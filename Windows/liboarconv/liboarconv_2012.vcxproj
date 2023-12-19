@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\MaterialTool.cpp" />
+    <ClCompile Include="..\..\MeshMaker.cpp" />
+    <ClCompile Include="..\..\OARTool.cpp" />
+    <ClCompile Include="..\..\PrimMesher.cpp" />
+    <ClCompile Include="..\..\PrimShape.cpp" />
+    <ClCompile Include="..\..\SculptMesher.cpp" />
+    <ClCompile Include="..\..\TerrainMesher.cpp" />
+    <ClCompile Include="..\..\TerrainTool.cpp" />
+    <ClCompile Include="..\..\TreeTool.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\LogDocTool.h" />
+    <ClInclude Include="..\..\MaterialTool.h" />
+    <ClInclude Include="..\..\MeshMaker.h" />
+    <ClInclude Include="..\..\OARTool.h" />
+    <ClInclude Include="..\..\PrimMesher.h" />
+    <ClInclude Include="..\..\PrimShape.h" />
+    <ClInclude Include="..\..\SculptMesher.h" />
+    <ClInclude Include="..\..\TerrainMesher.h" />
+    <ClInclude Include="..\..\TerrainTool.h" />
+    <ClInclude Include="..\..\TreeTool.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1EFE54E8-6071-4153-8E76-EDCC3845A25A}</ProjectGuid>
+    <RootNamespace>TUIS_Lib</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>liboarconv</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Configuration)64\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)64\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Configuration)64\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)64\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;..\..\..\magdb142;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_LIB;_DEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;MAGADBG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;WIN64;_LIB;_DEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;..\..\..\JunkBox_Win_Lib\WinBaseLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_LIB;NDEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;WIN64;_LIB;NDEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
