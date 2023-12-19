@@ -4,10 +4,10 @@
 // 2014/03/13 N.Kobyasahi
 //
 
-// Add Flying by Fumi.Iseki for OARConWin-1.2
+// Add Flying by Fumi.Iseki 
 // 2015/05/01 
-// 2015/07/11
-// 2023/12/17
+// 2015/07/11   for OARConvWin-1.1
+// 2023/12/17   for OARConvWin-1.2
 //
 
 using UnityEngine;
@@ -22,7 +22,7 @@ namespace UnityChan
 
     public class UnityChanControlScriptWithRgidBody : MonoBehaviour
     {
-        public bool showInteraction = true;		    // 初期メニュー表示
+        public bool showInteraction = true;         // 初期メニュー表示
         public float animSpeed = 1.5f;              // アニメーション再生速度設定
         public float lookSmoother = 3.0f;           // a smoothing setting for camera motion
         public bool useCurves = true;               // Mecanimでカーブ調整を使うか設定する
@@ -32,10 +32,10 @@ namespace UnityChan
         // 以下キャラクターコントローラ用パラメタ
         public float flyingSpeed = 10.0f;   // 飛行速度
         public float runningSpeed = 5.0f;   // 走る速度
-        public float walkSpeed = 2.5f;	    // 前進速度（歩き）
-        public float backwardSpeed = 2.0f;	// 後退速度
-        public float rotateSpeed = 0.8f;	// 旋回速度
-        public float jumpPower = 3.0f;		// ジャンプ威力
+        public float walkSpeed = 2.5f;      // 前進速度（歩き）
+        public float backwardSpeed = 2.0f;  // 後退速度
+        public float rotateSpeed = 0.8f;    // 旋回速度
+        public float jumpPower = 3.0f;        // ジャンプ威力
         // キャラクターコントローラ（カプセルコライダ）の参照
         private CapsuleCollider col;
         private Rigidbody rb;
@@ -56,10 +56,10 @@ namespace UnityChan
         static int restState = Animator.StringToHash("Base Layer.Rest");
 
         /*
-		 * by Fumi.Iseki
-		 */
-        private int flying = 0;			// 0: Land, 1: Flaying
-        private int forward = 0;		// 0: Stop, 1: forwarding, 2:Running
+         * by Fumi.Iseki
+         */
+        private int flying = 0;         // 0: Land, 1: Flaying
+        private int forward = 0;        // 0: Stop, 1: forwarding, 2:Running
         private uint keycnt = 0;
 
         private bool uparrowKey = false;
@@ -104,11 +104,11 @@ namespace UnityChan
             anim.SetFloat("Direction", h);                      // Animator側で設定している"Direction"パラメタにhを渡す
             anim.speed = animSpeed;                             // Animatorのモーション再生速度に animSpeedを設定する
             currentBaseState = anim.GetCurrentAnimatorStateInfo(0); // 参照用のステート変数にBase Layer (0)の現在のステートを設定する
-            //rb.useGravity = true;								//ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする 
+            //rb.useGravity = true;                                //ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする 
 
             /* 
-			 * by Fumi.Iseki
-			 */
+             * by Fumi.Iseki
+             */
             if (flying == 0)
             {
                 //rb.useGravity = false;
@@ -244,7 +244,6 @@ namespace UnityChan
                 velocity *= backwardSpeed;
             }
 
-            /**/
             if (Input.GetButtonDown("Jump")) {   // スペースキーを入力したら
                 //アニメーションのステートがLocomotionの最中のみジャンプできる
                 if (currentBaseState.fullPathHash == locoState) {
@@ -283,7 +282,6 @@ namespace UnityChan
                                                                         // ステートがトランジション中でない場合
                 if (!anim.IsInTransition(0))
                 {
-
                     // 以下、カーブ調整をする場合の処理
                     if (useCurves)
                     {
@@ -303,45 +301,44 @@ namespace UnityChan
                         {
                             if (hitInfo.distance > useCurvesHeight)
                             {
-                                col.height = orgColHight - jumpHeight;          // 調整されたコライダーの高さ
+                                col.height = orgColHight - jumpHeight;      // 調整されたコライダーの高さ
                                 float adjCenterY = orgVectColCenter.y + jumpHeight;
                                 col.center = new Vector3(0, adjCenterY, 0); // 調整されたコライダーのセンター
                             }
                             else
                             {
-                                // 閾値よりも低い時には初期値に戻す（念のため）					
+                                // 閾値よりも低い時には初期値に戻す（念のため）                    
                                 resetCollider();
                             }
                         }
                         rb.useGravity = true;                               //ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする
                     }
-                    // Jump bool値をリセットする（ループしないようにする）				
+                    // Jump bool値をリセットする（ループしないようにする）                
                     anim.SetBool("Jump", false);
                 }
             }
 
-            /**/
-			// IDLE中の処理
-			// 現在のベースレイヤーがidleStateの時
-			else if (currentBaseState.fullPathHash == idleState) {
-				//カーブでコライダ調整をしている時は、念のためにリセットする
-				if (useCurves) {
-					resetCollider ();
-				}
-				// スペースキーを入力したらRest状態になる
-				if (Input.GetButtonDown ("Jump")) {
-					anim.SetBool ("Rest", true);
-				}
-			}
-			// REST中の処理
-			// 現在のベースレイヤーがrestStateの時
-			else if (currentBaseState.fullPathHash == restState) {
-				//cameraObject.SendMessage("setCameraPositionFrontView");		// カメラを正面に切り替える
-				// ステートが遷移中でない場合、Rest bool値をリセットする（ループしないようにする）
-				if (!anim.IsInTransition (0)) {
-					anim.SetBool ("Rest", false);
-				}
-			}/**/
+            // IDLE中の処理
+            // 現在のベースレイヤーがidleStateの時
+            else if (currentBaseState.fullPathHash == idleState) {
+                //カーブでコライダ調整をしている時は、念のためにリセットする
+                if (useCurves) {
+                    resetCollider ();
+                }
+                // スペースキーを入力したらRest状態になる
+                if (Input.GetButtonDown ("Jump")) {
+                    anim.SetBool ("Rest", true);
+                }
+            }
+            // REST中の処理
+            // 現在のベースレイヤーがrestStateの時
+            else if (currentBaseState.fullPathHash == restState) {
+                //cameraObject.SendMessage("setCameraPositionFrontView");        // カメラを正面に切り替える
+                // ステートが遷移中でない場合、Rest bool値をリセットする（ループしないようにする）
+                if (!anim.IsInTransition (0)) {
+                    anim.SetBool ("Rest", false);
+                }
+            }
 
             uparrowKey = false;
             homeKey = false;
@@ -356,13 +353,13 @@ namespace UnityChan
             showInteraction = GUI.Toggle(rect, showInteraction, "Show Interaction");
 
             if (showInteraction) {
-                GUI.Box(new Rect(Screen.width - 260, 10, 250, 150), "Interaction");
-                GUI.Label(new Rect(Screen.width - 245, 30, 250, 30), "Up Arrow : Walk");
-                GUI.Label(new Rect(Screen.width - 245, 50, 250, 30), "Up Arrow x2 : Run");
-                GUI.Label(new Rect(Screen.width - 245, 70, 250, 30), "Home : Fly / Land");
-                GUI.Label(new Rect(Screen.width - 245, 90, 250, 30), "PageUp / PageDown : Up / Down");
-                GUI.Label(new Rect(Screen.width - 245, 110, 250, 30), "Left Control : Front Camera");
-                GUI.Label(new Rect(Screen.width - 245, 130, 250, 30), "Space Bar : Jump (Run) / Rest (Idle)");
+                GUI.Box(new Rect(  Screen.width - 260,  10, 250, 150), "Interaction");
+                GUI.Label(new Rect(Screen.width - 245,  30, 250,  30), "Up Arrow : Walk");
+                GUI.Label(new Rect(Screen.width - 245,  50, 250,  30), "Up Arrow x2 : Run");
+                GUI.Label(new Rect(Screen.width - 245,  70, 250,  30), "Home : Fly / Land");
+                GUI.Label(new Rect(Screen.width - 245,  90, 250,  30), "PageUp / PageDown : Up / Down");
+                GUI.Label(new Rect(Screen.width - 245, 110, 250,  30), "Left Control : Front Camera");
+                GUI.Label(new Rect(Screen.width - 245, 130, 250,  30), "Space Bar : Jump (Run) / Rest (Idle)");
             }
         }
 
