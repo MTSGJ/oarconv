@@ -5,7 +5,7 @@
 @brief   This is rewrite code from SculptMesh.cs of OpenSim for JunkBox_Lib.
 
 @file    SculptMesher.h
-@author  Fumi.Iseki  iseki@solar-system.tuis.ac.jp
+@author  Fumi.Iseki  iseki@rsch.tuis.ac.jp
 @version 1.1
 @date    2015 5/27
 

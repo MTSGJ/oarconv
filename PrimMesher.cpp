@@ -5,7 +5,7 @@
 @brief   This is rewrite code from PrimMesher.cs of OpenSim for JunkBox_Lib.
 
 @file    PrimMesher.cpp
-@author  Fumi.Iseki iseki@solar-system.tuis.ac.jp
+@author  Fumi.Iseki iseki@rsch.tuis.ac.jp
 @date    2014 9/7
 
 @sa http://opensimulator.org/

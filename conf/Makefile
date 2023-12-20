@@ -6,10 +6,12 @@ TOPDIR=../JunkBox_Lib
 
 
 #OPENJPEG_VERSION = 12
-OPENJPEG_VERSION = 14
+#OPENJPEG_VERSION = 14
 #OPENJPEG_VERSION = 15
 #OPENJPEG_VERSION = 20
 #OPENJPEG_VERSION = 21
+#OPENJPEG_VERSION = 24
+OPENJPEG_VERSION = 25
 
 
 ifeq ($(OPENJPEG_VERSION),12)
@@ -32,11 +34,19 @@ ifeq ($(OPENJPEG_VERSION),21)
 OPJINC = /usr/local/include/openjpeg-2.1
 OPJLIB = openjp2
 endif
+ifeq ($(OPENJPEG_VERSION),24)
+OPJINC = /usr/local/include/openjpeg-2.4
+OPJLIB = openjp2
+endif
+ifeq ($(OPENJPEG_VERSION),25)
+OPJINC = /usr/local/include/openjpeg-2.5
+OPJLIB = openjp2
+endif
 
 
 SUBJ = oarconv mktree
 
-OBJS = oarconv.o  oarconv_help.o OARTool.o TerrainTool.o TreeTool.o MeshMaker.o MaterialTool.o PrimMesher.o PrimShape.o SculptMesher.o TerrainMesher.o
+OBJS = oarconv.o oarconv_help.o OARTool.o TerrainTool.o TreeTool.o MeshMaker.o MaterialTool.o PrimMesher.o PrimShape.o SculptMesher.o TerrainMesher.o
 
 
 #
@@ -83,7 +93,7 @@ HLIB = -L$(LIB_MSH_DIR) -lmesh
 
 CFLAGS = -fPIC -DHAVE_CONFIG_H -I.. -I/usr/local/include -I$(OPJINC) -I$(TOPDIR) -I$(LIB_BSC_DIR) -I$(LIB_BSP_DIR) -I$(LIB_MTP_DIR) -I$(LIB_GRP_DIR) -I$(LIB_GRF_DIR) -I$(LIB_EXP_DIR) -I$(LIB_EXT_DIR) -I$(LIB_BRP_DIR) -I$(LIB_MSH_DIR) $(DEBUG)
 
-CFLAGS += -DENABLE_OPENJPEG -DOPENJPEG_VERSION=$(OPENJPEG_VERSION)
+CFLAGS += -DENABLE_OPENJPEG -DOPENJPEG_VERSION=$(OPENJPEG_VERSION) -DHAVE_OPENJPEG_H
 
 #
 #
@@ -123,7 +133,6 @@ xmlcollada: xmlcollada.o $(OBJS) $(LIB_BSP) $(LIB_GRP) $(LIB_EXP) $(LIB_BRP) $(L
 
 mktree: mktree.o $(OBJS) $(LIB_BSP) $(LIB_GRP) $(LIB_EXP) $(LIB_BRP) $(LIB_MSH) $(LIB_MTP)
 	$(CC) $(@).o $(OBJS) $(HLIB) $(ELIB) $(PLIB) $(RLIB) $(MLIB) $(BLIB) -O2 -o $@  -lz -L/usr/local/lib -ljpeg -l$(OPJLIB)
-
 
 
 
