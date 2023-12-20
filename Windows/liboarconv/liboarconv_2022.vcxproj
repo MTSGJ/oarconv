@@ -101,8 +101,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;..\..\..\magdb142;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_LIB;_UNICODE;_DEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;MAGADBG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;..\..\..\openjpeg-v2.5.0-windows-x86\include\openjpeg-2.5;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_LIB;_UNICODE;_DEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;OPENJPEG_VER=25;MAGADBG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -123,8 +123,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;WIN64;_LIB;_UNICODE;_DEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib64\Include;..\..\..\openjpeg-1.2\libopenjpeg;..\..\..\openjpeg-v2.5.0-windows-x64\include\openjpeg-2.5;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;WIN64;_LIB;_UNICODE;_DEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;OPENJPEG_VER=25;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -145,8 +145,8 @@
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;..\..\..\JunkBox_Win_Lib\WinBaseLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_LIB;_UNICODE;NDEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;..\..\..\JunkBox_Win_Lib\WinBaseLib;..\..\..\openjpeg-v2.5.0-windows-x86\include\openjpeg-2.5;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_LIB;_UNICODE;NDEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;OPENJPEG_VER=25;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -166,8 +166,8 @@
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib\include;..\..\..\openjpeg-1.2\libopenjpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;WIN64;_LIB;_UNICODE;NDEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib64\Include;..\..\..\openjpeg-1.2\libopenjpeg;..\..\..\openjpeg-v2.5.0-windows-x64\include\openjpeg-2.5;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;WIN64;_LIB;_UNICODE;NDEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;OPENJPEG_VER=25;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

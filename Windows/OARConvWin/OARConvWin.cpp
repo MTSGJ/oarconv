@@ -21,7 +21,12 @@
 #include  "ObjectsListDLG.h"
 
 #include  "tar32api.h"
+
+#ifdef WIN64
+#pragma comment(lib, "tar64.lib")
+#else
 #pragma comment(lib, "tar32.lib")
+#endif
 
 
 using namespace jbxl;

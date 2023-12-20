@@ -25,6 +25,6 @@
 
 //
 // OpenJpeg openjpeg-1.2 の DllOpenJPEG.vcxproj を使用
-#define    OPENJPEG_VER             12
+//#define    OPENJPEG_VER             12
 
 
