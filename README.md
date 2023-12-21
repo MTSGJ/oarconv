@@ -3,7 +3,7 @@ Convert OAR to Collada for Unity
 
 ## oarconv (for Linux)
 ### Compile
-#### needs OpenJpeg
+#### needs OpenJpeg v2.5
 ```
 git clone https://github.com/uclouvain/openjpeg.git
 cd openjpeg/
