@@ -1,5 +1,7 @@
 # OARConv
-Convert OAR to Collada for Unity
+* Convert OAR to Collada for Unity.
+* Please use Unity 2022.3.16f1 LTS
+* There are some bugs in 2023.2.3f1
 
 ## oarconv (for Linux)
 ### Usage
