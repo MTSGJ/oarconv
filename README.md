@@ -3,7 +3,8 @@ Convert OAR to Collada for Unity
 
 ## oarconv (for Linux)
 ### Usage
-
+#### Help
+```
  oarconv [-i OAR directory] [-o output directory] [-a adding assets directories that separated by ':'] [-f object xml file]
          [-t terrain texture scale] [-c external convert command of jp2]
          [-s start no.] [-e end no.]
@@ -26,8 +27,10 @@ Convert OAR to Collada for Unity
    -d : debug mode. display debug information.
    -v : display version information.
    -h : display this help messages.
+```
+#### Example
+* oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets -d
 
- ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets -d
 ### Compile
 #### needs OpenJpeg v2.5
 ```
