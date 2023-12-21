@@ -60,3 +60,5 @@ cd oarconv
 make
 ./oarconv -h
 ```
+
+## OARConvWin (for MS Windows)
