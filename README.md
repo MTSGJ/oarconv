@@ -1,7 +1,7 @@
 # OARConv
 * Convert OAR file of OpenSimulator to Collada files for Unity 2022.
 * Please use Unity 2022.3.16f1 LTS
-* There are some bugs in 2023.2.3f1
+* There are some bugs in Unity 2023.2.3f1
 
 ## oarconv (for Linux)
 ### Usage
@@ -45,8 +45,9 @@ make
 make install
 cd ../..
 ```
-#### needs JunkBox_Lib
+#### needs [JunkBox_Lib](https://github.com/JunkBox-Library/JunkBox_Lib)
 ```
+git clone https://github.com/JunkBox-Library/JunkBox_Lib.git
 cd JunkBox_Lib
 ./config.sh
 ./configure --enable-jpeg --enable-openjpeg=2.5 --enable-ssl --enable-ldap
