@@ -54,7 +54,8 @@ cd ../..
 git clone https://github.com/JunkBox-Library/JunkBox_Lib.git
 cd JunkBox_Lib
 ./config.sh
-./configure --enable-jpeg --enable-openjpeg=2.5 --enable-ssl --enable-ldap
+./configure --enable-jpeg --enable-openjpeg=2.5 --enable-ssl --enable-ldap             # before v1.8.x
+./configure --enable-jpeg --enable-openjpeg=/usr/local:2.5 --enable-ssl --enable-ldap  # after v1.9.x
 make
 cd C++Lib
 make
