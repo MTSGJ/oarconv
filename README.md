@@ -61,7 +61,7 @@ cd C++Lib
 make
 cd ../..
 ```
-#### oarconv
+#### OARConv
 ```
 git clone https://github.com/JunkBox-Library/oarconv.git
 cd oarconv
