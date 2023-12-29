@@ -13,33 +13,36 @@ TOPDIR=../JunkBox_Lib
 #OPENJPEG_VERSION = 24
 OPENJPEG_VERSION = 25
 
+#OPENJPEG_DIR = /usr
+OPENJPEG_DIR = /usr/local
+
 
 ifeq ($(OPENJPEG_VERSION),12)
-OPJINC = /usr/include
+OPJINC = $(OPENJPEG_DIR)/include
 OPJLIB = openjpeg
 endif
 ifeq ($(OPENJPEG_VERSION),14)
-OPJINC = /usr/local/include/openjpeg-1.4
+OPJINC = $(OPENJPEG_DIR)/include/openjpeg-1.4
 OPJLIB = openjpeg
 endif
 ifeq ($(OPENJPEG_VERSION),15)
-OPJINC = /usr/local/include/openjpeg-1.5
+OPJINC = $(OPENJPEG_DIR)/include/openjpeg-1.5
 OPJLIB = openjp2
 endif
 ifeq ($(OPENJPEG_VERSION),20)
-OPJINC = /usr/local/include/openjpeg-2.0
+OPJINC = $(OPENJPEG_DIR)/include/openjpeg-2.0
 OPJLIB = openjp2
 endif
 ifeq ($(OPENJPEG_VERSION),21)
-OPJINC = /usr/local/include/openjpeg-2.1
+OPJINC = $(OPENJPEG_DIR)/include/openjpeg-2.1
 OPJLIB = openjp2
 endif
 ifeq ($(OPENJPEG_VERSION),24)
-OPJINC = /usr/local/include/openjpeg-2.4
+OPJINC = $(OPENJPEG_DIR)/include/openjpeg-2.4
 OPJLIB = openjp2
 endif
 ifeq ($(OPENJPEG_VERSION),25)
-OPJINC = /usr/local/include/openjpeg-2.5
+OPJINC = $(OPENJPEG_DIR)/include/openjpeg-2.5
 OPJLIB = openjp2
 endif
 
