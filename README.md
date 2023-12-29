@@ -3,7 +3,9 @@
 * Please use Unity 2022.3.16f1 LTS
 * There are some bugs in Unity 2023.2.3f1
 * **oarconv** is for Linux/Unix
-* **OARConvWin** is for MS Windows 
+* **OARConvWin** is for MS Windows
+* [Wiki of OARConv](https://polaris.star-dust.jp/pukiwiki/?OAR+Converter)
+* [Wiki of OARConvWin](https://polaris.star-dust.jp/pukiwiki/?OARConvWin)
 
 ## oarconv (for Linux)
 ### Usage
