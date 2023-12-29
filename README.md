@@ -7,7 +7,7 @@
 * [Wiki of OARConv](https://polaris.star-dust.jp/pukiwiki/?OAR+Converter)
 * [Wiki of OARConvWin](https://polaris.star-dust.jp/pukiwiki/?OARConvWin)
 
-## oarconv (for Linux)
+## OARConv (for Linux)
 ### Usage
 #### Help
 ```
