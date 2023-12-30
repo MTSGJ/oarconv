@@ -8,6 +8,11 @@
 * [Wiki of OARConvWin](https://polaris.star-dust.jp/pukiwiki/?OARConvWin)
 * [Demo Video](https://www.youtube.com/watch?v=LUhqNJHLCuM)
 
+### Latest Version
+* OARConv : 1.4.5
+* OARConvWin : 1.2.1
+
+
 ## OARConv (for Linux)
 ### Usage
 #### Help
