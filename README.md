@@ -83,5 +83,5 @@ make
 -----------
 ## OARConvWin (for MS Windows)
 ### Download Binary
-- [OARConvWin-1.2.1.zip](http://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.2.1.zip)
+- [OARConvWin-1.2.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.2.1.zip)
 
