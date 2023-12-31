@@ -15,8 +15,8 @@
 * [Demo Video](https://www.youtube.com/watch?v=LUhqNJHLCuM)
 
 ### Latest Version
-* OARConv : 1.4.5
-* OARConvWin : 1.2.1
+* OARConv : 1.4.6
+* OARConvWin : 1.2.1.1
 
 
 ## OARConv (for Linux)
