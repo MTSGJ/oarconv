@@ -207,6 +207,8 @@ void CObjectsListDLG::OnBnClickedObjlistFind()
 	}
 	else {
 		listLBox->SetSel(indxPos, FALSE);
+		listLBox->SetSel(findPos + 2);        // 少し下にスクロールして選択行を上に上げる
+		listLBox->SetSel(findPos + 2, FALSE);
 		listLBox->SetSel(findPos);
 	}
 
