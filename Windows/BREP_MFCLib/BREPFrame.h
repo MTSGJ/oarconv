@@ -5,8 +5,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-
-
 /**
 CBREPFrame クラス
 
@@ -21,8 +19,6 @@ CBREPFrame クラス
 
 using namespace jbxl;
 using namespace jbxwl;
-
-
 
 
 
@@ -75,7 +71,6 @@ public:
 	afx_msg void OnDestroy();
 	afx_msg void OnClose();
 };
-
 
 
 

@@ -40,7 +40,6 @@ CBREPDoc::CBREPDoc()
 }
 
 
-
 CBREPDoc::~CBREPDoc()
 {
 //	if (ChangeData && !CallSave) SaveFile(false);
@@ -59,7 +58,6 @@ CBREPDoc::~CBREPDoc()
 		delete counter;
 	}
 }
-
 
 
 BEGIN_MESSAGE_MAP(CBREPDoc, CExDocument)
@@ -88,8 +86,6 @@ void CBREPDoc::Dump(CDumpContext& dc) const
 
 
 
-
-
 /////////////////////////////////////////////////////////////////////////////
 // CBREPDoc シリアライズ
 
@@ -104,7 +100,6 @@ void CBREPDoc::Serialize(CArchive& ar)
 		// TODO: この位置に読み込み用のコードを追加してください
 	}
 }
-
 
 
 
@@ -134,7 +129,6 @@ BOOL CBREPDoc::OnNewDocument()
 
 	return TRUE;
 }
-
 
 
 //
@@ -197,7 +191,6 @@ BOOL CBREPDoc::OnOpenDocument(LPCTSTR lpszPathName)
 }
 
 
-
 void  CBREPDoc::SolidRepair(int method)
 {
 	CProgressBarDLG* counter = new CProgressBarDLG(IDD_PROGBAR, _T("Correcting"), FALSE, pFrame);
@@ -212,7 +205,6 @@ void  CBREPDoc::SolidRepair(int method)
 	counter->MakeChildCounter(60);
 	ContoursRepair(method, false);
 	counter->DeleteChildCounter();
-
 
 	CreateSurplusContoursList(Solid);
 	CreateShortageWingsList(Solid);
@@ -231,7 +223,6 @@ void  CBREPDoc::SolidRepair(int method)
 	CallSave   = false;
 	return;
 }
-
 
 
 void  CBREPDoc::ContoursRepair(int method, bool mode)
@@ -269,7 +260,6 @@ void  CBREPDoc::ContoursRepair(int method, bool mode)
 
 	return;
 }
-
 
 
 void CBREPDoc::SaveFile(bool mode) 
@@ -311,7 +301,6 @@ void CBREPDoc::SaveFile(bool mode)
 }
 
 
-
 // Solid の状態を表示する．
 void CBREPDoc::ShowSolidInfo()
 {
@@ -323,6 +312,3 @@ void CBREPDoc::ShowSolidInfo()
 	//MessageBox(message, "CBREPDoc::データレポート", MB_OK);
 	MessageBox(pFrame->m_hWnd, message, _T("BREP_SOLID Data Report"), MB_ICONQUESTION);
 }
-
-
-
