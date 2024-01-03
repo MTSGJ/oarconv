@@ -135,7 +135,7 @@ CAPTION "バージョン情報 OARConvWin"
 FONT 9, "メイリオ", 400, 0, 0x80
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,10,10,20,20
-    LTEXT           "OARConvWin, Version 1.2.1",IDC_STATIC,37,7,123,8,SS_NOPREFIX
+    LTEXT           "OARConvWin, Version 1.2.2",IDC_STATIC,37,7,123,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2015",IDC_STATIC,41,28,69,8
     DEFPUSHBUTTON   "OK",IDOK,134,33,50,10,WS_GROUP
     LTEXT           "by F.Iseki, A.Tate, D.Mizumaki and K.Suzuki",IDC_STATIC,41,18,147,8,SS_NOPREFIX
@@ -231,12 +231,12 @@ BEGIN
             VALUE "Comments", "Subaru Projects"
             VALUE "CompanyName", "NSL"
             VALUE "FileDescription", "OAR Converter"
-            VALUE "FileVersion", "1.2.0.0"
+            VALUE "FileVersion", "1.2.2.0"
             VALUE "InternalName", "OARConvWin.exe"
             VALUE "LegalCopyright", "(C) Fumi.Iseki  All rights reserved."
             VALUE "OriginalFilename", "OARConvWin.exe"
             VALUE "ProductName", "OARConv"
-            VALUE "ProductVersion", "1.2.0.0"
+            VALUE "ProductVersion", "1.2.2.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -561,7 +561,7 @@ CAPTION "Version Information of OARConvWin"
 FONT 9, "Microsoft Sans Serif", 400, 0, 0x80
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,10,20,20
-    LTEXT           "OARConvWin, Version 1.2.1",IDC_STATIC,34,7,106,8,SS_NOPREFIX
+    LTEXT           "OARConvWin, Version 1.2.2",IDC_STATIC,34,7,106,8,SS_NOPREFIX
     LTEXT           "by F.Iseki, A.Tate, D.Mizumaki and K.Suzuki",IDC_STATIC,41,18,147,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2015",IDC_STATIC,41,29,69,8
     DEFPUSHBUTTON   "OK",IDOK,131,33,50,12,WS_GROUP
@@ -593,12 +593,12 @@ BEGIN
             VALUE "Comments", "Subaru Projects"
             VALUE "CompanyName", "NSL"
             VALUE "FileDescription", "OAR Converter"
-            VALUE "FileVersion", "1.2.0.0"
+            VALUE "FileVersion", "1.2.2.0"
             VALUE "InternalName", "OARConvWin.exe"
             VALUE "LegalCopyright", "(C) Fumi.Iseki  All rights reserved."
             VALUE "OriginalFilename", "OARConvWin.exe"
             VALUE "ProductName", "OARConv"
-            VALUE "ProductVersion", "1.2.0.0"
+            VALUE "ProductVersion", "1.2.2.0"
         END
     END
     BLOCK "VarFileInfo"
