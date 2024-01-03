@@ -17,7 +17,8 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
 LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
-#pragma code_page(932)
+//#pragma code_page(932)
+#pragma code_page(65001)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -240,7 +241,7 @@ BEGIN
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x411, 932
+        VALUE "Translation", 0x411, 65001
     END
 END
 
@@ -602,7 +603,7 @@ BEGIN
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x9, 932
+        VALUE "Translation", 0x9, 65001
     END
 END
 
