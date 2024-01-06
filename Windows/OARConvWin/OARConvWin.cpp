@@ -33,7 +33,6 @@ using namespace jbxl;
 using namespace jbxwl;
 
 
-
 // COARConvWinApp
 BEGIN_MESSAGE_MAP(COARConvWinApp, CWinApp)
 	ON_COMMAND(ID_APP_ABOUT, &COARConvWinApp::OnAppAbout)
@@ -250,7 +249,6 @@ void  COARConvWinApp::ViewDestructor(CExTextView* view)
 
 
 
-
 /////////////////////////////////////////////////////////////////////////////
 // アプリケーションのバージョン情報で使われる CAboutDlg ダイアログ
 //
@@ -261,7 +259,6 @@ void  COARConvWinApp::OnAppAbout()
 	if (aboutBox==NULL) aboutBox = new CMessageBoxDLG(IDD_ABOUTBOX, NULL, m_pMainWnd);
 	if (aboutBox!=NULL) aboutBox->Display();
 }
-
 
 
 
@@ -286,7 +283,7 @@ void  COARConvWinApp::OnFileOpen()
 void  COARConvWinApp::OnFolderOpen()
 {
 	CString crntd = getOarFolder();
-	CString foldr = EasyGetOpenFolderName((LPCTSTR)crntd, _T("Open OAR Folder"), m_pMainWnd->m_hWnd);
+	CString foldr = EasyGetOpenFolderName(crntd, _T("Open OAR Folder"), m_pMainWnd->m_hWnd);
 	if (foldr.IsEmpty()) return;
 
 	bool ret = folderOpenOAR(foldr);
@@ -322,7 +319,7 @@ void  COARConvWinApp::OnFileOpenQuick()
 void  COARConvWinApp::OnFolderOpenQuick()
 {
 	CString crntd = getOarFolder();
-	CString foldr = EasyGetOpenFolderName((LPCTSTR)crntd, _T("Open OAR Folder"), m_pMainWnd->m_hWnd);
+	CString foldr = EasyGetOpenFolderName(crntd, _T("Open OAR Folder"), m_pMainWnd->m_hWnd);
 	if (foldr.IsEmpty()) return;
 
 	bool ret = folderOpenOAR(foldr);
@@ -377,7 +374,6 @@ void  COARConvWinApp::OnSettingDialog()
 	appParam.saveConfigFile();
 	return;
 }
-
 
 
 
@@ -556,7 +552,6 @@ void  COARConvWinApp::convertAllData()
 
 
 
-
 /////////////////////////////////////////////////////////////////////////////////////////
 // Convert
 //
@@ -614,7 +609,6 @@ int   COARConvWinApp::convertAllFiles()
 	
 	return num;
 }
-
 
 
 void  COARConvWinApp::convertSelectedData(int selectedNums, int* selectedObjs)
@@ -675,7 +669,6 @@ int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
 	
 	return num;
 }
-
 
 
 void  COARConvWinApp::convertOneData(int index, BOOL outputDae)
@@ -743,7 +736,6 @@ void  COARConvWinApp::solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num)
 
 	return;
 }
-
 
 
 void  COARConvWinApp::showOARInfoDLG()
@@ -816,7 +808,6 @@ void  COARConvWinApp::updateStatusBar(CString path)
 
 	return;
 }
-
 
 
 /*
