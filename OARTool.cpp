@@ -10,7 +10,6 @@
 #include "OARTool.h"
 
 
-
 using namespace jbxl;
 
 
@@ -196,7 +195,6 @@ void  OARTool::SetPathInfo(const char* oardir, const char* daedir, const char* s
         #endif
     }
 }
-
 
 
 /**
@@ -402,7 +400,6 @@ bool  OARTool::GetDataInfo()
 }
 
 
-
 void  OARTool::MakeOutputFolder(bool outdae)
 {
     // mkdir for output
@@ -417,7 +414,6 @@ void  OARTool::MakeOutputFolder(bool outdae)
 
     return;
 }
-
 
 
 void  OARTool::ReadTerrainData(void)
@@ -453,7 +449,6 @@ void  OARTool::ReadTerrainData(void)
 }
 
 
-
 int  OARTool::GenerateTerrainDae(void)
 {
     if (terrainNum==0) return 0;
@@ -471,7 +466,6 @@ int  OARTool::GenerateTerrainDae(void)
 
     return num;
 }
-
 
 
 int  OARTool::GenerateObjectsDae(int startnum, int stopnum, bool useBrep, bool phantom, char* command)
@@ -500,7 +494,6 @@ int  OARTool::GenerateObjectsDae(int startnum, int stopnum, bool useBrep, bool p
 }
 
 
-
 int  OARTool::GenerateSelectedDae(int objnum, int* objlist, bool useBrep, bool phantom, char* command)
 {
     tList* lp = objectsFiles;
@@ -525,7 +518,6 @@ int  OARTool::GenerateSelectedDae(int objnum, int* objlist, bool useBrep, bool p
 
     return cnt;
 }
-
 
 
 /**
@@ -561,8 +553,8 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
     }
 
     ColladaXML* dae = new ColladaXML();
-    dae->forUnity5 = forUnity5;
-    dae->forUnity3D = forUnity3D;
+    dae->forUnity5  = forUnity5;
+    dae->forUnity4  = forUnity4;
     dae->forUnity3D = forUnity3D;
     dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
 
@@ -697,7 +689,6 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
 }
 
 
-
 /**
 @param texture    コンバート元データのUUID．
 @param add_fname  コンバート先ファイル名の追加文字列．
@@ -819,7 +810,6 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
 }
 
 
-
 /**
 テスト中！
 @param texture    コンバート元データのUUID．
@@ -887,7 +877,6 @@ int  OARTool::GenerateTerrainSTL(bool binfile)
 }
 
 
-
 int  OARTool::GenerateObjectsSTL(int startnum, int stopnum, bool binfile)
 {
     tList* lp = objectsFiles;
@@ -912,7 +901,6 @@ int  OARTool::GenerateObjectsSTL(int startnum, int stopnum, bool binfile)
 
     return cnt;
 }
-
 
 
 int  OARTool::GenerateSelectedSTL(int objnum, int* objlist, bool binfile)
@@ -941,7 +929,6 @@ int  OARTool::GenerateSelectedSTL(int objnum, int* objlist, bool binfile)
 }
 
 
-
 /**
 Tree, Grass, Prim(Sculpt, Meshを含む) のXMLデータ(ファイル１個分) を STL形式で書きだす.
 頂点の配置には BREPが使用される．
@@ -966,7 +953,6 @@ void  OARTool::GenerateSTL(const char* fname, int num, bool binfile)
 
     return;
 }
-
 
 
 BrepSolidList*  OARTool::GenerateSolidList(const char* fname)
