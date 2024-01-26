@@ -105,16 +105,16 @@ void  OARTool::setUnity4(bool unity4)
 }
 
 
-void  OARTool::setUnity3D(bool unity)
+void  OARTool::setUnity5(bool unity5)
 {
-    forUnity3D = unity;
+    forUnity5 = unity5;
     return;
 }
 
 
-void  OARTool::setUnity5(bool unity5)
+void  OARTool::setUnity3D(bool unity)
 {
-    forUnity5 = unity5;
+    forUnity3D = unity;
     return;
 }
 
@@ -579,9 +579,9 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
                 while (node!=NULL) {
                     if (node->material_param.enable) {
                         // convert texture
-                        char* addname = node->material_param.getAdditionalName();
-                        ConvertTexture(node->material_param.getTextureName(), addname, MTRL_IMAGE_TYPE, NULL, command);
-                        node->material_param.setupFullName(MTRL_IMAGE_TYPE);
+                        //char* addname = node->material_param.getAdditionalName();
+                        ConvertTexture(node->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        node->material_param.setFullName(MTRL_IMAGE_TYPE);
                     }
                     node = node->next;
                 }
@@ -608,9 +608,9 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
                 while (node!=NULL) {
                     if (node->material_param.enable) {
                         // convert texture
-                        char* addname = node->material_param.getAdditionalName();
-                        ConvertTexture(node->material_param.getTextureName(), addname, MTRL_IMAGE_TYPE, NULL, command);
-                        node->material_param.setupFullName(MTRL_IMAGE_TYPE);
+                        //char* addname = node->material_param.getAdditionalName();
+                        ConvertTexture(node->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        node->material_param.setFullName(MTRL_IMAGE_TYPE);
                     }
                     node = node->next;
                 }
@@ -645,19 +645,19 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
                         //node->material_param.setAlphaChannel(CheckAlphaChannel(node->material_param.getTextureName()));
                         //if (node->material_param.isSetAlpha()) node->material_param.setTransparent(MTRL_DEFAULT_ALPHA);
                         //if (unity3D) {
-                        //  char* paramsname = GetBase64ParamsString(node->material_param, 'O');    // O: Object
-                        //  if (paramsname!=NULL) {
-                        //      node->material_param.setAdditionalName(paramsname);
-                        //      ::free(paramsname);
+                        //  char* paramstr = GetBase64ParamsString(node->material_param, 'O');    // O: Object
+                        //  if (paramsstr!=NULL) {
+                        //      node->material_param.setParamString(paramstr);
+                        //      ::free(paramstr);
                         //  }
                         //}
                         
                         // convert texture
-                        char* addname = node->material_param.getAdditionalName();
-                        ConvertTexture(node->material_param.getTextureName(), addname, MTRL_IMAGE_TYPE, NULL, command);
-                        ConvertTexture(node->material_param.getBumpMapName(), addname, MTRL_IMAGE_TYPE, NULL, command);
-                        ConvertTexture(node->material_param.getSpecMapName(), addname, MTRL_IMAGE_TYPE, NULL, command);
-                        node->material_param.setupFullName(MTRL_IMAGE_TYPE);
+                        //char* addname = node->material_param.getAdditionalName();
+                        ConvertTexture(node->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        ConvertTexture(node->material_param.getBumpMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        ConvertTexture(node->material_param.getSpecMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        node->material_param.setFullName(MTRL_IMAGE_TYPE);
                     }
                     node = node->next;
                 }

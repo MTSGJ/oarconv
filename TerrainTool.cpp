@@ -370,10 +370,10 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath, bool add_
             param.setTransparent(1.0f);
             //
             if (add_param) {
-                char* paramname = param.getBase64Params('E');   // E: Earth
-                param.setAdditionalName(paramname);
-                param.setupFullName(MTRL_IMAGE_TYPE);
-                if (paramname!=NULL) ::free(paramname);
+                char* paramstr = param.getBase64Params('E');   // E: Earth
+                param.setParamString(paramstr);
+                param.setFullName(MTRL_IMAGE_TYPE);
+                if (paramstr!=NULL) ::free(paramstr);
             }
 
             char* filename = param.getTextureName();
@@ -464,10 +464,10 @@ void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool a
             param.setTransparent(1.0f);
             //
             if (add_param) {
-                char* paramname = param.getBase64Params('E');   // E: Earth
-                param.setAdditionalName(paramname);
-                param.setupFullName(MTRL_IMAGE_TYPE);
-                if (paramname!=NULL) ::free(paramname);
+                char* paramstr = param.getBase64Params('E');   // E: Earth
+                param.setParamString(paramstr);
+                param.setFullName(MTRL_IMAGE_TYPE);
+                if (paramstr!=NULL) ::free(paramstr);
             }
 
             MeshObjectData* data = new MeshObjectData();

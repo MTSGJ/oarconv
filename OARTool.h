@@ -88,7 +88,7 @@ private:
     TreeTool treeTool;
 
 public:
-    bool   forUnity3D;          // Unity3Dサポート
+    bool   forUnity3D;          // Unityサポート
     bool   forUnity5;           // Unity5.x 用
     bool   forUnity4;           // Unity4.x 用
     int    terrainNum;

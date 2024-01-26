@@ -64,8 +64,9 @@ int main(int argc, char** argv)
     while (node!=NULL) {
         if (node->material_param.enable) {
             // convert texture
-            oar.ConvertTexture(node->material_param.getTextureName(), node->material_param.getAdditionalName(), MTRL_IMAGE_TYPE);
-            node->material_param.setupFullName(MTRL_IMAGE_TYPE);
+            //oar.ConvertTexture(node->material_param.getTextureName(), node->material_param.getAdditionalName(), MTRL_IMAGE_TYPE);
+            oar.ConvertTexture(node->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE);
+            node->material_param.setFullName(MTRL_IMAGE_TYPE);
         }
         node = node->next;
     }
