@@ -161,7 +161,6 @@ char*  TreeTool::GetGrassTexture(int kind)
 }
 
 
-
 /**
 木データの生成．
 
@@ -221,19 +220,21 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_pa
         mparam[i].setAlphaMode(MATERIAL_ALPHA_MASKING);
         mparam[i].setAlphaCutoff(0.5);
         if (add_param) {
-            char* paramsname = mparam[i].getBase64Params('T');  // T: Tree
-            mparam[i].setAdditionalName(paramsname);
-            if (paramsname!=NULL) ::free(paramsname);
+            char* paramstr = mparam[i].getBase64Params('T');  // T: Tree
+            mparam[i].setParamString(paramstr);
+            if (paramstr!=NULL) ::free(paramstr);
         }
     }
 
     MeshObjectData* data = new MeshObjectData((char*)shape.ObjectName.buf);
     for (int i=0; i<facetno; i++) {
         data->addData(tridata, trino, i, NULL, false);
+        //data->addData(tridata, trino, i, mparam, false);
     }
     freeTriPolyData(tridata, trino);
 
     for (int i=0; i<ndiv; i++) { 
+        // 6面
         data->setMaterialParam(mparam[0]);
         data->setMaterialParam(mparam[1]);
         data->setMaterialParam(mparam[0]);
@@ -254,7 +255,6 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_pa
 
     return data;
 }
-
 
 
 /**
@@ -340,7 +340,6 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     facetno *= gnum;
 
     MaterialParam mparam[3];
-
     mparam[0].setTextureName(alphaTexture.getName());
     mparam[1].setTextureName(grassParam[shape.State].texture.getName());
     mparam[2].setTextureName(grassParam[shape.State].texture.getName());
@@ -352,9 +351,9 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
         mparam[i].setAlphaMode(MATERIAL_ALPHA_MASKING);
         mparam[i].setAlphaCutoff(0.5);
         if (add_param) {
-            char* paramsname = mparam[i].getBase64Params('G');  // G: Grass
-            mparam[i].setAdditionalName(paramsname);
-            if (paramsname!=NULL) ::free(paramsname);
+            char* paramstr = mparam[i].getBase64Params('G');  // G: Grass
+            mparam[i].setParamString(paramstr);
+            if (paramstr!=NULL) ::free(paramstr);
         }
     }
 
