@@ -49,7 +49,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>Static</UseOfMfc>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -132,7 +132,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_WIn_Lib\WinBaseLib;..\..\..\JunkBox_Win_Lib\DLGBoxLib;..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Win_Lib\MFCBaseLib;..\..\..\JunkBox_Win_Lib\MFCLib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;..\..\..\JunkBox_Lib++\MeshLib;..\OARConvWin;..\..;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\zlib-1.3\x64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;WIN64;_WINDOWS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN64;_WINDOWS;_DEBUG;_LIB;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -159,7 +159,7 @@
       <Optimization>Full</Optimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Win_Lib\WinBaseLib;..\..\..\JunkBox_Win_Lib\DLGBoxLib;..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Win_Lib\MFCBaseLib;..\..\..\JunkBox_Win_Lib\MFCLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\OARConvWin;..\..;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;..\..\..\zlib-1.3\x86;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_LIB;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -186,7 +186,7 @@
       <Optimization>Full</Optimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Win_Lib\WinBaseLib;..\..\..\JunkBox_Win_Lib\DLGBoxLib;..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Win_Lib\MFCBaseLib;..\..\..\JunkBox_Win_Lib\MFCLib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;..\..\..\JunkBox_Lib++\MeshLib;..\OARConvWin;..\..;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\zlib-1.3\x64;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;WIN64;_WINDOWS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN64;_WINDOWS;NDEBUG;_LIB;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>

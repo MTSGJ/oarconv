@@ -536,7 +536,7 @@ void  COARConvWinApp::convertAllData()
 	if (num>=0) {
 		CString format;
 		CString mesg;
-		format.LoadStringW(IDS_STR_CONVERT_NUM);
+		format.LoadString(IDS_STR_CONVERT_NUM);
 		mesg.Format(format, num);
 		MessageBoxDLG(IDS_STR_CNFRM, mesg, MB_OK, m_pMainWnd);
 	}
@@ -623,7 +623,7 @@ void  COARConvWinApp::convertSelectedData(int selectedNums, int* selectedObjs)
 	if (num>=0) {
 		CString format;
 		CString mesg;
-		format.LoadStringW(IDS_STR_CONVERT_NUM);
+		format.LoadString(IDS_STR_CONVERT_NUM);
 		mesg.Format(format, num);
 		MessageBoxDLG(IDS_STR_CNFRM, mesg, MB_OK, m_pMainWnd);
 	}
@@ -683,7 +683,7 @@ void  COARConvWinApp::convertOneData(int index, BOOL outputDae)
 	if (num>=0) {
 		CString format;
 		CString mesg;
-		format.LoadStringW(IDS_STR_CONVERT_NUM);
+		format.LoadString(IDS_STR_CONVERT_NUM);
 		mesg.Format(format, num);
 		MessageBoxDLG(IDS_STR_CNFRM, mesg, MB_OK, m_pMainWnd);
 	}
