@@ -15,8 +15,7 @@
 * [Demo Video](https://www.youtube.com/watch?v=LUhqNJHLCuM)
 
 ### Latest Version
-* OARConv : 1.4.6
-* OARConvWin : 1.2.1.1
+* v1.5.0
 
 
 ## OARConv (for Linux)
@@ -83,6 +82,7 @@ make
 -----------
 ## OARConvWin (for MS Windows)
 ### Download Binary
+- [OARConvWin-1.5.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.5.0.zip)
 - [OARConvWin-1.2.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.2.1.zip)
   
 ### Screen Shot
