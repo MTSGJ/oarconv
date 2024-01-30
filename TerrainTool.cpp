@@ -444,7 +444,7 @@ void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool a
                     region.gp[jj+i] = r32.gp[ww+i];
                 }
             }
-            FacetBaseData* facetdata = FacetBaseDataFromTerrainImage(region, shift, left, right, top, bottom, false);
+            ContourBaseData* facetdata = ContourBaseDataFromTerrainImage(region, shift, left, right, top, bottom, false);
 
             //
             Buffer daename = dup_Buffer(trnName);
@@ -484,7 +484,7 @@ void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool a
             free_Buffer(&daename);
             free_Buffer(&daepath);
             free_Buffer(&texfile);
-            freeFacetBaseData(facetdata);
+            freeContourBaseData(facetdata);
             freeColladaXML(dae);
             freeMeshObjectData(data);
 
@@ -543,7 +543,7 @@ void  TerrainTool::GenerateSTL(const char* outpath, Vector<float> offset, bool b
                     region.gp[jj+i] = r32.gp[ww+i];
                 }
             }
-            FacetBaseData* facetdata = FacetBaseDataFromTerrainImage(region, shift, left, right, top, bottom, true);
+            ContourBaseData* facetdata = ContourBaseDataFromTerrainImage(region, shift, left, right, top, bottom, true);
 
             //
             Buffer stlname = dup_Buffer(trnName);
@@ -564,7 +564,7 @@ void  TerrainTool::GenerateSTL(const char* outpath, Vector<float> offset, bool b
             region.free();
             free_Buffer(&stlname);
             free_Buffer(&stlpath);
-            freeFacetBaseData(facetdata);
+            freeContourBaseData(facetdata);
             freeMeshObjectData(data);
             freeBrepSolidList(solids);
 

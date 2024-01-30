@@ -184,7 +184,7 @@ void  TerrainMesh::GenerateMeshData(Vector<float> shift, bool autoseabed)
             uvs.push_back(UVMap<float>(du*(i+stx), dv*(j+sty)));
 
             if (i>0 && j>0) {
-                FacetTriIndex t1, t2;
+                ContourTriIndex t1, t2;
                 t1.mlt_set(p1, p4, p3);
                 t2.mlt_set(p1, p2, p4);
                 terrainTriIndex.push_back(t1);
@@ -197,7 +197,7 @@ void  TerrainMesh::GenerateMeshData(Vector<float> shift, bool autoseabed)
         // 海底面処理
         int cnum = (int)coords.size();  // データ（頂点）の数
 
-        FacetTriIndex s1, s2;
+        ContourTriIndex s1, s2;
         s1.mlt_set(cnum, cnum+2, cnum+3);
         s2.mlt_set(cnum, cnum+3, cnum+1);
         terrainTriIndex.push_back(s1);
@@ -219,12 +219,11 @@ void  TerrainMesh::GenerateMeshData(Vector<float> shift, bool autoseabed)
 }
 
 
-
 void  TerrainMesh::ComputeTriNormals(void)
 {
     int tnum = (int)terrainTriIndex.size();
     for (int i=0; i<tnum; i++) {
-        FacetTriIndex indx = terrainTriIndex[i];
+        ContourTriIndex indx = terrainTriIndex[i];
         Vector<float> normal = indx.SurfaceNormal(&coords);
         normals[indx.n1] = normals[indx.n1] + normal;
         normals[indx.n2] = normals[indx.n2] + normal;
@@ -237,7 +236,6 @@ void  TerrainMesh::ComputeTriNormals(void)
 }
 
 
-
 void  TerrainMesh::SetupTriArray(Vector<float> shift)
 {
     int size = (int)coords.size();
@@ -245,9 +243,9 @@ void  TerrainMesh::SetupTriArray(Vector<float> shift)
 
     int tnum = (int)terrainTriIndex.size();
     for (int i=0; i<tnum; i++) {
-        FacetTriIndex indx = terrainTriIndex[i];
-        FacetTriData  tridat;
-        tridat.facetNum = 0;
+        ContourTriIndex indx = terrainTriIndex[i];
+        ContourTriData  tridat;
+        tridat.contourNum = 0;
         tridat.v1  = coords [indx.v1];
         tridat.v2  = coords [indx.v2];
         tridat.v3  = coords [indx.v3];

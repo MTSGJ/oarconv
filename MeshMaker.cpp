@@ -1,11 +1,7 @@
 ﻿
 #include "MeshMaker.h"
 
-
-
 using namespace jbxl;
-
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,8 +25,8 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     PrimMeshParam param;
     param.GetParamFromBaseShape(baseShape);
 
-    TriPolyData*    tridata   = NULL;
-    FacetBaseData*  facetdata = NULL;
+    TriPolygonData*    tridata   = NULL;
+    ContourBaseData*  facetdata = NULL;
     int tri_num   = 0;
     int facet_num = 0;
 
@@ -38,15 +34,15 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     if ((param.sculptType&0x07)==SCULPT_TYPE_MESH) {
         //DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Generate LLM Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
-        tridata = TriPolyDataFromLLMeshFile(path, &facet_num, &tri_num);
+        tridata = TriPolygonDataFromLLMeshFile(path, &facet_num, &tri_num);
     }
 
     // Sculpted Prim
     else if (param.sculptEntry) {
         //DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Generate Sculpt Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
-        //facetdata = FacetBaseDataFromSculptJP2K(path, param.sculptType);
-        tridata = TriPolyDataFromSculptJP2K(path, param.sculptType, &tri_num);
+        //facetdata = ContourBaseDataFromSculptJP2K(path, param.sculptType);
+        tridata = TriPolygonDataFromSculptJP2K(path, param.sculptType, &tri_num);
         facet_num = 1;
     }
 
@@ -54,7 +50,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     else {
         //DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Generate Prim Mesh\n");
         PrimMesh primMesh = GeneratePrimMesh(param);
-        tridata = TriPolyDataFromPrimMesh(primMesh, &facet_num, &tri_num);
+        tridata = TriPolygonDataFromPrimMesh(primMesh, &facet_num, &tri_num);
         primMesh.free();
     }
 
@@ -68,7 +64,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     data->setAffineTrans(param.affineTrans);
 
     // ポリゴンデータの追加とTextureデータの設定
-    if (tridata!=NULL) {            // for TriPolyData
+    if (tridata!=NULL) {            // for TriPolygonData
         for (int i=0; i<facet_num; i++) {
             int facet = i;
             if (facet>=PRIM_MATERIAL_NUM) facet = PRIM_MATERIAL_NUM - 1;
@@ -95,7 +91,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         }
     }
     //
-    else if (facetdata!=NULL) {     // for FacetBaseData
+    else if (facetdata!=NULL) {     // for ContourBaseData
         if (param.materialParam->enable) {
             MaterialParam mparam;
             mparam.dup(param.materialParam[0]);
@@ -118,13 +114,12 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         }
     }
 
-    freeTriPolyData(tridata, tri_num);
-    freeFacetBaseData(facetdata);
+    freeTriPolygonData(tridata, tri_num);
+    freeContourBaseData(facetdata);
     param.free();
 
     return data;
 }
-
 
 
 /**
@@ -197,9 +192,8 @@ PrimMesh  jbxl::GeneratePrimMesh(PrimMeshParam param)
 }
 
 
-
 /**
-PrimMeshデータから三角ポリゴンデータの TriPolyDataを生成する．@n
+PrimMeshデータから三角ポリゴンデータの TriPolygonDataを生成する．@n
 
 @param primMesh   PrimMeshデータ
 @param[out] fnum  生成したFACETの数
@@ -207,19 +201,19 @@ PrimMeshデータから三角ポリゴンデータの TriPolyDataを生成する
 
 @return  三角ポリゴンデータの配列へのポインタ
 */
-TriPolyData*  jbxl::TriPolyDataFromPrimMesh(PrimMesh primMesh, int* fnum, int* pnum)
+TriPolygonData*  jbxl::TriPolygonDataFromPrimMesh(PrimMesh primMesh, int* fnum, int* pnum)
 {
     if (fnum!=NULL) *fnum = 0;
     if (pnum!=NULL) *pnum = 0;
 
     int len = (int)primMesh.primTriArray.size();
-    TriPolyData* tridata = (TriPolyData*)malloc(len*sizeof(TriPolyData));
+    TriPolygonData* tridata = (TriPolygonData*)malloc(len*sizeof(TriPolygonData));
     if (tridata==NULL) return NULL;
 
     for (int i=0; i<len; i++) {
         tridata[i].has_normal = true;
         tridata[i].has_texcrd = true;
-        tridata[i].facetNum   = primMesh.primTriArray[i].facetNum;
+        tridata[i].polygonNum = primMesh.primTriArray[i].contourNum;
         tridata[i].vertex[0]  = primMesh.primTriArray[i].v1;
         tridata[i].vertex[1]  = primMesh.primTriArray[i].v2;
         tridata[i].vertex[2]  = primMesh.primTriArray[i].v3;
@@ -238,37 +232,34 @@ TriPolyData*  jbxl::TriPolyDataFromPrimMesh(PrimMesh primMesh, int* fnum, int* p
 }
 
 
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // @sa http://wiki.secondlife.com/wiki/Sculpted_Prims:_Technical_Explanation
 // 
 
-
 /**
-Sculpted Primのファイル(JPEG 2000) からデータを読み込み，インデックス化された三角ポリゴンデータ FacetBaseDataを生成する．@n
+Sculpted Primのファイル(JPEG 2000) からデータを読み込み，インデックス化された三角ポリゴンデータ ContourBaseDataを生成する．@n
 
 @param jpegfile  Sculpted Primのデータの入った JPEG 2000ファイル名．
 @param type      Sculpted Primのタイプ
 
 @return  生成したポリゴンデータへのポインタ．
 */
-FacetBaseData*  jbxl::FacetBaseDataFromSculptJP2K(const char* jpegfile, int type)
+ContourBaseData*  jbxl::ContourBaseDataFromSculptJP2K(const char* jpegfile, int type)
 {
     if (jpegfile==NULL) return NULL;
 
-    DEBUG_MODE PRINT_MESG("JBXL::FacetBaseDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
+    DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
 
     JPEG2KImage jpg = readJPEG2KFile(jpegfile);
-    DEBUG_MODE PRINT_MESG("JBXL::FacetBaseDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
+    DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
     if (jpg.isNull() || jpg.col<1) {
-        PRINT_MESG("JBXL::FacetBaseDataFromSculptJP2K: WARNING: invalid jpeg 2000 image file! [%s]\n", jpegfile);
+        PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: WARNING: invalid jpeg 2000 image file! [%s]\n", jpegfile);
         jpg.free();
         return NULL;
     }
 
     MSGraph<uByte> grd = JPEG2KImage2MSGraph<uByte>(jpg);
-    FacetBaseData* facetdata = NULL;
+    ContourBaseData* facetdata = NULL;
 
     /*
     if (grd.zs>1) {
@@ -276,7 +267,7 @@ FacetBaseData*  jbxl::FacetBaseDataFromSculptJP2K(const char* jpegfile, int type
     else {
     }
     */
-    facetdata = FacetBaseDataFromSculptImage(grd, type);
+    facetdata = ContourBaseDataFromSculptImage(grd, type);
 
     grd.free();
     jpg.free();
@@ -285,15 +276,14 @@ FacetBaseData*  jbxl::FacetBaseDataFromSculptJP2K(const char* jpegfile, int type
 }
 
 
-
 /**
-Sculpted Primの画像データからインデックス化された三角ポリゴンデータ FacetBaseDataを生成する．@n
+Sculpted Primの画像データからインデックス化された三角ポリゴンデータ ContourBaseDataを生成する．@n
 
 @param grd   Sculpted Primのデータの入った画像データ．
 @param type  Sculpted Primのタイプ
 @return  生成したポリゴンデータへのポインタ．
 */
-FacetBaseData*  jbxl::FacetBaseDataFromSculptImage(MSGraph<uByte> grd, int type)
+ContourBaseData*  jbxl::ContourBaseDataFromSculptImage(MSGraph<uByte> grd, int type)
 {
     if (grd.isNull()) return NULL;
 
@@ -310,7 +300,7 @@ FacetBaseData*  jbxl::FacetBaseDataFromSculptImage(MSGraph<uByte> grd, int type)
     //
     SculptMesh sculptMesh(type);
 
-    FacetBaseData* facetdata = NULL;
+    ContourBaseData* facetdata = NULL;
 
     try {
         bool ret = sculptMesh.Image2Coords(grd);
@@ -321,7 +311,7 @@ FacetBaseData*  jbxl::FacetBaseDataFromSculptImage(MSGraph<uByte> grd, int type)
         int inum = (int)sculptMesh.sculptTriIndex.size()*3;
         int cnum = (int)sculptMesh.coords.size();
 
-        facetdata = new FacetBaseData(inum, cnum);
+        facetdata = new ContourBaseData(inum, cnum);
         if (!facetdata->getm()) {
             sculptMesh.free();
             return NULL;
@@ -339,9 +329,9 @@ FacetBaseData*  jbxl::FacetBaseDataFromSculptImage(MSGraph<uByte> grd, int type)
         }
     }
     catch (const std::bad_alloc&) {
-        PRINT_MESG("JBXL::FacetBaseDataFromSculptImage: ERROR: out of memory!!\n");
+        PRINT_MESG("JBXL::ContourBaseDataFromSculptImage: ERROR: out of memory!!\n");
         if (facetdata!=NULL) {
-            freeFacetBaseData(facetdata);
+            freeContourBaseData(facetdata);
             facetdata = NULL;
         }
     }
@@ -349,7 +339,6 @@ FacetBaseData*  jbxl::FacetBaseDataFromSculptImage(MSGraph<uByte> grd, int type)
     sculptMesh.free();
     return facetdata;
 }
-
 
 
 /**
@@ -361,26 +350,26 @@ Sculpted Primのファイル(JPEG 2000) からデータを読み込み，三角�
 
 @return  生成したポリゴンデータの配列へのポインタ．
 */
-TriPolyData*  jbxl::TriPolyDataFromSculptJP2K(const char* jpegfile, int type, int* pnum)
+TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int type, int* pnum)
 {
     if (pnum!=NULL) *pnum = 0;
     if (jpegfile==NULL) return NULL;
 
-    DEBUG_MODE PRINT_MESG("JBXL::TriPolyDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
+    DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
 
     JPEG2KImage jpg = readJPEG2KFile(jpegfile);
-    DEBUG_MODE PRINT_MESG("JBXL::TriPolyDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
+    DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
     if (jpg.isNull() || jpg.col<1) {
-        PRINT_MESG("JBXL::TriPolyDataFromSculptJP2K: ERROR: invalid jpeg 2000 image file! [%s]\n", jpegfile);
+        PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: ERROR: invalid jpeg 2000 image file! [%s]\n", jpegfile);
         jpg.free();
         return NULL;
     }
 
     MSGraph<uByte> grd = JPEG2KImage2MSGraph<uByte>(jpg);
-    TriPolyData* tridata = NULL;
+    TriPolygonData* tridata = NULL;
 
     if (grd.zs>1) {
-        tridata = TriPolyDataFromSculptImage(grd, type, pnum);
+        tridata = TriPolygonDataFromSculptImage(grd, type, pnum);
     }
     else {
         tridata = GenerateGrayScaleSculpt(pnum);
@@ -393,7 +382,6 @@ TriPolyData*  jbxl::TriPolyDataFromSculptJP2K(const char* jpegfile, int type, in
 }
 
 
-
 /**
 Sculpted Primの画像データから三角ポリゴンデータ TriPloyDataを生成する．@n
 
@@ -403,7 +391,7 @@ Sculpted Primの画像データから三角ポリゴンデータ TriPloyDataを�
 
 @return  生成したポリゴンデータの配列へのポインタ．
 */
-TriPolyData*  jbxl::TriPolyDataFromSculptImage(MSGraph<uByte> grd, int type, int* pnum)
+TriPolygonData*  jbxl::TriPolygonDataFromSculptImage(MSGraph<uByte> grd, int type, int* pnum)
 {
     if (pnum!=NULL) *pnum = 0;
     if (grd.isNull()) return NULL;
@@ -423,7 +411,7 @@ TriPolyData*  jbxl::TriPolyDataFromSculptImage(MSGraph<uByte> grd, int type, int
     //
     SculptMesh sculptMesh(type);
 
-    TriPolyData* tridata = NULL;
+    TriPolygonData* tridata = NULL;
 
     try {
         bool ret = sculptMesh.Image2Coords(grd);
@@ -431,7 +419,7 @@ TriPolyData*  jbxl::TriPolyDataFromSculptImage(MSGraph<uByte> grd, int type, int
         sculptMesh.GenerateMeshData();
 
         tnum = (int)sculptMesh.sculptTriArray.size();
-        tridata = (TriPolyData*)malloc(tnum*sizeof(TriPolyData));
+        tridata = (TriPolygonData*)malloc(tnum*sizeof(TriPolygonData));
         if (tridata==NULL) {
             sculptMesh.free();
             return NULL;
@@ -440,7 +428,7 @@ TriPolyData*  jbxl::TriPolyDataFromSculptImage(MSGraph<uByte> grd, int type, int
         for (int i=0; i<tnum; i++) {
             tridata[i].has_normal = true;
             tridata[i].has_texcrd = true;
-            tridata[i].facetNum   = sculptMesh.sculptTriArray[i].facetNum;
+            tridata[i].polygonNum = sculptMesh.sculptTriArray[i].contourNum;
             tridata[i].vertex[0]  = sculptMesh.sculptTriArray[i].v1;
             tridata[i].vertex[1]  = sculptMesh.sculptTriArray[i].v2;
             tridata[i].vertex[2]  = sculptMesh.sculptTriArray[i].v3;
@@ -453,9 +441,9 @@ TriPolyData*  jbxl::TriPolyDataFromSculptImage(MSGraph<uByte> grd, int type, int
         }
     }
     catch (const std::bad_alloc&) {
-        PRINT_MESG("JBXL::TriPolyDataFromSculptImage: ERROR: out of memory!!\n");
+        PRINT_MESG("JBXL::TriPolygonDataFromSculptImage: ERROR: out of memory!!\n");
         if (tridata!=NULL) {
-            freeTriPolyData(tridata, tnum);
+            freeTriPolygonData(tridata, tnum);
             tridata = NULL;
         }
         tnum = 0;
@@ -465,8 +453,6 @@ TriPolyData*  jbxl::TriPolyDataFromSculptImage(MSGraph<uByte> grd, int type, int
     sculptMesh.free();
     return tridata;
 }
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -485,7 +471,7 @@ llmeshデータから三角ポリゴンデータ TriPloyDataを生成する．@n
 
 @return  生成したポリゴンデータの配列へのポインタ．
 */
-TriPolyData*  jbxl::TriPolyDataFromLLMesh(uByte* mesh, int sz, int* fnum, int* pnum)
+TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, int* pnum)
 {
     if (mesh==NULL || fnum==NULL || pnum==NULL) return NULL;
 
@@ -509,15 +495,15 @@ TriPolyData*  jbxl::TriPolyDataFromLLMesh(uByte* mesh, int sz, int* fnum, int* p
     }
 
     //
-    int vertex_num = 0;     // 頂点数
-    int facet_idx  = 0;     // インデックスデータ中のFACET数 
-    int facet_pos  = 0;     // 座標データ中のFACET数
+    int vertex_num  = 0;     // 頂点数
+    int polygon_idx = 0;     // インデックスデータ中のFACET数 
+    int polygon_pos = 0;     // 座標データ中のFACET数
 
     // TriangleList (Vertex Indices)
     tList* lpidx = lpindex;
     while (lpidx!=NULL) {
         if (lpidx->altp!=NULL) {
-            facet_idx++;
+            polygon_idx++;
             Buffer dec = decode_base64_Buffer(lpidx->altp->ldat.key);
             vertex_num += dec.vldsz/2;
             free_Buffer(&dec);
@@ -528,18 +514,18 @@ TriPolyData*  jbxl::TriPolyDataFromLLMesh(uByte* mesh, int sz, int* fnum, int* p
     tList* lppos = lppostn;
     while (lppos!=NULL) {
         if (lppos->altp!=NULL) {
-            facet_pos++;
+            polygon_pos++;
         }
         lppos = lppos->next;
     }
 
-    if (facet_idx!=facet_pos) PRINT_MESG("WARNING: TriPolyDataFromLLMesh: missmatch facet number!\n");
-    int facet_num = Min(facet_idx, facet_pos);  // FACET数．通常は一致する．
+    if (polygon_idx!=polygon_pos) PRINT_MESG("WARNING: TriPolygonDataFromLLMesh: missmatch facet number!\n");
+    int facet_num = Min(polygon_idx, polygon_pos);  // FACET数．通常は一致する．
     int plygn_num = vertex_num/3;               // ポリゴン数
 
     //
-    size_t len = sizeof(TriPolyData)*plygn_num;
-    TriPolyData* tridata = (TriPolyData*)malloc(len);
+    size_t len = sizeof(TriPolygonData)*plygn_num;
+    TriPolygonData* tridata = (TriPolygonData*)malloc(len);
     memset(tridata, 0, len);
 
     // Option: 法線ベクトル，UVマップ
@@ -575,7 +561,7 @@ TriPolyData*  jbxl::TriPolyDataFromLLMesh(uByte* mesh, int sz, int* fnum, int* p
         for (int tri=0; tri<idx.vldsz/6; tri++) {   // ポリゴンループ
             for (int vtx=0; vtx<3; vtx++) index[vtx] = ushort_from_little_endian(idx.buf+6*tri+2*vtx);  // 頂点インデックス
 
-            tridata[tri_num].facetNum   = facet;
+            tridata[tri_num].polygonNum = facet;
             tridata[tri_num].has_normal = true;
             tridata[tri_num].has_texcrd = true;
             for (int vtx=0; vtx<3; vtx++) {
@@ -632,7 +618,6 @@ TriPolyData*  jbxl::TriPolyDataFromLLMesh(uByte* mesh, int sz, int* fnum, int* p
 }
 
 
-
 /**
 llmeshのファイルからデータを読み込み，三角ポリゴンデータ TriPloyDataを生成する．@n
 
@@ -642,7 +627,7 @@ llmeshのファイルからデータを読み込み，三角ポリゴンデー�
 
 @return  生成したポリゴンデータの配列へのポインタ．
 */
-TriPolyData*  jbxl::TriPolyDataFromLLMeshFile(const char* filename, int* fnum, int* pnum)
+TriPolygonData*  jbxl::TriPolygonDataFromLLMeshFile(const char* filename, int* fnum, int* pnum)
 {
     if (filename==NULL || fnum==NULL || pnum==NULL) return NULL;
     *fnum = *pnum = 0;
@@ -653,7 +638,7 @@ TriPolyData*  jbxl::TriPolyDataFromLLMeshFile(const char* filename, int* fnum, i
     uByte* buf = (uByte*)malloc(sz);
     if (buf==NULL) return NULL;
 
-    DEBUG_MODE PRINT_MESG("JBXL::TriPolyDataFromLLMeshFile: reading mesh file %s\n", filename);
+    DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromLLMeshFile: reading mesh file %s\n", filename);
     FILE* fp = fopen(filename, "rb");
     if (fp==NULL) {
         freeNull(buf);
@@ -663,7 +648,7 @@ TriPolyData*  jbxl::TriPolyDataFromLLMeshFile(const char* filename, int* fnum, i
     fclose(fp);
 
     int facet_num, tri_num;
-    TriPolyData* tridata = TriPolyDataFromLLMesh(buf, (int)sz, &facet_num, &tri_num);
+    TriPolygonData* tridata = TriPolygonDataFromLLMesh(buf, (int)sz, &facet_num, &tri_num);
 
     freeNull(buf);
 
@@ -671,7 +656,6 @@ TriPolyData*  jbxl::TriPolyDataFromLLMeshFile(const char* filename, int* fnum, i
     *pnum = tri_num;
     return tridata;
 }
-
 
 
 /**
@@ -705,7 +689,6 @@ tXML*  jbxl::GetLLsdXMLFromLLMesh(uByte* buf, int sz, const char* key)
 
     return xml;
 }
-
 
 
 /**
@@ -779,7 +762,6 @@ Vector<float>*  jbxl::GetLLMeshPositionDomainMaxMin(tXML* xml, int facet, bool m
 }
 
 
-
 /**
 @brief llmesh のXML形式データから TexCord0Domainの Max/Minパラメータを得る．
 
@@ -851,7 +833,6 @@ UVMap<float>*  jbxl::GetLLMeshTexCoordDomainMaxMin(tXML* xml, int facet, bool ma
 }
 
 
-
 /**
 LLMeshデータ中の unsigned short int型のデータを float型に変換する．@n
 変換後の値の範囲は min - max の間となる．
@@ -875,13 +856,12 @@ float  jbxl::LLMeshUint16toFloat(uByte* ptr, float max, float min)
 
 
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // for Terrain Mesh
 //
 
 /**
-Terrain用の標高データの入った画像データからインデックス化された三角ポリゴンデータ FacetBaseDataを生成する．@n
+Terrain用の標高データの入った画像データからインデックス化された三角ポリゴンデータ ContourBaseDataを生成する．@n
 
 @param grd      標高データの入った画像データ．
 @param shift    平行移動量．Unity3Dの仕様対策
@@ -893,7 +873,7 @@ Terrain用の標高データの入った画像データからインデックス�
 
 @return  生成したポリゴンデータへのポインタ．
 */
-FacetBaseData*  jbxl::FacetBaseDataFromTerrainImage(MSGraph<float> grd, Vector<float> shift, bool left, bool right, bool top, bool bottom, bool autosea)
+ContourBaseData*  jbxl::ContourBaseDataFromTerrainImage(MSGraph<float> grd, Vector<float> shift, bool left, bool right, bool top, bool bottom, bool autosea)
 {
     if (grd.isNull()) return NULL;
 
@@ -907,7 +887,7 @@ FacetBaseData*  jbxl::FacetBaseDataFromTerrainImage(MSGraph<float> grd, Vector<f
     int inum = (int)terrainMesh.terrainTriIndex.size()*3;   // index の数
     int cnum = (int)terrainMesh.coords.size();              // データ（頂点）の数
 
-    FacetBaseData* facetdata = new FacetBaseData(inum, cnum);
+    ContourBaseData* facetdata = new ContourBaseData(inum, cnum);
     if (!facetdata->getm()) {
         terrainMesh.free();
         return NULL;
@@ -930,9 +910,8 @@ FacetBaseData*  jbxl::FacetBaseDataFromTerrainImage(MSGraph<float> grd, Vector<f
 }
 
 
-
 /**
-Terrainの標高データのファイル(R32) からデータを読み込み，インデックス化された三角ポリゴンデータ FacetBaseDataを生成する．@n
+Terrainの標高データのファイル(R32) からデータを読み込み，インデックス化された三角ポリゴンデータ ContourBaseDataを生成する．@n
 
 @param r32file  Terrainの標高データの入った R32ファイル名．
 @param xsize
@@ -942,17 +921,17 @@ Terrainの標高データのファイル(R32) からデータを読み込み，�
 
 @return  生成したポリゴンデータへのポインタ．
 */
-FacetBaseData*  jbxl::FacetBaseDataFromTerrainR32(char* r32file, int xsize, int ysize, Vector<float> shift, bool autosea)
+ContourBaseData*  jbxl::ContourBaseDataFromTerrainR32(char* r32file, int xsize, int ysize, Vector<float> shift, bool autosea)
 {
     if (r32file==NULL) return NULL;
 
     size_t sz = file_size(r32file);
     if ((int)sz!=xsize*ysize*4) {
-        PRINT_MESG("JBXL::FacetBaseDataFromTerrainR32: ERROR: file size missmatch %d != %dx%dx4\n", xsize, ysize, sz);
+        PRINT_MESG("JBXL::ContourBaseDataFromTerrainR32: ERROR: file size missmatch %d != %dx%dx4\n", xsize, ysize, sz);
         return NULL;
     }
 
-    DEBUG_MODE PRINT_MESG("JBXL::FacetBaseDataFromTerrainR32: reading terrain r32 file %s\n", r32file);
+    DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromTerrainR32: reading terrain r32 file %s\n", r32file);
     FILE* fp = fopen(r32file, "rb");
     if (fp==NULL) return NULL;
 
@@ -963,13 +942,12 @@ FacetBaseData*  jbxl::FacetBaseDataFromTerrainR32(char* r32file, int xsize, int 
     fread(grd.gp, grd.xs*grd.ys*sizeof(float), 1, fp);
     fclose(fp);
 
-    FacetBaseData* facetdata = FacetBaseDataFromTerrainImage(grd, shift, true, true, true, true, autosea);
+    ContourBaseData* facetdata = ContourBaseDataFromTerrainImage(grd, shift, true, true, true, true, autosea);
 
     grd.free();
 
     return facetdata;
 }
-
 
 
 /**
@@ -987,7 +965,7 @@ Terrain用の標高データの入った画像データから三角ポリゴン�
 
 @return  生成したポリゴンデータの配列へのポインタ．
 */
-TriPolyData*  jbxl::TriPolyDataFromTerrainImage(MSGraph<float> grd, int* pnum, Vector<float> shift, bool left, bool right, bool top, bool bottom, bool autosea)
+TriPolygonData*  jbxl::TriPolygonDataFromTerrainImage(MSGraph<float> grd, int* pnum, Vector<float> shift, bool left, bool right, bool top, bool bottom, bool autosea)
 {
     if (grd.isNull() || pnum==NULL) return NULL;
 
@@ -1000,7 +978,7 @@ TriPolyData*  jbxl::TriPolyDataFromTerrainImage(MSGraph<float> grd, int* pnum, V
     terrainMesh.GenerateMeshData(shift, autosea);
 
     int tnum = (int)terrainMesh.terrainTriArray.size();
-    TriPolyData* tridata = (TriPolyData*)malloc(tnum*sizeof(TriPolyData));
+    TriPolygonData* tridata = (TriPolygonData*)malloc(tnum*sizeof(TriPolygonData));
     if (tridata==NULL) {
         terrainMesh.free();
         return NULL;
@@ -1009,7 +987,7 @@ TriPolyData*  jbxl::TriPolyDataFromTerrainImage(MSGraph<float> grd, int* pnum, V
     for (int i=0; i<tnum; i++) {
         tridata[i].has_normal = true;
         tridata[i].has_texcrd = true;
-        tridata[i].facetNum   = terrainMesh.terrainTriArray[i].facetNum;
+        tridata[i].polygonNum = terrainMesh.terrainTriArray[i].contourNum;
         tridata[i].vertex[0]  = terrainMesh.terrainTriArray[i].v1;
         tridata[i].vertex[1]  = terrainMesh.terrainTriArray[i].v2;
         tridata[i].vertex[2]  = terrainMesh.terrainTriArray[i].v3;
@@ -1027,7 +1005,6 @@ TriPolyData*  jbxl::TriPolyDataFromTerrainImage(MSGraph<float> grd, int* pnum, V
 }
 
 
-
 /**
 Terrainの標高データのファイル(R32) からデータを読み込み，三角ポリゴンデータ TriPloyDataを生成する．@n
 現在の所，未使用．
@@ -1041,18 +1018,18 @@ Terrainの標高データのファイル(R32) からデータを読み込み，�
 
 @return  生成したポリゴンデータの配列へのポインタ．
 */
-TriPolyData*  jbxl::TriPolyDataFromTerrainR32(char* r32file, int* pnum, int xsize, int ysize, Vector<float> shift, bool autosea)
+TriPolygonData*  jbxl::TriPolygonDataFromTerrainR32(char* r32file, int* pnum, int xsize, int ysize, Vector<float> shift, bool autosea)
 {
     if (r32file==NULL || pnum==NULL) return NULL;
     *pnum = 0;
 
     size_t sz = file_size(r32file);
     if ((int)sz!=xsize*ysize*4) {
-        PRINT_MESG("JBXL::TriPolyDataFromTerrainR32: ERROR: file size missmatch %d != %dx%dx4\n", xsize, ysize, sz);
+        PRINT_MESG("JBXL::TriPolygonDataFromTerrainR32: ERROR: file size missmatch %d != %dx%dx4\n", xsize, ysize, sz);
         return NULL;
     }
 
-    DEBUG_MODE PRINT_MESG("JBXL::TriPolyDataFromTerrainR32: reading terrain r32 file %s\n", r32file);
+    DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromTerrainR32: reading terrain r32 file %s\n", r32file);
     FILE* fp = fopen(r32file, "rb");
     if (fp==NULL) return NULL;
 
@@ -1063,7 +1040,7 @@ TriPolyData*  jbxl::TriPolyDataFromTerrainR32(char* r32file, int* pnum, int xsiz
     fread(grd.gp, grd.xs*grd.ys*sizeof(float), 1, fp);
     fclose(fp);
 
-    TriPolyData* tridata = TriPolyDataFromTerrainImage(grd, pnum, shift, true, true, true, true, autosea);
+    TriPolygonData* tridata = TriPolygonDataFromTerrainImage(grd, pnum, shift, true, true, true, true, autosea);
 
     grd.free();
 
@@ -1071,12 +1048,10 @@ TriPolyData*  jbxl::TriPolyDataFromTerrainR32(char* r32file, int* pnum, int xsiz
 }
 
 
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 
-TriPolyData*  jbxl::GenerateGrayScaleSculpt(int* pnum)
+TriPolygonData*  jbxl::GenerateGrayScaleSculpt(int* pnum)
 {
     PrimBaseShape bases;
     PrimMeshParam param;
@@ -1092,11 +1067,9 @@ TriPolyData*  jbxl::GenerateGrayScaleSculpt(int* pnum)
     primMesh.execRotate(rot);
     primMesh.execScale(0.6, 0.6, 0.6);
 
-    TriPolyData* tridata = TriPolyDataFromPrimMesh(primMesh, NULL, pnum);
+    TriPolygonData* tridata = TriPolygonDataFromPrimMesh(primMesh, NULL, pnum);
     primMesh.free();
 
     return tridata;
 }
-
-
 

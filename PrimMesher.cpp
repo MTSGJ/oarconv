@@ -47,7 +47,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 using namespace jbxl;
 
 
@@ -123,7 +122,6 @@ const  PrimAngle PrimAngleList::angles24[25] =
 };
 
 
-
 void  PrimAngleList::Intersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
 { 
     double denom = (y4-y3)*(x2-x1) - (x4-x3)*(y2-y1);
@@ -135,7 +133,6 @@ void  PrimAngleList::Intersection(double x1, double y1, double x2, double y2, do
         iY = y1 + ua*(y2 - y1);
     }
 }
-
 
 
 // 角度を最大25分割して angles に格納．
@@ -254,7 +251,6 @@ void  PrimProfile::init(void)
 }
 
 
-
 PrimProfile::PrimProfile(int sides, PrimMeshParam mparam, double hollow, int hollowSides, bool calcNormals)
 {
     init();
@@ -357,7 +353,7 @@ PrimProfile::PrimProfile(int sides, PrimMeshParam mparam, double hollow, int hol
             }
         }
         else if (!simpleFacet && angle.angle>0.0001) {
-            FacetTriIndex trindx;
+            ContourTriIndex trindx;
             trindx.v1 = 0;
             trindx.v2 = index;
             trindx.v3 = index + 1;
@@ -376,7 +372,7 @@ PrimProfile::PrimProfile(int sides, PrimMeshParam mparam, double hollow, int hol
         int numTotalVertex = numOuterVertex + numHollowVertex;
         //
         if (numOuterVertex==numHollowVertex) {
-            FacetTriIndex trindx;
+            ContourTriIndex trindx;
             for (int outvx=0; outvx<numOuterVertex-1; outvx++) {
                 trindx.v1 = outvx;
                 trindx.v2 = outvx + 1;
@@ -391,7 +387,7 @@ PrimProfile::PrimProfile(int sides, PrimMeshParam mparam, double hollow, int hol
         }
         else {
             if (numOuterVertex<numHollowVertex) {
-                FacetTriIndex trindx;
+                ContourTriIndex trindx;
                 int j = 0;
                 int maxJ = numOuterVertex - 1;
                 for (int i=0; i<numHollowVertex; i++) {
@@ -411,7 +407,7 @@ PrimProfile::PrimProfile(int sides, PrimMeshParam mparam, double hollow, int hol
                 }
             }
             else { 
-                FacetTriIndex trindx;
+                ContourTriIndex trindx;
                 int j = 0;
                 int maxJ = numHollowVertex - 1;
                 for (int i=0; i<numOuterVertex; i++) {
@@ -450,10 +446,10 @@ PrimProfile::PrimProfile(int sides, PrimMeshParam mparam, double hollow, int hol
     }
 
     if (simpleFacet) {
-        if (sides==3) primTriIndex.push_back(FacetTriIndex(0, 1, 2));
+        if (sides==3) primTriIndex.push_back(ContourTriIndex(0, 1, 2));
         else if (sides==4) {
-            primTriIndex.push_back(FacetTriIndex(0, 1, 2));
-            primTriIndex.push_back(FacetTriIndex(0, 2, 3));
+            primTriIndex.push_back(ContourTriIndex(0, 1, 2));
+            primTriIndex.push_back(ContourTriIndex(0, 2, 3));
         }
     }
 
@@ -525,7 +521,6 @@ PrimProfile::PrimProfile(int sides, PrimMeshParam mparam, double hollow, int hol
 }
 
 
-
 void  PrimProfile::MakeTriUVs(void)
 {
     triUVs.clear();
@@ -535,7 +530,6 @@ void  PrimProfile::MakeTriUVs(void)
         triUVs.push_back(UVMap<double>(0.5 + coords[i].x, 0.5 - coords[i].y));
     }
 }
-
 
 
 PrimProfile  PrimProfile::Copy(bool needIndex)
@@ -574,7 +568,6 @@ PrimProfile  PrimProfile::Copy(bool needIndex)
 }
 
 
-
 void  PrimProfile::execShift(double x, double y, double z)
 {
     Vector<double> vert;
@@ -588,7 +581,6 @@ void  PrimProfile::execShift(double x, double y, double z)
         coords[i] = vert;
     }
 }
-
 
 
 void  PrimProfile::execRotate(Quaternion<double> q)
@@ -606,7 +598,6 @@ void  PrimProfile::execRotate(Quaternion<double> q)
 }
 
 
-
 void  PrimProfile::execScale(double x, double y)
 {
     Vector<double> vert;
@@ -621,11 +612,10 @@ void  PrimProfile::execScale(double x, double y)
 }
 
 
-
 void  PrimProfile::FlipNormals(void)
 {
     int swptmp;
-    FacetTriIndex trindx;
+    ContourTriIndex trindx;
 
     int inum = (int)primTriIndex.size();
     for (int i=0; i<inum; i++) {
@@ -652,7 +642,6 @@ void  PrimProfile::FlipNormals(void)
 }
 
 
-
 void  PrimProfile::FlipUVs(void)
 {
     int tnum = (int)triUVs.size();
@@ -662,10 +651,9 @@ void  PrimProfile::FlipUVs(void)
 }
 
 
-
-void  PrimProfile::Add2FacetTriIndexVertex(int num)
+void  PrimProfile::Add2ContourTriIndexVertex(int num)
 {
-    FacetTriIndex tri;
+    ContourTriIndex tri;
 
     int inum = (int)primTriIndex.size();
     for (int i=0; i<inum; i++) {
@@ -678,11 +666,10 @@ void  PrimProfile::Add2FacetTriIndexVertex(int num)
 }
 
 
-
-void  PrimProfile::Add2FacetTriIndexNormal(int num)
+void  PrimProfile::Add2ContourTriIndexNormal(int num)
 {
     if (calcVertexNormals) {
-        FacetTriIndex tri;
+        ContourTriIndex tri;
         int inum = (int)primTriIndex.size();
         for (int i=0; i<inum; i++) {
             tri = primTriIndex[i];
@@ -851,7 +838,6 @@ void  PrimMeshParam::CreatePathNodes(int pathType, int steps)
 
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // PrimMesh
 //
@@ -883,7 +869,6 @@ void  PrimMesh::init(void)
 }
 
 
-
 PrimMesh::PrimMesh(int sds, int hsds, PrimMeshParam mesh)
 {
     init();
@@ -904,7 +889,6 @@ PrimMesh::PrimMesh(int sds, int hsds, PrimMeshParam mesh)
 }
 
 
-
 Vector<double>  PrimMesh::GetTriNormal(int index)
 {
     Vector<double> normal;
@@ -914,7 +898,6 @@ Vector<double>  PrimMesh::GetTriNormal(int index)
     normal = GetTriNormal(primTriIndex[index]);
     return normal;
 }
-
 
 
 void  PrimMesh::Extrude(int pathType)
@@ -1046,12 +1029,12 @@ void  PrimMesh::Extrude(int pathType)
             layer.FlipNormals();
             //
             Vector<double> triNormal = layer.triNormal;
-            FacetTriData primTri(profile.numBottomFacet);
+            ContourTriData primTri(profile.numBottomFacet);
             PRIM_TRIINDX_ARRAY primTriIndex = layer.primTriIndex;
             int numFacets = (int)layer.primTriIndex.size();
 
             for (int i=0; i<numFacets; i++) {
-                FacetTriIndex trindx = primTriIndex[i];
+                ContourTriIndex trindx = primTriIndex[i];
 
                 primTri.v1  = layer.coords[trindx.v1];
                 primTri.v2  = layer.coords[trindx.v2];
@@ -1081,12 +1064,12 @@ void  PrimMesh::Extrude(int pathType)
         //
         // サイド面
         int coordsLen = (int)coords.size();
-        layer.Add2FacetTriIndexVertex(coordsLen);
+        layer.Add2ContourTriIndexVertex(coordsLen);
 
         coords.insert(coords.end(), layer.coords.begin(), layer.coords.end());
 
         if (calcVertexNormals) {
-            layer.Add2FacetTriIndexNormal((int)normals.size());
+            layer.Add2ContourTriIndexNormal((int)normals.size());
             normals.insert(normals.end(), layer.normals.begin(), layer.normals.end());
         }
         if (node.percent<meshParam.pathBegin+0.01 || node.percent>meshParam.pathEnd-0.01) {
@@ -1094,8 +1077,8 @@ void  PrimMesh::Extrude(int pathType)
         }
 
         int numVertex = (int)layer.coords.size();
-        FacetTriIndex trindx1;
-        FacetTriIndex trindx2;
+        ContourTriIndex trindx1;
+        ContourTriIndex trindx2;
 
         thisV = node.percent;
 
@@ -1132,8 +1115,8 @@ void  PrimMesh::Extrude(int pathType)
                     int primTriNum = profile.triNums[whichVert];    // 面番号
                     if (!needEndFacets) primTriNum--;
 
-                    FacetTriData primTri1(primTriNum);
-                    FacetTriData primTri2(primTriNum);
+                    ContourTriData primTri1(primTriNum);
+                    ContourTriData primTri2(primTriNum);
 
                     primTri1.v1 = coords[trindx1.v1];
                     primTri1.v2 = coords[trindx1.v2];
@@ -1199,16 +1182,16 @@ void  PrimMesh::Extrude(int pathType)
                     //
                     // 法線ベクトル
                     if (whichVert==cut1Vert) {
-                        primTri1.facetNum = numCut1Facet;
-                        primTri2.facetNum = numCut1Facet;
+                        primTri1.contourNum = numCut1Facet;
+                        primTri2.contourNum = numCut1Facet;
                         primTri1.n1 = layer.cutNormal1;
                         primTri1.n2 = primTri1.n3 = lastCutNormal1;
                         primTri2.n1 = primTri2.n3 = layer.cutNormal1;
                         primTri2.n2 = lastCutNormal1;
                     }
                     else if (whichVert==cut2Vert) {
-                        primTri1.facetNum = numCut2Facet;
-                        primTri2.facetNum = numCut2Facet;
+                        primTri1.contourNum = numCut2Facet;
+                        primTri2.contourNum = numCut2Facet;
                         primTri1.n1 = layer.cutNormal2;
                         primTri1.n2 = lastCutNormal2;
                         primTri1.n3 = lastCutNormal2;
@@ -1245,13 +1228,13 @@ void  PrimMesh::Extrude(int pathType)
         // 上面
         if (needEndFacets && index==pathnum-1) {
             Vector<double> triNormal = layer.triNormal;
-            FacetTriData primTri(0);
+            ContourTriData primTri(0);
             PRIM_TRIINDX_ARRAY primTriIndex = layer.primTriIndex;
             int numFacets = (int)layer.primTriIndex.size();
             layer.FlipUVs();            // by Fumi.Iseki
 
             for (int i=0; i<numFacets; i++) {
-                FacetTriIndex trindx = primTriIndex[i];
+                ContourTriIndex trindx = primTriIndex[i];
                 primTri.v1 = layer.coords[trindx.v1-coordsLen];
                 primTri.v2 = layer.coords[trindx.v2-coordsLen];
                 primTri.v3 = layer.coords[trindx.v3-coordsLen];
@@ -1275,7 +1258,6 @@ void  PrimMesh::Extrude(int pathType)
 
     }
 }
-
 
 
 PrimMesh  PrimMesh::Copy(void)
@@ -1302,7 +1284,6 @@ PrimMesh  PrimMesh::Copy(void)
 }
 
 
-
 void  PrimMesh::ComputeTriNormals(void)
 {
     if (normalsProcessed) return;
@@ -1312,7 +1293,7 @@ void  PrimMesh::ComputeTriNormals(void)
 
     int inum = (int)primTriIndex.size();
     for (int i=0; i<inum; i++) {
-        FacetTriIndex trindx = primTriIndex[i];
+        ContourTriIndex trindx = primTriIndex[i];
         normals.push_back(GetTriNormal(i).normalize());
 
         int normIndx = (int)normals.size() - 1;
@@ -1339,7 +1320,7 @@ void  PrimMesh::execShift(double x, double y, double z)
 
     int tnum = (int)primTriArray.size();
     for (int i=0; i<tnum; i++) {
-        FacetTriData tri = primTriArray[i];
+        ContourTriData tri = primTriArray[i];
         tri.execShift(x, y, z);
         primTriArray[i] = tri;
     }
@@ -1356,7 +1337,7 @@ void  PrimMesh::execRotate(Quaternion<double> q)
 
     int tnum = (int)primTriArray.size();
     for (int i=0; i<tnum; i++) {
-        FacetTriData tri = primTriArray[i];
+        ContourTriData tri = primTriArray[i];
         tri.v1 = VectorRotation(tri.v1, q);
         tri.v2 = VectorRotation(tri.v2, q);
         tri.v3 = VectorRotation(tri.v3, q);
@@ -1366,7 +1347,6 @@ void  PrimMesh::execRotate(Quaternion<double> q)
         primTriArray[i] = tri;
     }
 }
-
 
 
 void  PrimMesh::execScale(double x, double y, double z)
@@ -1382,7 +1362,7 @@ void  PrimMesh::execScale(double x, double y, double z)
 
     int tnum = (int)primTriArray.size();
     for (int i=0; i<tnum; i++) {
-        FacetTriData tri = primTriArray[i];
+        ContourTriData tri = primTriArray[i];
         tri.v1.x *= m.x;
         tri.v1.y *= m.y;
         tri.v1.z *= m.z;
@@ -1395,5 +1375,4 @@ void  PrimMesh::execScale(double x, double y, double z)
         primTriArray[i] = tri;
     }
 }
-
 

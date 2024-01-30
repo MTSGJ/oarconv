@@ -46,29 +46,29 @@ int main(int argc, char** argv)
     // main process
     OARTool oar;
     oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)outdir.buf, (char*)adddir.buf);
-    oar.GetDataInfo();
+    oar.GetDataInfo();  // OARファイルから情報を得る．
 //  oar.MakeOutputFolder(makedir);
 //  oar.SetShift(xshift, yshift, zshift);
 
-    TreeTool*   tree = oar.GetTreeTool();
+    TreeTool*   tree = oar.GetTreeTool();   //
     ColladaXML* dae  = new ColladaXML();
 
     PrimBaseShape shape;
-    shape.State = 21;
+    shape.State = TREM_TREE_TEST;
     shape.PCode = PRIM_PCODE_TREE;
     tree->treeParam[shape.State].texture.setName((char*)texture.buf);
-    tree->treeParam[shape.State].size    = Vector<float>(xsize, 0.0001, ysize);
+    tree->treeParam[shape.State].size = Vector<float>(xsize, 0.0001, ysize);
 
-    MeshObjectData* data = tree->GenerateTree(shape, pnum, FALSE);
-    MeshObjectNode* node = data->nodelist;
-    while (node!=NULL) {
-        if (node->material_param.enable) {
+    MeshObjectData* data  = tree->GenerateTree(shape, pnum, FALSE);
+    MeshFacetNode*  facet = data->facet;
+    while (facet!=NULL) {
+        if (facet->material_param.enable) {
             // convert texture
-            //oar.ConvertTexture(node->material_param.getTextureName(), node->material_param.getAdditionalName(), MTRL_IMAGE_TYPE);
-            oar.ConvertTexture(node->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE);
-            node->material_param.setFullName(MTRL_IMAGE_TYPE);
+            //oar.ConvertTexture(facet->material_param.getTextureName(), facet->material_param.getAdditionalName(), MTRL_IMAGE_TYPE);
+            oar.ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE);
+            facet->material_param.setFullName(MTRL_IMAGE_TYPE);
         }
-        node = node->next;
+        facet = facet->next;
     }
     dae->addObject(data, false);
     dae->outputFile("test_tree.dae", oar.get_outpath(true));

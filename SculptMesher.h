@@ -52,11 +52,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #include <vector>
 #include <algorithm>
 
-#include "FacetBaseData.h"
+#include "ContourBaseData.h"
 #include "Gdata.h"
 
 #include "LogDocTool.h"
@@ -106,8 +105,8 @@ public:
     SCULPT_VECTOR_ARRAY normals;
     SCULPT_UVMAP_ARRAY  uvs;
 
-    FACET_TRIINDX_ARRAY sculptTriIndex;
-    FACET_TRIDATA_ARRAY sculptTriArray;
+    CONTOUR_TRIINDX_ARRAY sculptTriIndex;
+    CONTOUR_TRIDATA_ARRAY sculptTriArray;
 
     SCULPT_IMAGE_ARRAY  sculptImage;
 

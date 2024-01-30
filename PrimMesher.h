@@ -50,9 +50,8 @@
 #include <vector>
 #include <algorithm>
 
-#include "FacetBaseData.h"
+#include "ContourBaseData.h"
 #include "PrimShape.h"
-
 
 
 namespace  jbxl {
@@ -66,17 +65,15 @@ class   PrimMesh;
 
 struct  PrimPathNode;
 
-
 typedef std::vector<Vector<double> > PRIM_VECTOR_ARRAY;
 typedef std::vector<UVMap<double> >  PRIM_UVMAP_ARRAY;
-typedef std::vector<FacetTriIndex>   PRIM_TRIINDX_ARRAY;
-typedef std::vector<FacetTriData>    PRIM_TRIDATA_ARRAY;
+typedef std::vector<ContourTriIndex> PRIM_TRIINDX_ARRAY;
+typedef std::vector<ContourTriData>  PRIM_TRIDATA_ARRAY;
 typedef std::vector<PrimAngle>       PRIM_ANGLE_ARRAY;
 typedef std::vector<PrimPathNode>    PRIM_PATHNODE_ARRAY;
 
 typedef std::vector<int>             PRIM_INT_ARRAY;
 typedef std::vector<double>          PRIM_DOUBLE_ARRAY;
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +92,6 @@ public:
 
     void  init(double a=0.0, double x=0.0, double y=0.0) { angle = a; X = x; Y = y;}
 };
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +125,6 @@ private:
 
     void Intersection(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4);
 };
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,10 +183,9 @@ public:
     void FlipNormals(void);
     void FlipUVs(void);
 
-    void Add2FacetTriIndexVertex(int num);
-    void Add2FacetTriIndexNormal(int num);
+    void Add2ContourTriIndexVertex(int num);
+    void Add2ContourTriIndexNormal(int num);
 };
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,7 +210,6 @@ public:
 };
 
 
-
 struct  PrimPathNode
 {
     Vector<double>     position;
@@ -225,7 +218,6 @@ struct  PrimPathNode
     double             yScale;
     double             percent;
 };
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,7 +259,7 @@ public:
     void  Extrude(int pathType);
 
     Vector<double> GetTriNormal(Vector<double> v1, Vector<double> v2, Vector<double> v3) { return NewellMethod(v1, v2, v3).normalize();}
-    Vector<double> GetTriNormal(FacetTriIndex itri) { return GetTriNormal(coords[itri.v1], coords[itri.v2], coords[itri.v3]);}
+    Vector<double> GetTriNormal(ContourTriIndex itri) { return GetTriNormal(coords[itri.v1], coords[itri.v2], coords[itri.v3]);}
     Vector<double> GetTriNormal(int index);
 
     PrimMesh  Copy(void);

@@ -13,7 +13,7 @@
 #include "xtools.h"
 #include "txml.h"
 
-#include "FacetBaseData.h"
+#include "ContourBaseData.h"
 #include "Gdata.h"
 #include "BrepLib.h"
 

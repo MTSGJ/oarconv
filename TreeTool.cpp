@@ -187,23 +187,23 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_pa
 
     int trino;      // 三角ポリゴンの数
     int facetno;    // 面の数
-    TriPolyData* tridata = TriPolyDataFromPrimMesh(primMesh, &facetno, &trino);
+    TriPolygonData* tridata = TriPolygonDataFromPrimMesh(primMesh, &facetno, &trino);
     primMesh.free();
 
     for (int i=0; i<trino; i++) {
         tridata[i].execScale(treeParam[shape.State].size);
     }
-    TriPolyData* orgdata = dupTriPolyData(tridata, trino);
+    TriPolygonData* orgdata = dupTriPolygonData(tridata, trino);
 
     double th = PI/ndiv;
     for (int n=1; n<ndiv; n++) {
-        TriPolyData* dupdata = dupTriPolyData(orgdata, trino);
+        TriPolygonData* dupdata = dupTriPolygonData(orgdata, trino);
         for (int i=0; i<trino; i++) {
             dupdata[i].execRotate(Quaternion<double>(th*n, Vector<double>(0.0, 0.0, 1.0)));
         }
-        tridata = joinTriPolyData(tridata, trino*n, dupdata, trino);
+        tridata = joinTriPolygonData(tridata, trino*n, dupdata, trino);
     }
-    freeTriPolyData(orgdata, trino);
+    freeTriPolygonData(orgdata, trino);
     trino   *= ndiv;
     facetno *= ndiv;
     
@@ -231,7 +231,7 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_pa
         data->addData(tridata, trino, i, NULL, false);
         //data->addData(tridata, trino, i, mparam, false);
     }
-    freeTriPolyData(tridata, trino);
+    freeTriPolygonData(tridata, trino);
 
     for (int i=0; i<ndiv; i++) { 
         // 6面
@@ -283,14 +283,14 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
 
     int trino;      // 三角ポリゴンの数
     int facetno;    // 面の数
-    TriPolyData* orgdata = TriPolyDataFromPrimMesh(primMesh, &facetno, &trino);
+    TriPolygonData* orgdata = TriPolygonDataFromPrimMesh(primMesh, &facetno, &trino);
     primMesh.free();
 
     //
     for (int i=0; i<trino; i++) {
         orgdata[i].execScale(grassParam[shape.State].size);
     }
-    TriPolyData* tridata = NULL;
+    TriPolygonData* tridata = NULL;
     
     int gnum = 0;
     for (int n=0; n<num_grass; n++) {
@@ -323,19 +323,19 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
         }
         //
         if (valid_pos) {
-            TriPolyData* dupdata = dupTriPolyData(orgdata, trino);
+            TriPolygonData* dupdata = dupTriPolygonData(orgdata, trino);
             double th = (float)(Frand()*PI2);
             //
             for (int i=0; i<trino; i++) {
                 dupdata[i].execRotate(Quaternion<double>(th*n, Vector<double>(0.0, 0.0, 1.0)));
                 dupdata[i].execShift(Vector<double>(xx, yy, height+grassParam[shape.State].size.z/2.0));
             }
-            tridata = joinTriPolyData(tridata, trino*gnum, dupdata, trino);
+            tridata = joinTriPolygonData(tridata, trino*gnum, dupdata, trino);
             gnum++;
         }
     }
     //
-    freeTriPolyData(orgdata, trino);
+    freeTriPolygonData(orgdata, trino);
     trino   *= gnum;
     facetno *= gnum;
 
@@ -361,7 +361,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     for (int i=0; i<facetno; i++) {
         data->addData(tridata, trino, i, NULL, false);
     }
-    freeTriPolyData(tridata, trino);
+    freeTriPolygonData(tridata, trino);
 
     //for (int i=0; i<num_grass; i++) { 
     for (int i=0; i<gnum; i++) { 

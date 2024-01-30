@@ -575,15 +575,15 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
                 collider = false;
                 if (phantom) phantom_out = true;
                 //
-                MeshObjectNode* node = data->nodelist;
-                while (node!=NULL) {
-                    if (node->material_param.enable) {
+                MeshFacetNode* facet = data->facet;
+                while (facet!=NULL) {
+                    if (facet->material_param.enable) {
                         // convert texture
-                        //char* addname = node->material_param.getAdditionalName();
-                        ConvertTexture(node->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        node->material_param.setFullName(MTRL_IMAGE_TYPE);
+                        //char* addname = facet->material_param.getAdditionalName();
+                        ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        facet->material_param.setFullName(MTRL_IMAGE_TYPE);
                     }
-                    node = node->next;
+                    facet = facet->next;
                 }
                 dae->addObject(data, collider);
                 freeMeshObjectData(data);
@@ -604,15 +604,15 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
                 collider = false;
                 if (phantom)  phantom_out = true;
                 //
-                MeshObjectNode* node = data->nodelist;
-                while (node!=NULL) {
-                    if (node->material_param.enable) {
+                MeshFacetNode* facet = data->facet;
+                while (facet!=NULL) {
+                    if (facet->material_param.enable) {
                         // convert texture
-                        //char* addname = node->material_param.getAdditionalName();
-                        ConvertTexture(node->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        node->material_param.setFullName(MTRL_IMAGE_TYPE);
+                        //char* addname = facet->material_param.getAdditionalName();
+                        ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        facet->material_param.setFullName(MTRL_IMAGE_TYPE);
                     }
-                    node = node->next;
+                    facet = facet->next;
                 }
                 dae->addObject(data, collider);
                 freeMeshObjectData(data);
@@ -638,28 +638,28 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
                     if (!phantom) phantom_out = false;
                 }
                 //
-                MeshObjectNode* node = data->nodelist;
-                while (node!=NULL) {
-                    if (node->material_param.enable) {
+                MeshFacetNode* facet = data->facet;
+                while (facet!=NULL) {
+                    if (facet->material_param.enable) {
                         // MeshObjectDataFromPrimShape へ移動
-                        //node->material_param.setAlphaChannel(CheckAlphaChannel(node->material_param.getTextureName()));
-                        //if (node->material_param.isSetAlpha()) node->material_param.setTransparent(MTRL_DEFAULT_ALPHA);
+                        //facet->material_param.setAlphaChannel(CheckAlphaChannel(facet->material_param.getTextureName()));
+                        //if (facet->material_param.isSetAlpha()) facet->material_param.setTransparent(MTRL_DEFAULT_ALPHA);
                         //if (unity3D) {
-                        //  char* paramstr = GetBase64ParamsString(node->material_param, 'O');    // O: Object
+                        //  char* paramstr = GetBase64ParamsString(facet->material_param, 'O');    // O: Object
                         //  if (paramsstr!=NULL) {
-                        //      node->material_param.setParamString(paramstr);
+                        //      facet->material_param.setParamString(paramstr);
                         //      ::free(paramstr);
                         //  }
                         //}
                         
                         // convert texture
-                        //char* addname = node->material_param.getAdditionalName();
-                        ConvertTexture(node->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        ConvertTexture(node->material_param.getBumpMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        ConvertTexture(node->material_param.getSpecMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        node->material_param.setFullName(MTRL_IMAGE_TYPE);
+                        //char* addname = facet->material_param.getAdditionalName();
+                        ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        ConvertTexture(facet->material_param.getBumpMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        ConvertTexture(facet->material_param.getSpecMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                        facet->material_param.setFullName(MTRL_IMAGE_TYPE);
                     }
-                    node = node->next;
+                    facet = facet->next;
                 }
 
                 dae->addObject(data, collider);

@@ -299,7 +299,7 @@ void  SculptMesh::GenerateMeshData(void)
             uvs.push_back(UVMap<double>(du*i, 1.0-dv*j));
 
             if (i>0 && j>0) {
-                FacetTriIndex t1, t2;
+                ContourTriIndex t1, t2;
                 //
                 if (invert) {
                     t1.mlt_set(p1, p3, p4);
@@ -335,7 +335,7 @@ void  SculptMesh::ComputeTriNormals(int xs, int ys)
     int tnum = (int)sculptTriIndex.size();
 
     for (int i=0; i<tnum; i++) {
-        FacetTriIndex indx = sculptTriIndex[i];
+        ContourTriIndex indx = sculptTriIndex[i];
         Vector<double> normal = indx.SurfaceNormal(&coords);
         normals[indx.n1] = normals[indx.n1] + normal;
         normals[indx.n2] = normals[indx.n2] + normal;
@@ -364,9 +364,9 @@ void  SculptMesh::SetupTriArray(void)
     int tnum = (int)sculptTriIndex.size();
 
     for (int i=0; i<tnum; i++) {
-        FacetTriIndex indx = sculptTriIndex[i];
-        FacetTriData  tridat;
-        tridat.facetNum = 0;
+        ContourTriIndex indx = sculptTriIndex[i];
+        ContourTriData  tridat;
+        tridat.contourNum = 0;
         tridat.v1  = coords [indx.v1];
         tridat.v2  = coords [indx.v2];
         tridat.v3  = coords [indx.v3];
@@ -398,7 +398,7 @@ void  SculptMesh::execShift(double x, double y, double z)
 
     int tnum = (int)sculptTriArray.size();
     for (int i=0; i<tnum; i++) {
-        FacetTriData tri = sculptTriArray[i];
+        ContourTriData tri = sculptTriArray[i];
         tri.execShift(x, y, z);
         sculptTriArray[i] = tri;
     }
@@ -416,7 +416,7 @@ void  SculptMesh::execRotate(Quaternion<double> q)
 
     int tnum = (int)sculptTriArray.size();
     for (int i=0; i<tnum; i++) {
-        FacetTriData tri = sculptTriArray[i];
+        ContourTriData tri = sculptTriArray[i];
         tri.v1 = VectorRotation(tri.v1, q);
         tri.v2 = VectorRotation(tri.v2, q);
         tri.v3 = VectorRotation(tri.v3, q);
@@ -442,7 +442,7 @@ void  SculptMesh::execScale(double x, double y, double z)
 
     int tnum = (int)sculptTriArray.size();
     for (int i=0; i<tnum; i++) {
-        FacetTriData tri = sculptTriArray[i];
+        ContourTriData tri = sculptTriArray[i];
         tri.v1.x *= m.x;
         tri.v1.y *= m.y;
         tri.v1.z *= m.z;

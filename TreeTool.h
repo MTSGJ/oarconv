@@ -12,7 +12,7 @@
 #include "Vector.h"
 #include "Rotation.h"
 #include "txml.h"
-#include "FacetBaseData.h"
+#include "ContourBaseData.h"
 
 #include "TerrainTool.h"
 

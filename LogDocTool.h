@@ -6,7 +6,6 @@ Log Document用ツール
 
 */
 
-
 #ifdef WIN32
 
 #ifdef  PRINT_MESG

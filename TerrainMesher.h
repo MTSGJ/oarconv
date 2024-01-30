@@ -13,11 +13,10 @@
 @sa OpenSim/Region/Physics/Meshing/SculptMesh.cs
 */
 
-
 #include <vector>
 #include <algorithm>
 
-#include "FacetBaseData.h"
+#include "ContourBaseData.h"
 #include "Gdata.h"
 
 #include "LogDocTool.h"
@@ -34,7 +33,6 @@ typedef std::vector<Vector<float> >       TERRAIN_VECTOR_ARRAY;
 typedef std::vector<TERRAIN_VECTOR_ARRAY> TERRAIN_IMAGE_ARRAY;
 
 
-
 //
 class TerrainMesh
 {
@@ -43,9 +41,9 @@ public:
     TERRAIN_VECTOR_ARRAY normals;
     TERRAIN_UVMAP_ARRAY  uvs;
 
-    FACET_TRIINDX_ARRAY  terrainTriIndex;
-    FACET_TRIDATA_ARRAY  terrainTriArray;
-    TERRAIN_IMAGE_ARRAY  terrainImage;
+    CONTOUR_TRIINDX_ARRAY terrainTriIndex;
+    CONTOUR_TRIDATA_ARRAY terrainTriArray;
+    TERRAIN_IMAGE_ARRAY   terrainImage;
 
     int   xsize;
     int   ysize;

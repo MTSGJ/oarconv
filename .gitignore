@@ -1,3 +1,5 @@
 *.o
 oarconv
 mktree
+DAE
+OAR

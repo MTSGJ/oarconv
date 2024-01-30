@@ -59,7 +59,7 @@
 #include "txml.h"
 #include "xtools.h"
 
-#include "FacetBaseData.h"
+#include "ContourBaseData.h"
 #include "MaterialParam.h"
 
 #include "MaterialTool.h"
