@@ -6,12 +6,10 @@
 @version 1.1
 */
 
-
 #include "oarconv.h"
 
 
 using namespace jbxl;
-
 
 
 int main(int argc, char** argv)
@@ -29,11 +27,13 @@ int main(int argc, char** argv)
 
     int   strtnum = 0;
     int   stopnum = -1;
+    int   output  = OART_OUTPUT_DAE;
 
-    bool  outdae  = true;
-    bool  outstl  = false;
+//    bool  outdae  = true;
+//    bool  outobj  = false;
+//    bool  outstl  = false;
+//    bool  makedir = true;
     bool  phantom = false;
-    bool  makedir = true;
     bool  useBrep = true;
     bool  binstl  = true;
 
@@ -49,7 +49,8 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "-x")) { if (i!=argc-1) xshift = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-y")) { if (i!=argc-1) yshift = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-z")) { if (i!=argc-1) zshift = (float)atof(argv[i+1]);}
-        else if (!strcmp(argv[i], "-b")) { outstl    = true;}   // STLデータを出力
+        else if (!strcmp(argv[i], "-j")) { output = OART_OUTPUT_OBJ;}   // OBJデータを出力
+        else if (!strcmp(argv[i], "-b")) { output = OART_OUTPUT_STL;}   // STLデータを出力
         else if (!strcmp(argv[i], "-p")) { phantom   = true;}   // １個でも phantomを含むなら Phantomディレクトリへ
         else if (!strcmp(argv[i], "-d")) { DebugMode = ON;}
         else if (!strcmp(argv[i], "-h")) { oarconv_help(stdout); exit(0);}
@@ -64,41 +65,43 @@ int main(int argc, char** argv)
 
     init_rand();
 
-    if (outstl) {
-        makedir = false;
-        outdae  = false;
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////
     // main process
     OARTool oar;
-    oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)outdir.buf, (char*)astdir.buf);
+    oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf, output);
     oar.GetDataInfo();  // -f オプションがあるので，成否は無視．
-    oar.MakeOutputFolder(makedir);
+    oar.MakeOutputFolder(output);
     oar.SetShift(xshift, yshift, zshift);
 
     if (infile.buf!=NULL) {
         oar.objectsNum = 1;
-        if (outdae) oar.GenerateDae((char*)infile.buf, 1, useBrep, phantom);
-        if (outstl) oar.GenerateSTL((char*)infile.buf, 1, binstl);
+        if      (output==OART_OUTPUT_DAE) oar.GenerateDae((char*)infile.buf, 1, useBrep, phantom);
+        else if (output==OART_OUTPUT_OBJ) oar.GenerateOBJ((char*)infile.buf, 1, useBrep, phantom);
+        else if (output==OART_OUTPUT_STL) oar.GenerateSTL((char*)infile.buf, 1, binstl);
     }
     else {
         if (strtnum==0) {
             oar.ReadTerrainData();
-            if (outdae) {
+            if (output==OART_OUTPUT_DAE) {
                 oar.SetTerrainTextureScale(scale);
                 oar.GenerateTerrainDae();
             }
-            if (outstl) oar.GenerateTerrainSTL(binstl);
+            else if (output==OART_OUTPUT_OBJ) {
+                oar.SetTerrainTextureScale(scale);
+                oar.GenerateTerrainOBJ();
+            }
+            else if (output==OART_OUTPUT_STL) {
+                oar.GenerateTerrainSTL(binstl);
+            }
             strtnum = 1;
         }
         if (stopnum!=0) {
-            if (outdae) oar.GenerateObjectsDae(strtnum, stopnum, useBrep, phantom, (char*)cmmnd.buf);
-            if (outstl) oar.GenerateObjectsSTL(strtnum, stopnum, binstl);
+            if      (output==OART_OUTPUT_DAE) oar.GenerateObjectsDae(strtnum, stopnum, useBrep, phantom, (char*)cmmnd.buf);
+            else if (output==OART_OUTPUT_OBJ) oar.GenerateObjectsOBJ(strtnum, stopnum, useBrep, phantom, (char*)cmmnd.buf);
+            else if (output==OART_OUTPUT_STL) oar.GenerateObjectsSTL(strtnum, stopnum, binstl);
         }
     }
     oar.free();
-    
     
     del_tList(&AlphaChannelList);
     //

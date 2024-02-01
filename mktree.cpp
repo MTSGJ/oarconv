@@ -20,6 +20,8 @@ int main(int argc, char** argv)
     Buffer outdir  = init_Buffer();
     Buffer adddir  = make_Buffer_bystr("./");
     Buffer texture = init_Buffer();
+
+    int    output  = OART_OUTPUT_DAE;
     float  xsize   = 1.0;
     float  ysize   = 1.0;
     int    pnum    = 4;
@@ -34,6 +36,8 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "-x")) { if (i!=argc-1) xsize = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-y")) { if (i!=argc-1) ysize = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-n")) { if (i!=argc-1) pnum  = (int)atoi(argv[i+1]);}
+        else if (!strcmp(argv[i], "-j")) { output = OART_OUTPUT_OBJ;}   // OBJデータを出力
+        else if (!strcmp(argv[i], "-b")) { output = OART_OUTPUT_STL;}   // STLデータを出力
     }
 
     if (texture.buf==NULL) {
@@ -45,7 +49,7 @@ int main(int argc, char** argv)
     //////////////////////////////////////////////////////////////////////////////////////////////
     // main process
     OARTool oar;
-    oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)outdir.buf, (char*)adddir.buf);
+    oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)adddir.buf, output);
     oar.GetDataInfo();  // OARファイルから情報を得る．
 //  oar.MakeOutputFolder(makedir);
 //  oar.SetShift(xshift, yshift, zshift);

@@ -1,5 +1,4 @@
-﻿
-/**
+﻿/**
 @brief  OpenSimの Terrain用ツール
 
 @file   TerrainTool.cpp
@@ -148,7 +147,6 @@ TerrainTexWeight  TerrainTool::GetTextureWeight(int x, int y)
 }
 
 
-
 /**
 @sa http://www.nsl.tuis.ac.jp/xoops/modules/xpwiki/?OpenSim%2FDiorama2
 */
@@ -180,7 +178,6 @@ int  TerrainTool::GetDioramaMode(void)
     }
     return mode1;
 }
-
 
 
 MSGraph<uByte>  TerrainTool::GenerateDioramaTexture(MSGraph<uByte>* vp, int mode)
@@ -242,10 +239,8 @@ MSGraph<uByte>  TerrainTool::GenerateDioramaTexture(MSGraph<uByte>* vp, int mode
     else {
         msg = scalingMSGraph2D(vp[mode-1], lsize/(float)vp[mode-1].xs);
     }
-        
     return msg;
 }
-
 
 
 MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
@@ -287,7 +282,6 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
     //
     return msg;
 }
-
 
 
 void  TerrainTool::GenerateTexture(tList* assets, const char* outpath, bool add_param)
@@ -397,7 +391,9 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath, bool add_
 }
 
 
-
+//
+// for Dae
+//
 void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool add_param)
 {
     if (r32.isNull()) return;
@@ -491,12 +487,113 @@ void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool a
             count++;
         }
     }
-
     return;
 }
 
 
+//
+// for OBJ
+//
+void  TerrainTool::GenerateOBJ(const char* outpath, Vector<float> offset, bool add_param)
+{
+    if (r32.isNull()) return;
 
+    char num[L_OCT];
+    int  count = 0;
+
+    bool left;
+    bool right;
+    bool top;
+    bool bottom;
+
+    //
+    DEBUG_MODE PRINT_MESG("TerrainTool::GenerateOBJ: generating sub region mesh.\n");
+    for (int rj=0; rj<rgnum; rj++) {
+        top = bottom = false;
+        int jsize = 257;                // 境界用
+        if (rj==0) top = true;
+        if (rj==rgnum-1) {
+            bottom = true;
+            jsize = 256;
+        }
+        int yy = rj*256*xsize;
+        //
+        for (int ri=0; ri<rgnum; ri++) {
+            left = right = false;
+            int isize = 257;            // 境界用
+            if (ri==0) left = true;
+            if (ri==rgnum-1) {
+                right = true;
+                isize = 256;
+            }
+            int xx = ri*256 + yy;
+
+            DEBUG_MODE if (rgnum>1) PRINT_MESG("TerrainTool::GenerateOBJ: generating sub region mesh. %02d/%d\n", count, rgnum*rgnum-1);
+            Vector<float> shift = Vector<float>(ri*256.0f-xsize/2.0f+offset.x, rj*256.0f-ysize/2.0f+offset.y, -waterHeight+offset.z);
+            MSGraph<float> region;
+
+            region.getm(isize, jsize);
+            for (int j=0; j<jsize; j++) {
+                int jj = j*isize;
+                int ww = j*xsize + xx;
+                for (int i=0; i<isize; i++) {
+                    region.gp[jj+i] = r32.gp[ww+i];
+                }
+            }
+            ContourBaseData* facetdata = ContourBaseDataFromTerrainImage(region, shift, left, right, top, bottom, false);
+
+            //
+            Buffer daename = dup_Buffer(trnName);
+            if (rgnum>1) {
+                snprintf(num, L_OCT-1, "_%02d", count);
+                cat_s2Buffer(num, &daename);
+            }
+            rewrite_sBuffer_str(&daename, "?", "_");
+            rewrite_sBuffer_str(&daename, " ", "_");
+
+            Buffer daepath = make_Buffer_bystr(outpath);
+            Buffer texfile = dup_Buffer(daename);
+
+            MaterialParam param;
+            param.setTextureName(get_file_name((char*)texfile.buf));
+            param.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+            param.setTransparent(1.0f);
+            //
+            if (add_param) {
+                char* paramstr = param.getBase64Params('E');   // E: Earth
+                param.setParamString(paramstr);
+                param.setFullName(MTRL_IMAGE_TYPE);
+                if (paramstr!=NULL) ::free(paramstr);
+            }
+
+            MeshObjectData* data = new MeshObjectData();
+            data->addData(facetdata, &param);
+            data->setMaterialParam(param);
+
+            ColladaXML* dae = new ColladaXML();
+            dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
+            dae->addObject(data, true);
+            dae->outputFile((char*)daename.buf, (char*)daepath.buf);
+
+            param.free();
+            region.free();
+            free_Buffer(&daename);
+            free_Buffer(&daepath);
+            free_Buffer(&texfile);
+            freeContourBaseData(facetdata);
+            freeColladaXML(dae);
+            freeMeshObjectData(data);
+
+            count++;
+        }
+    }
+    return;
+}
+
+
+//
+// for STL
+//
 void  TerrainTool::GenerateSTL(const char* outpath, Vector<float> offset, bool binfile)
 {
     if (r32.isNull()) return;
@@ -571,10 +668,8 @@ void  TerrainTool::GenerateSTL(const char* outpath, Vector<float> offset, bool b
             count++;
         }
     }
-
     return;
 }
-
 
 
 
@@ -632,7 +727,6 @@ TerrainTexWeight  jbxl::GetTerrainBaseTextureWeight(float h, float min, float ma
 }
 
 
-
 /**
 画像データ vpからスケーリングファクターに従って,座標 (x, y, col) の輝度値を取り出す．
 x, yが intでなのは，スケーリングファクタとの演算があるから．@n
@@ -659,7 +753,6 @@ int  jbxl::GetScalingPixel(MSGraph<uByte>* vp, float scale, float x, float y, in
 
     return (int)(vp->gp[col*vp->xs*vp->ys + jj*vp->xs + ii]);
 }
-
 
 
 

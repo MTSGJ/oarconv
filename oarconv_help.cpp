@@ -27,6 +27,7 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   -y : specify shift of y direction of all objects. default is 0.0\n");
     fprintf(fp, "   -z : specify shift of z direction of all objects. default is 0.0\n");
     fprintf(fp, "   -b : output STL file(s) using BREP.\n");
+    fprintf(fp, "   -j : output OBJ file(s) using BREP.\n");
     fprintf(fp, "   -p : when linked objects include phantom even one, saved to Phantom directory.\n");
     fprintf(fp, "   -d : debug mode. display debug information. \n");
     fprintf(fp, "   -v : display version information. \n");

@@ -25,7 +25,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     PrimMeshParam param;
     param.GetParamFromBaseShape(baseShape);
 
-    TriPolygonData*    tridata   = NULL;
+    TriPolygonData*   tridata   = NULL;
     ContourBaseData*  facetdata = NULL;
     int tri_num   = 0;
     int facet_num = 0;

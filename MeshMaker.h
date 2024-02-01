@@ -17,6 +17,7 @@
 #include "Vector.h"
 #include "Rotation.h"
 #include "ColladaTool.h"
+#include "OBJDataTool.h"
 
 #include "PrimMesher.h"
 #include "SculptMesher.h"

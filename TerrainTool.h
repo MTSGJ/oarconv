@@ -29,14 +29,12 @@ namespace  jbxl {
 #define  TRNT_DEFAULT_TEX_SCALE     7.0f
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////////
 
 struct TerrainTexWeight
 {
     float w[4];
 };
-
 
 
 
@@ -89,8 +87,9 @@ public:
     void   ReadHeightData(const char* path);
 
     void   GenerateTexture(tList* assets, const char* outpath, bool app_param);
-    void   GenerateDae(const char* outpath, Vector<float> offset, bool app_param);
 
+    void   GenerateDae(const char* outpath, Vector<float> offset, bool app_param);
+    void   GenerateOBJ(const char* outpath, Vector<float> offset, bool app_param);
     void   GenerateSTL(const char* outpath, Vector<float> offset, bool binfile=true);
 
     TerrainTexWeight  GetTextureWeight(int x, int y);

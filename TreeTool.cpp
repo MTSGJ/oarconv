@@ -174,6 +174,7 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_pa
 {
     if (pbs.State<0 || pbs.State>=TREM_TREE_NUM) pbs.State = 0;
     set_shape(pbs);
+    DEBUG_MODE PRINT_MESG("TreeTool::GenerateTree: number of tree unit is %d\n", pbs.State);
 
     if (ndiv<=0) ndiv = treeParam[pbs.State].num_panel;
 
@@ -264,7 +265,7 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_pa
 @param terrain    地形情報ツールへのポインタ．草の Z座標を決めるために必要．NULLなら Z座標は 0.0
 @param add_param  マテリアルのテクスチャ名にパラメータ用文字列を付与するか？（Unity3D用）
 
-@return  Meshデータ．
+@return  Meshデータ．affine_trans は NULL.
 */
 MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain, bool add_param)
 {
