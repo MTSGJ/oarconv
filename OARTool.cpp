@@ -138,7 +138,7 @@ pathTEX : テクスチャ出力用のパス
 pathPTM : ファントムデータ出力用のパス
 pathAST : 追加のアセットデータ用のパス
 
-@param format  出力データフォーマット（JBXL_3D_FORMAT_DAE, JBXL_3D_FORMAT_OBJ, JBXL_3D_FORMAT_STL）
+@param format  出力データフォーマット（JBXL_3D_FORMAT_DAE, JBXL_3D_FORMAT_OBJ, JBXL_3D_FORMAT_STL_A/B）
 @param oardir  読み込むOARファイルのトップディレクトリ
 @param outdir  データ書き出し用ディレクトリ
 @param astdir  アセットデータの追加ディレクトリ（OARに含まれていないアッセットデータ用）
@@ -456,7 +456,7 @@ int  OARTool::GenerateTerrainDataFile(int format)
 {
     if (terrainNum==0) return 0;
 
-    PRINT_MESG("GenerateTerrainDae: generating terrain datafile file (%d)\n", format);
+    PRINT_MESG("GenerateTerrainDataFile: generating terrain datafile file (%d)\n", format);
     int num = 0;
     while (num<terrainNum) {
         terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf, forUnity3D);
@@ -466,7 +466,6 @@ int  OARTool::GenerateTerrainDataFile(int format)
         DisPatcher(); 
 #endif
     }
-
     return num;
 }
 
@@ -527,12 +526,12 @@ int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, boo
 void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool useBrep, bool phantom, char* command)
 
 Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) を指定された形式で書きだす．
-出力先は pathOUT で指定されたディレクトリ．
+出力先は 大域変数 pathOUT, pathPTM, pathTEX で指定されたディレクトリ．
 
-@@aram format   ファイル形式（JBXL_3D_FORMAT_DAE, JBXL_3D_FORMAT_OBJ）
+@@aram format   ファイル形式（JBXL_3D_FORMAT_DAE, JBXL_3D_FORMAT_OBJ, JBXL_3D_FORMAT_SLT_A/B）
 @param fname    オブジェクト名（xmlファイル名）
-@param useBrep  頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
 @param num      表示用の処理番号．
+@param useBrep  頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
 @paeam phantom  オブジェクト中に１個でもファントムがある場合，全体をファントムとするか？
 @param command  JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
 */
