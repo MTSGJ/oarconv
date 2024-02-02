@@ -17,9 +17,9 @@
 #include "Gdata.h"
 #include "BrepLib.h"
 
+#include "LogDocTool.h"
 #include "MeshMaker.h"
 #include "MaterialTool.h"
-#include "LogDocTool.h"
 
 
 namespace  jbxl {
@@ -86,11 +86,9 @@ public:
     void   ReadSettings(const char* path);
     void   ReadHeightData(const char* path);
 
-    void   GenerateTexture(tList* assets, const char* outpath, bool app_param);
-
-    void   GenerateDae(const char* outpath, Vector<float> offset, bool app_param);
-    void   GenerateOBJ(const char* outpath, Vector<float> offset, bool app_param);
-    void   GenerateSTL(const char* outpath, Vector<float> offset, bool binfile=true);
+    void   GenerateTexture(int format, tList* assets, const char* outpath, bool app_param);
+    void   GenerateDataFile(int format, const char* outpath, Vector<float> offset, bool app_param);
+    //void   GenerateSTL(const char* outpath, Vector<float> offset, bool binfile=true);
 
     TerrainTexWeight  GetTextureWeight(int x, int y);
 

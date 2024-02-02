@@ -9,7 +9,6 @@
 @date    2014 10/5
 */
 
-
 #include "tools++.h"
 #include "xtools.h"
 #include "txml.h"
@@ -49,12 +48,7 @@ namespace  jbxl {
   #define  OART_JP2_DECOMP_COM      "/usr/local/bin/opj_decompress -i %s -o %s >/dev/null 2>&1"
 #endif
 
-#define  OART_OUTPUT_DAE            0x01
-#define  OART_OUTPUT_OBJ            0x02
-#define  OART_OUTPUT_STL            0x04
-
 #define  OART_FLAGS_PHANTOM         "Phantom"
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -74,9 +68,7 @@ public:
 
 private:
     Buffer pathOAR;             // OAR directory
-    Buffer pathDAE;             // Output directory for DAE
-    Buffer pathOBJ;             // Output directory for OBJ
-    Buffer pathSTL;             // Output directory for STL
+    Buffer pathOUT;             // Output directory for output
     Buffer pathTEX;             // Texture directory
     Buffer pathPTM;             // Phantom directory
     Buffer pathAST;             // Adding assets directory
@@ -116,9 +108,9 @@ public:
     char*  get_outpath(int output);
 
 public:
-    void   SetPathInfo(const char* oardir, const char* outdir, const char* astdir, int output=OART_OUTPUT_DAE);
+    void   SetPathInfo(int format, const char* oardir, const char* outdir, const char* astdir);
     bool   GetDataInfo(void);
-    void   MakeOutputFolder(int output=OART_OUTPUT_DAE);
+    void   MakeOutputFolder(int output=JBXL_3D_FORMAT_DAE);
 
     void   SetShift(Vector<float> vt) { shift = vt;}
     void   SetShift(float x, float y, float z) { shift.set(x, y, z);}
@@ -126,24 +118,11 @@ public:
     tList* GetObjectsList(void) { return objectsFiles;}
     void   ReadTerrainData(void);
 
-    // Dae
-    int    GenerateTerrainDae (void);
-    int    GenerateObjectsDae (int startnum=1, int stopnum=-1, bool useBrep=true, bool phantom=false, char* command=NULL);
-    int    GenerateSelectedDae(int objnum, int* objlist, bool useBrep=true, bool phantom=false, char* command=NULL);
-    void   GenerateDae(const char* fname, int num=1, bool useBrep=true, bool phantom=false, char* command=NULL);
-
-    // OBJ
-    int    GenerateTerrainOBJ (void);
-    int    GenerateObjectsOBJ (int startnum=1, int stopnum=-1, bool useBrep=true, bool phantom=false, char* command=NULL);
-    int    GenerateSelectedOBJ(int objnum, int* objlist, bool useBrep=true, bool phantom=false, char* command=NULL);
-    void   GenerateOBJ(const char* fname, int num=1, bool useBrep=true, bool phantom=false, char* command=NULL);
-
-    // STL
-    int    GenerateTerrainSTL (bool binfile=true);
-    int    GenerateObjectsSTL (int startnum=1, int stopnum=-1, bool binfile=true);
-    int    GenerateSelectedSTL(int objnum, int* objlist, bool binfile=true);
-    void   GenerateSTL(const char* fname, int num=1, bool binfile=true);
-    BrepSolidList*  GenerateSolidList(const char* fname);
+    // DAE/OBJ/STL
+    int    GenerateTerrainDataFile (int format=JBXL_3D_FORMAT_DAE);
+    int    GenerateObjectsDataFile (int format, int startnum=1, int stopnum=-1, bool useBrep=true, bool phantom=false, char* command=NULL);
+    int    GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep=true, bool phantom=false, char* command=NULL);
+    void   GenerateDataFile(int format, const char* fname, int num=1, bool useBrep=true, bool phantom=false, char* command=NULL);
 
     void   ConvertTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL, const char* command=NULL);
     void   MakeDummyTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL);

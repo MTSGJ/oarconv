@@ -17,7 +17,6 @@
 #include "TerrainTool.h"
 
 
-
 #define  TREM_GRASS_NUM_RATE        0.1
 
 #define  TREM_TREE_NUM              22
@@ -55,7 +54,6 @@
 #define  TREM_GRASS_TEST            6   // for TEST Grass 
 
 
-
 namespace  jbxl {
 
 
@@ -81,7 +79,6 @@ public:
 };
 
 
-
 //
 class GrassParam
 {
@@ -98,7 +95,6 @@ public:
     void init(void);
     void free(void) { texture.free();}
 };
-
 
 
 //

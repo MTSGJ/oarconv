@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     Buffer adddir  = make_Buffer_bystr("./");
     Buffer texture = init_Buffer();
 
-    int    output  = OART_OUTPUT_DAE;
+    int    format  = JBXL_3D_FORMAT_DAE;
     float  xsize   = 1.0;
     float  ysize   = 1.0;
     int    pnum    = 4;
@@ -36,8 +36,8 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "-x")) { if (i!=argc-1) xsize = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-y")) { if (i!=argc-1) ysize = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-n")) { if (i!=argc-1) pnum  = (int)atoi(argv[i+1]);}
-        else if (!strcmp(argv[i], "-j")) { output = OART_OUTPUT_OBJ;}   // OBJデータを出力
-        else if (!strcmp(argv[i], "-b")) { output = OART_OUTPUT_STL;}   // STLデータを出力
+        else if (!strcmp(argv[i], "-j")) { format = JBXL_3D_FORMAT_OBJ;}     // OBJデータを出力
+        else if (!strcmp(argv[i], "-b")) { format = JBXL_3D_FORMAT_STL_B;}   // STLデータを出力
     }
 
     if (texture.buf==NULL) {
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     //////////////////////////////////////////////////////////////////////////////////////////////
     // main process
     OARTool oar;
-    oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)adddir.buf, output);
+    oar.SetPathInfo(format, (char*)inpdir.buf, (char*)outdir.buf, (char*)adddir.buf);
     oar.GetDataInfo();  // OARファイルから情報を得る．
 //  oar.MakeOutputFolder(makedir);
 //  oar.SetShift(xshift, yshift, zshift);

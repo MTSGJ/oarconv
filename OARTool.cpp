@@ -19,8 +19,7 @@ using namespace jbxl;
 void  OARTool::init(void)
 {
     pathOAR = init_Buffer();    // OAR directory
-    pathDAE = init_Buffer();    // Output directory for DAE
-    pathSTL = init_Buffer();    // Output directory for STL
+    pathOUT = init_Buffer();    // Output directory
     pathTEX = init_Buffer();    // Texture directory
     pathPTM = init_Buffer();    // Fhantom directory
     pathAST = init_Buffer();    // Adding assets directory
@@ -74,11 +73,9 @@ void  OARTool::free(void)
 }
 
 
-char*  OARTool::get_outpath(int output)
+char*  OARTool::get_outpath(int format)
 {
-    if      (output == OART_OUTPUT_DAE) return (char*)pathDAE.buf; 
-    else if (output == OART_OUTPUT_OBJ) return (char*)pathOBJ.buf; 
-    return (char*)pathSTL.buf;
+    return (char*)pathOUT.buf;
 }
 
 
@@ -86,8 +83,7 @@ char*  OARTool::get_outpath(int output)
 void  OARTool::clear_path(void)
 {
     free_Buffer(&pathOAR);
-    free_Buffer(&pathDAE);
-    free_Buffer(&pathSTL);
+    free_Buffer(&pathOUT);
     free_Buffer(&pathTEX);
     free_Buffer(&pathPTM);
     free_Buffer(&pathAST);
@@ -138,19 +134,16 @@ void  OARTool::setUE5(bool ue5)
 
 設定されるパス情報は以下の通り．
 pathOAR : データ入力用（OAR）のパス
-pathDAE : DAEデータ出力用のパス
-pathOBJ : OBJデータ出力用のパス
-pathSTL : STLデータ出力用のパス
 pathTEX : テクスチャ出力用のパス
 pathPTM : ファントムデータ出力用のパス
 pathAST : 追加のアセットデータ用のパス
 
+@param format  出力データフォーマット（JBXL_3D_FORMAT_DAE, JBXL_3D_FORMAT_OBJ, JBXL_3D_FORMAT_STL）
 @param oardir  読み込むOARファイルのトップディレクトリ
 @param outdir  データ書き出し用ディレクトリ
 @param astdir  アセットデータの追加ディレクトリ（OARに含まれていないアッセットデータ用）
-@param output  出力データフォーマット（OART_OUTPUT_DAE, OART_OUTPUT_OBJ, OART_OUTPUT_STL）
 */
-void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* astdir, int output)
+void  OARTool::SetPathInfo(int format, const char* oardir, const char* outdir, const char* astdir)
 {
     clear_path();
 
@@ -169,39 +162,31 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
 
     // OUTPUT
     if (outdir!=NULL) {
-        pathDAE = make_Buffer_bystr(outdir);
-        pathOBJ = make_Buffer_bystr(outdir);
-        pathSTL = make_Buffer_bystr(outdir);
+        pathOUT = make_Buffer_bystr(outdir);
         #ifdef WIN32
-            if (pathDAE.buf[strlen((char*)pathDAE.buf)-1]!='\\') cat_s2Buffer("\\", &pathDAE);
-            if (pathOBJ.buf[strlen((char*)pathOBJ.buf)-1]!='\\') cat_s2Buffer("\\", &pathOBJ);
-            if (pathSTL.buf[strlen((char*)pathSTL.buf)-1]!='\\') cat_s2Buffer("\\", &pathSTL);
+            if (pathOUT.buf[strlen((char*)pathOUT.buf)-1]!='\\') cat_s2Buffer("\\", &pathOUT);
         #else
-            if (pathDAE.buf[strlen((char*)pathDAE.buf)-1]!='/') cat_s2Buffer("/", &pathDAE);
-            if (pathOBJ.buf[strlen((char*)pathOBJ.buf)-1]!='/') cat_s2Buffer("/", &pathOBJ);
-            if (pathSTL.buf[strlen((char*)pathSTL.buf)-1]!='/') cat_s2Buffer("/", &pathSTL);
+            if (pathOUT.buf[strlen((char*)pathOUT.buf)-1]!='/') cat_s2Buffer("/", &pathOUT);
         #endif
     }
     else {
-        pathDAE = make_Buffer_bystr(OART_DEFAULT_DAE_DIR);
-        pathOBJ = make_Buffer_bystr(OART_DEFAULT_OBJ_DIR);
-        pathSTL = make_Buffer_bystr(OART_DEFAULT_STL_DIR);
+        if (format==JBXL_3D_FORMAT_DAE) {
+            pathOUT = make_Buffer_bystr(OART_DEFAULT_DAE_DIR);
+        }
+        else if (format==JBXL_3D_FORMAT_OBJ) {
+            pathOUT = make_Buffer_bystr(OART_DEFAULT_OBJ_DIR);
+        }
+        else {  // STL
+            pathOUT = make_Buffer_bystr(OART_DEFAULT_STL_DIR);
+        }
     }
 
-    if (output==OART_OUTPUT_DAE) {
-        pathTEX = make_Buffer_bystr((char*)pathDAE.buf);
-        pathPTM = make_Buffer_bystr((char*)pathDAE.buf);
-        cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
-        cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
-    }
-    else if (output==OART_OUTPUT_OBJ) {
-        pathTEX = make_Buffer_bystr((char*)pathOBJ.buf);
-        pathPTM = make_Buffer_bystr((char*)pathOBJ.buf);
-        cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
-        cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
-    }
+    pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
+    pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
+    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
+    cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
 
-    // ASSE
+    // ASSET
     if (astdir==NULL) {
         pathAST = make_Buffer_bystr(OART_DEFAULT_AST_DIR);
     }
@@ -419,23 +404,13 @@ bool  OARTool::GetDataInfo()
 }
 
 
-void  OARTool::MakeOutputFolder(int output)
+void  OARTool::MakeOutputFolder(int format)
 {
-    // mkdir for output
-    if (output == OART_OUTPUT_DAE) {
-        mkdir((char*)pathDAE.buf, 0700);
+    mkdir((char*)pathOUT.buf, 0700);
+    mkdir((char*)pathPTM.buf, 0700);
+    if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
         mkdir((char*)pathTEX.buf, 0700);
-        mkdir((char*)pathPTM.buf, 0700);
     }
-    else if (output == OART_OUTPUT_OBJ) {
-        mkdir((char*)pathOBJ.buf, 0700);
-        mkdir((char*)pathTEX.buf, 0700);
-        mkdir((char*)pathPTM.buf, 0700);
-    }
-    else if (output & OART_OUTPUT_STL) {
-        mkdir((char*)pathSTL.buf, 0700);
-    }
-
     return;
 }
 
@@ -475,17 +450,17 @@ void  OARTool::ReadTerrainData(void)
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// for DAE
+// for DAE/OBJ/STL
 
-int  OARTool::GenerateTerrainDae(void)
+int  OARTool::GenerateTerrainDataFile(int format)
 {
     if (terrainNum==0) return 0;
 
-    PRINT_MESG("GenerateTerrainDae: generating terrain dae file\n");
+    PRINT_MESG("GenerateTerrainDae: generating terrain datafile file (%d)\n", format);
     int num = 0;
     while (num<terrainNum) {
-        terrain[num].GenerateTexture(assetsFiles, (char*)pathTEX.buf, forUnity3D);
-        terrain[num].GenerateDae((char*)pathDAE.buf, shift, forUnity3D);
+        terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf, forUnity3D);
+        terrain[num].GenerateDataFile(format, (char*)pathOUT.buf, shift, forUnity3D);
         num++;
 #ifdef WIN32
         DisPatcher(); 
@@ -496,7 +471,7 @@ int  OARTool::GenerateTerrainDae(void)
 }
 
 
-int  OARTool::GenerateObjectsDae(int startnum, int stopnum, bool useBrep, bool phantom, char* command)
+int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, bool useBrep, bool phantom, char* command)
 {
     tList* lp = objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
@@ -507,7 +482,7 @@ int  OARTool::GenerateObjectsDae(int startnum, int stopnum, bool useBrep, bool p
     while (lp!=NULL) {
         num++;
         if (num>=startnum && num<=stopnum) {
-            GenerateDae((char*)lp->ldat.val.buf, num, useBrep, phantom, command);
+            GenerateDataFile(format, (char*)lp->ldat.val.buf, num, useBrep, phantom, command);
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
@@ -522,7 +497,7 @@ int  OARTool::GenerateObjectsDae(int startnum, int stopnum, bool useBrep, bool p
 }
 
 
-int  OARTool::GenerateSelectedDae(int objnum, int* objlist, bool useBrep, bool phantom, char* command)
+int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep, bool phantom, char* command)
 {
     tList* lp = objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
@@ -531,7 +506,7 @@ int  OARTool::GenerateSelectedDae(int objnum, int* objlist, bool useBrep, bool p
     int cnt = 0;
     while (lp!=NULL) {
         if (num==objlist[cnt]) {
-            GenerateDae((char*)lp->ldat.val.buf, num+1, useBrep, phantom, command);
+            GenerateDataFile(format, (char*)lp->ldat.val.buf, num+1, useBrep, phantom, command);
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
@@ -549,42 +524,63 @@ int  OARTool::GenerateSelectedDae(int objnum, int* objlist, bool useBrep, bool p
 
 
 /**
-Tree, Grass, Prim(Sculpt, Meshを含む) のXMLデータ(オブジェクト１個分) を Collada形式で書きだす．
-出力先は outPathで指定されたディレクトリ．
+void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool useBrep, bool phantom, char* command)
 
+Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) を指定された形式で書きだす．
+出力先は pathOUT で指定されたディレクトリ．
+
+@@aram format   ファイル形式（JBXL_3D_FORMAT_DAE, JBXL_3D_FORMAT_OBJ）
 @param fname    オブジェクト名（xmlファイル名）
 @param useBrep  頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
 @param num      表示用の処理番号．
 @paeam phantom  オブジェクト中に１個でもファントムがある場合，全体をファントムとするか？
 @param command  JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
-@param outPath  大域変数．データの出力先．
 */
-void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phantom, char* command)
+void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool useBrep, bool phantom, char* command)
 {
-    PRINT_MESG("[%d/%d] GenerateDae: converting %s\n", num, objectsNum, fname);
+    PRINT_MESG("[%d/%d] GenerateDataFile: generating %s\n", num, objectsNum, fname);
+
+    ColladaXML*    dae = NULL;
+    OBJData*       obj = NULL;
+    BrepSolidList* stl = NULL;
+
+    if (format==JBXL_3D_FORMAT_DAE) {
+        dae = new ColladaXML();
+        dae->forUnity5  = forUnity5;
+        dae->forUnity4  = forUnity4;
+        dae->forUnity3D = forUnity3D;
+        dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
+    }
+    else if (format==JBXL_3D_FORMAT_OBJ) {
+        obj = new OBJData(); 
+    }
+    else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+        useBrep = false;
+        phantom = false;
+        command = NULL;
+        stl = new BrepSolidList();
+    }
+    else {
+        PRINT_MESG("OARTool::GenerateDataFile: WARNING: unknown data format (%d)\n", format);
+        return;
+    }
 
     int shno = 0;
     PrimBaseShape* shapes;
-
+    //
     tXML* sxml = xml_parse_file(fname);
     if (sxml!=NULL) {
         shapes = CreatePrimBaseShapesFromXML(sxml, assetsFiles, &shno); // Shapeデータ．shnoはデータの数
         del_xml(&sxml);
         if (shapes==NULL || shno<=0) {
-            PRINT_MESG("OARTool::GenerateDae: WARNING: not found shape data in %s (skip)\n", fname);
+            PRINT_MESG("OARTool::GenerateDataFile: WARNING: not found shape data in %s (skip)\n", fname);
             return;
         }
     }
     else {
-        PRINT_MESG("OARTool::GenerateDae: WARNING: XML File %s Read Error.(skip)\n", fname);
+        PRINT_MESG("OARTool::GenerateDataFile: WARNING: XML File %s Read Error.(skip)\n", fname);
         return;
     }
-
-    ColladaXML* dae = new ColladaXML();
-    dae->forUnity5  = forUnity5;
-    dae->forUnity4  = forUnity4;
-    dae->forUnity3D = forUnity3D;
-    dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
 
     bool phantom_out, collider;
     if (phantom) phantom_out = false;
@@ -603,17 +599,23 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
                 collider = false;
                 if (phantom) phantom_out = true;
                 //
-                MeshFacetNode* facet = data->facet;
-                while (facet!=NULL) {
-                    if (facet->material_param.enable) {
-                        // convert texture
-                        //char* addname = facet->material_param.getAdditionalName();
-                        ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        facet->material_param.setFullName(MTRL_IMAGE_TYPE);
+                // STLの場合は不必要
+                if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
+                    MeshFacetNode* facet = data->facet;
+                    while (facet!=NULL) {
+                        if (facet->material_param.enable) {
+                            // convert texture
+                            //char* addname = facet->material_param.getAdditionalName();
+                            ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                            facet->material_param.setFullName(MTRL_IMAGE_TYPE);
+                        }
+                        facet = facet->next;
                     }
-                    facet = facet->next;
                 }
-                dae->addObject(data, collider);
+                //
+                if      (format==JBXL_3D_FORMAT_DAE) dae->addObject(data, collider);
+                else if (format==JBXL_3D_FORMAT_OBJ) obj->addObject(data, collider);
+                else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) stl->addObject(data);
                 freeMeshObjectData(data);
                 //
                 count++;
@@ -632,17 +634,23 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
                 collider = false;
                 if (phantom)  phantom_out = true;
                 //
-                MeshFacetNode* facet = data->facet;
-                while (facet!=NULL) {
-                    if (facet->material_param.enable) {
-                        // convert texture
-                        //char* addname = facet->material_param.getAdditionalName();
-                        ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        facet->material_param.setFullName(MTRL_IMAGE_TYPE);
+                // STLの場合は不必要
+                if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
+                    MeshFacetNode* facet = data->facet;
+                    while (facet!=NULL) {
+                        if (facet->material_param.enable) {
+                            // convert texture
+                            //char* addname = facet->material_param.getAdditionalName();
+                            ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                            facet->material_param.setFullName(MTRL_IMAGE_TYPE);
+                        }
+                        facet = facet->next;
                     }
-                    facet = facet->next;
                 }
-                dae->addObject(data, collider);
+                //
+                if      (format==JBXL_3D_FORMAT_DAE) dae->addObject(data, collider);
+                else if (format==JBXL_3D_FORMAT_OBJ) obj->addObject(data, collider);
+                else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) stl->addObject(data);
                 freeMeshObjectData(data);
                 //
                 count++;
@@ -666,31 +674,36 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
                     if (!phantom) phantom_out = false;
                 }
                 //
-                MeshFacetNode* facet = data->facet;
-                while (facet!=NULL) {
-                    if (facet->material_param.enable) {
-                        // MeshObjectDataFromPrimShape へ移動
-                        //facet->material_param.setAlphaChannel(CheckAlphaChannel(facet->material_param.getTextureName()));
-                        //if (facet->material_param.isSetAlpha()) facet->material_param.setTransparent(MTRL_DEFAULT_ALPHA);
-                        //if (unity3D) {
-                        //  char* paramstr = GetBase64ParamsString(facet->material_param, 'O');    // O: Object
-                        //  if (paramsstr!=NULL) {
-                        //      facet->material_param.setParamString(paramstr);
-                        //      ::free(paramstr);
-                        //  }
-                        //}
+                // STLの場合は不必要
+                if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
+                    MeshFacetNode* facet = data->facet;
+                    while (facet!=NULL) {
+                        if (facet->material_param.enable) {
+                            // MeshObjectDataFromPrimShape へ移動
+                            //facet->material_param.setAlphaChannel(CheckAlphaChannel(facet->material_param.getTextureName()));
+                            //if (facet->material_param.isSetAlpha()) facet->material_param.setTransparent(MTRL_DEFAULT_ALPHA);
+                            //if (unity3D) {
+                            //  char* paramstr = GetBase64ParamsString(facet->material_param, 'O');    // O: Object
+                            //  if (paramsstr!=NULL) {
+                            //      facet->material_param.setParamString(paramstr);
+                            //      ::free(paramstr);
+                            //  }
+                            //}
                         
-                        // convert texture
-                        //char* addname = facet->material_param.getAdditionalName();
-                        ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        ConvertTexture(facet->material_param.getBumpMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        ConvertTexture(facet->material_param.getSpecMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        facet->material_param.setFullName(MTRL_IMAGE_TYPE);
+                            // convert texture
+                            //char* addname = facet->material_param.getAdditionalName();
+                            ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                            ConvertTexture(facet->material_param.getBumpMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                            ConvertTexture(facet->material_param.getSpecMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
+                            facet->material_param.setFullName(MTRL_IMAGE_TYPE);
+                        }
+                        facet = facet->next;
                     }
-                    facet = facet->next;
                 }
-
-                dae->addObject(data, collider);
+                //
+                if      (format==JBXL_3D_FORMAT_DAE) dae->addObject(data, collider);
+                else if (format==JBXL_3D_FORMAT_OBJ) obj->addObject(data, collider);
+                else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) stl->addObject(data);
                 freeMeshObjectData(data);
                 //
                 count++;
@@ -700,447 +713,37 @@ void  OARTool::GenerateDae(const char* fname, int num, bool useBrep, bool phanto
 
     // Output file
     if (count>0) {
-        if (count==1 && forUnity4) dae->addCenterObject();  // for Unity4.x
+        Buffer out_path = init_Buffer();
+        if (phantom_out) out_path = dup_Buffer(pathPTM);
+        else             out_path = dup_Buffer(pathOUT);
         //
-        Buffer out_path = dup_Buffer(pathDAE);
-        if (phantom_out) cat_Buffer(&pathPTM, &out_path);
-        dae->outputFile(fname, (char*)out_path.buf, XML_INDENT_FORMAT); // fnameの拡張子は自動的に変換される
+        // fnameの拡張子は自動的に変換される
+        if (format==JBXL_3D_FORMAT_DAE) {
+            if (count==1 && forUnity4) dae->addCenterObject();  // for Unity4.x
+            dae->outputFile(fname, (char*)out_path.buf, XML_INDENT_FORMAT); 
+            freeColladaXML(dae);
+        }
+        else if (format==JBXL_3D_FORMAT_OBJ) {
+            obj->execAffineTrans();
+            obj->outputFile(fname, (char*)out_path.buf);
+            freeOBJData(obj);
+        }
+        else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+            bool binfile = true;
+            if (format==JBXL_3D_FORMAT_STL_A) binfile = false;
+            stl->getMerge(NULL);
+            stl->outputFile(fname, (char*)out_path.buf, binfile);
+            freeBrepSolidList(stl);
+        }
         free_Buffer(&out_path);
     }
 
-    freeColladaXML(dae);
     for (int s=0; s<shno; s++) shapes[s].free();
     ::free(shapes);
 
     return;
 }
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// for OBJ
-
-int  OARTool::GenerateTerrainOBJ(void)
-{
-    if (terrainNum==0) return 0;
-
-    PRINT_MESG("GenerateTerrainOBJ: generating terrain OBJ file\n");
-    int num = 0;
-    while (num<terrainNum) {
-        terrain[num].GenerateTexture(assetsFiles, (char*)pathTEX.buf, forUnity3D);
-        terrain[num].GenerateOBJ((char*)pathOBJ.buf, shift, forUnity3D);
-        num++;
-#ifdef WIN32
-        DisPatcher(); 
-#endif
-    }
-
-    return num;
-}
-
-
-int  OARTool::GenerateObjectsOBJ(int startnum, int stopnum, bool useBrep, bool phantom, char* command)
-{
-    tList* lp = objectsFiles;
-    CVCounter* counter = GetUsableGlobalCounter();
-
-    if (stopnum<0) stopnum = objectsNum;
-    int num = 0;
-    int cnt = 0;
-    while (lp!=NULL) {
-        num++;
-        if (num>=startnum && num<=stopnum) {
-            GenerateOBJ((char*)lp->ldat.val.buf, num, useBrep, phantom, command);
-            if (counter!=NULL) {
-                if (counter->cancel) break;
-                counter->StepIt();
-            }
-            cnt++;
-        }
-        lp = lp->next;
-    }
-    if (counter!=NULL && counter->cancel) cnt = -1;
-
-    return cnt;
-}
-
-
-int  OARTool::GenerateSelectedOBJ(int objnum, int* objlist, bool useBrep, bool phantom, char* command)
-{
-    tList* lp = objectsFiles;
-    CVCounter* counter = GetUsableGlobalCounter();
-
-    int num = 0;
-    int cnt = 0;
-    while (lp!=NULL) {
-        if (num==objlist[cnt]) {
-            GenerateOBJ((char*)lp->ldat.val.buf, num+1, useBrep, phantom, command);
-            if (counter!=NULL) {
-                if (counter->cancel) break;
-                counter->StepIt();
-            }
-            cnt++;
-            if (cnt==objnum) break;
-        }
-        num++;
-        lp = lp->next;
-    }
-    if (counter!=NULL && counter->cancel) cnt = -1;
-
-    return cnt;
-}
-
-
-/**
-Tree, Grass, Prim(Sculpt, Meshを含む) のXMLデータ(オブジェクト１個分) を Collada形式で書きだす．
-出力先は outPathで指定されたディレクトリ．
-
-@param fname    オブジェクト名（xmlファイル名）
-@param useBrep  頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
-@param num      表示用の処理番号．
-@paeam phantom  オブジェクト中に１個でもファントムがある場合，全体をファントムとするか？
-@param command  JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
-@param outPath  大域変数．データの出力先．
-*/
-void  OARTool::GenerateOBJ(const char* fname, int num, bool useBrep, bool phantom, char* command)
-{
-    PRINT_MESG("[%d/%d] GenerateOBJ: converting %s\n", num, objectsNum, fname);
-
-    int shno = 0;
-    PrimBaseShape* shapes;
-
-    tXML* sxml = xml_parse_file(fname);
-    if (sxml!=NULL) {
-        shapes = CreatePrimBaseShapesFromXML(sxml, assetsFiles, &shno); // Shapeデータ．shnoはデータの数
-        del_xml(&sxml);
-        if (shapes==NULL || shno<=0) {
-            PRINT_MESG("OARTool::GenerateOBJ: WARNING: not found shape data in %s (skip)\n", fname);
-            return;
-        }
-    }
-    else {
-        PRINT_MESG("OARTool::GenerateOBJ: WARNING: XML File %s Read Error.(skip)\n", fname);
-        return;
-    }
-
-    /*
-    ColladaXML* dae = new ColladaXML();
-    dae->forUnity5  = forUnity5;
-    dae->forUnity4  = forUnity4;
-    dae->forUnity3D = forUnity3D;
-    dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
-    */
-
-    OBJData* obj = new OBJData();
-
-    bool phantom_out, collider;
-    if (phantom) phantom_out = false;
-    else         phantom_out = true;
- 
-    int  count = 0;
-    for (int s=0; s<shno; s++) {
-        //
-        // Tree
-        if (shapes[s].PCode==PRIM_PCODE_NEWTREE || shapes[s].PCode==PRIM_PCODE_TREE) {
-            //
-            shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
-            MeshObjectData* data = treeTool.GenerateTree(shapes[s], 0, forUnity3D);
-            //
-            if (data!=NULL) {
-                collider = false;
-                if (phantom) phantom_out = true;
-                //
-                MeshFacetNode* facet = data->facet;
-                while (facet!=NULL) {
-                    if (facet->material_param.enable) {
-                        // convert texture
-                        //char* addname = facet->material_param.getAdditionalName();
-                        ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        facet->material_param.setFullName(MTRL_IMAGE_TYPE);
-                    }
-                    facet = facet->next;
-                }
-                obj->addObject(data, collider);
-                freeMeshObjectData(data);
-                //
-                count++;
-            }
-        }
-
-        //
-        // Grass
-        else if (shapes[s].PCode==PRIM_PCODE_GRASS){ 
-            //
-            shapes[s].affineTrans.addShift(-xsize/2.0f, -ysize/2.0f, -waterHeight);
-            MeshObjectData* data = treeTool.GenerateGrass(shapes[s], terrain, forUnity3D);  // 1個の Terrainのみサポート．範囲チェックあり
-            shapes[s].affineTrans.addShift(shift.x, shift.y, shift.z);
-            //
-            if (data!=NULL) {
-                collider = false;
-                if (phantom)  phantom_out = true;
-                //
-                MeshFacetNode* facet = data->facet;
-                while (facet!=NULL) {
-                    if (facet->material_param.enable) {
-                        // convert texture
-                        //char* addname = facet->material_param.getAdditionalName();
-                        ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        facet->material_param.setFullName(MTRL_IMAGE_TYPE);
-                    }
-                    facet = facet->next;
-                }
-                obj->addObject(data, collider);
-                freeMeshObjectData(data);
-                //
-                count++;
-            }
-        }
-
-        //
-        // Prim (Sculpt, Meshを含む)
-        else if (shapes[s].PCode==PRIM_PCODE_PRIM) { 
-            //
-            shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
-            MeshObjectData* data = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, forUnity3D);
-            //
-            if (data!=NULL) {
-                if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
-                    collider = false;
-                    if (phantom)  phantom_out = true;
-                }
-                else {
-                    collider = true;
-                    if (!phantom) phantom_out = false;
-                }
-                //
-                MeshFacetNode* facet = data->facet;
-                while (facet!=NULL) {
-                    if (facet->material_param.enable) {
-                        // MeshObjectDataFromPrimShape へ移動
-                        //facet->material_param.setAlphaChannel(CheckAlphaChannel(facet->material_param.getTextureName()));
-                        //if (facet->material_param.isSetAlpha()) facet->material_param.setTransparent(MTRL_DEFAULT_ALPHA);
-                        //if (unity3D) {
-                        //  char* paramstr = GetBase64ParamsString(facet->material_param, 'O');    // O: Object
-                        //  if (paramsstr!=NULL) {
-                        //      facet->material_param.setParamString(paramstr);
-                        //      ::free(paramstr);
-                        //  }
-                        //}
-                        
-                        // convert texture
-                        //char* addname = facet->material_param.getAdditionalName();
-                        ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        ConvertTexture(facet->material_param.getBumpMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        ConvertTexture(facet->material_param.getSpecMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
-                        facet->material_param.setFullName(MTRL_IMAGE_TYPE);
-                    }
-                    facet = facet->next;
-                }
-
-                obj->addObject(data, collider);
-                freeMeshObjectData(data);
-                //
-                count++;
-            }
-        }
-    }
-
-    // Output file
-    if (count>0) {
-        //if (count==1 && forUnity4) obj->addCenterObject();  // for Unity4.x
-        //
-        Buffer out_path = dup_Buffer(pathOBJ);
-        if (phantom_out) cat_Buffer(&pathPTM, &out_path);
-        obj->execAffineTrans();
-        obj->outputFile(fname, (char*)out_path.buf); // fnameの拡張子は自動的に変換される
-        free_Buffer(&out_path);
-    }
-
-    freeOBJData(obj);
-    for (int s=0; s<shno; s++) shapes[s].free();
-    ::free(shapes);
-
-    return;
-}
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// for STL
-//
-
-int  OARTool::GenerateTerrainSTL(bool binfile)
-{
-    if (terrainNum==0) return 0;
-
-    PRINT_MESG("GenerateTerrainSTL: generating terrain stl file\n");
-    int num = 0;
-    while (num<terrainNum) {
-        terrain[num].GenerateSTL((char*)pathSTL.buf, shift, binfile);
-        num++;
-#ifdef WIN32
-        DisPatcher();
-#endif
-    }
-
-    return num;
-}
-
-
-int  OARTool::GenerateObjectsSTL(int startnum, int stopnum, bool binfile)
-{
-    tList* lp = objectsFiles;
-    CVCounter* counter = GetUsableGlobalCounter();
-
-    if (stopnum<0) stopnum = objectsNum;
-    int num = 0;
-    int cnt = 0;
-    while (lp!=NULL) {
-        num++;
-        if (num>=startnum && num<=stopnum) {
-            GenerateSTL((char*)lp->ldat.val.buf, num, binfile);
-            if (counter!=NULL) {
-                if (counter->cancel) break;
-                counter->StepIt();
-            }
-            cnt++;
-        }
-        lp = lp->next;
-    }
-    if (counter!=NULL && counter->cancel) cnt = -1;
-
-    return cnt;
-}
-
-
-int  OARTool::GenerateSelectedSTL(int objnum, int* objlist, bool binfile)
-{
-    tList* lp = objectsFiles;
-    CVCounter* counter = GetUsableGlobalCounter();
-
-    int num = 0;
-    int cnt = 0;
-    while (lp!=NULL) {
-        if (num==objlist[cnt]) {
-            GenerateSTL((char*)lp->ldat.val.buf, num+1, binfile);
-            if (counter!=NULL) {
-                if (counter->cancel) break;
-                counter->StepIt();
-            }
-            cnt++;
-            if (cnt==objnum) break;
-        }
-        num++;
-        lp = lp->next;
-    }
-    if (counter!=NULL && counter->cancel) cnt = -1;
-
-    return cnt;
-}
-
-
-/**
-Tree, Grass, Prim(Sculpt, Meshを含む) のXMLデータ(ファイル１個分) を STL形式で書きだす.
-頂点の配置には BREPが使用される．
-
-@param fname    オブジェクト名
-@param num      表示用の処理番号．
-@param binfile  データをバイナリ形式で出力するか？
-*/
-void  OARTool::GenerateSTL(const char* fname, int num, bool binfile)
-{
-    PRINT_MESG("[%d/%d] GenerateSTL: converting %s\n", num, objectsNum, fname);
-
-    BrepSolidList* slist = GenerateSolidList(fname);
-
-    // Output file
-    if (slist!=NULL) {
-        Buffer out_path = dup_Buffer(pathSTL);
-        slist->outputFile(fname, (char*)out_path.buf, binfile); // fnameの拡張子は自動的に変換される
-        free_Buffer(&out_path);
-        freeBrepSolidList(slist);
-    }
-
-    return;
-}
-
-
-BrepSolidList*  OARTool::GenerateSolidList(const char* fname)
-{
-    int shno = 0;
-    PrimBaseShape* shapes;
-
-    tXML* sxml = xml_parse_file(fname);
-    if (sxml!=NULL) {
-        shapes = CreatePrimBaseShapesFromXML(sxml, assetsFiles, &shno); // Shapeデータ．shnoはデータの数
-        del_xml(&sxml);
-        if (shapes==NULL || shno<=0) {
-            PRINT_MESG("OARTool::GenerateBrepSolidList: WARNING: not found shape data in %s (skip)\n", fname);
-            return NULL;
-        }
-    }
-    else {
-        PRINT_MESG("OARTool::GenerateBrepSolidList: WARNING: XML File %s Read Error.(skip)\n", fname);
-        return NULL;
-    }
-
-    BrepSolidList* slist = new BrepSolidList();
-
-    int count = 0;
-    for (int s=0; s<shno; s++) {
-        // Tree
-        if (shapes[s].PCode==PRIM_PCODE_NEWTREE || shapes[s].PCode==PRIM_PCODE_TREE) {
-            //
-            shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
-            MeshObjectData* data = treeTool.GenerateTree(shapes[s], 0, forUnity3D);
-            //
-            if (data!=NULL) {
-                slist->addObject(data);
-                freeMeshObjectData(data);
-                //
-                count++;
-            }
-        }
-
-        // Grass
-        else if (shapes[s].PCode==PRIM_PCODE_GRASS){ 
-            //
-            shapes[s].affineTrans.addShift(-xsize/2.0f, -ysize/2.0f, -waterHeight);
-            MeshObjectData* data = treeTool.GenerateGrass(shapes[s], terrain, forUnity3D);  // 1個の Terrainのみサポート．範囲チェックあり
-            shapes[s].affineTrans.addShift(shift.x, shift.y, shift.z);
-            //
-            if (data!=NULL) {
-                slist->addObject(data);
-                freeMeshObjectData(data);
-                //
-                count++;
-            }
-        }
-
-        // Prim (Sculpt, Meshを含む)
-        else if (shapes[s].PCode==PRIM_PCODE_PRIM) { 
-            //
-            shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
-            MeshObjectData* data = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, false, forUnity3D);
-            //
-            if (data!=NULL) {
-                slist->addObject(data);
-                freeMeshObjectData(data);
-                //
-                count++;
-            }
-        }
-    }
-
-    for (int s=0; s<shno; s++) shapes[s].free();
-    ::free(shapes);
-
-    if (count<=0) {
-        freeBrepSolidList(slist);
-        slist = NULL;
-    }
-    return slist;
-}
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -284,8 +284,11 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
 }
 
 
-void  TerrainTool::GenerateTexture(tList* assets, const char* outpath, bool add_param)
+void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpath, bool add_param)
 {
+    if (format!=JBXL_3D_FORMAT_DAE && format!=JBXL_3D_FORMAT_OBJ) return; 
+    if (assets==NULL) return;
+
     MSGraph<uByte> vp[4];
     MSGraph<uByte> msg;
 
@@ -392,9 +395,9 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath, bool add_
 
 
 //
-// for Dae
+// for DAE/OBJ/STL
 //
-void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool add_param)
+void  TerrainTool::GenerateDataFile(int format, const char* outpath, Vector<float> offset, bool add_param)
 {
     if (r32.isNull()) return;
 
@@ -407,7 +410,7 @@ void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool a
     bool bottom;
 
     //
-    DEBUG_MODE PRINT_MESG("TerrainTool::GenerateDae: generating sub region mesh.\n");
+    DEBUG_MODE PRINT_MESG("TerrainTool::GenerateDataFile: generating sub region mesh.\n");
     for (int rj=0; rj<rgnum; rj++) {
         top = bottom = false;
         int jsize = 257;                // 境界用
@@ -428,7 +431,7 @@ void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool a
             }
             int xx = ri*256 + yy;
 
-            DEBUG_MODE if (rgnum>1) PRINT_MESG("TerrainTool::GenerateDae: generating sub region mesh. %02d/%d\n", count, rgnum*rgnum-1);
+            DEBUG_MODE if (rgnum>1) PRINT_MESG("TerrainTool::GenerateDataFile: generating sub region mesh. %02d/%d\n", count, rgnum*rgnum-1);
             Vector<float> shift = Vector<float>(ri*256.0f-xsize/2.0f+offset.x, rj*256.0f-ysize/2.0f+offset.y, -waterHeight+offset.z);
             MSGraph<float> region;
 
@@ -443,16 +446,16 @@ void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool a
             ContourBaseData* facetdata = ContourBaseDataFromTerrainImage(region, shift, left, right, top, bottom, false);
 
             //
-            Buffer daename = dup_Buffer(trnName);
+            Buffer objname = dup_Buffer(trnName);
             if (rgnum>1) {
                 snprintf(num, L_OCT-1, "_%02d", count);
-                cat_s2Buffer(num, &daename);
+                cat_s2Buffer(num, &objname);
             }
-            rewrite_sBuffer_str(&daename, "?", "_");
-            rewrite_sBuffer_str(&daename, " ", "_");
+            rewrite_sBuffer_str(&objname, "?", "_");
+            rewrite_sBuffer_str(&objname, " ", "_");
 
-            Buffer daepath = make_Buffer_bystr(outpath);
-            Buffer texfile = dup_Buffer(daename);
+            Buffer path = make_Buffer_bystr(outpath);
+            Buffer texfile = dup_Buffer(objname);
 
             MaterialParam param;
             param.setTextureName(get_file_name((char*)texfile.buf));
@@ -470,18 +473,40 @@ void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool a
             data->addData(facetdata, &param);
             data->setMaterialParam(param);
 
-            ColladaXML* dae = new ColladaXML();
-            dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
-            dae->addObject(data, true);
-            dae->outputFile((char*)daename.buf, (char*)daepath.buf);
+            //
+            ColladaXML*    dae = NULL;
+            OBJData*       obj = NULL;
+            BrepSolidList* stl = NULL;
+
+            if (format==JBXL_3D_FORMAT_DAE) {
+                dae = new ColladaXML();
+                dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
+                dae->addObject(data, true);
+                dae->outputFile((char*)objname.buf, (char*)path.buf);
+                freeColladaXML(dae);
+            }
+            else if (format==JBXL_3D_FORMAT_OBJ) {
+                obj = new OBJData();
+                //obj->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
+                obj->addObject(data, true);
+                obj->outputFile((char*)objname.buf, (char*)path.buf);
+                freeOBJData(obj);
+            }
+            else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+                bool binfile = true;
+                if (format==JBXL_3D_FORMAT_STL_A) binfile = false;
+                stl = new BrepSolidList();
+                stl->addObject(data);
+                stl->outputFile((char*)objname.buf, (char*)path.buf, binfile);
+                freeBrepSolidList(stl);
+            }
+            free_Buffer(&objname);
+            free_Buffer(&path);
 
             param.free();
             region.free();
-            free_Buffer(&daename);
-            free_Buffer(&daepath);
             free_Buffer(&texfile);
             freeContourBaseData(facetdata);
-            freeColladaXML(dae);
             freeMeshObjectData(data);
 
             count++;
@@ -491,106 +516,7 @@ void  TerrainTool::GenerateDae(const char* outpath, Vector<float> offset, bool a
 }
 
 
-//
-// for OBJ
-//
-void  TerrainTool::GenerateOBJ(const char* outpath, Vector<float> offset, bool add_param)
-{
-    if (r32.isNull()) return;
-
-    char num[L_OCT];
-    int  count = 0;
-
-    bool left;
-    bool right;
-    bool top;
-    bool bottom;
-
-    //
-    DEBUG_MODE PRINT_MESG("TerrainTool::GenerateOBJ: generating sub region mesh.\n");
-    for (int rj=0; rj<rgnum; rj++) {
-        top = bottom = false;
-        int jsize = 257;                // 境界用
-        if (rj==0) top = true;
-        if (rj==rgnum-1) {
-            bottom = true;
-            jsize = 256;
-        }
-        int yy = rj*256*xsize;
-        //
-        for (int ri=0; ri<rgnum; ri++) {
-            left = right = false;
-            int isize = 257;            // 境界用
-            if (ri==0) left = true;
-            if (ri==rgnum-1) {
-                right = true;
-                isize = 256;
-            }
-            int xx = ri*256 + yy;
-
-            DEBUG_MODE if (rgnum>1) PRINT_MESG("TerrainTool::GenerateOBJ: generating sub region mesh. %02d/%d\n", count, rgnum*rgnum-1);
-            Vector<float> shift = Vector<float>(ri*256.0f-xsize/2.0f+offset.x, rj*256.0f-ysize/2.0f+offset.y, -waterHeight+offset.z);
-            MSGraph<float> region;
-
-            region.getm(isize, jsize);
-            for (int j=0; j<jsize; j++) {
-                int jj = j*isize;
-                int ww = j*xsize + xx;
-                for (int i=0; i<isize; i++) {
-                    region.gp[jj+i] = r32.gp[ww+i];
-                }
-            }
-            ContourBaseData* facetdata = ContourBaseDataFromTerrainImage(region, shift, left, right, top, bottom, false);
-
-            //
-            Buffer daename = dup_Buffer(trnName);
-            if (rgnum>1) {
-                snprintf(num, L_OCT-1, "_%02d", count);
-                cat_s2Buffer(num, &daename);
-            }
-            rewrite_sBuffer_str(&daename, "?", "_");
-            rewrite_sBuffer_str(&daename, " ", "_");
-
-            Buffer daepath = make_Buffer_bystr(outpath);
-            Buffer texfile = dup_Buffer(daename);
-
-            MaterialParam param;
-            param.setTextureName(get_file_name((char*)texfile.buf));
-            param.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-            param.setTransparent(1.0f);
-            //
-            if (add_param) {
-                char* paramstr = param.getBase64Params('E');   // E: Earth
-                param.setParamString(paramstr);
-                param.setFullName(MTRL_IMAGE_TYPE);
-                if (paramstr!=NULL) ::free(paramstr);
-            }
-
-            MeshObjectData* data = new MeshObjectData();
-            data->addData(facetdata, &param);
-            data->setMaterialParam(param);
-
-            ColladaXML* dae = new ColladaXML();
-            dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
-            dae->addObject(data, true);
-            dae->outputFile((char*)daename.buf, (char*)daepath.buf);
-
-            param.free();
-            region.free();
-            free_Buffer(&daename);
-            free_Buffer(&daepath);
-            free_Buffer(&texfile);
-            freeContourBaseData(facetdata);
-            freeColladaXML(dae);
-            freeMeshObjectData(data);
-
-            count++;
-        }
-    }
-    return;
-}
-
-
+/*
 //
 // for STL
 //
@@ -670,7 +596,7 @@ void  TerrainTool::GenerateSTL(const char* outpath, Vector<float> offset, bool b
     }
     return;
 }
-
+*/
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
