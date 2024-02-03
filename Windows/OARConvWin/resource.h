@@ -17,25 +17,28 @@
 #define IDC_CHECK_DEBUGMODE             31015
 #define IDC_EDIT_PREFIX_OAR             31016
 #define IDC_EDIT_PREFIX_DAE             31017
-#define IDC_EDIT_PREFIX_STL             31018
-#define IDC_OBJLIST_CLOSE               31019
-#define IDC_OBJLIST_CONV                31020
-#define IDC_RADIO_DAE                   31021
-#define IDC_OBJLIST_CLEAR               31022
-#define IDC_RADIO_STL                   31023
-#define IDC_OBJLIST_FIND                31024
-#define IDC_LIST_CONV                   31025
-#define IDC_LIST_OBJECTS                31026
-#define IDC_EDIT_TERRAIN_SCALE          31027
-#define IDC_OBJLIST_PREVIEW             31028
-#define IDC_EDIT_STOP_NUM               31029
-#define IDC_EDIT_START_NUM              31030
-#define IDC_EDIT_SHIFT_X                31031
-#define IDC_EDIT_SHIFT_Y                31032
-#define IDC_EDIT_SHIFT_Z                31033
-#define IDD_DIALOG_OARSET               31100
-#define IDD_DIALOG_OBJLIST              31101
-#define IDD_DIALOG_OARINFO              31102
+#define IDC_EDIT_PREFIX_DBJ             31018
+#define IDC_EDIT_PREFIX_STL             31019
+#define IDC_OBJLIST_CLOSE               31020
+#define IDC_EDIT_PREFIX_OBJ             31119
+#define IDC_OBJLIST_CONV                31120
+#define IDC_RADIO_DAE                   31121
+#define IDC_RADIO_OBJ                   31222
+#define IDC_RADIO_STL                   31223
+#define IDC_OBJLIST_FIND                31224
+#define IDC_LIST_CONV                   31225
+#define IDC_LIST_OBJECTS                31226
+#define IDC_EDIT_TERRAIN_SCALE          31227
+#define IDC_OBJLIST_CLEAR               31228
+#define IDC_OBJLIST_PREVIEW             31328
+#define IDC_EDIT_STOP_NUM               31329
+#define IDC_EDIT_START_NUM              31330
+#define IDC_EDIT_SHIFT_X                31331
+#define IDC_EDIT_SHIFT_Y                31332
+#define IDC_EDIT_SHIFT_Z                31333
+#define IDD_DIALOG_OARSET               31400
+#define IDD_DIALOG_OBJLIST              31401
+#define IDD_DIALOG_OARINFO              31402
 #define ID_FOLDER_OPEN                  31780
 #define ID_FILE_QUICK                   31782
 #define ID_FOLDER_QUICK                 31783
@@ -56,7 +59,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        134
+#define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         32803
 #define _APS_NEXT_CONTROL_VALUE         1022
 #define _APS_NEXT_SYMED_VALUE           101

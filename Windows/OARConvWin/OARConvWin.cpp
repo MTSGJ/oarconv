@@ -646,8 +646,7 @@ int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
 		SetGlobalCounter(progress);
 	}
 	//
-	num = oarTool.GenerateSelectedDataFile(appParam.format, strtnum, stopnum, true, false, (char*)comDecomp.buf);
-	num = oarTool.GenerateSelectedDataFile(selectedNums, selectedObjs, true, false, (char*)comDecomp.buf);
+	num = oarTool.GenerateSelectedDataFile(appParam.format, selectedNums, selectedObjs, true, (char*)comDecomp.buf);
 	//
 	if (progress!=NULL) {
 		progress->PutFill();
@@ -694,9 +693,7 @@ int   COARConvWinApp::convertOneFile(int index, BOOL outputDae)
 
 	//////////////////////////////////////////////////////////////////////////////
 	// Convert
-	int num = 0;
-	if (outputDae) num = oarTool.GenerateObjectsDae(index, index, true, false, (char*)comDecomp.buf);
-	else           num = oarTool.GenerateObjectsSTL(index, index, true);
+	int num = oarTool.GenerateObjectsDataFile(appParam.format, index, index, true, (char*)comDecomp.buf);
 	
 	return num;
 }
@@ -735,7 +732,6 @@ void  COARConvWinApp::showOARInfoDLG()
 
 	return;
 }
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////

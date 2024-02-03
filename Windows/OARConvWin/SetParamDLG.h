@@ -16,6 +16,7 @@ public:
 
 //
 protected:
+	int      outputFormat;
 	int      startNum;
 	int      stopNum;
 	float    terrainScale;
@@ -30,6 +31,7 @@ protected:
 
 	CString  prefixOAR;
 	CString  prefixDAE;
+	CString  prefixOBJ;
 	CString  prefixSTL;
 
 //
@@ -39,6 +41,7 @@ protected:
 	CEdit*   terrainScaleEBox;
 
 	CButton* outputDaeButton;
+	CButton* outputObjButton;
 	CButton* outputStlButton;
 	CButton* outputTerrainButton;
 	CButton* debugModeButton;
@@ -49,6 +52,7 @@ protected:
 
 	CEdit*   prefixOarEBox;
 	CEdit*   prefixDaeEBox;
+	CEdit*   prefixObjEBox;
 	CEdit*   prefixStlEBox;
 
 public:
