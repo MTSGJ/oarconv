@@ -1,16 +1,12 @@
 ﻿#pragma once
 
-
 #include  "OARConvWin_config.h"
 #include  "WinTools.h"
 
 #include  "TerrainTool.h"
 
 
-
 using namespace  jbxwl;
-
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -45,23 +41,26 @@ public:
 // Parameters
 public:
 	CString	oarFolder;
-	CString	daeFolder;
-	CString	stlFolder;
+	CString	outFolder;
 	CString	logFolder;
 
 	int     startNum;
 	int     stopNum;
-	BOOL    outputDae;
+	BOOL    outputObject;
 	BOOL    outputTerrain;
 	BOOL    debugMode;
 	
+	int     format;
+
 	float   terrainScale;
 	float   xShift;
 	float   yShift;
 	float   zShift;
 
 	CString prefixOAR;
+	CString prefixOUT;
 	CString prefixDAE;
+	CString prefixOBJ;
 	CString prefixSTL;
 };
 

@@ -55,7 +55,6 @@ BEGIN_MESSAGE_MAP(COARConvWinApp, CWinApp)
 END_MESSAGE_MAP()
 
 
-
 // COARConvWinApp コンストラクション
 COARConvWinApp::COARConvWinApp()
 {
@@ -248,7 +247,6 @@ void  COARConvWinApp::ViewDestructor(CExTextView* view)
 }
 
 
-
 /////////////////////////////////////////////////////////////////////////////
 // アプリケーションのバージョン情報で使われる CAboutDlg ダイアログ
 //
@@ -430,24 +428,21 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 	}
 
 	// Output Folder
-	CString daef, stlf;
-	daef = path + appParam.prefixDAE + file;
-	stlf = path + appParam.prefixSTL + file;
+	CString outf;
+	outf = path + appParam.prefixOUT + file;
 	setOarFolder((LPCTSTR)oarf);
-	setDaeFolder((LPCTSTR)daef);
-	setStlFolder((LPCTSTR)stlf);
+	setOutFolder((LPCTSTR)outf);
 	appParam.saveConfigFile();
 
 	////////////////////////////////////////////////////////////////////
+	int format = JBXL_3D_FORMAT_STL_A;
 	char* oardir = ts2mbs(getOarFolder());
-	char* daedir = ts2mbs(getDaeFolder());
-	char* stldir = ts2mbs(getStlFolder());
+	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
-	oarTool.SetPathInfo(oardir, daedir, stldir, (char*)assetsFolder.buf);
+	oarTool.SetPathInfo(format, oardir, outdir, (char*)assetsFolder.buf);
  	::free(oardir);
-	::free(daedir);
-	::free(stldir);
+	::free(outdir);
 
 	bool chk = oarTool.GetDataInfo();
 	if (!chk) {
@@ -474,36 +469,32 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 	updateMenuBar();
 	updateStatusBar(_T(""));
 
-	CString path = folder;
-	if (path.Right(1)==_T("\\")) path = path.Left(path.GetLength()-1);
+	CString oarf = folder;
+	if (oarf.Right(1)==_T("\\")) oarf = oarf.Left(oarf.GetLength()-1);
 
-	CString daef, stlf;
-	CString prnt = get_file_path_t(path);
-	CString dirn = get_file_name_t(path);
+	CString outf;
+	CString prnt = get_file_path_t(oarf);
+	CString dirn = get_file_name_t(oarf);
 	CString top4 = dirn.Left(4);
 	if (!top4.Compare(appParam.prefixOAR)) {
-		daef = prnt + appParam.prefixDAE + dirn.Right(dirn.GetLength()-4);
-		stlf = prnt + appParam.prefixSTL + dirn.Right(dirn.GetLength()-4);
+		outf = prnt + appParam.prefixOUT + dirn.Right(dirn.GetLength()-4);
 	}
 	else {
-		daef = prnt + appParam.prefixDAE + dirn;
-		stlf = prnt + appParam.prefixSTL + dirn;
+		outf = prnt + appParam.prefixOUT + dirn;
 	}
-	setOarFolder((LPCTSTR)path);
-	setDaeFolder((LPCTSTR)daef);
-	setStlFolder((LPCTSTR)stlf);
+	setOarFolder((LPCTSTR)oarf);
+	setOutFolder((LPCTSTR)outf);
 	appParam.saveConfigFile();
 
 	////////////////////////////////////////////////////////////////////
+	int format = JBXL_3D_FORMAT_STL_A;
 	char* oardir = ts2mbs(getOarFolder());
-	char* daedir = ts2mbs(getDaeFolder());
-	char* stldir = ts2mbs(getStlFolder());
+	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
-	oarTool.SetPathInfo(oardir, daedir, stldir, (char*)assetsFolder.buf);
+	oarTool.SetPathInfo(format, oardir, outdir, (char*)assetsFolder.buf);
 	::free(oardir);
-	::free(daedir);
-	::free(stldir);
+	::free(outdir);
 
 	bool chk = oarTool.GetDataInfo();
 	if (!chk) {
@@ -528,8 +519,10 @@ void  COARConvWinApp::convertAllData()
 {
 	isConverting = true;
 	updateMenuBar();
-	if (appParam.outputDae) oarTool.MakeOutputFolder(true);
-	else                    oarTool.MakeOutputFolder(false);
+	int format = JBXL_3D_FORMAT_STL_A;
+	//if (appParam.outputDae) oarTool.MakeOutputFolder(true);
+	oarTool.MakeOutputFolder(format);
+	//else                    oarTool.MakeOutputFolder(false);
 
 	//
 	int num = convertAllFiles();
@@ -578,27 +571,23 @@ int   COARConvWinApp::convertAllFiles()
 		if (mbox!=NULL) mbox->Display();
 		//
 		oarTool.ReadTerrainData();
-		if (appParam.outputDae) {
-			oarTool.SetTerrainTextureScale(appParam.terrainScale);
-			num = oarTool.GenerateTerrainDae();
-		}
-		else {
-			num = oarTool.GenerateTerrainSTL(true);
-		}
+		oarTool.SetTerrainTextureScale(appParam.terrainScale);
+		num = oarTool.GenerateTerrainDataFile(appParam.format);
+
 		if (mbox!=NULL) delete mbox;
 	}
 	//
 	if (stopnum!=0) {
 		CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
 		if (progress!=NULL) {
-			if (appParam.outputDae) progress->SetTitle("Convert to DAE Files");
-			else                    progress->SetTitle("Convert to STL Files");
+			if      (appParam.format==JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
+			else if (appParam.format==JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
+			else                                          progress->SetTitle("Convert to STL Files");
 			progress->Start(prognum);
 			SetGlobalCounter(progress);
 		}
 		//
-		if (appParam.outputDae) num = oarTool.GenerateObjectsDae(strtnum, stopnum, true, false, (char*)comDecomp.buf);
-		else                    num = oarTool.GenerateObjectsSTL(strtnum, stopnum, true);
+		num = oarTool.GenerateObjectsDataFile(appParam.format, strtnum, stopnum, true, false, (char*)comDecomp.buf);
 		//
 		if (progress!=NULL) {
 			progress->PutFill();
@@ -606,7 +595,6 @@ int   COARConvWinApp::convertAllFiles()
 			ClearGlobalCounter();
 		}
 	}
-	
 	return num;
 }
 
@@ -615,8 +603,7 @@ void  COARConvWinApp::convertSelectedData(int selectedNums, int* selectedObjs)
 {
 	isConverting = true;
 	updateMenuBar();
-	if (appParam.outputDae) oarTool.MakeOutputFolder(true);
-	else                    oarTool.MakeOutputFolder(false);
+	oarTool.MakeOutputFolder(appParam.format);
 
 	//
 	int num = convertSelectedFiles(selectedNums, selectedObjs);
@@ -652,14 +639,15 @@ int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
 	int num = 0;
 	CProgressBarDLG* progress = new CProgressBarDLG(_T(""), TRUE);
 	if (progress!=NULL) {
-		if (appParam.outputDae) progress->SetTitle("Convert to DAE Files");
-		else                    progress->SetTitle("Convert to STL Files");
+		if      (appParam.format == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
+		else if (appParam.format == JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
+		else                                            progress->SetTitle("Convert to STL Files");
 		progress->Start(prognum);
 		SetGlobalCounter(progress);
 	}
 	//
-	if (appParam.outputDae) num = oarTool.GenerateSelectedDae(selectedNums, selectedObjs, true, false, (char*)comDecomp.buf);
-	else                    num = oarTool.GenerateSelectedSTL(selectedNums, selectedObjs, true);
+	num = oarTool.GenerateSelectedDataFile(appParam.format, strtnum, stopnum, true, false, (char*)comDecomp.buf);
+	num = oarTool.GenerateSelectedDataFile(selectedNums, selectedObjs, true, false, (char*)comDecomp.buf);
 	//
 	if (progress!=NULL) {
 		progress->PutFill();

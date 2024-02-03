@@ -58,12 +58,10 @@ public:
 
 public:
 	void	 setOarFolder(LPCTSTR fldr) { appParam.oarFolder = fldr;}
-	void	 setDaeFolder(LPCTSTR fldr) { appParam.daeFolder = fldr;}
-	void	 setStlFolder(LPCTSTR fldr) { appParam.stlFolder = fldr;}
+	void	 setOutFolder(LPCTSTR fldr) { appParam.outFolder = fldr;}
 
 	LPCTSTR  getOarFolder(void) { return (LPCTSTR)appParam.oarFolder;}
-	LPCTSTR  getDaeFolder(void) { return (LPCTSTR)appParam.daeFolder;}
-	LPCTSTR  getStlFolder(void) { return (LPCTSTR)appParam.stlFolder;}
+	LPCTSTR  getOutFolder(void) { return (LPCTSTR)appParam.outFolder;}
 
 	bool	 fileOpen(CString);
 	bool	 fileOpenOAR  (CString);
@@ -108,9 +106,4 @@ public:
 };
 
 
-
-
 extern COARConvWinApp theApp;
-
-
-

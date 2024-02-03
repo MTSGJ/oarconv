@@ -6,35 +6,34 @@
 using namespace jbxwl;
 
 
-
-
 void  CParameterSet::init(void)
 {
-	configFilePath	= makeConfigFilePath();
-	configSizePath	= makeConfigSizePath();
+	configFilePath = makeConfigFilePath();
+	configSizePath = makeConfigSizePath();
 
 	// Parameters
 	oarFolder     = GetCurrentFolder();
-	daeFolder     = _T(".\\");
-	stlFolder     = _T(".\\");
+	outFolder     = _T(".\\");
 	logFolder     = _T(".\\Log");
 
 	startNum      =  1;
 	stopNum       = -1;
-	outputDae     = TRUE;
 	outputTerrain = TRUE;
 	debugMode     = FALSE;
 	
+	format        = JBXL_3D_FORMAT_STL_A;
 	terrainScale  = TRNT_DEFAULT_TEX_SCALE;
 	xShift        = 0.0f;
 	yShift        = 0.0f;
 	zShift        = 0.0f;
 
 	prefixOAR     = _T("OAR_");
+	prefixOUT     = _T("DAE_");
+
 	prefixDAE     = _T("DAE_");
+	prefixOBJ     = _T("OBJ_");
 	prefixSTL     = _T("STL_");
 }
-
 
 
 void  CParameterSet::readConfigFile(void)
@@ -44,15 +43,13 @@ void  CParameterSet::readConfigFile(void)
 
 	//
 	oarFolder     = get_tstr_param_tList (lt, "oarFolder", (LPCTSTR)oarFolder);
-	daeFolder     = get_tstr_param_tList (lt, "daeFolder", (LPCTSTR)daeFolder);
-	stlFolder     = get_tstr_param_tList (lt, "stlFolder", (LPCTSTR)stlFolder);
+	outFolder     = get_tstr_param_tList (lt, "outFolder", (LPCTSTR)outFolder);
 	logFolder     = get_tstr_param_tList (lt, "logFolder", (LPCTSTR)logFolder);
 
 	startNum      = get_int_param_tList  (lt, "startNum", startNum);
 	stopNum       = get_int_param_tList  (lt, "stopNum",  stopNum);
 
 	outputTerrain = get_bool_param_tList (lt, "outputTerrain", outputTerrain);
-	outputDae     = get_bool_param_tList (lt, "outputDae", outputDae);
 	debugMode     = get_bool_param_tList (lt, "debugMode", debugMode);
 
 	terrainScale  = get_float_param_tList(lt, "terrainScale", terrainScale);
@@ -70,7 +67,6 @@ void  CParameterSet::readConfigFile(void)
 }
 
 
-
 void  CParameterSet::saveConfigFile(void)
 {   
 	FILE* fp = tfopen(configFilePath, _T("wb"));
@@ -80,10 +76,8 @@ void  CParameterSet::saveConfigFile(void)
 	Buffer tmp = make_Buffer(LNAME);
 	copy_ts2Buffer(oarFolder, &tmp);
 	fprintf(fp, "oarFolder %s\n", (char*)tmp.buf);
-	copy_ts2Buffer(daeFolder, &tmp);
-	fprintf(fp, "daeFolder %s\n", (char*)tmp.buf);
-	copy_ts2Buffer(stlFolder, &tmp);
-	fprintf(fp, "stlFolder %s\n", (char*)tmp.buf);
+	copy_ts2Buffer(outFolder, &tmp);
+	fprintf(fp, "outFolder %s\n", (char*)tmp.buf);
 	copy_ts2Buffer(logFolder, &tmp);
 	fprintf(fp, "logFolder %s\n", (char*)tmp.buf);
 	//
@@ -106,8 +100,6 @@ void  CParameterSet::saveConfigFile(void)
 	//
 	if (outputTerrain) fprintf(fp, "outputTerrain %s\n", "TRUE");
 	else               fprintf(fp, "outputTerrain %s\n", "FALSE");
-	if (outputDae) fprintf(fp, "outputDae %s\n", "TRUE");
-	else           fprintf(fp, "outputDae %s\n", "FALSE");
 	if (debugMode) fprintf(fp, "debugMode %s\n", "TRUE");
 	else           fprintf(fp, "debugMode %s\n", "FALSE");
 
@@ -116,8 +108,6 @@ void  CParameterSet::saveConfigFile(void)
 	fclose(fp);
 	return;
 }
-
-
 
 
 //////////////////////////////////////////////////////////////////
@@ -129,7 +119,6 @@ void  CParameterSet::readWindowSize(RECT* winsz)
 
 	tList* lt = read_index_tList_file_t(configSizePath, ' ');
 	if (lt==NULL) return;
-
 	//	
 	winsz->left   = (LONG)get_int_param_tList(lt, "windowsPosX",  (int)winsz->left);
 	winsz->top	  = (LONG)get_int_param_tList(lt, "windowsPosY",  (int)winsz->top);
@@ -160,7 +149,6 @@ void  CParameterSet::saveWindowSize(RECT winsz)
 }
 
 
-
 CString  CParameterSet::makeConfigFilePath(void)
 {
 	// Roming
@@ -168,7 +156,6 @@ CString  CParameterSet::makeConfigFilePath(void)
 
 	return configf;
 }
-
 
 
 CString  CParameterSet::makeConfigSizePath(void)
