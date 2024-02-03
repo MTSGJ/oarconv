@@ -13,7 +13,6 @@ CBREPDoc クラス
 
 */
 
-
 #include  "ExClass.h"
 #include  "BrepLib.h"
 
@@ -22,7 +21,6 @@ CBREPDoc クラス
 
 using namespace jbxl;
 using namespace jbxwl;
-
 
 
 /////////////////////////////////////////////////////////////////////////////

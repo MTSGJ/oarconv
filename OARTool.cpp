@@ -745,7 +745,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                             //      ::free(paramstr);
                             //  }
                             //}
-                        
+
                             // convert texture
                             //char* addname = facet->material_param.getAdditionalName();
                             ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
@@ -793,8 +793,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             return (void*)obj;
         }
         else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-            //stl->getMerge(NULL);
-            //stl->outputFile(fname, (char*)pathOUT.buf, false);
             return (void*)stl;
         }
     }
@@ -819,7 +817,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         ColladaXML* dae = (ColladaXML*)solid;
         if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
         else                  out_path = dup_Buffer(pathOUT);
-        dae->outputFile(fname, (char*)out_path.buf, XML_INDENT_FORMAT); 
+        dae->outputFile(fname, (char*)out_path.buf, XML_INDENT_FORMAT);
     }
     else if (format==JBXL_3D_FORMAT_OBJ) {
         OBJData* obj = (OBJData*)solid;
@@ -828,11 +826,11 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         obj->outputFile(fname, (char*)out_path.buf);
     }
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-        bool binfile = true;
-        if (format==JBXL_3D_FORMAT_STL_A) binfile = false;
+        bool ascii = true;
+        if (format==JBXL_3D_FORMAT_STL_B) ascii = false;
         out_path = dup_Buffer(pathOUT);
         BrepSolidList* stl = (BrepSolidList*)solid;
-        stl->outputFile(fname, (char*)out_path.buf, binfile);
+        stl->outputFile(fname, (char*)out_path.buf, ascii);
     }
     free_Buffer(&out_path);
 

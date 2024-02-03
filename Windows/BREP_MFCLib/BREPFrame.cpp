@@ -3,13 +3,11 @@
 
 #include "stdafx.h"
 
-
 #include "BREPFrame.h"
 #include "BREPView.h"
 #include "BREPDoc.h"
 #include "resource.h"
 #include ".\brepframe.h"
-
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -20,7 +18,6 @@ static char THIS_FILE[] = __FILE__;
 
 using namespace jbxl;
 using namespace jbxwl;
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -44,8 +41,6 @@ BEGIN_MESSAGE_MAP(CBREPFrame, CExFrame)
 	ON_WM_CLOSE()
 	ON_WM_DESTROY()
 END_MESSAGE_MAP()
-
-
 
 
 
@@ -73,7 +68,6 @@ BOOL CBREPFrame::PreCreateWindow(CREATESTRUCT& cs)
 }
 
 
-
 /////////////////////////////////////////////////////////////////////////////
 // CBREPFrame クラスの診断
 
@@ -90,8 +84,6 @@ void CBREPFrame::Dump(CDumpContext& dc) const
 }
 
 #endif //_DEBUG
-
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -119,7 +111,6 @@ int CBREPFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	return 0;
 }
-
 
 
 ////////////////////////////////////////////////////////
@@ -222,20 +213,12 @@ void CBREPFrame::OnSolidInfo()
 }
 
 
-
-
-
-
-
-
 void CBREPFrame::OnClose()
 {
 	// TODO : ここにメッセージ ハンドラ コードを追加するか、既定の処理を呼び出します。
 	//if (((CBREPDoc*)pDoc)->ChangeData) ((CBREPDoc*)pDoc)->SaveFile(false);
 	CExFrame::OnClose();
 }
-
-
 
 
 void CBREPFrame::OnDestroy()
@@ -245,5 +228,4 @@ void CBREPFrame::OnDestroy()
 
 	// TODO : ここにメッセージ ハンドラ コードを追加します。
 }
-
 

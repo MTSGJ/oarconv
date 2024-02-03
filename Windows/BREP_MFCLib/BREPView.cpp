@@ -10,7 +10,6 @@
 #include "BREPDoc.h"
 #include "ProgressBarDLG.h"
 
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -22,10 +21,7 @@ using namespace jbxl;
 using namespace jbxwl;
 
 
-
-
 extern UINT TimerID;
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -47,13 +43,10 @@ CBREPView::~CBREPView()
 }
 
 
-
 BEGIN_MESSAGE_MAP(CBREPView, CDxVTXBaseView)
 	//{{AFX_MSG_MAP(CBREPView)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,7 +58,6 @@ void CBREPView::OnDraw(CDC* pDC)
 //	ExecRender();
 }
 */
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -82,8 +74,6 @@ void CBREPView::Dump(CDumpContext& dc) const
 	CDxVTXBaseView::Dump(dc);
 }
 #endif //_DEBUG
-
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -130,7 +120,6 @@ void  CBREPView::OnInitialUpdate()
 	hasViewData = TRUE;
 	return;
 }
-
 
 
 void    CBREPView::SetState()
@@ -188,7 +177,6 @@ void    CBREPView::SetState()
 }
 
 
-
 // 
 void   CBREPView::ExMouseWheel()
 {
@@ -200,7 +188,6 @@ void   CBREPView::ExMouseWheel()
 }
 
 
-
 void    CBREPView::ExecRender()
 {
 	HRESULT hr;
@@ -210,7 +197,6 @@ void    CBREPView::ExecRender()
 //	hr = lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(10,10,120), 1.0f, 0);
 	hr = lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(30,30,200), 1.0f, 0);
 	if (FAILED(hr)) { DEBUG_MODE PRINT_MESG("CBREPView::ExecRender: Failed to clear window\n"); return;}
-
 
 	// シーンの描画開始
 	hr = lpD3DDevice->BeginScene();	
@@ -245,7 +231,6 @@ void    CBREPView::ExecRender()
 		}
 	}
 }
-
 
 
 // 頂点バッファの準備
@@ -340,7 +325,6 @@ BOOL   CBREPView::PrepareVB()
 }
 
 
-
 //
 //  (angleX, angleY -> angle?, angle?)
 // 
@@ -352,12 +336,10 @@ void   CBREPView::ExRotationAngle()
 }
 
 
-
 void   CBREPView::ClearObject()
 {
 	hasViewData = FALSE;
 } 
-
 
 
 void   CBREPView::InitObject()
@@ -367,7 +349,6 @@ void   CBREPView::InitObject()
 }
 
 
-
 void CBREPView::SwitchWired() 
 {	
 	if (wired) wired = false;
@@ -375,11 +356,9 @@ void CBREPView::SwitchWired()
 }
 
 
-
 void CBREPView::SwitchSolid() 
 {
 	if (solided) solided = false;
 	else         solided = true;
 }
-
 

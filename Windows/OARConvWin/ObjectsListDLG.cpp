@@ -344,5 +344,5 @@ void  CObjectsListDLG::OpenPreviewWindow(int idx)
 		delete counter;
 	}
 	//
-	winApp->solidOpenBrep(solid, mbs2ts(fname), num+1);	// solid は呼び出された関数が解放する
+	winApp->solidOpenBrep(solid, mbs2ts(fname), num + 1);	// solid は呼び出された関数が解放する
 }

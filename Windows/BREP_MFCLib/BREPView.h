@@ -5,8 +5,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-
-
 /**
 CBREPView クラス
 
@@ -15,17 +13,12 @@ CBREPView クラス
 
 */
 
-
 #include  "DxBaseClass.h"
 #include  "Brep.h"
 #include  "TriBrep.h"
 
-
-
 using namespace jbxl;
 using namespace jbxwl;
-
-
 
 
 typedef struct 
@@ -40,7 +33,6 @@ typedef struct
 //#define	 FVF_SBREP_VERTEX (D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 //#define	 FVF_SBREP_VERTEX (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 #define	 FVF_SBREP_VERTEX (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE)
-
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -111,7 +103,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 };
-
 
 
 /////////////////////////////////////////////////////////////////////////////
