@@ -29,7 +29,6 @@ int main(int argc, char** argv)
     int   stopnum = -1;
     int   format  = JBXL_3D_FORMAT_DAE;
 
-    bool  phantom = false;
     bool  useBrep = true;
 
     for (int i=1; i<argc; i++) {
@@ -46,7 +45,6 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "-z")) { if (i!=argc-1) zshift = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-j")) { format = JBXL_3D_FORMAT_OBJ;}     // OBJデータを出力
         else if (!strcmp(argv[i], "-b")) { format = JBXL_3D_FORMAT_STL_B;}   // STLデータを出力
-        else if (!strcmp(argv[i], "-p")) { phantom   = true;}   // １個でも phantomを含むなら Phantomディレクトリへ
         else if (!strcmp(argv[i], "-d")) { DebugMode = ON;}
         else if (!strcmp(argv[i], "-h")) { oarconv_help(stdout); exit(0);}
         else if (!strcmp(argv[i], "-v")) { fprintf(stdout, " Version is %s\n", OARCONV_VERSION); exit(0);}
@@ -70,7 +68,7 @@ int main(int argc, char** argv)
 
     if (infile.buf!=NULL) {
         oar.objectsNum = 1;
-        oar.GenerateSelectedDataFile(format, (char*)infile.buf, useBrep, phantom, (char*)cmmnd.buf);
+        oar.GenerateSelectedDataFile(format, (char*)infile.buf, useBrep, (char*)cmmnd.buf);
     }
     else {
         if (strtnum==0) {
@@ -80,7 +78,7 @@ int main(int argc, char** argv)
             strtnum = 1;
         }
         if (stopnum!=0) {
-            oar.GenerateObjectsDataFile(format, strtnum, stopnum, useBrep, phantom, (char*)cmmnd.buf);
+            oar.GenerateObjectsDataFile(format, strtnum, stopnum, useBrep, (char*)cmmnd.buf);
         }
     }
     oar.free();

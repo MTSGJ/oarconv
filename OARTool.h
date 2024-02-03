@@ -110,7 +110,7 @@ public:
 public:
     void   SetPathInfo(int format, const char* oardir, const char* outdir, const char* astdir);
     bool   GetDataInfo(void);
-    void   MakeOutputFolder(int output=JBXL_3D_FORMAT_DAE);
+    void   MakeOutputFolder(int format);
 
     void   SetShift(Vector<float> vt) { shift = vt;}
     void   SetShift(float x, float y, float z) { shift.set(x, y, z);}
@@ -120,11 +120,11 @@ public:
 
     // DAE/OBJ/STL
     int    GenerateTerrainDataFile (int format);
-    int    GenerateObjectsDataFile (int format, int startnum=1, int stopnum=-1, bool useBrep=true, bool phantom=true, char* command=NULL);
-    void   GenerateSelectedDataFile(int format, char* fname, bool useBrep, bool phantom, char* command);
-//    int    GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep=true, bool phantom=false, char* command=NULL);
+    int    GenerateObjectsDataFile (int format, int startnum=1, int stopnum=-1, bool useBrep=true, char* command=NULL);
+    void   GenerateSelectedDataFile(int format, char* fname, bool useBrep=true, char* command=NULL);
+    int    GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep=true, char* command=NULL);
 
-    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, bool phantom=false, char* command=NULL);
+    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, char* command=NULL);
     void   outputSolidData(int format, const char* fname, void* solid);
     void   freeSolidData(int format, void* solid);
 

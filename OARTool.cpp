@@ -470,7 +470,7 @@ int  OARTool::GenerateTerrainDataFile(int format)
 }
 
 
-int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, bool useBrep, bool phantom, char* command)
+int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, bool useBrep, char* command)
 {
     tList* lp = objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
@@ -481,7 +481,7 @@ int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, boo
     while (lp!=NULL) {
         num++;
         if (num>=startnum && num<=stopnum) {
-            void* solid = generateSolidData(format, (char*)lp->ldat.val.buf, num, useBrep, phantom, command);
+            void* solid = generateSolidData(format, (char*)lp->ldat.val.buf, num, useBrep, command);
             outputSolidData(format, (char*)lp->ldat.val.buf, solid);
             freeSolidData(format, solid);
             if (counter!=NULL) {
@@ -498,18 +498,19 @@ int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, boo
 }
 
 
-void  OARTool::GenerateSelectedDataFile(int format, char* fname, bool useBrep, bool phantom, char* command)
+void  OARTool::GenerateSelectedDataFile(int format, char* fname, bool useBrep, char* command)
 {
     if (fname==NULL) return;
 
-    void* solid =generateSolidData(format, fname, 1, useBrep, phantom, command);
+    void* solid =generateSolidData(format, fname, 1, useBrep, command);
     outputSolidData(format, fname, solid);
     freeSolidData(format, solid);
 
     return;
 }
-/*
-int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep, bool phantom, char* command)
+
+
+int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep, char* command)
 {
     tList* lp = objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
@@ -518,7 +519,7 @@ int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, boo
     int cnt = 0;
     while (lp!=NULL) {
         if (num==objlist[cnt]) {
-            void* solid =generateSolidData(format, (char*)lp->ldat.val.buf, num + 1, useBrep, phantom, command);
+            void* solid =generateSolidData(format, (char*)lp->ldat.val.buf, num + 1, useBrep, command);
             outputSolidData(format, (char*)lp->ldat.val.buf, solid);
             freeSolidData(format, solid);
             if (counter!=NULL) {
@@ -535,11 +536,10 @@ int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, boo
 
     return cnt;
 }
-*/
 
 
 /**
-void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, bool phantom, char* command)
+void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
 
 Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) から指定された形式で SOLIDデータを生成する．
 
@@ -547,11 +547,10 @@ Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１�
 @param fname    オブジェクト名（xmlファイル名）
 @param num      表示用の処理番号．
 @param useBrep  頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
-@paeam phantom  オブジェクト中に１個でもファントムがある場合，全体をファントムとするか？
 @param command  JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
 @retval 生成されたデータへのポインタ．それぞれのデータ型でキャストして使用する．
 */
-void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, bool phantom, char* command)
+void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
 {
     if (fname==NULL) return NULL;
     PRINT_MESG("[%d/%d] GenerateSolid: generating %s\n", num, objectsNum, fname);
@@ -591,7 +590,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     }
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         useBrep = true;
-        phantom = false;
         command = NULL;
         stl = new BrepSolidList();
     }
@@ -722,11 +720,11 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
                 //
                 if (format==JBXL_3D_FORMAT_DAE) {
-                    if (!collider && phantom) dae->phantom_out = true;
+                    if (collider) dae->phantom_out = false;
                     dae->addObject(data, collider);
                 }
                 else if (format==JBXL_3D_FORMAT_OBJ) {
-                    if (!collider && phantom) obj->phantom_out = true;
+                    if (collider) obj->phantom_out = false;
                     obj->addObject(data, collider);
                 }
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
