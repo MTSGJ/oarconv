@@ -797,27 +797,3 @@ void  COARConvWinApp::updateStatusBar(CString path)
 
 	return;
 }
-
-
-/*
-void  COARConvWinApp::printSelectedObjects(int objnum, int* objlist)
-{
-	if (objnum==0 || objlist==NULL) return;
-
-	tList* lp = oarTool.GetObjectsList();
-
-	int num = 0;
-	int cnt = 0;
-	while (lp!=NULL) {
-		if (num==objlist[cnt]) {
-			char* fname = get_file_name((char*)lp->ldat.val.buf);
-			PRINT_MESG("printSelectedObjects: selected %d: %s\n", num+1, fname);
-			cnt++;
-			if (cnt==objnum) break;
-		}
-		num++;
-		lp = lp->next;
-	}
-
-	return;
-}*/

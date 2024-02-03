@@ -502,18 +502,12 @@ int  OARTool::GenerateTerrainDataFile(int format)
     PRINT_MESG("GenerateTerrainSolid: generating terrain datafile file (%d)\n", format);
     int num = 0;
     while (num<terrainNum) {
-        PRINT_MESG("1111111111111111   %d\n", terrainNum);
         terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf, forUnity3D);
-        PRINT_MESG("22222222222222222\n");
         terrain[num].GenerateTerrain(format, (char*)pathOUT.buf, shift, forUnity3D);
-        PRINT_MESG("333333333333333333\n");
         num++;
 #ifdef WIN32
-        PRINT_MESG("444444444444444444444\n");
-        //DisPatcher(); 
-        PRINT_MESG("55555555555555555555\n");
+        DisPatcher(); 
 #endif
-        PRINT_MESG("66666666666666666666\n");
     }
     return num;
 }
