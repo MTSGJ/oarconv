@@ -13,12 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// æ—¥æœ¬èªž (æ—¥æœ¬) resources
+// “ú–{Œê (“ú–{) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
 LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
-//#pragma code_page(932)
-#pragma code_page(65001)
+#pragma code_page(932)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -74,28 +73,28 @@ IDR_BREPFRAME           ICON                    "res\\OARConvWinDoc.ico"
 
 IDR_MAINFRAME MENU
 BEGIN
-    POPUP "ãƒ•ã‚¡ã‚¤ãƒ« (&F)"
+    POPUP "ƒtƒ@ƒCƒ‹ (&F)"
     BEGIN
-        MENUITEM "OARãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã (&O)",             ID_FILE_OPEN
-        MENUITEM "OARãƒ•ã‚©ãƒ«ãƒ€ã‚’é–‹ã (&F)",             ID_FOLDER_OPEN
+        MENUITEM "OARƒtƒ@ƒCƒ‹‚ðŠJ‚­ (&O)",             ID_FILE_OPEN
+        MENUITEM "OARƒtƒHƒ‹ƒ_‚ðŠJ‚­ (&F)",             ID_FOLDER_OPEN
         MENUITEM SEPARATOR
-        MENUITEM "ãƒ‡ãƒ¼ã‚¿å¤‰æ› (&C)",                  ID_CONVERT_DATA
+        MENUITEM "ƒf[ƒ^•ÏŠ· (&C)",                  ID_CONVERT_DATA
         MENUITEM SEPARATOR
         MENUITEM " ",                           ID_DUMMY
         MENUITEM SEPARATOR
-        MENUITEM "ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çµ‚äº†(&X)",             ID_APP_EXIT
+        MENUITEM "ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌI—¹(&X)",             ID_APP_EXIT
     END
-    POPUP "ãƒ„ãƒ¼ãƒ« (&T)"
+    POPUP "ƒc[ƒ‹ (&T)"
     BEGIN
-        MENUITEM "ãƒ­ã‚°ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ (&L)",                ID_LOG_WINDOW
+        MENUITEM "ƒƒOƒEƒBƒ“ƒhƒE (&L)",                ID_LOG_WINDOW
         MENUITEM SEPARATOR
-        MENUITEM "ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒªã‚¹ãƒˆ (&O)",              ID_OBJ_LIST
+        MENUITEM "ƒIƒuƒWƒFƒNƒgƒŠƒXƒg (&O)",              ID_OBJ_LIST
         MENUITEM SEPARATOR
-        MENUITEM "è¨­å®š (&S)",                     ID_SETTING_DIALOG
+        MENUITEM "Ý’è (&S)",                     ID_SETTING_DIALOG
     END
-    POPUP "ãƒ˜ãƒ«ãƒ— (&H)"
+    POPUP "ƒwƒ‹ƒv (&H)"
     BEGIN
-        MENUITEM "ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±... (&A)",             ID_APP_ABOUT
+        MENUITEM "ƒo[ƒWƒ‡ƒ“î•ñ... (&A)",             ID_APP_ABOUT
     END
 END
 
@@ -131,11 +130,11 @@ END
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 196, 48
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ± OARConvWin"
-FONT 9, "ãƒ¡ã‚¤ãƒªã‚ª", 400, 0, 0x80
+CAPTION "ƒo[ƒWƒ‡ƒ“î•ñ OARConvWin"
+FONT 9, "ƒƒCƒŠƒI", 400, 0, 0x80
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,10,10,20,20
-    LTEXT           "OARConvWin, Version 1.5.0",IDC_STATIC,37,7,123,8,SS_NOPREFIX
+    LTEXT           "OARConvWin v1.6",IDC_STATIC,37,7,123,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2015",IDC_STATIC,41,28,69,8
     DEFPUSHBUTTON   "OK",IDOK,134,33,50,10,WS_GROUP
     LTEXT           "by F.Iseki, A.Tate, D.Mizumaki and K.Suzuki",IDC_STATIC,41,18,147,8,SS_NOPREFIX
@@ -143,13 +142,13 @@ END
 
 IDD_DIALOG_OARINFO DIALOGEX 0, 0, 153, 82
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "OARæƒ…å ±"
-FONT 9, "ãƒ¡ã‚¤ãƒªã‚ª", 400, 0, 0x80
+CAPTION "OARî•ñ"
+FONT 9, "ƒƒCƒŠƒI", 400, 0, 0x80
 BEGIN
-    LTEXT           "ãƒªãƒ¼ã‚¸ãƒ§ãƒ³å",IDC_STATIC,7,7,52,11
-    LTEXT           "OARãƒãƒ¼ã‚¸ãƒ§ãƒ³",IDC_STATIC,7,20,52,11
-    LTEXT           "ãƒªãƒ¼ã‚¸ãƒ§ãƒ³ã‚µã‚¤ã‚º",IDC_STATIC,7,33,58,11
-    LTEXT           "ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ•°",IDC_STATIC,7,46,52,11
+    LTEXT           "ƒŠ[ƒWƒ‡ƒ“–¼",IDC_STATIC,7,7,52,11
+    LTEXT           "OARƒo[ƒWƒ‡ƒ“",IDC_STATIC,7,20,52,11
+    LTEXT           "ƒŠ[ƒWƒ‡ƒ“ƒTƒCƒY",IDC_STATIC,7,33,58,11
+    LTEXT           "ƒIƒuƒWƒFƒNƒg”",IDC_STATIC,7,46,52,11
     LTEXT           "non",IDC_STATIC_RGNAME,68,6,78,10,SS_SUNKEN
     LTEXT           "0.8",IDC_STATIC_OARVER,68,19,46,10,SS_SUNKEN
     LTEXT           "256x256",IDC_STATIC_RGSIZE,68,32,46,10,SS_SUNKEN
@@ -157,51 +156,54 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,53,65,50,14
 END
 
-IDD_DIALOG_OARSET DIALOGEX 0, 0, 168, 234
+IDD_DIALOG_OARSET DIALOGEX 0, 0, 168, 265
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "è¨­å®š"
-FONT 9, "ãƒ¡ã‚¤ãƒªã‚ª", 400, 0, 0x80
+CAPTION "Ý’è"
+FONT 9, "ƒƒCƒŠƒI", 400, 0, 0x80
 BEGIN
-    GROUPBOX        "ãƒ‡ãƒ¼ã‚¿å‡ºåŠ›",IDC_STATIC,7,8,153,93
-    LTEXT           "é–‹å§‹ç•ªå·",IDC_STATIC,21,18,35,10
-    LTEXT           "çµ‚äº†ç•ªå·",IDC_STATIC,21,31,35,10
+    GROUPBOX        "ƒf[ƒ^o—Í",IDC_STATIC,7,8,153,108
+    LTEXT           "ŠJŽn”Ô†",IDC_STATIC,21,18,35,10
+    LTEXT           "I—¹”Ô†",IDC_STATIC,21,31,35,10
     EDITTEXT        IDC_EDIT_START_NUM,54,17,27,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_EDIT_STOP_NUM,54,30,27,12,ES_AUTOHSCROLL
-    CONTROL         "DAE",IDC_RADIO_DAE,"Button",BS_AUTORADIOBUTTON,21,42,35,10
-    CONTROL         "STL",IDC_RADIO_STL,"Button",BS_AUTORADIOBUTTON,21,52,35,10
-    CONTROL         "åœŸåœ°ãƒ‡ãƒ¼ã‚¿ã®å‡ºåŠ›",IDC_CHECK_TERRAIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,64,99,10
-    LTEXT           "åœŸåœ°ç”»åƒã‚¹ã‚±ãƒ¼ãƒ«",IDC_STATIC,21,76,64,10
-    EDITTEXT        IDC_EDIT_TERRAIN_SCALE,83,75,31,12,ES_AUTOHSCROLL
-    CONTROL         "ãƒ‡ãƒãƒƒã‚°ãƒ¢ãƒ¼ãƒ‰",IDC_CHECK_DEBUGMODE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,87,69,10
-    GROUPBOX        "ã‚·ãƒ•ãƒˆ",IDC_STATIC,7,104,153,51
-    LTEXT           "X æ–¹å‘",IDC_STATIC,21,114,35,10
-    LTEXT           "Y æ–¹å‘",IDC_STATIC,21,127,35,10
-    LTEXT           "Z æ–¹å‘",IDC_STATIC,21,140,35,10
-    EDITTEXT        IDC_EDIT_SHIFT_X,53,113,31,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_SHIFT_Y,53,126,31,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_SHIFT_Z,53,139,31,12,ES_AUTOHSCROLL
-    GROUPBOX        "ãƒ•ã‚©ãƒ«ãƒ€",IDC_STATIC,7,158,153,51
-    LTEXT           "OAR ãƒ•ã‚©ãƒ«ãƒ€ æŽ¥é ­æ–‡å­—",IDC_STATIC,21,168,82,10
-    LTEXT           "DAE ãƒ•ã‚©ãƒ«ãƒ€ æŽ¥é ­æ–‡å­—",IDC_STATIC,21,181,82,10
-    LTEXT           "STL ãƒ•ã‚©ãƒ«ãƒ€ æŽ¥é ­æ–‡å­—",IDC_STATIC,21,194,82,10
-    EDITTEXT        IDC_EDIT_PREFIX_OAR,98,167,53,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_PREFIX_DAE,98,180,53,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_PREFIX_STL,98,193,53,12,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "OK",IDOK,17,212,59,15
-    PUSHBUTTON      "ã‚­ãƒ£ãƒ³ã‚»ãƒ«",IDCANCEL,89,212,59,15
+    CONTROL         "DAE",IDC_RADIO_DAE,"Button",BS_AUTORADIOBUTTON,20,43,35,10
+    CONTROL         "OBJ",IDC_RADIO_OBJ,"Button",BS_AUTORADIOBUTTON,20,53,35,10
+    CONTROL         "STL",IDC_RADIO_STL,"Button",BS_AUTORADIOBUTTON,20,63,35,10
+    CONTROL         "“y’nƒf[ƒ^‚Ìo—Í",IDC_CHECK_TERRAIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,78,99,10
+    LTEXT           "“y’n‰æ‘œƒXƒP[ƒ‹",IDC_STATIC,21,90,64,10
+    EDITTEXT        IDC_EDIT_TERRAIN_SCALE,83,89,31,12,ES_AUTOHSCROLL
+    CONTROL         "ƒfƒoƒbƒOƒ‚[ƒh",IDC_CHECK_DEBUGMODE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,21,101,69,10
+    GROUPBOX        "ƒVƒtƒg",IDC_STATIC,7,120,153,51
+    LTEXT           "X •ûŒü",IDC_STATIC,21,130,35,10
+    LTEXT           "Y •ûŒü",IDC_STATIC,21,143,35,10
+    LTEXT           "Z •ûŒü",IDC_STATIC,21,156,35,10
+    EDITTEXT        IDC_EDIT_SHIFT_X,53,129,31,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_SHIFT_Y,53,142,31,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_SHIFT_Z,53,155,31,12,ES_AUTOHSCROLL
+    GROUPBOX        "ƒtƒHƒ‹ƒ_",IDC_STATIC,7,173,153,67
+    LTEXT           "OAR ƒtƒHƒ‹ƒ_ Ú“ª•¶Žš",IDC_STATIC,20,184,82,10
+    LTEXT           "DAE ƒtƒHƒ‹ƒ_ Ú“ª•¶Žš",IDC_STATIC,20,198,82,10
+    LTEXT           "OBJ ƒtƒHƒ‹ƒ_ Ú“ª•¶Žš",IDC_STATIC,20,212,82,10
+    LTEXT           "STL ƒtƒHƒ‹ƒ_ Ú“ª•¶Žš",IDC_STATIC,20,226,82,10
+    EDITTEXT        IDC_EDIT_PREFIX_OAR,98,184,53,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PREFIX_DAE,98,198,53,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PREFIX_OBJ,98,212,53,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PREFIX_STL,98,226,53,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,17,243,59,15
+    PUSHBUTTON      "ƒLƒƒƒ“ƒZƒ‹",IDCANCEL,89,243,59,15
 END
 
 IDD_DIALOG_OBJLIST DIALOGEX 0, 0, 349, 188
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ ãƒªã‚¹ãƒˆ"
-FONT 9, "ãƒ¡ã‚¤ãƒªã‚ª", 400, 0, 0x80
+CAPTION "ƒIƒuƒWƒFƒNƒg ƒŠƒXƒg"
+FONT 9, "ƒƒCƒŠƒI", 400, 0, 0x80
 BEGIN
     LISTBOX         IDC_LIST_OBJECTS,7,22,335,148,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "ãƒ‡ãƒ¼ã‚¿å¤‰æ›",IDC_OBJLIST_CONV,188,174,46,10
-    PUSHBUTTON      "ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼",IDC_OBJLIST_PREVIEW,242,174,46,10
-    PUSHBUTTON      "é–‰ã˜ã‚‹",IDC_OBJLIST_CLOSE,296,174,46,10
-    PUSHBUTTON      "æ¤œç´¢",IDC_OBJLIST_FIND,242,7,46,10
-    PUSHBUTTON      "ã‚¯ãƒªã‚¢",IDC_OBJLIST_CLEAR,296,7,46,10
+    PUSHBUTTON      "ƒf[ƒ^•ÏŠ·",IDC_OBJLIST_CONV,188,174,46,10
+    PUSHBUTTON      "ƒvƒŒƒrƒ…[",IDC_OBJLIST_PREVIEW,242,174,46,10
+    PUSHBUTTON      "•Â‚¶‚é",IDC_OBJLIST_CLOSE,296,174,46,10
+    PUSHBUTTON      "ŒŸõ",IDC_OBJLIST_FIND,242,7,46,10
+    PUSHBUTTON      "ƒNƒŠƒA",IDC_OBJLIST_CLEAR,296,7,46,10
     EDITTEXT        IDC_EDIT_FNDSTR,7,7,230,10,ES_AUTOHSCROLL
 END
 
@@ -231,12 +233,12 @@ BEGIN
             VALUE "Comments", "Subaru Projects"
             VALUE "CompanyName", "NSL"
             VALUE "FileDescription", "OAR Converter"
-            VALUE "FileVersion", "1.5.0.0"
+            VALUE "FileVersion", "1.6.0.0"
             VALUE "InternalName", "OARConvWin.exe"
             VALUE "LegalCopyright", "(C) Fumi.Iseki  All rights reserved."
             VALUE "OriginalFilename", "OARConvWin.exe"
             VALUE "ProductName", "OARConv"
-            VALUE "ProductVersion", "1.5.0.0"
+            VALUE "ProductVersion", "1.6.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -273,7 +275,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 160
         TOPMARGIN, 7
-        BOTTOMMARGIN, 227
+        BOTTOMMARGIN, 258
     END
 
     IDD_DIALOG_OBJLIST, DIALOG
@@ -297,6 +299,11 @@ BEGIN
     0
 END
 
+IDD_DIALOG_OARSET AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -312,8 +319,8 @@ END
 STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "OARConvWin"
-    AFX_IDS_IDLEMESSAGE     "ãƒ¬ãƒ‡ã‚£"
-    IDS_STR_ERR_EXTRACT     "ãƒ•ã‚¡ã‚¤ãƒ«ã®å±•é–‹ã‚¨ãƒ©ãƒ¼"
+    AFX_IDS_IDLEMESSAGE     "ƒŒƒfƒB"
+    IDS_STR_ERR_EXTRACT     "ƒtƒ@ƒCƒ‹‚Ì“WŠJƒGƒ‰["
 END
 
 STRINGTABLE
@@ -322,108 +329,108 @@ BEGIN
     ID_INDICATOR_CAPS       "CAP"
     ID_INDICATOR_NUM        "NUM"
     ID_INDICATOR_SCRL       "SCRL"
-    ID_INDICATOR_OVR        "ä¸Šæ›¸ã"
-    ID_INDICATOR_REC        "è¨˜éŒ²"
+    ID_INDICATOR_OVR        "ã‘‚«"
+    ID_INDICATOR_REC        "‹L˜^"
 END
 
 STRINGTABLE
 BEGIN
-    ID_FILE_NEW             "æ–°è¦ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆ\næ–°è¦ãƒ•ã‚¡ã‚¤ãƒ«"
-    ID_FILE_OPEN            "æ—¢å­˜ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã\né–‹ã"
-    ID_FILE_CLOSE           "ä½œæ¥­ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹\né–‰ã˜ã‚‹"
-    ID_FILE_SAVE            "ä½œæ¥­ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¸Šæ›¸ãã—ã¦ä¿å­˜\nä¿å­˜"
-    ID_FILE_SAVE_AS         "ä½œæ¥­ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æ–°ã—ã„åå‰ã§ä¿å­˜\nåå‰ã‚’ã¤ã‘ã¦ä¿å­˜"
-    ID_FILE_PAGE_SETUP      "å°åˆ·ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®å¤‰æ›´\nãƒšãƒ¼ã‚¸ ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã®è¨­å®š"
-    ID_FILE_PRINT_SETUP     "ãƒ—ãƒªãƒ³ã‚¿ãŠã‚ˆã³å°åˆ·ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®å¤‰æ›´\nå°åˆ·è¨­å®š"
-    ID_FILE_PRINT           "ä½œæ¥­ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å°åˆ·\nå°åˆ·"
-    ID_FILE_PRINT_PREVIEW   "å°åˆ·ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’è¡¨ç¤º\nå°åˆ·ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼"
+    ID_FILE_NEW             "V‹K‚Éƒtƒ@ƒCƒ‹‚ðì¬\nV‹Kƒtƒ@ƒCƒ‹"
+    ID_FILE_OPEN            "Šù‘¶‚Ìƒtƒ@ƒCƒ‹‚ðŠJ‚­\nŠJ‚­"
+    ID_FILE_CLOSE           "ì‹Æ’†‚Ìƒtƒ@ƒCƒ‹‚ð•Â‚¶‚é\n•Â‚¶‚é"
+    ID_FILE_SAVE            "ì‹Æ’†‚Ìƒtƒ@ƒCƒ‹‚ðã‘‚«‚µ‚Ä•Û‘¶\n•Û‘¶"
+    ID_FILE_SAVE_AS         "ì‹Æ’†‚Ìƒtƒ@ƒCƒ‹‚ðV‚µ‚¢–¼‘O‚Å•Û‘¶\n–¼‘O‚ð‚Â‚¯‚Ä•Û‘¶"
+    ID_FILE_PAGE_SETUP      "ˆóüƒIƒvƒVƒ‡ƒ“‚Ì•ÏX\nƒy[ƒW ƒŒƒCƒAƒEƒg‚ÌÝ’è"
+    ID_FILE_PRINT_SETUP     "ƒvƒŠƒ“ƒ^‚¨‚æ‚ÑˆóüƒIƒvƒVƒ‡ƒ“‚Ì•ÏX\nˆóüÝ’è"
+    ID_FILE_PRINT           "ì‹Æ’†‚Ìƒtƒ@ƒCƒ‹‚ðˆóü\nˆóü"
+    ID_FILE_PRINT_PREVIEW   "ˆóüƒCƒ[ƒW‚ð•\Ž¦\nˆóüƒvƒŒƒrƒ…["
 END
 
 STRINGTABLE
 BEGIN
-    ID_APP_ABOUT            "ãƒ—ãƒ­ã‚°ãƒ©ãƒ æƒ…å ±ã€ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã€è‘—ä½œæ¨©ã‚’è¡¨ç¤ºã—ã¾ã™ã€‚\nãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±"
-    ID_APP_EXIT             "ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚’çµ‚äº†ã—ã€ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã‚’æŒ‡ç¤º\\çµ‚äº†"
+    ID_APP_ABOUT            "ƒvƒƒOƒ‰ƒ€î•ñAƒo[ƒWƒ‡ƒ“A’˜ìŒ ‚ð•\Ž¦‚µ‚Ü‚·B\nƒo[ƒWƒ‡ƒ“î•ñ"
+    ID_APP_EXIT             "ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ðI—¹‚µAƒtƒ@ƒCƒ‹‚Ì•Û‘¶‚ðŽwŽ¦\\I—¹"
 END
 
 STRINGTABLE
 BEGIN
-    ID_FILE_MRU_FILE        "æŒ‡å®šã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã"
+    ID_FILE_MRU_FILE        "Žw’è‚Ìƒtƒ@ƒCƒ‹‚ðŠJ‚­"
 END
 
 STRINGTABLE
 BEGIN
-    ID_NEXT_PANE            "æ¬¡ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«åˆ‡ã‚Šæ›¿ãˆã‚‹\næ¬¡ã®ãƒšã‚¤ãƒ³"
-    ID_PREV_PANE            "å‰ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«åˆ‡ã‚Šæ›¿ãˆã‚‹\nå‰ã®ãƒšã‚¤ãƒ³"
+    ID_NEXT_PANE            "ŽŸ‚ÌƒEƒBƒ“ƒhƒE‚ÉØ‚è‘Ö‚¦‚é\nŽŸ‚ÌƒyƒCƒ“"
+    ID_PREV_PANE            "‘O‚ÌƒEƒBƒ“ƒhƒE‚ÉØ‚è‘Ö‚¦‚é\n‘O‚ÌƒyƒCƒ“"
 END
 
 STRINGTABLE
 BEGIN
-    ID_WINDOW_NEW           "ä½œæ¥­ä¸­ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¤‡å†™ã—ã¦è¡¨ç¤º\næ–°è¦ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦"
-    ID_WINDOW_ARRANGE       "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä¸‹éƒ¨ã«ã‚¢ã‚¤ã‚³ãƒ³ã‚’æ•´åˆ—\nã‚¢ã‚¤ã‚³ãƒ³ã®æ•´åˆ—"
-    ID_WINDOW_CASCADE       "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é‡ã­ã¦è¡¨ç¤º\né‡ã­ã¦è¡¨ç¤º"
-    ID_WINDOW_TILE_HORZ     "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä¸¦ã¹ã¦è¡¨ç¤º\nä¸¦ã¹ã¦è¡¨ç¤º"
-    ID_WINDOW_TILE_VERT     "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä¸¦ã¹ã¦è¡¨ç¤º\nä¸¦ã¹ã¦è¡¨ç¤º"
-    ID_WINDOW_SPLIT         "ä½œæ¥­ä¸­ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’åˆ†å‰²\nåˆ†å‰²"
+    ID_WINDOW_NEW           "ì‹Æ’†‚ÌƒEƒBƒ“ƒhƒE‚ð•¡ŽÊ‚µ‚Ä•\Ž¦\nV‹KƒEƒBƒ“ƒhƒE"
+    ID_WINDOW_ARRANGE       "ƒEƒBƒ“ƒhƒE‚Ì‰º•”‚ÉƒAƒCƒRƒ“‚ð®—ñ\nƒAƒCƒRƒ“‚Ì®—ñ"
+    ID_WINDOW_CASCADE       "ƒEƒBƒ“ƒhƒE‚ðd‚Ë‚Ä•\Ž¦\nd‚Ë‚Ä•\Ž¦"
+    ID_WINDOW_TILE_HORZ     "ƒEƒBƒ“ƒhƒE‚ð•À‚×‚Ä•\Ž¦\n•À‚×‚Ä•\Ž¦"
+    ID_WINDOW_TILE_VERT     "ƒEƒBƒ“ƒhƒE‚ð•À‚×‚Ä•\Ž¦\n•À‚×‚Ä•\Ž¦"
+    ID_WINDOW_SPLIT         "ì‹Æ’†‚ÌƒEƒBƒ“ƒhƒE‚ð•ªŠ„\n•ªŠ„"
 END
 
 STRINGTABLE
 BEGIN
-    ID_EDIT_CLEAR           "é¸æŠžç¯„å›²ã‚’æ¶ˆåŽ»\næ¶ˆåŽ»"
-    ID_EDIT_CLEAR_ALL       "ã™ã¹ã¦æ¶ˆåŽ»\nã™ã¹ã¦æ¶ˆåŽ»"
-    ID_EDIT_COPY            "é¸æŠžç¯„å›²ã‚’ã‚³ãƒ”ãƒ¼ã—ã¦ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã«ä¿å­˜\nä¿å­˜"
-    ID_EDIT_CUT             "é¸æŠžç¯„å›²ã‚’åˆ‡ã‚Šå–ã£ã¦ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã«ä¿å­˜\nåˆ‡ã‚Šå–ã‚Š"
-    ID_EDIT_FIND            "æŒ‡å®šã—ãŸæ–‡å­—åˆ—ã®æ¤œç´¢\næ¤œç´¢"
-    ID_EDIT_PASTE           "ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã®å†…å®¹ã‚’è²¼ã‚Šä»˜ã‘\nè²¼ã‚Šä»˜ã‘"
-    ID_EDIT_REPEAT          "ç›´å‰ã«è¡Œã£ãŸå‹•ä½œã‚’ç¹°ã‚Šè¿”ã™\nç¹°ã‚Šè¿”ã—"
-    ID_EDIT_REPLACE         "æŒ‡å®šã—ãŸæ–‡å­—åˆ—ã‚’ä»–ã®æ–‡å­—åˆ—ã§ç½®æ›\nç½®æ›"
-    ID_EDIT_SELECT_ALL      "ãƒ•ã‚¡ã‚¤ãƒ«å†…ã®ã™ã¹ã¦ã‚’é¸æŠž\nã™ã¹ã¦é¸æŠž"
-    ID_EDIT_UNDO            "ç›´å‰ã«è¡Œã£ãŸå‹•ä½œã‚’å…ƒã«æˆ»ã™\nå…ƒã«æˆ»ã™"
-    ID_EDIT_REDO            "ç›´å‰ã«è¡Œã£ãŸå‹•ä½œã‚’ç¹°ã‚Šè¿”ã™\nç¹°ã‚Šè¿”ã™"
+    ID_EDIT_CLEAR           "‘I‘ð”ÍˆÍ‚ðÁ‹Ž\nÁ‹Ž"
+    ID_EDIT_CLEAR_ALL       "‚·‚×‚ÄÁ‹Ž\n‚·‚×‚ÄÁ‹Ž"
+    ID_EDIT_COPY            "‘I‘ð”ÍˆÍ‚ðƒRƒs[‚µ‚ÄƒNƒŠƒbƒvƒ{[ƒh‚É•Û‘¶\n•Û‘¶"
+    ID_EDIT_CUT             "‘I‘ð”ÍˆÍ‚ðØ‚èŽæ‚Á‚ÄƒNƒŠƒbƒvƒ{[ƒh‚É•Û‘¶\nØ‚èŽæ‚è"
+    ID_EDIT_FIND            "Žw’è‚µ‚½•¶Žš—ñ‚ÌŒŸõ\nŒŸõ"
+    ID_EDIT_PASTE           "ƒNƒŠƒbƒvƒ{[ƒh‚Ì“à—e‚ð“\‚è•t‚¯\n“\‚è•t‚¯"
+    ID_EDIT_REPEAT          "’¼‘O‚És‚Á‚½“®ì‚ðŒJ‚è•Ô‚·\nŒJ‚è•Ô‚µ"
+    ID_EDIT_REPLACE         "Žw’è‚µ‚½•¶Žš—ñ‚ð‘¼‚Ì•¶Žš—ñ‚Å’uŠ·\n’uŠ·"
+    ID_EDIT_SELECT_ALL      "ƒtƒ@ƒCƒ‹“à‚Ì‚·‚×‚Ä‚ð‘I‘ð\n‚·‚×‚Ä‘I‘ð"
+    ID_EDIT_UNDO            "’¼‘O‚És‚Á‚½“®ì‚ðŒ³‚É–ß‚·\nŒ³‚É–ß‚·"
+    ID_EDIT_REDO            "’¼‘O‚És‚Á‚½“®ì‚ðŒJ‚è•Ô‚·\nŒJ‚è•Ô‚·"
 END
 
 STRINGTABLE
 BEGIN
-    ID_VIEW_TOOLBAR         "ãƒ„ãƒ¼ãƒ« ãƒãƒ¼ã® è¡¨ç¤º/éžè¡¨ç¤º\nãƒ„ãƒ¼ãƒ« ãƒãƒ¼ã®è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ"
-    ID_VIEW_STATUS_BAR      "ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ ãƒãƒ¼ã® è¡¨ç¤º/éžè¡¨ç¤º\nã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ ãƒãƒ¼ã®è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ"
+    ID_VIEW_TOOLBAR         "ƒc[ƒ‹ ƒo[‚Ì •\Ž¦/”ñ•\Ž¦\nƒc[ƒ‹ ƒo[‚Ì•\Ž¦Ø‚è‘Ö‚¦"
+    ID_VIEW_STATUS_BAR      "ƒXƒe[ƒ^ƒX ƒo[‚Ì •\Ž¦/”ñ•\Ž¦\nƒXƒe[ƒ^ƒX ƒo[‚Ì•\Ž¦Ø‚è‘Ö‚¦"
 END
 
 STRINGTABLE
 BEGIN
-    AFX_IDS_SCSIZE          "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºã‚’å¤‰æ›´"
-    AFX_IDS_SCMOVE          "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½ç½®ã‚’å¤‰æ›´"
-    AFX_IDS_SCMINIMIZE      "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’æœ€å°åŒ–ã™ã‚‹"
-    AFX_IDS_SCMAXIMIZE      "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’æœ€å¤§åŒ–ã™ã‚‹"
-    AFX_IDS_SCNEXTWINDOW    "æ¬¡ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«åˆ‡ã‚Šæ›¿ãˆã‚‹"
-    AFX_IDS_SCPREVWINDOW    "å‰ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«åˆ‡ã‚Šæ›¿ãˆã‚‹"
-    AFX_IDS_SCCLOSE         "ä½œæ¥­ä¸­ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é–‰ã˜ã€å¤‰æ›´ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã‚’æŒ‡ç¤º"
+    AFX_IDS_SCSIZE          "ƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY‚ð•ÏX"
+    AFX_IDS_SCMOVE          "ƒEƒBƒ“ƒhƒE‚ÌˆÊ’u‚ð•ÏX"
+    AFX_IDS_SCMINIMIZE      "ƒEƒBƒ“ƒhƒE‚ðÅ¬‰»‚·‚é"
+    AFX_IDS_SCMAXIMIZE      "ƒEƒBƒ“ƒhƒE‚ðÅ‘å‰»‚·‚é"
+    AFX_IDS_SCNEXTWINDOW    "ŽŸ‚ÌƒEƒBƒ“ƒhƒE‚ÉØ‚è‘Ö‚¦‚é"
+    AFX_IDS_SCPREVWINDOW    "‘O‚ÌƒEƒBƒ“ƒhƒE‚ÉØ‚è‘Ö‚¦‚é"
+    AFX_IDS_SCCLOSE         "ì‹Æ’†‚ÌƒEƒBƒ“ƒhƒE‚ð•Â‚¶A•ÏX‚µ‚½ƒtƒ@ƒCƒ‹‚Ì•Û‘¶‚ðŽwŽ¦"
 END
 
 STRINGTABLE
 BEGIN
-    AFX_IDS_SCRESTORE       "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’é€šå¸¸ã®ã‚µã‚¤ã‚ºã«æˆ»ã™"
-    AFX_IDS_SCTASKLIST      "ã‚¿ã‚¹ã‚¯ä¸€è¦§ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹"
-    AFX_IDS_MDICHILD        "ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã«ã™ã‚‹"
+    AFX_IDS_SCRESTORE       "ƒEƒBƒ“ƒhƒE‚ð’Êí‚ÌƒTƒCƒY‚É–ß‚·"
+    AFX_IDS_SCTASKLIST      "ƒ^ƒXƒNˆê——‚ðƒAƒNƒeƒBƒu‚É‚·‚é"
+    AFX_IDS_MDICHILD        "ƒEƒBƒ“ƒhƒE‚ðƒAƒNƒeƒBƒu‚É‚·‚é"
 END
 
 STRINGTABLE
 BEGIN
-    AFX_IDS_PREVIEW_CLOSE   "å°åˆ·ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ ãƒ¢ãƒ¼ãƒ‰ã®çµ‚ã‚ã‚Š\nãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ã®ã‚­ãƒ£ãƒ³ã‚»ãƒ«"
+    AFX_IDS_PREVIEW_CLOSE   "ˆóüƒvƒŒƒrƒ…[ ƒ‚[ƒh‚ÌI‚í‚è\nƒvƒŒƒrƒ…[‚ÌƒLƒƒƒ“ƒZƒ‹"
 END
 
 STRINGTABLE
 BEGIN
-    IDS_STR_CONVERT_NUM     "%d å€‹ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å¤‰æ›ã—ã¾ã—ãŸ"
-    IDS_STR_CONV_TERRAIN    "åœŸåœ°ãƒ‡ãƒ¼ã‚¿ã‚’å¤‰æ›ä¸­ï¼Žã—ã°ã‚‰ããŠå¾…ã¡ãã ã•ã„ï¼Žï¼Žï¼Ž"
-    IDS_STR_NOT_OAR         "æŒ‡å®šã•ã‚ŒãŸãƒ‡ãƒ¼ã‚¿ã¯ OARã§ã¯ã‚ã‚Šã¾ã›ã‚“!!"
+    IDS_STR_CONVERT_NUM     "%d ŒÂ‚ÌƒIƒuƒWƒFƒNƒg‚ð•ÏŠ·‚µ‚Ü‚µ‚½"
+    IDS_STR_CONV_TERRAIN    "“y’nƒf[ƒ^‚ð•ÏŠ·’†D‚µ‚Î‚ç‚­‚¨‘Ò‚¿‚­‚¾‚³‚¢DDD"
+    IDS_STR_NOT_OAR         "Žw’è‚³‚ê‚½ƒf[ƒ^‚Í OAR‚Å‚Í‚ ‚è‚Ü‚¹‚ñ!!"
     IDS_STR_STATUSBAR_INIT  "OAR Path:                                                                                                                                                      "
 END
 
-#endif    // æ—¥æœ¬èªž (æ—¥æœ¬) resources
+#endif    // “ú–{Œê (“ú–{) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// è‹±èªž (ãƒ‹ãƒ¥ãƒ¼ãƒˆãƒ©ãƒ«) resources
+// ‰pŒê (ƒjƒ…[ƒgƒ‰ƒ‹) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_NEUTRAL
@@ -507,38 +514,41 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,53,78,50,14
 END
 
-IDD_DIALOG_OARSET DIALOGEX 0, 0, 145, 283
+IDD_DIALOG_OARSET DIALOGEX 0, 0, 145, 295
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Settings"
 FONT 9, "Microsoft Sans Serif", 400, 0, 0x0
 BEGIN
-    GROUPBOX        "Data Output",IDC_STATIC,7,7,131,117
+    GROUPBOX        "Data Output",IDC_STATIC,7,7,131,128
     LTEXT           "Start Num",IDC_STATIC,18,19,38,12
     LTEXT           "Stop NUm",IDC_STATIC,18,34,50,12
     EDITTEXT        IDC_EDIT_START_NUM,54,17,23,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_EDIT_STOP_NUM,54,32,23,12,ES_AUTOHSCROLL
-    CONTROL         "DAE",IDC_RADIO_DAE,"Button",BS_AUTORADIOBUTTON,18,50,30,12
-    CONTROL         "STL",IDC_RADIO_STL,"Button",BS_AUTORADIOBUTTON,18,62,30,12
-    CONTROL         "Output of Terrain Data",IDC_CHECK_TERRAIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,78,85,12
-    LTEXT           "Terrain Texture Scale",IDC_STATIC,18,93,76,15
-    EDITTEXT        IDC_EDIT_TERRAIN_SCALE,91,91,27,12,ES_AUTOHSCROLL
-    GROUPBOX        "Folders",IDC_STATIC,7,193,131,60
-    LTEXT           "Prefix of OAR Folder",IDC_STATIC,18,207,70,12
-    LTEXT           "Prefix of DAE Folder",IDC_STATIC,18,222,70,12
-    LTEXT           "Prefix of STL Folder",IDC_STATIC,18,237,70,12
-    EDITTEXT        IDC_EDIT_PREFIX_OAR,87,205,45,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_PREFIX_DAE,87,220,45,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_PREFIX_STL,87,235,45,12,ES_AUTOHSCROLL
-    CONTROL         "Debug Mode",IDC_CHECK_DEBUGMODE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,108,59,10
-    GROUPBOX        "Shift",IDC_STATIC,7,130,131,59
-    LTEXT           "X Shift",IDC_STATIC,18,142,30,12
-    LTEXT           "Y Shift",IDC_STATIC,18,157,30,12
-    LTEXT           "Z Shift",IDC_STATIC,18,172,30,12
-    EDITTEXT        IDC_EDIT_SHIFT_X,47,140,27,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_SHIFT_Y,47,155,27,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_SHIFT_Z,47,170,27,12,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "OK",IDOK,14,262,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,83,262,50,14
+    CONTROL         "DAE",IDC_RADIO_DAE,"Button",BS_AUTORADIOBUTTON,17,50,35,10
+    CONTROL         "OBJ",IDC_RADIO_OBJ,"Button",BS_AUTORADIOBUTTON,17,62,35,10
+    CONTROL         "STL",IDC_RADIO_STL,"Button",BS_AUTORADIOBUTTON,17,74,35,10
+    CONTROL         "Output of Terrain Data",IDC_CHECK_TERRAIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,90,85,12
+    LTEXT           "Terrain Texture Scale",IDC_STATIC,17,105,76,15
+    EDITTEXT        IDC_EDIT_TERRAIN_SCALE,89,119,27,12,ES_AUTOHSCROLL
+    GROUPBOX        "Folders",IDC_STATIC,7,200,131,70
+    LTEXT           "Prefix of OAR Folder",IDC_STATIC,7,212,82,10
+    LTEXT           "Prefix of DAE Folder",IDC_STATIC,7,226,82,10
+    LTEXT           "Prefix of OBJ Folder",IDC_STATIC,7,240,82,10
+    LTEXT           "Prefix of STKLFolder",IDC_STATIC,7,254,82,10
+    EDITTEXT        IDC_EDIT_PREFIX_OAR,84,212,53,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PREFIX_DAE,84,226,53,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PREFIX_OBJ,84,240,53,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PREFIX_STL,84,254,53,12,ES_AUTOHSCROLL
+    CONTROL         "Debug Mode",IDC_CHECK_DEBUGMODE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,121,59,10
+    GROUPBOX        "Shift",IDC_STATIC,7,138,131,59
+    LTEXT           "X Shift",IDC_STATIC,18,150,30,12
+    LTEXT           "Y Shift",IDC_STATIC,18,165,30,12
+    LTEXT           "Z Shift",IDC_STATIC,18,180,30,12
+    EDITTEXT        IDC_EDIT_SHIFT_X,47,148,27,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_SHIFT_Y,47,163,27,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_SHIFT_Z,47,178,27,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,14,274,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,83,274,50,14
 END
 
 IDD_DIALOG_OBJLIST DIALOGEX 0, 0, 349, 204
@@ -561,7 +571,7 @@ CAPTION "Version Information of OARConvWin"
 FONT 9, "Microsoft Sans Serif", 400, 0, 0x80
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,10,20,20
-    LTEXT           "OARConvWin, Version 1.5.0",IDC_STATIC,34,7,106,8,SS_NOPREFIX
+    LTEXT           "OARConvWin v1.6",IDC_STATIC,34,7,106,8,SS_NOPREFIX
     LTEXT           "by F.Iseki, A.Tate, D.Mizumaki and K.Suzuki",IDC_STATIC,41,18,147,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2015",IDC_STATIC,41,29,69,8
     DEFPUSHBUTTON   "OK",IDOK,131,33,50,12,WS_GROUP
@@ -593,12 +603,12 @@ BEGIN
             VALUE "Comments", "Subaru Projects"
             VALUE "CompanyName", "NSL"
             VALUE "FileDescription", "OAR Converter"
-            VALUE "FileVersion", "1.5.0.0"
+            VALUE "FileVersion", "1.6.0.0"
             VALUE "InternalName", "OARConvWin.exe"
             VALUE "LegalCopyright", "(C) Fumi.Iseki  All rights reserved."
             VALUE "OriginalFilename", "OARConvWin.exe"
             VALUE "ProductName", "OARConv"
-            VALUE "ProductVersion", "1.5.0.0"
+            VALUE "ProductVersion", "1.6.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -629,7 +639,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 138
         TOPMARGIN, 7
-        BOTTOMMARGIN, 276
+        BOTTOMMARGIN, 288
     END
 
     IDD_DIALOG_OBJLIST, DIALOG
@@ -654,6 +664,11 @@ END
 //
 
 IDD_ABOUTBOX AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_DIALOG_OARSET AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
@@ -779,7 +794,7 @@ BEGIN
     IDS_STR_STATUSBAR_INIT  "OAR Path:                                                                                                                                                      "
 END
 
-#endif    // è‹±èªž (ãƒ‹ãƒ¥ãƒ¼ãƒˆãƒ©ãƒ«) resources
+#endif    // ‰pŒê (ƒjƒ…[ƒgƒ‰ƒ‹) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

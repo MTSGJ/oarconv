@@ -435,12 +435,11 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 	appParam.saveConfigFile();
 
 	////////////////////////////////////////////////////////////////////
-	int format = JBXL_3D_FORMAT_STL_A;
 	char* oardir = ts2mbs(getOarFolder());
 	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
-	oarTool.SetPathInfo(format, oardir, outdir, (char*)assetsFolder.buf);
+	oarTool.SetPathInfo(appParam.outputFormat, oardir, outdir, (char*)assetsFolder.buf);
  	::free(oardir);
 	::free(outdir);
 
@@ -487,12 +486,11 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 	appParam.saveConfigFile();
 
 	////////////////////////////////////////////////////////////////////
-	int format = JBXL_3D_FORMAT_STL_A;
 	char* oardir = ts2mbs(getOarFolder());
 	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
-	oarTool.SetPathInfo(format, oardir, outdir, (char*)assetsFolder.buf);
+	oarTool.SetPathInfo(appParam.outputFormat, oardir, outdir, (char*)assetsFolder.buf);
 	::free(oardir);
 	::free(outdir);
 
@@ -519,9 +517,8 @@ void  COARConvWinApp::convertAllData()
 {
 	isConverting = true;
 	updateMenuBar();
-	int format = JBXL_3D_FORMAT_STL_A;
 	//if (appParam.outputDae) oarTool.MakeOutputFolder(true);
-	oarTool.MakeOutputFolder(format);
+	oarTool.MakeOutputFolder(appParam.outputFormat);
 	//else                    oarTool.MakeOutputFolder(false);
 
 	//
@@ -572,7 +569,7 @@ int   COARConvWinApp::convertAllFiles()
 		//
 		oarTool.ReadTerrainData();
 		oarTool.SetTerrainTextureScale(appParam.terrainScale);
-		num = oarTool.GenerateTerrainDataFile(appParam.format);
+		num = oarTool.GenerateTerrainDataFile(appParam.outputFormat);
 
 		if (mbox!=NULL) delete mbox;
 	}
@@ -580,14 +577,14 @@ int   COARConvWinApp::convertAllFiles()
 	if (stopnum!=0) {
 		CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
 		if (progress!=NULL) {
-			if      (appParam.format==JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
-			else if (appParam.format==JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
-			else                                          progress->SetTitle("Convert to STL Files");
+			if      (appParam.outputFormat==JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
+			else if (appParam.outputFormat==JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
+			else                                                progress->SetTitle("Convert to STL Files");
 			progress->Start(prognum);
 			SetGlobalCounter(progress);
 		}
 		//
-		num = oarTool.GenerateObjectsDataFile(appParam.format, strtnum, stopnum, true, false, (char*)comDecomp.buf);
+		num = oarTool.GenerateObjectsDataFile(appParam.outputFormat, strtnum, stopnum, true, (char*)comDecomp.buf);
 		//
 		if (progress!=NULL) {
 			progress->PutFill();
@@ -603,7 +600,7 @@ void  COARConvWinApp::convertSelectedData(int selectedNums, int* selectedObjs)
 {
 	isConverting = true;
 	updateMenuBar();
-	oarTool.MakeOutputFolder(appParam.format);
+	oarTool.MakeOutputFolder(appParam.outputFormat);
 
 	//
 	int num = convertSelectedFiles(selectedNums, selectedObjs);
@@ -639,14 +636,14 @@ int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
 	int num = 0;
 	CProgressBarDLG* progress = new CProgressBarDLG(_T(""), TRUE);
 	if (progress!=NULL) {
-		if      (appParam.format == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
-		else if (appParam.format == JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
-		else                                            progress->SetTitle("Convert to STL Files");
+		if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
+		else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
+		else                                                  progress->SetTitle("Convert to STL Files");
 		progress->Start(prognum);
 		SetGlobalCounter(progress);
 	}
 	//
-	num = oarTool.GenerateSelectedDataFile(appParam.format, selectedNums, selectedObjs, true, (char*)comDecomp.buf);
+	num = oarTool.GenerateSelectedDataFile(appParam.outputFormat, selectedNums, selectedObjs, true, (char*)comDecomp.buf);
 	//
 	if (progress!=NULL) {
 		progress->PutFill();
@@ -693,7 +690,7 @@ int   COARConvWinApp::convertOneFile(int index, BOOL outputDae)
 
 	//////////////////////////////////////////////////////////////////////////////
 	// Convert
-	int num = oarTool.GenerateObjectsDataFile(appParam.format, index, index, true, (char*)comDecomp.buf);
+	int num = oarTool.GenerateObjectsDataFile(appParam.outputFormat, index, index, true, (char*)comDecomp.buf);
 	
 	return num;
 }

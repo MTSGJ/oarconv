@@ -1,6 +1,6 @@
-﻿//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ で生成されたインクルード ファイル。
-// OARConvWin.rc で使用
+//{{NO_DEPENDENCIES}}
+// Microsoft Visual C++ generated include file.
+// Used by OARConvWin.rc
 //
 #define IDC_EDIT1                       1021
 #define IDC_EDIT_FNDSTR                 1021

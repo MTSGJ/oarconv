@@ -50,8 +50,7 @@ public:
 	BOOL    outputTerrain;
 	BOOL    debugMode;
 	
-	int     format;
-
+	int     outputFormat;		// ファイルフォーマット DAE, OBJ, STL
 	float   terrainScale;
 	float   xShift;
 	float   yShift;

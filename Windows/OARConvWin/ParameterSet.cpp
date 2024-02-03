@@ -21,7 +21,7 @@ void  CParameterSet::init(void)
 	outputTerrain = TRUE;
 	debugMode     = FALSE;
 	
-	format        = JBXL_3D_FORMAT_STL_A;
+	outputFormat  = JBXL_3D_FORMAT_STL_A;
 	terrainScale  = TRNT_DEFAULT_TEX_SCALE;
 	xShift        = 0.0f;
 	yShift        = 0.0f;
@@ -29,7 +29,6 @@ void  CParameterSet::init(void)
 
 	prefixOAR     = _T("OAR_");
 	prefixOUT     = _T("DAE_");
-
 	prefixDAE     = _T("DAE_");
 	prefixOBJ     = _T("OBJ_");
 	prefixSTL     = _T("STL_");
@@ -40,7 +39,6 @@ void  CParameterSet::readConfigFile(void)
 {
 	tList* lt = read_index_tList_file_t(configFilePath, ' ');
 	if (lt==NULL) return;
-
 	//
 	oarFolder     = get_tstr_param_tList (lt, "oarFolder", (LPCTSTR)oarFolder);
 	outFolder     = get_tstr_param_tList (lt, "outFolder", (LPCTSTR)outFolder);
@@ -52,14 +50,16 @@ void  CParameterSet::readConfigFile(void)
 	outputTerrain = get_bool_param_tList (lt, "outputTerrain", outputTerrain);
 	debugMode     = get_bool_param_tList (lt, "debugMode", debugMode);
 
+    outputFormat  = get_int_param_tList  (lt, "outputFormat", outputFormat);
 	terrainScale  = get_float_param_tList(lt, "terrainScale", terrainScale);
 	xShift        = get_float_param_tList(lt, "xShift", xShift);
 	yShift        = get_float_param_tList(lt, "yShift", yShift);
 	zShift        = get_float_param_tList(lt, "zShift", zShift);
 
-	prefixOAR     = get_tstr_param_tList (lt, "prefixOAR", (LPCTSTR)prefixOAR);
-	prefixDAE     = get_tstr_param_tList (lt, "prefixDAE", (LPCTSTR)prefixDAE);
-	prefixSTL     = get_tstr_param_tList (lt, "prefixSTL", (LPCTSTR)prefixSTL);
+	prefixOAR     = get_tstr_param_tList(lt, "prefixOAR", (LPCTSTR)prefixOAR);
+	prefixDAE     = get_tstr_param_tList(lt, "prefixDAE", (LPCTSTR)prefixDAE);
+	prefixOBJ     = get_tstr_param_tList(lt, "prefixOBJ", (LPCTSTR)prefixOBJ);
+	prefixSTL     = get_tstr_param_tList(lt, "prefixSTL", (LPCTSTR)prefixSTL);
 
 	//
 	del_all_tList(&lt);
@@ -85,6 +85,8 @@ void  CParameterSet::saveConfigFile(void)
 	fprintf(fp, "prefixOAR %s\n", (char*)tmp.buf);
 	copy_ts2Buffer(prefixDAE, &tmp);
 	fprintf(fp, "prefixDAE %s\n", (char*)tmp.buf);
+	copy_ts2Buffer(prefixOBJ, &tmp);
+	fprintf(fp, "prefixOBJ %s\n", (char*)tmp.buf);
 	copy_ts2Buffer(prefixSTL, &tmp);
 	fprintf(fp, "prefixSTL %s\n", (char*)tmp.buf);
 	//
@@ -93,6 +95,7 @@ void  CParameterSet::saveConfigFile(void)
 	fprintf(fp, "startNum %d\n", startNum);
 	fprintf(fp, "stopNum %d\n",  stopNum);
 	//
+	fprintf(fp, "outputFormat %d\n", outputFormat);
 	fprintf(fp, "terrainScale %f\n", terrainScale);
 	fprintf(fp, "xShift %f\n", xShift);
 	fprintf(fp, "yShift %f\n", yShift);

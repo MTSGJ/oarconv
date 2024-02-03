@@ -15,7 +15,7 @@ IMPLEMENT_DYNAMIC(CSetParamDLG, CDialogEx)
 CSetParamDLG::CSetParamDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSetParamDLG::IDD, pParent)
 {
-	outputFormat = param->format;
+	outputFormat = param->outputFormat;
 	startNum = param->startNum;
 	stopNum  = param->stopNum;
 	terrainScale = param->terrainScale;
@@ -63,6 +63,7 @@ void  CSetParamDLG::getParameters(CParameterSet* param)
 {
 	param->startNum = startNum;
 	param->stopNum = stopNum;
+	param->outputFormat = outputFormat;
 	param->terrainScale = terrainScale;
 
 	param->outputTerrain = outputTerrain;
@@ -74,6 +75,7 @@ void  CSetParamDLG::getParameters(CParameterSet* param)
 
 	param->prefixOAR = prefixOAR;
 	param->prefixDAE = prefixDAE;
+	param->prefixOBJ = prefixOBJ;
 	param->prefixSTL = prefixSTL;
 
 	return;
@@ -114,6 +116,7 @@ BOOL CSetParamDLG::OnInitDialog()
 
 	prefixOarEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_OAR);
 	prefixDaeEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_DAE);
+	prefixObjEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_OBJ);
 	prefixStlEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_STL);
 
 	sntprintf(buf, LNAME, _T("%d"), startNum);
@@ -156,7 +159,7 @@ BOOL CSetParamDLG::OnInitDialog()
 	sntprintf(buf, LNAME, _T("%s"), prefixOAR);
 	prefixOarEBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%s"), prefixDAE);
-	prefixOarEBox->SetWindowText(buf);
+	prefixDaeEBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%s"), prefixOBJ);
 	prefixObjEBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%s"), prefixSTL);
@@ -200,9 +203,20 @@ void CSetParamDLG::OnOK()
 	prefixOAR = buf;
 	prefixDaeEBox->GetWindowText(buf, LNAME);
 	prefixDAE = buf;
+	prefixObjEBox->GetWindowText(buf, LNAME);
+	prefixOBJ = buf;
 	prefixStlEBox->GetWindowText(buf, LNAME);
 	prefixSTL = buf;
 
 	CDialogEx::OnOK();
 }
 
+BEGIN_MESSAGE_MAP(CSetParamDLG, CDialogEx)
+	ON_BN_CLICKED(IDC_RADIO_OBJ, &CSetParamDLG::OnBnClickedRadioObj)
+END_MESSAGE_MAP()
+
+
+void CSetParamDLG::OnBnClickedRadioObj()
+{
+	// TODO: ここにコントロール通知ハンドラー コードを追加します。
+}
