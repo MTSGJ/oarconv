@@ -58,15 +58,12 @@ BOOL   CShowInfoDLG::OnInitDialog()
 	sizeSBox = (CStatic*)GetDlgItem(IDC_STATIC_RGSIZE);
 	numSBox	 = (CStatic*)GetDlgItem(IDC_STATIC_OBJNUM);
 
-	sntprintf(buf, LNAME, _T("%s"), regionName);
+	sntprintf(buf, LNAME, _T("%s"), regionName.GetString());
 	nameSBox->SetWindowText(buf);
-
 	sntprintf(buf, LNAME, _T("%d.%d"), majorVersion, minorVersion);
 	verSBox->SetWindowText(buf);
-
 	sntprintf(buf, LNAME, _T("%dx%d"), rgSize, rgSize);
 	sizeSBox->SetWindowText(buf);
-
 	sntprintf(buf, LNAME, _T("%d"), objNum);
 	numSBox->SetWindowText(buf);
 

@@ -280,7 +280,7 @@ void  COARConvWinApp::OnFileOpen()
 //
 void  COARConvWinApp::OnFolderOpen()
 {
-	CString crntd = getOarFolder();
+	CString crntd = getOARFolder();
 	CString foldr = EasyGetOpenFolderName(crntd, _T("Open OAR Folder"), m_pMainWnd->m_hWnd);
 	if (foldr.IsEmpty()) return;
 
@@ -316,7 +316,7 @@ void  COARConvWinApp::OnFileOpenQuick()
 //
 void  COARConvWinApp::OnFolderOpenQuick()
 {
-	CString crntd = getOarFolder();
+	CString crntd = getOARFolder();
 	CString foldr = EasyGetOpenFolderName(crntd, _T("Open OAR Folder"), m_pMainWnd->m_hWnd);
 	if (foldr.IsEmpty()) return;
 
@@ -368,11 +368,14 @@ void  COARConvWinApp::OnSettingDialog()
 	setdlg->getParameters(&appParam);
 	delete (setdlg);
 
+	char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
+	oarTool.ChangePathInfo(appParam.outputFormat, NULL, outdir, NULL);
+	::free(outdir);
+
 	DebugMode = appParam.debugMode;
 	appParam.saveConfigFile();
 	return;
 }
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -394,6 +397,8 @@ bool  COARConvWinApp::fileOpen(CString fname)
 }
 
 
+//
+// OARファイルをオープンする．
 //
 bool  COARConvWinApp::fileOpenOAR(CString fname)
 {
@@ -428,14 +433,15 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 	}
 
 	// Output Folder
-	CString outf;
-	outf = path + appParam.prefixOUT + file;
-	setOarFolder((LPCTSTR)oarf);
+	CString outf = path + appParam.prefixOUT + file;
+	setOARName((LPCTSTR)file);
+	setBaseFolder((LPCTSTR)path);
+	setOARFolder((LPCTSTR)oarf);
 	setOutFolder((LPCTSTR)outf);
 	appParam.saveConfigFile();
 
 	////////////////////////////////////////////////////////////////////
-	char* oardir = ts2mbs(getOarFolder());
+	char* oardir = ts2mbs(getOARFolder());
 	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
@@ -451,7 +457,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 
 	hasData = true;
 	updateMenuBar();
-	updateStatusBar(getOarFolder());
+	updateStatusBar(getOARFolder());
 	//
 	char* fn = ts2mbs(fname);
 	PRINT_MESG("fileOpenOAR: File is opened %s\n", fn);
@@ -462,6 +468,8 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 
 
 //
+// OARフォルダをオープンする．
+//
 bool  COARConvWinApp::folderOpenOAR(CString folder)
 {
 	hasData = false;
@@ -471,22 +479,24 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 	CString oarf = folder;
 	if (oarf.Right(1)==_T("\\")) oarf = oarf.Left(oarf.GetLength()-1);
 
+	int len = appParam.prefixOAR.GetLength();
 	CString outf;
 	CString prnt = get_file_path_t(oarf);
 	CString dirn = get_file_name_t(oarf);
-	CString top4 = dirn.Left(4);
-	if (!top4.Compare(appParam.prefixOAR)) {
-		outf = prnt + appParam.prefixOUT + dirn.Right(dirn.GetLength()-4);
+	CString topd = dirn.Left(len);
+	if (!topd.Compare(appParam.prefixOAR)) {
+		dirn = dirn.Right(dirn.GetLength() - len);
 	}
-	else {
-		outf = prnt + appParam.prefixOUT + dirn;
-	}
-	setOarFolder((LPCTSTR)oarf);
+	outf = prnt + appParam.prefixOUT + dirn;
+
+	setOARName((LPCTSTR)dirn);		// dirn は OARの名前になっているはず
+	setBaseFolder((LPCTSTR)prnt);
+	setOARFolder((LPCTSTR)oarf);
 	setOutFolder((LPCTSTR)outf);
 	appParam.saveConfigFile();
 
 	////////////////////////////////////////////////////////////////////
-	char* oardir = ts2mbs(getOarFolder());
+	char* oardir = ts2mbs(getOARFolder());
 	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
@@ -502,7 +512,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 
 	hasData = true;
 	updateMenuBar();
-	updateStatusBar(getOarFolder());
+	updateStatusBar(getOARFolder());
 	//
 	char* fn = ts2mbs(folder);
 	PRINT_MESG("folderOpenOAR: Folder is opened %s\n", fn);
@@ -517,11 +527,9 @@ void  COARConvWinApp::convertAllData()
 {
 	isConverting = true;
 	updateMenuBar();
-	//if (appParam.outputDae) oarTool.MakeOutputFolder(true);
-	oarTool.MakeOutputFolder(appParam.outputFormat);
-	//else                    oarTool.MakeOutputFolder(false);
 
-	//
+	oarTool.MakeOutputFolder(appParam.outputFormat);;
+
 	int num = convertAllFiles();
 	if (num>=0) {
 		CString format;

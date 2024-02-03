@@ -78,6 +78,15 @@ void  CSetParamDLG::getParameters(CParameterSet* param)
 	param->prefixOBJ = prefixOBJ;
 	param->prefixSTL = prefixSTL;
 
+	if (outputFormat == JBXL_3D_FORMAT_DAE) {
+		param->prefixOUT = prefixDAE;
+	}
+	else if (outputFormat == JBXL_3D_FORMAT_OBJ) {
+		param->prefixOUT = prefixOBJ;
+	}
+	else {
+		param->prefixOUT = prefixSTL;
+	}
 	return;
 }
 
@@ -145,9 +154,8 @@ BOOL CSetParamDLG::OnInitDialog()
 
 	if (outputTerrain) outputTerrainButton->SetCheck(1);
 	else               outputTerrainButton->SetCheck(0);
-
-	if (debugMode) debugModeButton->SetCheck(1);
-	else           debugModeButton->SetCheck(0);
+	if (debugMode)     debugModeButton->SetCheck(1);
+	else               debugModeButton->SetCheck(0);
 
 	sntprintf(buf, LNAME, _T("%g"), xShift);
 	xShiftEBox->SetWindowText(buf);
@@ -156,13 +164,13 @@ BOOL CSetParamDLG::OnInitDialog()
 	sntprintf(buf, LNAME, _T("%g"), zShift);
 	zShiftEBox->SetWindowText(buf);
 
-	sntprintf(buf, LNAME, _T("%s"), prefixOAR);
+	sntprintf(buf, LNAME, _T("%s"), prefixOAR.GetString());
 	prefixOarEBox->SetWindowText(buf);
-	sntprintf(buf, LNAME, _T("%s"), prefixDAE);
+	sntprintf(buf, LNAME, _T("%s"), prefixDAE.GetString());
 	prefixDaeEBox->SetWindowText(buf);
-	sntprintf(buf, LNAME, _T("%s"), prefixOBJ);
+	sntprintf(buf, LNAME, _T("%s"), prefixOBJ.GetString());
 	prefixObjEBox->SetWindowText(buf);
-	sntprintf(buf, LNAME, _T("%s"), prefixSTL);
+	sntprintf(buf, LNAME, _T("%s"), prefixSTL.GetString());
 	prefixStlEBox->SetWindowText(buf);
 
 	return TRUE;
@@ -188,9 +196,8 @@ void CSetParamDLG::OnOK()
 
 	if (outputTerrainButton->GetCheck()) outputTerrain = TRUE;
 	else                                 outputTerrain = FALSE;
-
-	if (debugModeButton->GetCheck()) debugMode = TRUE;
-	else                             debugMode = FALSE;
+	if (debugModeButton->GetCheck())     debugMode = TRUE;
+	else                                 debugMode = FALSE;
 
 	xShiftEBox->GetWindowText(buf, LNAME);
 	xShift = (float)ttof(buf);

@@ -109,6 +109,7 @@ public:
 
 public:
     void   SetPathInfo(int format, const char* oardir, const char* outdir, const char* astdir);
+    void   ChangePathInfo(int format, const char* oardir, const char* outdir, const char* astdir);
     bool   GetDataInfo(void);
     void   MakeOutputFolder(int format);
 

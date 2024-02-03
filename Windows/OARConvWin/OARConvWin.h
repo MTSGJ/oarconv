@@ -57,11 +57,15 @@ public:
 	bool     isConverting;
 
 public:
-	void	 setOarFolder(LPCTSTR fldr) { appParam.oarFolder = fldr;}
-	void	 setOutFolder(LPCTSTR fldr) { appParam.outFolder = fldr;}
+	void	 setOARName(LPCTSTR name)    { appParam.oarName = name; }
+	void	 setBaseFolder(LPCTSTR fldr) { appParam.baseFolder = fldr; }
+	void	 setOARFolder (LPCTSTR fldr) { appParam.oarFolder = fldr; }
+	void	 setOutFolder (LPCTSTR fldr) { appParam.outFolder = fldr; }
 
-	LPCTSTR  getOarFolder(void) { return (LPCTSTR)appParam.oarFolder;}
-	LPCTSTR  getOutFolder(void) { return (LPCTSTR)appParam.outFolder;}
+	LPCTSTR  getOARName(void)    { return (LPCTSTR)appParam.oarName; }
+	LPCTSTR  getBaseFolder(void) { return (LPCTSTR)appParam.baseFolder; }
+	LPCTSTR  getOARFolder (void) { return (LPCTSTR)appParam.oarFolder; }
+	LPCTSTR  getOutFolder (void) { return (LPCTSTR)appParam.outFolder; }
 
 	bool	 fileOpen(CString);
 	bool	 fileOpenOAR  (CString);

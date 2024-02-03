@@ -12,6 +12,8 @@ void  CParameterSet::init(void)
 	configSizePath = makeConfigSizePath();
 
 	// Parameters
+	oarName       = _T("");
+	baseFolder    = GetCurrentFolder();
 	oarFolder     = GetCurrentFolder();
 	outFolder     = _T(".\\");
 	logFolder     = _T(".\\Log");
@@ -21,7 +23,7 @@ void  CParameterSet::init(void)
 	outputTerrain = TRUE;
 	debugMode     = FALSE;
 	
-	outputFormat  = JBXL_3D_FORMAT_STL_A;
+	outputFormat  = JBXL_3D_FORMAT_DAE;
 	terrainScale  = TRNT_DEFAULT_TEX_SCALE;
 	xShift        = 0.0f;
 	yShift        = 0.0f;
@@ -103,8 +105,8 @@ void  CParameterSet::saveConfigFile(void)
 	//
 	if (outputTerrain) fprintf(fp, "outputTerrain %s\n", "TRUE");
 	else               fprintf(fp, "outputTerrain %s\n", "FALSE");
-	if (debugMode) fprintf(fp, "debugMode %s\n", "TRUE");
-	else           fprintf(fp, "debugMode %s\n", "FALSE");
+	if (debugMode)     fprintf(fp, "debugMode %s\n", "TRUE");
+	else               fprintf(fp, "debugMode %s\n", "FALSE");
 
 	//
 	fflush(fp);

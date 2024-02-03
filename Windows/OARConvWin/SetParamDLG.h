@@ -21,7 +21,6 @@ protected:
 	int      stopNum;
 	float    terrainScale;
 
-	BOOL     outputDae;
 	BOOL     outputTerrain;
 	BOOL     debugMode;
 	

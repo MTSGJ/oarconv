@@ -201,6 +201,45 @@ void  OARTool::SetPathInfo(int format, const char* oardir, const char* outdir, c
 }
 
 
+
+void  OARTool::ChangePathInfo(int format, const char* oardir, const char* outdir, const char* astdir)
+{
+    // OAR
+    if (oardir != NULL) {
+        pathOAR = make_Buffer_bystr(oardir);
+#ifdef WIN32
+        if (pathOAR.buf[strlen((char*)pathOAR.buf) - 1] != '\\') cat_s2Buffer("\\", &pathOAR);
+#else
+        if (pathOAR.buf[strlen((char*)pathOAR.buf) - 1] != '/') cat_s2Buffer("/", &pathOAR);
+#endif
+    }
+
+    // OUTPUT
+    if (outdir != NULL) {
+        pathOUT = make_Buffer_bystr(outdir);
+#ifdef WIN32
+        if (pathOUT.buf[strlen((char*)pathOUT.buf) - 1] != '\\') cat_s2Buffer("\\", &pathOUT);
+#else
+        if (pathOUT.buf[strlen((char*)pathOUT.buf) - 1] != '/') cat_s2Buffer("/", &pathOUT);
+#endif
+    }
+    pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
+    pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
+    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
+    cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
+
+    // ASSET
+    if (astdir != NULL) {
+        pathAST = make_Buffer_bystr(astdir);
+#ifdef WIN32
+        if (pathAST.buf[strlen((char*)pathAST.buf) - 1] != '\\') cat_s2Buffer("\\", &pathAST);
+#else
+        if (pathAST.buf[strlen((char*)pathAST.buf) - 1] != '/') cat_s2Buffer("/", &pathAST);
+#endif
+    }
+}
+
+
 /**
 入力用データ（OAR）の一部を読み込んで，情報を得る．
 OARデータでない場合は false を返す．
@@ -737,8 +776,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
     }
 
-    //for (int s=0; s<shno; s++) shapes[s].free();
-    //::free(shapes);
+    for (int s=0; s<shno; s++) shapes[s].free();
+    ::free(shapes);
 
     if (count>0) {
         if (format==JBXL_3D_FORMAT_DAE) {
