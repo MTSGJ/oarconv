@@ -142,7 +142,7 @@ BOOL CBREPDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 	long int fno, vfno;
 	char* mbstr = ts2mbs(lpszPathName);
-	STLData* stldata = ReadSTLFile(mbstr, &fno);
+	STLData* stldata = readSTLFile(mbstr, &fno);
 	::free(mbstr);
 	if (stldata==NULL) return FALSE;
 	hasReadData = TRUE;
