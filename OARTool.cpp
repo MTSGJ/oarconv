@@ -201,8 +201,12 @@ void  OARTool::SetPathInfo(int format, const char* oardir, const char* outdir, c
 }
 
 
+/**
+データ入出力用のパス情報を修正する．
 
-void  OARTool::ChangePathInfo(int format, const char* oardir, const char* outdir, const char* astdir)
+修正するものだけ指定する．
+*/
+void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char* astdir)
 {
     // OAR
     if (oardir != NULL) {
@@ -222,11 +226,11 @@ void  OARTool::ChangePathInfo(int format, const char* oardir, const char* outdir
 #else
         if (pathOUT.buf[strlen((char*)pathOUT.buf) - 1] != '/') cat_s2Buffer("/", &pathOUT);
 #endif
+        pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
+        pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
+        cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
+        cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
     }
-    pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
-    pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
-    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
-    cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
 
     // ASSET
     if (astdir != NULL) {
@@ -644,12 +648,12 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         if (shapes[s].PCode==PRIM_PCODE_NEWTREE || shapes[s].PCode==PRIM_PCODE_TREE) {
             //
             shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
-            MeshObjectData* data = treeTool.GenerateTree(shapes[s], 0, forUnity3D);
+            MeshObjectData* mesh = treeTool.GenerateTree(shapes[s], 0, forUnity3D);
             //
-            if (data!=NULL) {
+            if (mesh!=NULL) {
                 // STLの場合は不必要
                 if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
-                    MeshFacetNode* facet = data->facet;
+                    MeshFacetNode* facet = mesh->facet;
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
                             // convert texture
@@ -663,16 +667,16 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 //
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
-                    dae->addObject(data, false);
+                    dae->addObject(mesh, false);
                 }
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     obj->phantom_out = true;
-                    obj->addObject(data, false);
+                    obj->addObject(mesh, false);
                 }
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-                    stl->addObject(data);
+                    stl->addObject(mesh);
                 }
-                freeMeshObjectData(data);
+                freeMeshObjectData(mesh);
                 //
                 count++;
             }
@@ -683,13 +687,13 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         else if (shapes[s].PCode==PRIM_PCODE_GRASS){ 
             //
             shapes[s].affineTrans.addShift(-xsize/2.0f, -ysize/2.0f, -waterHeight);
-            MeshObjectData* data = treeTool.GenerateGrass(shapes[s], terrain, forUnity3D);  // 1個の Terrainのみサポート．範囲チェックあり
+            MeshObjectData* mesh = treeTool.GenerateGrass(shapes[s], terrain, forUnity3D);  // 1個の Terrainのみサポート．範囲チェックあり
             shapes[s].affineTrans.addShift(shift.x, shift.y, shift.z);
             //
-            if (data!=NULL) {
+            if (mesh!=NULL) {
                 // STLの場合は不必要
                 if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
-                    MeshFacetNode* facet = data->facet;
+                    MeshFacetNode* facet = mesh->facet;
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
                             // convert texture
@@ -703,16 +707,16 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 //
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
-                    dae->addObject(data, false);
+                    dae->addObject(mesh, false);
                 }
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     obj->phantom_out = true;
-                    obj->addObject(data, false);
+                    obj->addObject(mesh, false);
                 }
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-                    stl->addObject(data);
+                    stl->addObject(mesh);
                 }
-                freeMeshObjectData(data);
+                freeMeshObjectData(mesh);
                 //
                 count++;
             }
@@ -723,12 +727,12 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         else if (shapes[s].PCode==PRIM_PCODE_PRIM) { 
             //
             shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
-            MeshObjectData* data = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, forUnity3D);
+            MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, forUnity3D);
             //
-            if (data!=NULL) {
+            if (mesh!=NULL) {
                 // STLの場合は不必要
                 if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
-                    MeshFacetNode* facet = data->facet;
+                    MeshFacetNode* facet = mesh->facet;
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
                             // MeshObjectDataFromPrimShape へ移動
@@ -760,16 +764,16 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 //
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
-                    dae->addObject(data, collider);
+                    dae->addObject(mesh, collider);
                 }
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     if (collider) obj->phantom_out = false;
-                    obj->addObject(data, collider);
+                    obj->addObject(mesh, collider);
                 }
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-                    stl->addObject(data);
+                    stl->addObject(mesh);
                 }
-                freeMeshObjectData(data);
+                freeMeshObjectData(mesh);
                 //
                 count++;
             }
@@ -790,11 +794,10 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
             //stl->getMerge(NULL);
-            stl->outputFile(fname, (char*)pathOUT.buf, false);
+            //stl->outputFile(fname, (char*)pathOUT.buf, false);
             return (void*)stl;
         }
     }
-
     return NULL;
 }
 
@@ -829,7 +832,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         if (format==JBXL_3D_FORMAT_STL_A) binfile = false;
         out_path = dup_Buffer(pathOUT);
         BrepSolidList* stl = (BrepSolidList*)solid;
-        //stl->outputFile(fname, (char*)out_path.buf, binfile);
+        stl->outputFile(fname, (char*)out_path.buf, binfile);
     }
     free_Buffer(&out_path);
 

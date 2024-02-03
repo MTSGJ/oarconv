@@ -369,7 +369,7 @@ void  COARConvWinApp::OnSettingDialog()
 	delete (setdlg);
 
 	char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
-	oarTool.ChangePathInfo(appParam.outputFormat, NULL, outdir, NULL);
+	oarTool.ChangePathInfo(NULL, outdir, NULL);
 	::free(outdir);
 
 	DebugMode = appParam.debugMode;
