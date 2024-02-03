@@ -407,8 +407,8 @@ bool  OARTool::GetDataInfo()
 void  OARTool::MakeOutputFolder(int format)
 {
     mkdir((char*)pathOUT.buf, 0700);
-    mkdir((char*)pathPTM.buf, 0700);
     if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
+        mkdir((char*)pathPTM.buf, 0700);
         mkdir((char*)pathTEX.buf, 0700);
     }
     return;
@@ -456,11 +456,11 @@ int  OARTool::GenerateTerrainDataFile(int format)
 {
     if (terrainNum==0) return 0;
 
-    PRINT_MESG("GenerateTerrainDataFile: generating terrain datafile file (%d)\n", format);
+    PRINT_MESG("GenerateTerrainSolid: generating terrain datafile file (%d)\n", format);
     int num = 0;
     while (num<terrainNum) {
         terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf, forUnity3D);
-        terrain[num].GenerateDataFile(format, (char*)pathOUT.buf, shift, forUnity3D);
+        terrain[num].GenerateTerrain(format, (char*)pathOUT.buf, shift, forUnity3D);
         num++;
 #ifdef WIN32
         DisPatcher(); 
@@ -481,7 +481,9 @@ int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, boo
     while (lp!=NULL) {
         num++;
         if (num>=startnum && num<=stopnum) {
-            GenerateDataFile(format, (char*)lp->ldat.val.buf, num, useBrep, phantom, command);
+            void* solid = generateSolidData(format, (char*)lp->ldat.val.buf, num, useBrep, phantom, command);
+            outputSolidData(format, (char*)lp->ldat.val.buf, solid);
+            freeSolidData(format, solid);
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
@@ -496,6 +498,17 @@ int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, boo
 }
 
 
+void  OARTool::GenerateSelectedDataFile(int format, char* fname, bool useBrep, bool phantom, char* command)
+{
+    if (fname==NULL) return;
+
+    void* solid =generateSolidData(format, fname, 1, useBrep, phantom, command);
+    outputSolidData(format, fname, solid);
+    freeSolidData(format, solid);
+
+    return;
+}
+/*
 int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep, bool phantom, char* command)
 {
     tList* lp = objectsFiles;
@@ -505,7 +518,9 @@ int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, boo
     int cnt = 0;
     while (lp!=NULL) {
         if (num==objlist[cnt]) {
-            GenerateDataFile(format, (char*)lp->ldat.val.buf, num+1, useBrep, phantom, command);
+            void* solid =generateSolidData(format, (char*)lp->ldat.val.buf, num + 1, useBrep, phantom, command);
+            outputSolidData(format, (char*)lp->ldat.val.buf, solid);
+            freeSolidData(format, solid);
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
@@ -520,13 +535,13 @@ int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, boo
 
     return cnt;
 }
+*/
 
 
 /**
-void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool useBrep, bool phantom, char* command)
+void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, bool phantom, char* command)
 
-Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) を指定された形式で書きだす．
-出力先は 大域変数 pathOUT, pathPTM, pathTEX で指定されたディレクトリ．
+Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) から指定された形式で SOLIDデータを生成する．
 
 @@aram format   ファイル形式（JBXL_3D_FORMAT_DAE, JBXL_3D_FORMAT_OBJ, JBXL_3D_FORMAT_SLT_A/B）
 @param fname    オブジェクト名（xmlファイル名）
@@ -534,11 +549,32 @@ Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１�
 @param useBrep  頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
 @paeam phantom  オブジェクト中に１個でもファントムがある場合，全体をファントムとするか？
 @param command  JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
+@retval 生成されたデータへのポインタ．それぞれのデータ型でキャストして使用する．
 */
-void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool useBrep, bool phantom, char* command)
+void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, bool phantom, char* command)
 {
-    PRINT_MESG("[%d/%d] GenerateDataFile: generating %s\n", num, objectsNum, fname);
+    if (fname==NULL) return NULL;
+    PRINT_MESG("[%d/%d] GenerateSolid: generating %s\n", num, objectsNum, fname);
+    
+    // read XML
+    int shno = 0;
+    PrimBaseShape* shapes;
+    //
+    tXML* sxml = xml_parse_file(fname);
+    if (sxml!=NULL) {
+        shapes = CreatePrimBaseShapesFromXML(sxml, assetsFiles, &shno); // Shapeデータ．shnoはデータの数
+        del_xml(&sxml);
+        if (shapes==NULL || shno<=0) {
+            PRINT_MESG("OARTool::GenerateSolid: WARNING: not found shape data in %s (skip)\n", fname);
+            return NULL;
+        }
+    }
+    else {
+        PRINT_MESG("OARTool::GenerateSolid: WARNING: XML File %s Read Error.(skip)\n", fname);
+        return NULL;
+    }
 
+    //
     ColladaXML*    dae = NULL;
     OBJData*       obj = NULL;
     BrepSolidList* stl = NULL;
@@ -554,37 +590,16 @@ void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool use
         obj = new OBJData(); 
     }
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-        useBrep = false;
+        useBrep = true;
         phantom = false;
         command = NULL;
         stl = new BrepSolidList();
     }
     else {
-        PRINT_MESG("OARTool::GenerateDataFile: WARNING: unknown data format (%d)\n", format);
-        return;
+        PRINT_MESG("OARTool::GenerateSolid: WARNING: unknown data format (%d)\n", format);
+        return NULL;
     }
 
-    int shno = 0;
-    PrimBaseShape* shapes;
-    //
-    tXML* sxml = xml_parse_file(fname);
-    if (sxml!=NULL) {
-        shapes = CreatePrimBaseShapesFromXML(sxml, assetsFiles, &shno); // Shapeデータ．shnoはデータの数
-        del_xml(&sxml);
-        if (shapes==NULL || shno<=0) {
-            PRINT_MESG("OARTool::GenerateDataFile: WARNING: not found shape data in %s (skip)\n", fname);
-            return;
-        }
-    }
-    else {
-        PRINT_MESG("OARTool::GenerateDataFile: WARNING: XML File %s Read Error.(skip)\n", fname);
-        return;
-    }
-
-    bool phantom_out, collider;
-    if (phantom) phantom_out = false;
-    else         phantom_out = true;
- 
     int  count = 0;
     for (int s=0; s<shno; s++) {
         //
@@ -595,9 +610,6 @@ void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool use
             MeshObjectData* data = treeTool.GenerateTree(shapes[s], 0, forUnity3D);
             //
             if (data!=NULL) {
-                collider = false;
-                if (phantom) phantom_out = true;
-                //
                 // STLの場合は不必要
                 if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
                     MeshFacetNode* facet = data->facet;
@@ -612,9 +624,17 @@ void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool use
                     }
                 }
                 //
-                if      (format==JBXL_3D_FORMAT_DAE) dae->addObject(data, collider);
-                else if (format==JBXL_3D_FORMAT_OBJ) obj->addObject(data, collider);
-                else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) stl->addObject(data);
+                if (format==JBXL_3D_FORMAT_DAE) {
+                    dae->phantom_out = true;
+                    dae->addObject(data, false);
+                }
+                else if (format==JBXL_3D_FORMAT_OBJ) {
+                    obj->phantom_out = true;
+                    obj->addObject(data, false);
+                }
+                else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+                    stl->addObject(data);
+                }
                 freeMeshObjectData(data);
                 //
                 count++;
@@ -630,9 +650,6 @@ void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool use
             shapes[s].affineTrans.addShift(shift.x, shift.y, shift.z);
             //
             if (data!=NULL) {
-                collider = false;
-                if (phantom)  phantom_out = true;
-                //
                 // STLの場合は不必要
                 if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
                     MeshFacetNode* facet = data->facet;
@@ -647,9 +664,17 @@ void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool use
                     }
                 }
                 //
-                if      (format==JBXL_3D_FORMAT_DAE) dae->addObject(data, collider);
-                else if (format==JBXL_3D_FORMAT_OBJ) obj->addObject(data, collider);
-                else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) stl->addObject(data);
+                if (format==JBXL_3D_FORMAT_DAE) {
+                    dae->phantom_out = true;
+                    dae->addObject(data, false);
+                }
+                else if (format==JBXL_3D_FORMAT_OBJ) {
+                    obj->phantom_out = true;
+                    obj->addObject(data, false);
+                }
+                else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+                    stl->addObject(data);
+                }
                 freeMeshObjectData(data);
                 //
                 count++;
@@ -664,15 +689,6 @@ void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool use
             MeshObjectData* data = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, forUnity3D);
             //
             if (data!=NULL) {
-                if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
-                    collider = false;
-                    if (phantom)  phantom_out = true;
-                }
-                else {
-                    collider = true;
-                    if (!phantom) phantom_out = false;
-                }
-                //
                 // STLの場合は不必要
                 if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
                     MeshFacetNode* facet = data->facet;
@@ -699,10 +715,23 @@ void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool use
                         facet = facet->next;
                     }
                 }
+
+                bool collider = true;
+                if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
+                    collider = false;
+                }
                 //
-                if      (format==JBXL_3D_FORMAT_DAE) dae->addObject(data, collider);
-                else if (format==JBXL_3D_FORMAT_OBJ) obj->addObject(data, collider);
-                else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) stl->addObject(data);
+                if (format==JBXL_3D_FORMAT_DAE) {
+                    if (!collider && phantom) dae->phantom_out = true;
+                    dae->addObject(data, collider);
+                }
+                else if (format==JBXL_3D_FORMAT_OBJ) {
+                    if (!collider && phantom) obj->phantom_out = true;
+                    obj->addObject(data, collider);
+                }
+                else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+                    stl->addObject(data);
+                }
                 freeMeshObjectData(data);
                 //
                 count++;
@@ -710,35 +739,83 @@ void  OARTool::GenerateDataFile(int format, const char* fname, int num, bool use
         }
     }
 
-    // Output file
+    //for (int s=0; s<shno; s++) shapes[s].free();
+    //::free(shapes);
+
     if (count>0) {
-        Buffer out_path = init_Buffer();
-        if (phantom_out) out_path = dup_Buffer(pathPTM);
-        else             out_path = dup_Buffer(pathOUT);
-        //
-        // fnameの拡張子は自動的に変換される
         if (format==JBXL_3D_FORMAT_DAE) {
             if (count==1 && forUnity4) dae->addCenterObject();  // for Unity4.x
-            dae->outputFile(fname, (char*)out_path.buf, XML_INDENT_FORMAT); 
-            freeColladaXML(dae);
+            return (void*)dae;
         }
         else if (format==JBXL_3D_FORMAT_OBJ) {
             obj->execAffineTrans();
-            obj->outputFile(fname, (char*)out_path.buf);
-            freeOBJData(obj);
+            return (void*)obj;
         }
         else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-            bool binfile = true;
-            if (format==JBXL_3D_FORMAT_STL_A) binfile = false;
-            stl->getMerge(NULL);
-            stl->outputFile(fname, (char*)out_path.buf, binfile);
-            freeBrepSolidList(stl);
+            //stl->getMerge(NULL);
+            stl->outputFile(fname, (char*)pathOUT.buf, false);
+            return (void*)stl;
         }
-        free_Buffer(&out_path);
     }
 
-    for (int s=0; s<shno; s++) shapes[s].free();
-    ::free(shapes);
+    return NULL;
+}
+
+
+/**
+void  OARTool::outputSolidData(int format, const char* fname, void* solid)
+
+それぞれの形式の SOLIDデータからファイルを出力する．
+出力先は 大域変数 pathOUT, pathPTM, pathTEX で指定されたディレクトリ．
+*/
+void  OARTool::outputSolidData(int format, const char* fname, void* solid)
+{
+    if (solid==NULL || fname==NULL) return;
+    //
+    Buffer out_path = init_Buffer();
+
+    // fnameの拡張子は自動的に変換される
+    if (format==JBXL_3D_FORMAT_DAE) {
+        ColladaXML* dae = (ColladaXML*)solid;
+        if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
+        else                  out_path = dup_Buffer(pathOUT);
+        dae->outputFile(fname, (char*)out_path.buf, XML_INDENT_FORMAT); 
+    }
+    else if (format==JBXL_3D_FORMAT_OBJ) {
+        OBJData* obj = (OBJData*)solid;
+        if (obj->phantom_out) out_path = dup_Buffer(pathPTM);
+        else                  out_path = dup_Buffer(pathOUT);
+        obj->outputFile(fname, (char*)out_path.buf);
+    }
+    else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+        bool binfile = true;
+        if (format==JBXL_3D_FORMAT_STL_A) binfile = false;
+        out_path = dup_Buffer(pathOUT);
+        BrepSolidList* stl = (BrepSolidList*)solid;
+        //stl->outputFile(fname, (char*)out_path.buf, binfile);
+    }
+    free_Buffer(&out_path);
+
+    return;
+}
+
+
+void  OARTool::freeSolidData(int format, void* solid)
+{
+    if (solid==NULL) return;
+
+    if (format==JBXL_3D_FORMAT_DAE) {
+        ColladaXML* dae = (ColladaXML*)solid;
+        freeColladaXML(dae);
+    }
+    else if (format==JBXL_3D_FORMAT_OBJ) {
+        OBJData* obj = (OBJData*)solid;
+        freeOBJData(obj);
+    }
+    else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+        BrepSolidList* stl = (BrepSolidList*)solid;
+        freeBrepSolidList(stl);
+    }
 
     return;
 }

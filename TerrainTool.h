@@ -87,8 +87,7 @@ public:
     void   ReadHeightData(const char* path);
 
     void   GenerateTexture(int format, tList* assets, const char* outpath, bool app_param);
-    void   GenerateDataFile(int format, const char* outpath, Vector<float> offset, bool app_param);
-    //void   GenerateSTL(const char* outpath, Vector<float> offset, bool binfile=true);
+    void   GenerateTerrain(int format, const char* outpath, Vector<float> offset, bool app_param);
 
     TerrainTexWeight  GetTextureWeight(int x, int y);
 

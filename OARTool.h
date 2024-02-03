@@ -119,15 +119,19 @@ public:
     void   ReadTerrainData(void);
 
     // DAE/OBJ/STL
-    int    GenerateTerrainDataFile (int format=JBXL_3D_FORMAT_DAE);
-    int    GenerateObjectsDataFile (int format, int startnum=1, int stopnum=-1, bool useBrep=true, bool phantom=false, char* command=NULL);
-    int    GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep=true, bool phantom=false, char* command=NULL);
-    void   GenerateDataFile(int format, const char* fname, int num=1, bool useBrep=true, bool phantom=false, char* command=NULL);
+    int    GenerateTerrainDataFile (int format);
+    int    GenerateObjectsDataFile (int format, int startnum=1, int stopnum=-1, bool useBrep=true, bool phantom=true, char* command=NULL);
+    void   GenerateSelectedDataFile(int format, char* fname, bool useBrep, bool phantom, char* command);
+//    int    GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep=true, bool phantom=false, char* command=NULL);
+
+    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, bool phantom=false, char* command=NULL);
+    void   outputSolidData(int format, const char* fname, void* solid);
+    void   freeSolidData(int format, void* solid);
 
     void   ConvertTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL, const char* command=NULL);
     void   MakeDummyTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL);
 
-    // ReadTerrainData と GenerateTerrainDae の間で呼ぶこと．
+    // ReadTerrainData と GenerateTerrainDataFile の間で呼ぶこと．
     void  SetTerrainTextureScale(float sc) { if(terrain!=NULL) for(int i=0; i<terrainNum; i++) terrain[i].set_scale((float)sc);}
 
     TreeTool* GetTreeTool(void) { return &treeTool;}

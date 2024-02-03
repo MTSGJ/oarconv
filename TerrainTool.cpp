@@ -397,7 +397,7 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
 //
 // for DAE/OBJ/STL
 //
-void  TerrainTool::GenerateDataFile(int format, const char* outpath, Vector<float> offset, bool add_param)
+void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float> offset, bool add_param)
 {
     if (r32.isNull()) return;
 
@@ -410,7 +410,7 @@ void  TerrainTool::GenerateDataFile(int format, const char* outpath, Vector<floa
     bool bottom;
 
     //
-    DEBUG_MODE PRINT_MESG("TerrainTool::GenerateDataFile: generating sub region mesh.\n");
+    DEBUG_MODE PRINT_MESG("TerrainTool::GenerateTerrain: generating sub region mesh.\n");
     for (int rj=0; rj<rgnum; rj++) {
         top = bottom = false;
         int jsize = 257;                // 境界用
@@ -431,7 +431,7 @@ void  TerrainTool::GenerateDataFile(int format, const char* outpath, Vector<floa
             }
             int xx = ri*256 + yy;
 
-            DEBUG_MODE if (rgnum>1) PRINT_MESG("TerrainTool::GenerateDataFile: generating sub region mesh. %02d/%d\n", count, rgnum*rgnum-1);
+            DEBUG_MODE if (rgnum>1) PRINT_MESG("TerrainTool::GenerateTerrain: generating sub region mesh. %02d/%d\n", count, rgnum*rgnum-1);
             Vector<float> shift = Vector<float>(ri*256.0f-xsize/2.0f+offset.x, rj*256.0f-ysize/2.0f+offset.y, -waterHeight+offset.z);
             MSGraph<float> region;
 

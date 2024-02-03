@@ -335,7 +335,8 @@ void  CObjectsListDLG::OpenPreviewWindow(int idx)
 
 	//
 	CProgressBarDLG* counter = new CProgressBarDLG(_T("Create Preview Window"), FALSE);
-	BrepSolidList* slist = winApp->oarTool.GenerateSolidList(obj);
+	//BrepSolidList* slist = winApp->oarTool.GenerateSolidList(obj);
+	BrepSolidList* slist = (BrepSolidList*)winApp->oarTool.generateSolidData(JBXL_3D_FORMAT_STL_B, obj);
 	BREP_SOLID* solid = slist->getMerge(counter);
 	freeBrepSolidList(slist);
 	if (counter!=NULL) {
