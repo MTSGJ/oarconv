@@ -361,4 +361,3 @@ void CBREPView::SwitchSolid()
 	if (solided) solided = false;
 	else         solided = true;
 }
-
