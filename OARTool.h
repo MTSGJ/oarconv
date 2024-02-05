@@ -24,27 +24,15 @@
 #include "TerrainTool.h"
 #include "LogDocTool.h"
 
+#include "OARDirectory.h"
+
 
 namespace  jbxl {
 
 
 #ifdef WIN32
-  #define  OART_DEFAULT_INP_DIR     ".\\"
-  #define  OART_DEFAULT_DAE_DIR     "DAE\\"
-  #define  OART_DEFAULT_OBJ_DIR     "OBJ\\"
-  #define  OART_DEFAULT_STL_DIR     "STL\\"
-  #define  OART_DEFAULT_AST_DIR     "assets\\"
-  #define  OART_DEFAULT_TEX_DIR     "Textures\\"
-  #define  OART_DEFAULT_PTM_DIR     "Phantoms\\"
   #define  OART_JP2_DECOMP_COM      "opj_decompress.exe -i %s -o %s"
 #else
-  #define  OART_DEFAULT_INP_DIR     "./"
-  #define  OART_DEFAULT_DAE_DIR     "./DAE/"
-  #define  OART_DEFAULT_OBJ_DIR     "./OBJ/"
-  #define  OART_DEFAULT_STL_DIR     "./STL/"
-  #define  OART_DEFAULT_AST_DIR     "/usr/local/share/oarconv/assets/:./assets/"
-  #define  OART_DEFAULT_TEX_DIR     "Textures/"
-  #define  OART_DEFAULT_PTM_DIR     "Phantoms/"
   #define  OART_JP2_DECOMP_COM      "/usr/local/bin/opj_decompress -i %s -o %s >/dev/null 2>&1"
 #endif
 

@@ -453,6 +453,17 @@ void  OARTool::MakeOutputFolder(int format)
     if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
         mkdir((char*)pathPTM.buf, 0700);
         mkdir((char*)pathTEX.buf, 0700);
+        //
+        if (format==JBXL_3D_FORMAT_OBJ) {
+            Buffer mtl = dup_Buffer(pathOUT);
+            Buffer ptm_mtl = dup_Buffer(pathPTM);
+            cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
+            cat_s2Buffer(OART_DEFAULT_MTL_DIR, &ptm_mtl);
+            mkdir((char*)mtl.buf, 0700);
+            mkdir((char*)ptm_mtl.buf, 0700);
+            free_Buffer(&mtl);
+            free_Buffer(&ptm_mtl);
+        }
     }
     return;
 }
@@ -823,7 +834,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         OBJData* obj = (OBJData*)solid;
         if (obj->phantom_out) out_path = dup_Buffer(pathPTM);
         else                  out_path = dup_Buffer(pathOUT);
-        obj->outputFile(fname, (char*)out_path.buf);
+        obj->outputFile(fname, (char*)out_path.buf, OART_DEFAULT_MTL_DIR);
     }
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         bool ascii = true;

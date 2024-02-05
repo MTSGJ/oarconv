@@ -21,6 +21,8 @@
 #include "MeshMaker.h"
 #include "MaterialTool.h"
 
+#include "OARDirectory.h"
+
 
 namespace  jbxl {
 

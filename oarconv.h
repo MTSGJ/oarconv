@@ -2,7 +2,6 @@
     Convert OAR Files to Collada Files
 */
 
-
 #include "OARTool.h"
 #include "oarconv_help.h"
 
@@ -10,7 +9,8 @@
 //using namespace jbxl;
 
 
-#define OARCONV_VERSION             "1.5.0" // 20240126 less texture
+#define OARCONV_VERSION             "1.6.0" // 2024 OBJ File
+//#define OARCONV_VERSION           "1.5.0" // 20240126 less texture
 //#define OARCONV_VERSION           "1.4.6" // 20240105 Unity 2022 support
 //#define OARCONV_VERSION           "1.4.5" // 20201205 for latest JunkBox Library
 //#define OARCONV_VERSION           "1.4.4" // 20160511 fix tree rotation bug. regenerate tree images

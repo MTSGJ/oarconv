@@ -482,22 +482,22 @@ void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float
                 dae = new ColladaXML();
                 dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
                 dae->addObject(data, true);
-                dae->outputFile((char*)objname.buf, (char*)path.buf);
+                dae->outputFile((char*)objname.buf, (char*)path.buf, XML_INDENT_FORMAT);
                 freeColladaXML(dae);
             }
             else if (format==JBXL_3D_FORMAT_OBJ) {
                 obj = new OBJData();
                 //obj->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
                 obj->addObject(data, true);
-                obj->outputFile((char*)objname.buf, (char*)path.buf);
+                obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
             }
             else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-                bool binfile = true;
-                if (format==JBXL_3D_FORMAT_STL_A) binfile = false;
+                bool ascii = true;
+                if (format==JBXL_3D_FORMAT_STL_B) ascii = false;
                 stl = new BrepSolidList();
                 stl->addObject(data);
-                stl->outputFile((char*)objname.buf, (char*)path.buf, binfile);
+                stl->outputFile((char*)objname.buf, (char*)path.buf, ascii);
                 freeBrepSolidList(stl);
             }
             free_Buffer(&objname);
