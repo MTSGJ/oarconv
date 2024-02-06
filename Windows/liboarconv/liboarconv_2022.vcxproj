@@ -33,6 +33,7 @@
     <ClInclude Include="..\..\LogDocTool.h" />
     <ClInclude Include="..\..\MaterialTool.h" />
     <ClInclude Include="..\..\MeshMaker.h" />
+    <ClInclude Include="..\..\OARDirectory.h" />
     <ClInclude Include="..\..\OARTool.h" />
     <ClInclude Include="..\..\PrimMesher.h" />
     <ClInclude Include="..\..\PrimShape.h" />
