@@ -635,7 +635,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     if (format==JBXL_3D_FORMAT_DAE) {
         dae = new ColladaXML();
         dae->forUnity5  = forUnity5;
-        dae->forUnity4  = forUnity4;
         dae->forUnity3D = forUnity3D;
         dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
     }
@@ -815,7 +814,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
 void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 
 それぞれの形式の SOLIDデータからファイルを出力する．
-出力先は 大域変数 pathOUT, pathPTM, pathTEX で指定されたディレクトリ．
+出力先は 大域変数 pathOUT, pathPTM で指定されたディレクトリ．
 */
 void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 {

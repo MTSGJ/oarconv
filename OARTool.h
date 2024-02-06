@@ -89,7 +89,9 @@ public:
     void   setUnity4(bool); 
     void   setUnity5(bool);
     void   setUnity3D(bool);
+    void   setUnity(bool b) { setUnity3D(b);}
     void   setUE5(bool);
+    void   setUE(bool b)    { setUE5(b);}
 
     void   clear_path(void);
     void   clear_list(void);
