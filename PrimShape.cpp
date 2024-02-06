@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * Source code of OpenMetaverse is used in part. 
  *
  * see also http://openmetaverse.org/
@@ -59,7 +58,6 @@ static const std::string _PrimHoleType[PRIM_HOLE_TYPE_NUM] =
 };
 
 
-
 //
 static const std::string _PrimBumpMapUUID[PRIM_BUMPMAP_NUM] = 
 {
@@ -81,7 +79,6 @@ static const std::string _PrimBumpMapUUID[PRIM_BUMPMAP_NUM] =
     "83b77fc6-10b4-63ec-4de7-f40629f238c5",     // suction      
     "735198cf-6ea0-2550-e222-21d3c6a341ae"      // weave        
 };
-
 
 
 
@@ -226,7 +223,6 @@ void  PrimBaseShape::GenerateBaseParam(int type)
     }
     return;
 }
-
 
 
 /**
@@ -375,7 +371,6 @@ void  PrimBaseShape::GetBaseParamFromXML(tXML* xml, AffineTrans<double>* base)
 }
 
 
-
 /**
 Texture Entry. 
 
@@ -502,8 +497,8 @@ void  PrimBaseShape::GetTextureEntry(tXML* xml)
                 for (int facet=0, bit=1; facet<fieldSize; facet++, bit<<=1) {
                     if ((facetBits&bit)!=0) {
                         uByte material = (uByte)(*ptr);
-                        int specular = (int)((material & 0xc0)>>6);
-                        materialParam[facet].setShininess(specular/3.0f);
+                        int shininess = (int)((material & 0xc0)>>6);
+                        materialParam[facet].setShininess(shininess/3.0f);
                         int bright = (int)((material & 0x20)>>5);   // 0 or 1
                         if (bright==1) materialParam[facet].setBright(1.0f);
                         int bumpno = (int)(material & 0x1f);
@@ -561,7 +556,6 @@ void  PrimBaseShape::GetTextureEntry(tXML* xml)
 }
 
 
-
 MaterialParam  PrimBaseShape::GetDefaultTextureEntry(uByte* ptr, int size)
 {
     MaterialParam param;
@@ -613,8 +607,8 @@ MaterialParam  PrimBaseShape::GetDefaultTextureEntry(uByte* ptr, int size)
 
     // Material
     uByte material = (uByte)(*ptr);
-    int specular = (int)((material & 0xc0)>>6);
-    param.setShininess(specular/3.0f);
+    int shininess = (int)((material & 0xc0)>>6);
+    param.setShininess(shininess/3.0f);
     int bright = (int)((material & 0x20)>>5);   // 0 or 1
     if (bright==1) param.setBright(1.0f);
     int bumpno = (int)(material & 0x1f);
@@ -652,7 +646,6 @@ MaterialParam  PrimBaseShape::GetDefaultTextureEntry(uByte* ptr, int size)
 }
 
 
-
 /**
 @sa OpenMetaverse.Primitive.TextureEntry Class
 */
@@ -671,7 +664,6 @@ bool  PrimBaseShape::ReadFacetBitField(uByte** data, int* facetBits, int* fieldS
 
     return (*facetBits!=0);
 }
-
 
 
 /**
@@ -807,7 +799,6 @@ void  PrimBaseShape::GetMaterialParams(tList* resourceList)
 }
 
 
-
 //
 void  PrimBaseShape::PrintTextureEntry(void)
 {
@@ -840,7 +831,6 @@ void  PrimBaseShape::PrintTextureEntry(void)
     }
     PRINT_MESG("\n");
 }
-
 
 
 //
@@ -885,7 +875,6 @@ void  PrimBaseShape::PrintBaseParam(void)
 
     return;
 }
-
 
 
 
@@ -939,7 +928,6 @@ PrimBaseShape*  jbxl::CreatePrimBaseShapesFromXML(tXML* xml, tList* rsclist, int
     if (sno!=NULL) *sno = count;
     return shapes;
 }
-
 
 
 
