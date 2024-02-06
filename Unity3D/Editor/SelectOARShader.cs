@@ -177,7 +177,8 @@ public sealed class SelectOARShader : AssetPostprocessor
         if (name.Length >= atr_len)
         {
             string sub = name.Substring(name.Length - atr_len, atr_len);
-            string enc = sub.Replace('$', '/');
+            string enc = sub.Replace('#', '/');
+            string enc = sub.Replace('$', '/');     // for old version
             //UnityEngine.Debug.Log("Base64 String = " + enc);
             byte[] dec = Convert.FromBase64String(enc);    // MTRL_ATTR_LEN (32/4*3 = 24)
 
