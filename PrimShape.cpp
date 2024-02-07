@@ -317,7 +317,7 @@ void  PrimBaseShape::GetBaseParamFromXML(tXML* xml, AffineTrans<double>* base)
     if (SculptEntry && stype<SCULPT_TYPE_MESH) {    // Sculpted Prim: Texture(Matrial) is one
         for (int i=1; i<PRIM_MATERIAL_NUM; i++) materialParam[i].enable = false;
     }
-    for (int i=0; i<PRIM_MATERIAL_NUM; i++) materialParam[i].setAlphaMode(MATERIAL_ALPHA_BLENDING);
+    for (int i=0; i<PRIM_MATERIAL_NUM; i++) materialParam[i].texture.setAlphaMode(MATERIAL_ALPHA_BLENDING);
 
     //
     double gposx = (double)get_xml_float_content_bystr(xml, "<GroupPosition><X>");
@@ -432,10 +432,10 @@ void  PrimBaseShape::GetTextureEntry(tXML* xml)
                         if (red==0.0) red = MTRL_DEFAULT_COLOR;
                         if (grn==0.0) grn = MTRL_DEFAULT_COLOR;
                         if (blu==0.0) blu = MTRL_DEFAULT_COLOR;
-                        materialParam[facet].setColor(red, 0);
-                        materialParam[facet].setColor(grn, 1);
-                        materialParam[facet].setColor(blu, 2);
-                        materialParam[facet].setColor(alp, 3);
+                        materialParam[facet].texture.setColor(red, 0);
+                        materialParam[facet].texture.setColor(grn, 1);
+                        materialParam[facet].texture.setColor(blu, 2);
+                        materialParam[facet].texture.setColor(alp, 3);
                     }
                 }
                 ptr += 4;
@@ -445,7 +445,7 @@ void  PrimBaseShape::GetTextureEntry(tXML* xml)
             while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) {
                 for (int facet=0, bit=1; facet<fieldSize; facet++, bit<<=1) {
                     if ((facetBits&bit)!=0) {
-                        materialParam[facet].setScaleU((double)(*(float*)ptr));
+                        materialParam[facet].texture.setScaleU((double)(*(float*)ptr));
                     }
                 }
                 ptr += 4;
@@ -454,7 +454,7 @@ void  PrimBaseShape::GetTextureEntry(tXML* xml)
             while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) {
                 for (int facet=0, bit=1; facet<fieldSize; facet++, bit<<=1) {
                     if ((facetBits&bit)!=0) {
-                        materialParam[facet].setScaleV((double)(*(float*)ptr));
+                        materialParam[facet].texture.setScaleV((double)(*(float*)ptr));
                     }
                 }
                 ptr += 4;
@@ -465,7 +465,7 @@ void  PrimBaseShape::GetTextureEntry(tXML* xml)
                 double shftu = (*(short int*)ptr)/32767.0;
                 for (int facet=0, bit=1; facet<fieldSize; facet++, bit<<=1) {
                     if ((facetBits&bit)!=0) {
-                        materialParam[facet].setShiftU(shftu);
+                        materialParam[facet].texture.setShiftU(shftu);
                     }
                 }
                 ptr += 2;
@@ -475,7 +475,7 @@ void  PrimBaseShape::GetTextureEntry(tXML* xml)
                 double shftv = (*(short int*)ptr)/32767.0;
                 for (int facet=0, bit=1; facet<fieldSize; facet++, bit<<=1) {
                     if ((facetBits&bit)!=0) {
-                        materialParam[facet].setShiftV(shftv);
+                        materialParam[facet].texture.setShiftV(shftv);
                     }
                 }
                 ptr += 2;
@@ -486,7 +486,7 @@ void  PrimBaseShape::GetTextureEntry(tXML* xml)
                 double rot = (*(short int*)ptr)/32768.0*PI2;
                 for (int facet=0, bit=1; facet<fieldSize; facet++, bit<<=1) {
                     if ((facetBits&bit)!=0) {
-                        materialParam[facet].setRotate(rot);
+                        materialParam[facet].texture.setRotate(rot);
                     }
                 }
                 ptr += 2;
@@ -577,31 +577,31 @@ MaterialParam  PrimBaseShape::GetDefaultTextureEntry(uByte* ptr, int size)
     if (red==0.0) red = MTRL_DEFAULT_COLOR;
     if (grn==0.0) grn = MTRL_DEFAULT_COLOR;
     if (blu==0.0) blu = MTRL_DEFAULT_COLOR;
-    param.setColor(red, 0);                 // R
-    param.setColor(grn, 1);                 // G
-    param.setColor(blu, 2);                 // B
-    param.setColor(alp, 3);                 // A
+    param.texture.setColor(red, 0);                 // R
+    param.texture.setColor(grn, 1);                 // G
+    param.texture.setColor(blu, 2);                 // B
+    param.texture.setColor(alp, 3);                 // A
     ptr += 4;
     while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) ptr += 4;
 
     // Scale UV
-    param.setScaleU((double)(*(float*)ptr));
+    param.texture.setScaleU((double)(*(float*)ptr));
     ptr += 4;
     while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) ptr += 4;
-    param.setScaleV((double)(*(float*)ptr));
+    param.texture.setScaleV((double)(*(float*)ptr));
     ptr += 4;
     while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) ptr += 4;
 
     // Shift UV
-    param.setShiftU((*(short int*)ptr)/32767.0);
+    param.texture.setShiftU((*(short int*)ptr)/32767.0);
     ptr += 2;
     while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) ptr += 2;
-    param.setShiftV(((*(short int*)ptr)/32767.0));
+    param.texture.setShiftV(((*(short int*)ptr)/32767.0));
     ptr += 2;
     while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) ptr += 2;
 
     // Rotation
-    param.setRotate(((*(short int*)ptr)/32768.0*PI2));
+    param.texture.setRotate(((*(short int*)ptr)/32768.0*PI2));
     ptr += 2;
     while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) ptr += 2;
 
@@ -753,8 +753,8 @@ void  PrimBaseShape::GetMaterialParams(tList* resourceList)
                 //
                 tXML* xml = xml_parse_file(path);
                 if (xml!=NULL) {
-                    materialParam[i].setAlphaMode  (get_xml_int_content_bystr(xml, "<key>DiffuseAlphaMode</key><integer>"));
-                    materialParam[i].setAlphaCutoff(get_xml_int_content_bystr(xml, "<key>AlphaMaskCutoff</key><integer>")/255.0);
+                    materialParam[i].texture.setAlphaMode  (get_xml_int_content_bystr(xml, "<key>DiffuseAlphaMode</key><integer>"));
+                    materialParam[i].texture.setAlphaCutoff(get_xml_int_content_bystr(xml, "<key>AlphaMaskCutoff</key><integer>")/255.0);
                     materialParam[i].setGlossiness (get_xml_int_content_bystr(xml, "<key>SpecExp</key><integer>")/255.0);
                     materialParam[i].setEnvironment(get_xml_int_content_bystr(xml, "<key>EnvIntensity</key><integer>")/255.0);
                     //
@@ -794,7 +794,6 @@ void  PrimBaseShape::GetMaterialParams(tList* resourceList)
             }
         }
     }
-
     return;
 }
 
@@ -809,11 +808,11 @@ void  PrimBaseShape::PrintTextureEntry(void)
             PRINT_MESG("texture     : %s\n", materialParam[i].getTextureName()); 
             PRINT_MESG("material    : %s\n", materialName[i].buf);
             //
-            PRINT_MESG("color       : %f, %f, %f, %f\n", (float)materialParam[i].getColor(0), (float)materialParam[i].getColor(1),
-                                                            (float)materialParam[i].getColor(2), (float)materialParam[i].getColor(3));
-            PRINT_MESG("scale       : %f, %f\n", (float)materialParam[i].getScaleU(), (float)materialParam[i].getScaleV());
-            PRINT_MESG("shift       : %f, %f\n", (float)materialParam[i].getShiftU(), (float)materialParam[i].getShiftV());
-            PRINT_MESG("rotate      : %f\n", (float)materialParam[i].getRotate());
+            PRINT_MESG("color       : %f, %f, %f, %f\n", (float)materialParam[i].texture.getColor(0), (float)materialParam[i].texture.getColor(1),
+                                                         (float)materialParam[i].texture.getColor(2), (float)materialParam[i].texture.getColor(3));
+            PRINT_MESG("scale       : %f, %f\n", (float)materialParam[i].texture.getScaleU(), (float)materialParam[i].texture.getScaleV());
+            PRINT_MESG("shift       : %f, %f\n", (float)materialParam[i].texture.getShiftU(), (float)materialParam[i].texture.getShiftV());
+            PRINT_MESG("rotate      : %f\n", (float)materialParam[i].texture.getRotate());
             PRINT_MESG("transparent : %f\n", (float)materialParam[i].getTransparent());
             PRINT_MESG("shininess   : %f\n", (float)materialParam[i].getShininess());
             PRINT_MESG("glow        : %f\n", (float)materialParam[i].getGlow());
@@ -822,10 +821,10 @@ void  PrimBaseShape::PrintTextureEntry(void)
             //
             PRINT_MESG("mapping     : %d\n", materialParam[i].mapping);
             PRINT_MESG("flags       : %d\n", materialParam[i].mflags);
-            if (materialParam[i].getAlphaChannel()) PRINT_MESG("alphaChannel: true\n");
-            else                                    PRINT_MESG("alphaChannel: false\n");
-            PRINT_MESG("alphaMode   : %d\n", materialParam[i].getAlphaMode());
-            PRINT_MESG("alphaCutoff : %f\n", (float)materialParam[i].getAlphaCutoff());
+            if (materialParam[i].texture.getAlphaChannel()) PRINT_MESG("alphaChannel: true\n");
+            else                                            PRINT_MESG("alphaChannel: false\n");
+            PRINT_MESG("alphaMode   : %d\n", materialParam[i].texture.getAlphaMode());
+            PRINT_MESG("alphaCutoff : %f\n", (float)materialParam[i].texture.getAlphaCutoff());
             PRINT_MESG("\n");
         }
     }

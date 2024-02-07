@@ -4,6 +4,10 @@
 
 TOPDIR=../JunkBox_Lib
 
+#
+CC   = g++
+AR   = ar
+TH   = touch
 
 #OPENJPEG_VERSION = 12
 #OPENJPEG_VERSION = 14
@@ -51,15 +55,29 @@ SUBJ = oarconv mktree
 
 OBJS = oarconv_help.o OARTool.o TerrainTool.o TreeTool.o MeshMaker.o MaterialTool.o PrimMesher.o PrimShape.o SculptMesher.o TerrainMesher.o
 
-
-#
 all: $(SUBJ)
 
 #
-CC   = g++
-AR   = ar
-TH   = touch
+OARTool.h: LogDocTool.h OARDirectory.h
+	$(TH) OARTool.h
 
+TerrainTool.h: LogDocTool.h OARDirectory.h
+	$(TH) TerrainTool.h
+
+MeshMaker.h: LogDocTool.h
+	$(TH)
+
+PrimShape.h: LogDocTool.h
+	$(TH) PrimShape.h
+
+SculptMesher.h: LogDocTool.h
+	$(TH) SculptMesher.h
+
+TerrainMesher.h: LogDocTool.h
+	$(TH) TerrainMesher.h
+
+mktree.cpp: oarconv.h
+	$(TH) mktree.cpp
 
 
 LIB_DIR=$(TOPDIR)/C++Lib
@@ -110,7 +128,6 @@ CFLAGS += -DENABLE_OPENJPEG -DOPENJPEG_VERSION=$(OPENJPEG_VERSION) -DHAVE_OPENJP
 
 .cpp.o: $(LIB_MSH)
 	$(CC) $< $(CFLAGS) -c -O2 
-
 
 .c.o:
 	$(CC) $< $(CFLAGS) -c -O2 

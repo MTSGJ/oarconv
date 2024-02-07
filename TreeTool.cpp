@@ -213,13 +213,13 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_pa
     mparam[0].setTextureName(alphaTexture.getName());
     mparam[1].setTextureName(treeParam[shape.State].texture.getName());
     mparam[2].setTextureName(treeParam[shape.State].texture.getName());
-    mparam[2].setFlipU(true);
+    mparam[2].texture.setFlipU(true);
 
     for (int i=0; i<3; i++) {
-        mparam[i].setColor(1.0f, 1.0f, 1.0f, 1.0f);
         mparam[i].setTransparent(MTRL_DEFAULT_ALPHA);
-        mparam[i].setAlphaMode(MATERIAL_ALPHA_MASKING);
-        mparam[i].setAlphaCutoff(0.5);
+        mparam[i].texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        mparam[i].texture.setAlphaMode(MATERIAL_ALPHA_MASKING);
+        mparam[i].texture.setAlphaCutoff(0.5);
         if (add_param) {
             char* paramstr = mparam[i].getBase64Params('T');  // T: Tree
             mparam[i].setParamString(paramstr);
@@ -344,13 +344,13 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     mparam[0].setTextureName(alphaTexture.getName());
     mparam[1].setTextureName(grassParam[shape.State].texture.getName());
     mparam[2].setTextureName(grassParam[shape.State].texture.getName());
-    mparam[2].setFlipU(true);
+    mparam[2].texture.setFlipU(true);
 
     for (int i=0; i<3; i++) {
-        mparam[i].setColor(1.0, 1.0, 1.0, 1.0);
         mparam[i].setTransparent(MTRL_DEFAULT_ALPHA);
-        mparam[i].setAlphaMode(MATERIAL_ALPHA_MASKING);
-        mparam[i].setAlphaCutoff(0.5);
+        mparam[i].texture.setColor(1.0, 1.0, 1.0, 1.0);
+        mparam[i].texture.setAlphaMode(MATERIAL_ALPHA_MASKING);
+        mparam[i].texture.setAlphaCutoff(0.5);
         if (add_param) {
             char* paramstr = mparam[i].getBase64Params('G');  // G: Grass
             mparam[i].setParamString(paramstr);

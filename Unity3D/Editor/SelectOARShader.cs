@@ -37,27 +37,29 @@ public sealed class SelectOARShader : AssetPostprocessor
     private float glow          = 0.0f;
     private float bright        = 0.0f;
     private float light         = 0.0f;
-    private char kind           = 'O';        // Object
+    private float shiftU        = 0.0f;
+    private float shiftV        = 0.0f;
+    private float scaleU        = 1.0f;
+    private float scaleV        = 1.0f;
+    private float rotate        = 0.0f;
+    private char  kind          = 'O';        // Object
 
 
     void OnPreprocessModel()
     {
         string currentFolder = Path.GetDirectoryName(assetPath);
-        if (!AssetDatabase.IsValidFolder(currentFolder + "/" + MaterialFolder))
-        {
+        if (!AssetDatabase.IsValidFolder(currentFolder + "/" + MaterialFolder)) {
             AssetDatabase.CreateFolder(currentFolder, MaterialFolder);
         }
         ModelImporter modelImporter = assetImporter as ModelImporter;
 
         /*
-        if (!modelImporter.importSettingsMissing)
-        {
+        if (!modelImporter.importSettingsMissing) {
         }*/
         //modelImporter.animationType = ModelImporterAnimationType.None;
 
         modelImporter.addCollider = true;
-        if (currentFolder.EndsWith("/" + PhantomFolder) || currentFolder.EndsWith("\\" + PhantomFolder))
-        {
+        if (currentFolder.EndsWith("/" + PhantomFolder) || currentFolder.EndsWith("\\" + PhantomFolder)) {
             modelImporter.addCollider = false;
         }
     }
@@ -77,67 +79,52 @@ public sealed class SelectOARShader : AssetPostprocessor
         getParamsFromMaterialName(materialName);
         material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
 
-        if (kind == 'T' || kind == 'G')
-        {   // Tree or Grass
+        if (kind == 'T' || kind == 'G') {   // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
         //
-        else if (transparent < 0.99f)
-        {
-            if (shininess > 0.01f)
-            {
-                if (cutoff > 0.01f)
-                {   // Alpha Cutoff
+        else if (transparent < 0.99f) {
+            if (shininess > 0.01f) {
+                if (cutoff > 0.01f) {   // Alpha Cutoff
                     material.shader = Shader.Find(TransCutSpecShader);
                     if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
                 }
-                else
-                {   // Alpha Blending
-                    if (transparent >= 0.90f)
-                    {
+                else {   // Alpha Blending
+                    if (transparent >= 0.90f) {
                         material.shader = Shader.Find(TransCutSpecShader);
                         if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", 0.2f);
                     }
-                    else
-                    {
+                    else {
                         material.shader = Shader.Find(TransSpecShader);
                     }
                 }
                 if (material.HasProperty("_Shininess")) material.SetFloat("_Shininess", 1.0f - shininess);
             }
             //
-            else
-            {
-                if (cutoff > 0.01f)
-                {   // Alpha Cutoff
+            else {
+                if (cutoff > 0.01f) {   // Alpha Cutoff
                     material.shader = Shader.Find(TransCutShader);
                     if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
                 }
-                else
-                {   // Alpha Blending
-                    if (transparent >= 0.90f)
-                    {
+                else {   // Alpha Blending
+                    if (transparent >= 0.90f) {
                         material.shader = Shader.Find(TransCutSoftShader);
                         if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", 0.9f);
                     }
-                    else
-                    {
+                    else {
                         material.shader = Shader.Find(TransShader);
                     }
                 }
             }
         }
         //
-        else if (glow > 0.02f)
-        {
+        else if (glow > 0.02f) {
             material.EnableKeyword("_EMISSION");
             material.shader = Shader.Find(GlowShader);
-            if (material.HasProperty("_EmissionColor"))
-            {
+            if (material.HasProperty("_EmissionColor")) {
                 Color col = material.GetColor("_Color");
                 float fac = col.maxColorComponent;
-                if (fac > 0.01f)
-                {
+                if (fac > 0.01f) {
                     if (glow > 0.99f) glow = 0.99f;
                     col = col * (glow / fac);
                 }
@@ -146,21 +133,18 @@ public sealed class SelectOARShader : AssetPostprocessor
             if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", shininess);
         }
         //
-        else if (bright > 0.01f)
-        {
+        else if (bright > 0.01f) {
             material.shader = Shader.Find(BrightShader);
             if (material.HasProperty("_Shininess")) material.SetFloat("_Shininess", 1.0f - shininess);
         }
         //
-        else if (shininess > 0.01f)
-        {
+        else if (shininess > 0.01f) {
             material.shader = Shader.Find(SpecularShader);
             if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", shininess / 2.0f);
             if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", 0.5f + shininess / 2.0f);
         }
         //
-        else
-        {
+        else {
             material.shader = Shader.Find(NormalShader);
         }
 
@@ -174,11 +158,10 @@ public sealed class SelectOARShader : AssetPostprocessor
     {
         int atr_len = 32;    // MTRL_ATTR_LEN /3*4 (36/3*4 = 32)
         //
-        if (name.Length >= atr_len)
-        {
+        if (name.Length >= atr_len) {
             string sub = name.Substring(name.Length - atr_len, atr_len);
             string enc = sub.Replace('#', '/');
-            string enc = sub.Replace('$', '/');     // for old version
+            enc = enc.Replace('$', '/');           // for old version
             //UnityEngine.Debug.Log("Base64 String = " + enc);
             byte[] dec = Convert.FromBase64String(enc);    // MTRL_ATTR_LEN (32/4*3 = 24)
 
@@ -186,12 +169,25 @@ public sealed class SelectOARShader : AssetPostprocessor
             colorGreen  = 1.0f - (float)dec[1] / 255.0f;
             colorBlue   = 1.0f - (float)dec[2] / 255.0f;
             transparent = 1.0f - (float)dec[3] / 255.0f;
-            cutoff      = (float)dec[4] / 255.0f;
-            shininess   = (float)dec[5] / 255.0f;
-            glow        = (float)dec[6] / 255.0f;
-            bright      = (float)dec[7] / 255.0f;
-            light       = (float)dec[8] / 255.0f;
-            kind        = (char)dec[23];
+            cutoff      = (float)dec[ 4] / 255.0f;
+            shininess   = (float)dec[ 5] / 255.0f;
+            glow        = (float)dec[ 6] / 255.0f;
+            bright      = (float)dec[ 7] / 255.0f;
+            light       = (float)dec[ 8] / 255.0f;
+
+            short[] tmp = new short[1];
+            Buffer.BlockCopy(dec, 13, tmp, 0, 2);
+            shiftU      = (float)tmp[0] / 2000.0f;
+            Buffer.BlockCopy(dec, 15, tmp, 0, 2);
+            shiftV      = (float)tmp[0] / 2000.0f;
+            Buffer.BlockCopy(dec, 17, tmp, 0, 2);
+            scaleU      = (float)tmp[0] / 100.0f;
+            Buffer.BlockCopy(dec, 19, tmp, 0, 2);
+            scaleV      = (float)tmp[0] / 100.0f;
+            Buffer.BlockCopy(dec, 21, tmp, 0, 2);
+            rotate      = (float)tmp[0] / 2000.0f;
+
+            kind        = (char) dec[23];
 
             if (cutoff > 0.9f) cutoff = 0.9f;
         }

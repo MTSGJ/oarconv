@@ -363,8 +363,8 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
 
             MaterialParam param;
             param.setTextureName((char*)trrntex.buf);
-            param.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             param.setTransparent(1.0f);
+            param.texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             //
             if (add_param) {
                 char* paramstr = param.getBase64Params('E');   // E: Earth
@@ -459,8 +459,8 @@ void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float
 
             MaterialParam param;
             param.setTextureName(get_file_name((char*)texfile.buf));
-            param.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             param.setTransparent(1.0f);
+            param.texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             //
             if (add_param) {
                 char* paramstr = param.getBase64Params('E');   // E: Earth
