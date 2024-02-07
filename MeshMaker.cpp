@@ -14,13 +14,11 @@ PrimBaseShapeデータは jbxl::CreatePrimBaseShapesFromXML() または PrimBase
 @param shape         PrimBaseShape データ
 @param resourceList  key部にリソース名，val部に assetリソースのパスを格納したリスト．Sculpted Image, llmeshデータの検索用．
 @param useBrep       BREPを使用して頂点を配置する．速度は若干遅くなるが，頂点数（データ量）は減る．
-@param addParam      マテリアルのテクスチャ名にパラメータ用文字列を付与するか？（Unity3D用）
-
 @return  MeshObjectData  Colladaデータ
 
 @sa OpenSim/Region/Physics/Meshing/Meshmerizer.cs
 */
-MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tList* resourceList, bool useBrep, bool addParam)
+MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tList* resourceList, bool useBrep)
 {
     PrimMeshParam param;
     param.GetParamFromBaseShape(baseShape);
@@ -74,12 +72,10 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
                 //
                 mparam.texture.setAlphaChannel(CheckAlphaChannel(mparam.getTextureName(), resourceList));
                 if (mparam.texture.isSetAlpha()) mparam.setTransparent(MTRL_DEFAULT_ALPHA);
-                if (addParam) {
-                    char* paramstr = mparam.getBase64Params('O');
-                    if (paramstr!=NULL) {
-                        mparam.setParamString(paramstr);
-                        ::free(paramstr);
-                    }
+                char* paramstr = mparam.getBase64Params('O');
+                if (paramstr!=NULL) {
+                    mparam.setParamString(paramstr);
+                    ::free(paramstr);
                 }
                 //
                 data->addData(tridata, tri_num, i, &mparam, useBrep);
@@ -98,12 +94,10 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
             //
             mparam.texture.setAlphaChannel(CheckAlphaChannel(mparam.getTextureName(), resourceList));
             if (mparam.texture.isSetAlpha()) mparam.setTransparent(MTRL_DEFAULT_ALPHA);
-            if (addParam) {
-                char* paramstr = mparam.getBase64Params('O');
-                if (paramstr!=NULL) {
-                    mparam.setParamString(paramstr);
-                    ::free(paramstr);
-                }
+            char* paramstr = mparam.getBase64Params('O');
+            if (paramstr!=NULL) {
+                mparam.setParamString(paramstr);
+                ::free(paramstr);
             }
             //
             data->addData(facetdata, &mparam);

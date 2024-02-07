@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     tree->treeParam[shape.State].texture.setName((char*)texture.buf);
     tree->treeParam[shape.State].size = Vector<float>(xsize, 0.0001, ysize);
 
-    MeshObjectData* data  = tree->GenerateTree(shape, pnum, FALSE);
+    MeshObjectData* data  = tree->GenerateTree(shape, pnum);
     MeshFacetNode*  facet = data->facet;
     while (facet!=NULL) {
         if (facet->material_param.enable) {

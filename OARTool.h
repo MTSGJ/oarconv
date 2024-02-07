@@ -73,10 +73,10 @@ private:
     TreeTool treeTool;
 
 public:
-    bool   forUnity3D;          // Unityサポート
-    bool   forUnity5;           // Unity5.x 用
     bool   forUnity4;           // Unity4.x 用
-    bool   forUE5;              // Unreal Engine 5
+    bool   forUnity5;           // Unity5.x 用
+    bool   forUnity;            // Unityサポート
+    bool   forUE;               // Unreal Engine
     int    terrainNum;
     int    objectsNum;
 
@@ -88,10 +88,8 @@ public:
 
     void   setUnity4(bool); 
     void   setUnity5(bool);
-    void   setUnity3D(bool);
-    void   setUnity(bool b) { setUnity3D(b);}
-    void   setUE5(bool);
-    void   setUE(bool b)    { setUE5(b);}
+    void   setUnity(bool);
+    void   setUE(bool);
 
     void   clear_path(void);
     void   clear_list(void);

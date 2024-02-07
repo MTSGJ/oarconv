@@ -122,8 +122,8 @@ public:
     char*   GetTreeTexture (int kind=-1);
     char*   GetGrassTexture(int kind=-1);
 
-    MeshObjectData*  GenerateTree (PrimBaseShape pbs, int ndiv, bool add_param);
-    MeshObjectData*  GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain, bool add_param);
+    MeshObjectData*  GenerateTree (PrimBaseShape pbs, int ndiv);
+    MeshObjectData*  GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain);
 };
 
 

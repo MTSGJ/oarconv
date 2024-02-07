@@ -38,7 +38,7 @@ namespace  jbxl {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 
-MeshObjectData* MeshObjectDataFromPrimShape(PrimBaseShape shape, tList* resourceList, bool useBrep, bool addParam);
+MeshObjectData* MeshObjectDataFromPrimShape(PrimBaseShape shape, tList* resourceList, bool useBrep);
 
 PrimMesh        GeneratePrimMesh(PrimMeshParam param);
 TriPolygonData* TriPolygonDataFromPrimMesh(PrimMesh primMesh, int* fnum, int* pnum);

@@ -42,9 +42,10 @@ void  OARTool::init(void)
     assetsFiles     = NULL;     // Files list in assets  
     objectsFiles    = NULL;     // Files list in objects
 
-    forUnity3D      = true;     // for Unity3D
-    forUnity5       = false;    // for Unity3D v5.x
-    forUnity4       = false;    // for Unity3D v4.x
+    forUnity4       = false;    // for Unity v4.x
+    forUnity5       = false;    // for Unity v5.x
+    forUnity        = true;     // for Unity
+    forUE           = false;    // for UE
     terrainNum      = 0;
     terrain         = NULL;     // pointer to TerrainSetteings
 
@@ -104,6 +105,10 @@ void  OARTool::clear_list(void)
 void  OARTool::setUnity4(bool unity4)
 {
     forUnity4 = unity4;
+    if (unity4) {
+        forUnity = true;
+        forUE = false;
+    }
     return;
 }
 
@@ -111,20 +116,36 @@ void  OARTool::setUnity4(bool unity4)
 void  OARTool::setUnity5(bool unity5)
 {
     forUnity5 = unity5;
+    if (unity5) {
+        forUnity = true;
+        forUE = false;
+    }
     return;
 }
 
 
-void  OARTool::setUnity3D(bool unity)
+void  OARTool::setUnity(bool unity)
 {
-    forUnity3D = unity;
+    forUnity = unity;
+    if (unity) {
+        forUE = false;
+    }
+    else {
+        forUnity4 = false;
+        forUnity5 = false;
+    }
     return;
 }
 
 
-void  OARTool::setUE5(bool ue5)
+void  OARTool::setUE(bool ue)
 {
-    forUE5 = ue5;
+    forUE = ue;
+    if (ue) {
+        forUnity  = false;
+        forUnity4 = false;
+        forUnity5 = false;
+    }
     return;
 }
 
@@ -513,8 +534,8 @@ int  OARTool::GenerateTerrainDataFile(int format)
     PRINT_MESG("GenerateTerrainSolid: generating terrain datafile file (%d)\n", format);
     int num = 0;
     while (num<terrainNum) {
-        terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf, forUnity3D);
-        terrain[num].GenerateTerrain(format, (char*)pathOUT.buf, shift, forUnity3D);
+        terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf);
+        terrain[num].GenerateTerrain(format, (char*)pathOUT.buf, shift, forUE);
         num++;
 #ifdef WIN32
         DisPatcher(); 
@@ -634,12 +655,13 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
 
     if (format==JBXL_3D_FORMAT_DAE) {
         dae = new ColladaXML();
-        dae->forUnity5  = forUnity5;
-        dae->forUnity3D = forUnity3D;
+        dae->forUnity5 = forUnity5;
+        dae->forUnity  = forUnity;
         dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
     }
     else if (format==JBXL_3D_FORMAT_OBJ) {
         obj = new OBJData(); 
+        obj->setUE(forUE);     // UE
     }
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         useBrep = true;
@@ -658,7 +680,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         if (shapes[s].PCode==PRIM_PCODE_NEWTREE || shapes[s].PCode==PRIM_PCODE_TREE) {
             //
             shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
-            MeshObjectData* mesh = treeTool.GenerateTree(shapes[s], 0, forUnity3D);
+            MeshObjectData* mesh = treeTool.GenerateTree(shapes[s], 0);
             //
             if (mesh!=NULL) {
                 // STLの場合は不必要
@@ -697,7 +719,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         else if (shapes[s].PCode==PRIM_PCODE_GRASS){ 
             //
             shapes[s].affineTrans.addShift(-xsize/2.0f, -ysize/2.0f, -waterHeight);
-            MeshObjectData* mesh = treeTool.GenerateGrass(shapes[s], terrain, forUnity3D);  // 1個の Terrainのみサポート．範囲チェックあり
+            MeshObjectData* mesh = treeTool.GenerateGrass(shapes[s], terrain);  // 1個の Terrainのみサポート．範囲チェックあり
             shapes[s].affineTrans.addShift(shift.x, shift.y, shift.z);
             //
             if (mesh!=NULL) {
@@ -737,7 +759,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         else if (shapes[s].PCode==PRIM_PCODE_PRIM) { 
             //
             shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
-            MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, forUnity3D);
+            MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep);
             //
             if (mesh!=NULL) {
                 // STLの場合は不必要
@@ -833,7 +855,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         OBJData* obj = (OBJData*)solid;
         if (obj->phantom_out) out_path = dup_Buffer(pathPTM);
         else                  out_path = dup_Buffer(pathOUT);
-        obj->outputFile(fname, (char*)out_path.buf, OART_DEFAULT_MTL_DIR);
+        obj->outputFile(fname, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
     }
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         bool ascii = true;

@@ -284,7 +284,7 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
 }
 
 
-void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpath, bool add_param)
+void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpath)
 {
     if (format!=JBXL_3D_FORMAT_DAE && format!=JBXL_3D_FORMAT_OBJ) return; 
     if (assets==NULL) return;
@@ -366,12 +366,10 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
             param.setTransparent(1.0f);
             param.texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             //
-            if (add_param) {
-                char* paramstr = param.getBase64Params('E');   // E: Earth
-                param.setParamString(paramstr);
-                param.setFullName(MTRL_IMAGE_TYPE);
-                if (paramstr!=NULL) ::free(paramstr);
-            }
+            char* paramstr = param.getBase64Params('E');   // E: Earth
+            param.setParamString(paramstr);
+            param.setFullName(MTRL_IMAGE_TYPE);
+            if (paramstr!=NULL) ::free(paramstr);
 
             char* filename = param.getTextureName();
             cat_s2Buffer(filename, &texfile);
@@ -397,7 +395,7 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
 //
 // for DAE/OBJ/STL
 //
-void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float> offset, bool add_param)
+void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float> offset, bool ue5)
 {
     if (r32.isNull()) return;
 
@@ -462,12 +460,10 @@ void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float
             param.setTransparent(1.0f);
             param.texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             //
-            if (add_param) {
-                char* paramstr = param.getBase64Params('E');   // E: Earth
-                param.setParamString(paramstr);
-                param.setFullName(MTRL_IMAGE_TYPE);
-                if (paramstr!=NULL) ::free(paramstr);
-            }
+            char* paramstr = param.getBase64Params('E');   // E: Earth
+            param.setParamString(paramstr);
+            param.setFullName(MTRL_IMAGE_TYPE);
+            if (paramstr!=NULL) ::free(paramstr);
 
             MeshObjectData* data = new MeshObjectData();
             data->addData(facetdata, &param);
@@ -488,8 +484,9 @@ void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float
             else if (format==JBXL_3D_FORMAT_OBJ) {
                 obj = new OBJData();
                 //obj->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
+                obj->setUE(ue5);
                 obj->addObject(data, true);
-                obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_MTL_DIR);
+                obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
             }
             else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {

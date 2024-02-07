@@ -166,11 +166,10 @@ char*  TreeTool::GetGrassTexture(int kind)
 
 @param pbs        基本情報が格納された形状変数．木の種類は pbs.Stateに格納されている．
 @param ndiv       木を構成する平面の数．
-@param add_param  マテリアルのテクスチャ名にパラメータ用文字列を付与するか？（Unity3D用）
 
 @return  Meshデータ．
 */
-MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_param)
+MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv)
 {
     if (pbs.State<0 || pbs.State>=TREM_TREE_NUM) pbs.State = 0;
     set_shape(pbs);
@@ -220,11 +219,9 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_pa
         mparam[i].texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         mparam[i].texture.setAlphaMode(MATERIAL_ALPHA_MASKING);
         mparam[i].texture.setAlphaCutoff(0.5);
-        if (add_param) {
-            char* paramstr = mparam[i].getBase64Params('T');  // T: Tree
-            mparam[i].setParamString(paramstr);
-            if (paramstr!=NULL) ::free(paramstr);
-        }
+        char* paramstr = mparam[i].getBase64Params('T');  // T: Tree
+        mparam[i].setParamString(paramstr);
+        if (paramstr!=NULL) ::free(paramstr);
     }
 
     MeshObjectData* data = new MeshObjectData((char*)shape.ObjectName.buf);
@@ -263,11 +260,10 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv, bool add_pa
 
 @param pbs        基本情報が格納された形状変数．木の種類は pbs.Stateに格納されている．
 @param terrain    地形情報ツールへのポインタ．草の Z座標を決めるために必要．NULLなら Z座標は 0.0
-@param add_param  マテリアルのテクスチャ名にパラメータ用文字列を付与するか？（Unity3D用）
 
 @return  Meshデータ．affine_trans は NULL.
 */
-MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain, bool add_param)
+MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain)
 {
     if (pbs.State<0 || pbs.State>=TREM_GRASS_NUM) pbs.State = 0;
     set_shape(pbs);
@@ -351,11 +347,9 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
         mparam[i].texture.setColor(1.0, 1.0, 1.0, 1.0);
         mparam[i].texture.setAlphaMode(MATERIAL_ALPHA_MASKING);
         mparam[i].texture.setAlphaCutoff(0.5);
-        if (add_param) {
-            char* paramstr = mparam[i].getBase64Params('G');  // G: Grass
-            mparam[i].setParamString(paramstr);
-            if (paramstr!=NULL) ::free(paramstr);
-        }
+        char* paramstr = mparam[i].getBase64Params('G');  // G: Grass
+        mparam[i].setParamString(paramstr);
+        if (paramstr!=NULL) ::free(paramstr);
     }
 
     MeshObjectData* data = new MeshObjectData((char*)shape.ObjectName.buf);

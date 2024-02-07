@@ -8,11 +8,12 @@ void  oarconv_help(FILE* fp)
 {
     fprintf(fp, "\n");
     fprintf(fp, " oarconv ");
-    fprintf(fp, "[-i OAR directory] [-o output directory] [-a adding assets directories that separated by ':'] [-f object xml file]\n");
-    fprintf(fp, "         [-t terrain texture scale] [-c external convert command of jp2]\n");
-    fprintf(fp, "         [-s start no.] [-e end no.]\n");
-    fprintf(fp, "         [-x shift of x direction] [-y shift of y direction] [-z shift of z direction]\n");
-    fprintf(fp, "         [-b] [-p] [-d] [-v] [-h]\n");
+    fprintf(fp, "[-i OAR_directory] [-o output_directory] [-a adding_assets_directories_that_separated_by_':'] [-f object_xml_file]\n");
+    fprintf(fp, "         [-t terrain_texture_scale] [-c external_convert_command_of_jp2]\n");
+    fprintf(fp, "         [-s start_no.] [-e end_no.]\n");
+    fprintf(fp, "         [-l | -w] [-r]\n");
+    fprintf(fp, "         [-x shift_of_x_direction] [-y shift_of_y_direction] [-z shift_of_z_direction]\n");
+    fprintf(fp, "         [-b] [-d] [-v] [-h]\n");
     fprintf(fp, "\n");
 
     fprintf(fp, "   -i : specify OAR directory. default is %s\n", OART_DEFAULT_INP_DIR);
@@ -26,9 +27,9 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   -x : specify shift of x direction of all objects. default is 0.0\n");
     fprintf(fp, "   -y : specify shift of y direction of all objects. default is 0.0\n");
     fprintf(fp, "   -z : specify shift of z direction of all objects. default is 0.0\n");
+    fprintf(fp, "   -r : for Unreal Engine.\n");
     fprintf(fp, "   -l : output STL file(s) using BREP.\n");
     fprintf(fp, "   -w : output Wavefront OBJ file(s) using BREP.\n");
-    fprintf(fp, "   -p : when linked objects include phantom even one, saved to Phantom directory.\n");
     fprintf(fp, "   -d : debug mode. display debug information. \n");
     fprintf(fp, "   -v : display version information. \n");
     fprintf(fp, "   -h : display this help messages. \n");
