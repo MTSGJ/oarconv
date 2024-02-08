@@ -23,6 +23,7 @@ void  CParameterSet::init(void)
 	outputTerrain = TRUE;
 	debugMode     = FALSE;
 	
+	outputEngine  = JBXL_3D_ENGINE_UNITY;
 	outputFormat  = JBXL_3D_FORMAT_DAE;
 	terrainScale  = TRNT_DEFAULT_TEX_SCALE;
 	xShift        = 0.0f;
@@ -52,6 +53,7 @@ void  CParameterSet::readConfigFile(void)
 	outputTerrain = get_bool_param_tList (lt, "outputTerrain", outputTerrain);
 	debugMode     = get_bool_param_tList (lt, "debugMode", debugMode);
 
+	outputEngine  = get_int_param_tList  (lt, "outputEngine", outputEngine);
     outputFormat  = get_int_param_tList  (lt, "outputFormat", outputFormat);
 	terrainScale  = get_float_param_tList(lt, "terrainScale", terrainScale);
 	xShift        = get_float_param_tList(lt, "xShift", xShift);
@@ -63,6 +65,16 @@ void  CParameterSet::readConfigFile(void)
 	prefixOBJ     = get_tstr_param_tList(lt, "prefixOBJ", (LPCTSTR)prefixOBJ);
 	prefixSTL     = get_tstr_param_tList(lt, "prefixSTL", (LPCTSTR)prefixSTL);
 
+	//
+	if (outputFormat == JBXL_3D_FORMAT_DAE) {
+		prefixOUT = prefixDAE;
+	}
+	else if (outputFormat == JBXL_3D_FORMAT_OBJ) {
+		prefixOUT = prefixOBJ;
+	}
+	else {
+		prefixOUT = prefixSTL;
+	}
 	//
 	del_all_tList(&lt);
 	return;
@@ -97,6 +109,7 @@ void  CParameterSet::saveConfigFile(void)
 	fprintf(fp, "startNum %d\n", startNum);
 	fprintf(fp, "stopNum %d\n",  stopNum);
 	//
+	fprintf(fp, "outputEngine %d\n", outputEngine);
 	fprintf(fp, "outputFormat %d\n", outputFormat);
 	fprintf(fp, "terrainScale %f\n", terrainScale);
 	fprintf(fp, "xShift %f\n", xShift);

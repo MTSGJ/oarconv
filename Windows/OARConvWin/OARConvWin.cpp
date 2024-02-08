@@ -373,13 +373,14 @@ void  COARConvWinApp::OnOutFormatDialog()
 	oarTool.ChangePathInfo(NULL, outdir, NULL);
 	::free(outdir);
 
+	if (appParam.outputEngine == JBXL_3D_ENGINE_UE) oarTool.setUE(true);
+	else                                            oarTool.setUnity(true);
 	DebugMode = appParam.debugMode;
 	appParam.saveConfigFile();
 	return;
 }
 
 
-//
 void  COARConvWinApp::OnSettingDialog()
 {
 	CSetParamDLG* setdlg = new CSetParamDLG(&appParam, m_pMainWnd);

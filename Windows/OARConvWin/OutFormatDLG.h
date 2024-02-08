@@ -17,7 +17,7 @@ public:
 //
 protected:
 	int      outputFormat;
-
+	int      outputEngine;
 //
 protected:
 	CButton* outputDaeButton;

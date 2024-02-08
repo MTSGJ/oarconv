@@ -15,7 +15,6 @@ IMPLEMENT_DYNAMIC(CSetParamDLG, CDialogEx)
 CSetParamDLG::CSetParamDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 	: CDialogEx(CSetParamDLG::IDD, pParent)
 {
-	//outputFormat = param->outputFormat;
 	startNum = param->startNum;
 	stopNum  = param->stopNum;
 	terrainScale = param->terrainScale;
@@ -37,9 +36,6 @@ CSetParamDLG::CSetParamDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 	terrainScaleEBox = NULL;
 
 	outputTerrainButton = NULL;
-	//outputDaeButton = NULL;
-	//outputObjButton = NULL;
-	//outputStlButton = NULL;
 	debugModeButton = NULL;
 
 	xShiftEBox = NULL;
@@ -62,7 +58,6 @@ void  CSetParamDLG::getParameters(CParameterSet* param)
 {
 	param->startNum = startNum;
 	param->stopNum = stopNum;
-	//param->outputFormat = outputFormat;
 	param->terrainScale = terrainScale;
 
 	param->outputTerrain = outputTerrain;
@@ -77,16 +72,6 @@ void  CSetParamDLG::getParameters(CParameterSet* param)
 	param->prefixOBJ = prefixOBJ;
 	param->prefixSTL = prefixSTL;
 
-	/*
-	if (outputFormat == JBXL_3D_FORMAT_DAE) {
-		param->prefixOUT = prefixDAE;
-	}
-	else if (outputFormat == JBXL_3D_FORMAT_OBJ) {
-		param->prefixOUT = prefixOBJ;
-	}
-	else {
-		param->prefixOUT = prefixSTL;
-	}*/
 	return;
 }
 
@@ -111,10 +96,6 @@ BOOL CSetParamDLG::OnInitDialog()
 	startNumEBox = (CEdit*)GetDlgItem(IDC_EDIT_START_NUM);
 	stopNumEBox  = (CEdit*)GetDlgItem(IDC_EDIT_STOP_NUM);
 
-	//outputDaeButton = (CButton*)GetDlgItem(IDC_RADIO_DAE);
-	//outputObjButton = (CButton*)GetDlgItem(IDC_RADIO_OBJ);
-	//outputStlButton = (CButton*)GetDlgItem(IDC_RADIO_STL);
-
 	outputTerrainButton = (CButton*)GetDlgItem(IDC_CHECK_TERRAIN);
 	terrainScaleEBox = (CEdit*)GetDlgItem(IDC_EDIT_TERRAIN_SCALE);
 	debugModeButton = (CButton*)GetDlgItem(IDC_CHECK_DEBUGMODE);
@@ -135,23 +116,6 @@ BOOL CSetParamDLG::OnInitDialog()
 
 	sntprintf(buf, LNAME, _T("%g"), terrainScale);
 	terrainScaleEBox->SetWindowText(buf);
-
-	/*
-	if (outputFormat == JBXL_3D_FORMAT_DAE) {
-		outputDaeButton->SetCheck(1);
-		outputObjButton->SetCheck(0);
-		outputStlButton->SetCheck(0);
-	}
-	else if (outputFormat == JBXL_3D_FORMAT_OBJ) {
-		outputDaeButton->SetCheck(0);
-		outputObjButton->SetCheck(1);
-		outputStlButton->SetCheck(0);
-	}
-	else {
-		outputDaeButton->SetCheck(0);
-		outputObjButton->SetCheck(0);
-		outputStlButton->SetCheck(1);
-	}*/
 
 	if (outputTerrain) outputTerrainButton->SetCheck(1);
 	else               outputTerrainButton->SetCheck(0);
@@ -190,10 +154,6 @@ void CSetParamDLG::OnOK()
 	stopNum = ttoi(buf);
 	terrainScaleEBox->GetWindowText(buf, LNAME);
 	terrainScale = (float)ttof(buf);
-
-	//if (outputDaeButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_DAE;
-	//if (outputObjButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_OBJ;
-	//if (outputStlButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_STL_A;
 
 	if (outputTerrainButton->GetCheck()) outputTerrain = TRUE;
 	else                                 outputTerrain = FALSE;

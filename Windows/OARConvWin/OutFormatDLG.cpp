@@ -15,6 +15,7 @@ IMPLEMENT_DYNAMIC(COutFormatDLG, CDialogEx)
 COutFormatDLG::COutFormatDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 	: CDialogEx(COutFormatDLG::IDD, pParent)
 {
+	outputEngine = param->outputEngine;
 	outputFormat = param->outputFormat;
 
 	outputDaeButton = NULL;
@@ -33,6 +34,7 @@ COutFormatDLG::~COutFormatDLG()
 
 void  COutFormatDLG::getParameters(CParameterSet* param)
 {
+	param->outputEngine = outputEngine;
 	param->outputFormat = outputFormat;
 
 	if (outputFormat == JBXL_3D_FORMAT_DAE) {
@@ -54,19 +56,31 @@ void COutFormatDLG::DoDataExchange(CDataExchange* pDX)
 }
 
 
-
 ////////////////////////////////////////////////////////////////////
 // COutFormatDLG メッセージ ハンドラー
 
 BOOL COutFormatDLG::OnInitDialog()
 {
-	//TCHAR buf[LNAME];
-
 	CDialogEx::OnInitDialog();
 
-	outputDaeButton = (CButton*)GetDlgItem(IDC_RADIO_DAE);
-	outputObjButton = (CButton*)GetDlgItem(IDC_RADIO_OBJ);
-	outputStlButton = (CButton*)GetDlgItem(IDC_RADIO_STL);
+	outputUnityButton = (CButton*)GetDlgItem(IDC_RADIO_UNITY);
+	outputUEButton    = (CButton*)GetDlgItem(IDC_RADIO_UE);
+	outputDaeButton   = (CButton*)GetDlgItem(IDC_RADIO_DAE);
+	outputObjButton   = (CButton*)GetDlgItem(IDC_RADIO_OBJ);
+	outputStlButton   = (CButton*)GetDlgItem(IDC_RADIO_STL);
+
+	if (outputEngine == JBXL_3D_ENGINE_UNITY) {
+		outputUnityButton->SetCheck(1);
+		outputUEButton->SetCheck(0);
+	}
+	else if (outputEngine == JBXL_3D_ENGINE_UE) {
+		outputUnityButton->SetCheck(0);
+		outputUEButton->SetCheck(1);
+	}
+	else {
+		outputUnityButton->SetCheck(0);
+		outputUEButton->SetCheck(0);
+	}
 
 	if (outputFormat == JBXL_3D_FORMAT_DAE) {
 		outputDaeButton->SetCheck(1);
@@ -90,11 +104,11 @@ BOOL COutFormatDLG::OnInitDialog()
 
 void COutFormatDLG::OnOK()
 {
-	//TCHAR buf[LNAME];
-
-	if (outputDaeButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_DAE;
-	if (outputObjButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_OBJ;
-	if (outputStlButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_STL_A;
+	if (outputUnityButton->GetCheck()) outputEngine = JBXL_3D_ENGINE_UNITY;
+	if (outputUEButton->GetCheck())    outputEngine = JBXL_3D_ENGINE_UE;
+	if (outputDaeButton->GetCheck())   outputFormat = JBXL_3D_FORMAT_DAE;
+	if (outputObjButton->GetCheck())   outputFormat = JBXL_3D_FORMAT_OBJ;
+	if (outputStlButton->GetCheck())   outputFormat = JBXL_3D_FORMAT_STL_A;
 
 	CDialogEx::OnOK();
 }
