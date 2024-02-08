@@ -372,27 +372,12 @@ void  COARConvWinApp::OnOutFormatDialog()
 	delete (setdlg);
 
     oarTool.SetEngine(appParam.outputEngine);
-/*
-	if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) {
-        
-		oarTool.setUnity(true);
-		oarTool.setUE(false);
-	}
-	if (appParam.outputEngine == JBXL_3D_ENGINE_UE) {
-		oarTool.setUnity(false);
-		oarTool.setUE(true);
-	}
-	else {
-		oarTool.setUnity(false);
-		oarTool.setUE(false);
-	}*/
-
 	char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
 	oarTool.ChangePathInfo(NULL, outdir, NULL);
 	::free(outdir);
 
 	appParam.saveConfigFile();
-	updateStatusBar(_T(""));
+	updateStatusBar(getOARFolder());
 
 	return;
 }
