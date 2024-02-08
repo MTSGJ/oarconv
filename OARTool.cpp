@@ -127,10 +127,7 @@ void  OARTool::setUnity5(bool unity5)
 void  OARTool::setUnity(bool unity)
 {
     forUnity = unity;
-    if (unity) {
-        forUE = false;
-    }
-    else {
+    if (!unity) {
         forUnity4 = false;
         forUnity5 = false;
     }
@@ -141,11 +138,6 @@ void  OARTool::setUnity(bool unity)
 void  OARTool::setUE(bool ue)
 {
     forUE = ue;
-    if (ue) {
-        forUnity  = false;
-        forUnity4 = false;
-        forUnity5 = false;
-    }
     return;
 }
 
