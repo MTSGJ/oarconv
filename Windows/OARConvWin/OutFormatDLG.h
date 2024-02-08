@@ -38,4 +38,6 @@ public:
 	virtual void OnOK();
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnBnClickedRadioObj();
+	afx_msg void OnBnClickedRadioDae();
+	afx_msg void OnBnClickedRadioStl();
 };
