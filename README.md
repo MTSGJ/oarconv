@@ -2,8 +2,6 @@
 
 ## OverView
 * Convert OAR file of OpenSimulator to Collada files for Unity 2022/2023.
-* Please use Unity 2022.3.16f1 LTS
-* There are some bugs in Unity 2023.2.3f1
 * **OARConv** is for Linux/Unix
 * **OARConvWin** is for MS Windows
 
