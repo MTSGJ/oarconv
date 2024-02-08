@@ -702,7 +702,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     obj->phantom_out = true;
-                    obj->addTexcrdSource(mesh);
                     obj->addObject(mesh, false);
                 }
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -743,7 +742,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     obj->phantom_out = true;
-                    obj->addTexcrdSource(mesh);
                     obj->addObject(mesh, false);
                 }
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -801,7 +799,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     if (collider) obj->phantom_out = false;
-                    obj->addTexcrdSource(mesh);
                     obj->addObject(mesh, collider);
                 }
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
