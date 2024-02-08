@@ -369,7 +369,10 @@ void  COARConvWinApp::OnOutFormatDialog()
 	setdlg->getParameters(&appParam);
 	delete (setdlg);
 
+    oarTool.SetEngine(appParam.outputEngine);
+/*
 	if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) {
+        
 		oarTool.setUnity(true);
 		oarTool.setUE(false);
 	}
@@ -380,7 +383,7 @@ void  COARConvWinApp::OnOutFormatDialog()
 	else {
 		oarTool.setUnity(false);
 		oarTool.setUE(false);
-	}
+	}*/
 
 	char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
 	oarTool.ChangePathInfo(NULL, outdir, NULL);
@@ -823,7 +826,15 @@ void  COARConvWinApp::updateStatusBar(CString path)
 {
 	if (pMainFrame==NULL) return;
 
-	CString mesg = _T("OAR Path: ") + path;
+    CString prefix;
+    if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T("DAE: ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ)   prefix = _T("OBJ: ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL)   prefix = _T("STL: ");
+
+    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY: ");
+    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE: ");
+
+	CString mesg = prefix + _T("OAR Path: ") + path;
 	pMainFrame->SetStausBarText(mesg);
 
 	return;
