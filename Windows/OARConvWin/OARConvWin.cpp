@@ -382,6 +382,10 @@ void  COARConvWinApp::OnOutFormatDialog()
 		oarTool.setUE(false);
 	}
 
+	char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
+	oarTool.ChangePathInfo(NULL, outdir, NULL);
+	::free(outdir);
+
 	appParam.saveConfigFile();
 	return;
 }
