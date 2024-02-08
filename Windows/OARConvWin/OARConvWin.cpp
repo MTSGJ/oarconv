@@ -829,7 +829,8 @@ void  COARConvWinApp::updateStatusBar(CString path)
     CString prefix;
     if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T("DAE: ");
     else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ)   prefix = _T("OBJ: ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL)   prefix = _T("STL: ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("STL_A: ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("STL_B: ");
 
     if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY: ");
     else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE: ");
