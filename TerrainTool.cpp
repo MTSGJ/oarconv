@@ -385,7 +385,6 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
             count++;
         }
     }
-
     msg.free();
 
     return;
@@ -395,7 +394,7 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
 //
 // for DAE/OBJ/STL
 //
-void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float> offset, bool ue5)
+void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float> offset, int engine)
 {
     if (r32.isNull()) return;
 
@@ -484,7 +483,7 @@ void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float
             else if (format==JBXL_3D_FORMAT_OBJ) {
                 obj = new OBJData();
                 //obj->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
-                obj->setUE(ue5);
+                obj->setEngine(engine);
                 obj->addObject(data, true);
                 obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
