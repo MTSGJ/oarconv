@@ -484,6 +484,7 @@ void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float
                 obj = new OBJData();
                 //obj->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
                 obj->setEngine(engine);
+                obj->addTexcrdSource(data);
                 obj->addObject(data, true);
                 obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
