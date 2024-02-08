@@ -42,10 +42,11 @@ void  OARTool::init(void)
     assetsFiles     = NULL;     // Files list in assets  
     objectsFiles    = NULL;     // Files list in objects
 
+    forUE           = false;    // for UE
     forUnity4       = false;    // for Unity v4.x
     forUnity5       = false;    // for Unity v5.x
     forUnity        = true;     // for Unity
-    forUE           = false;    // for UE
+    engine          = JBXL_3D_ENGINE_UNITY;
     terrainNum      = 0;
     terrain         = NULL;     // pointer to TerrainSetteings
 
@@ -105,10 +106,7 @@ void  OARTool::clear_list(void)
 void  OARTool::setUnity4(bool unity4)
 {
     forUnity4 = unity4;
-    if (unity4) {
-        forUnity = true;
-        forUE = false;
-    }
+    if (unity4) forUnity = true;
     return;
 }
 
@@ -116,10 +114,7 @@ void  OARTool::setUnity4(bool unity4)
 void  OARTool::setUnity5(bool unity5)
 {
     forUnity5 = unity5;
-    if (unity5) {
-        forUnity = true;
-        forUE = false;
-    }
+    if (unity5) forUnity = true;
     return;
 }
 
@@ -138,6 +133,18 @@ void  OARTool::setUnity(bool unity)
 void  OARTool::setUE(bool ue)
 {
     forUE = ue;
+    return;
+}
+
+
+void  OARTool::SetEngine(int e)
+{
+    setUnity(false);
+    setUE(false);
+    //
+    engine = e;
+    if      (e == JBXL_3D_ENGINE_UNITY)  setUnity(true);
+    else if (e == JBXL_3D_ENGINE_UE)     setUE(true);
     return;
 }
 
@@ -527,7 +534,7 @@ int  OARTool::GenerateTerrainDataFile(int format)
     int num = 0;
     while (num<terrainNum) {
         terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf);
-        terrain[num].GenerateTerrain(format, (char*)pathOUT.buf, shift, forUE);
+        terrain[num].GenerateTerrain(format, (char*)pathOUT.buf, shift, engine);
         num++;
 #ifdef WIN32
         DisPatcher(); 
@@ -653,7 +660,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     }
     else if (format==JBXL_3D_FORMAT_OBJ) {
         obj = new OBJData(); 
-        obj->setUE(forUE);     // UE
+        obj->setEngine(engine);
     }
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         useBrep = true;

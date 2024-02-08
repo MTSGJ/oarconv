@@ -77,6 +77,9 @@ public:
     bool   forUnity5;           // Unity5.x 用
     bool   forUnity;            // Unityサポート
     bool   forUE;               // Unreal Engine
+
+    int    engine;
+
     int    terrainNum;
     int    objectsNum;
 
@@ -101,6 +104,7 @@ public:
     bool   GetDataInfo(void);
     void   MakeOutputFolder(int format);
 
+    void   SetEngine(int e);
     void   SetShift(Vector<float> vt) { shift = vt;}
     void   SetShift(float x, float y, float z) { shift.set(x, y, z);}
 

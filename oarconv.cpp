@@ -28,8 +28,8 @@ int main(int argc, char** argv)
     int   strtnum = 0;
     int   stopnum = -1;
     int   format  = JBXL_3D_FORMAT_DAE;
+    int   engine  = JBXL_3D_ENGINE_UNITY;
 
-    bool  forUE   = false;
     bool  useBrep = true;
 
     for (int i=1; i<argc; i++) {
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "-x")) { if (i!=argc-1) xshift = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-y")) { if (i!=argc-1) yshift = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-z")) { if (i!=argc-1) zshift = (float)atof(argv[i+1]);}
-        else if (!strcmp(argv[i], "-r")) { forUE  = true;}                  // UE
+        else if (!strcmp(argv[i], "-r")) { engine = JBXL_3D_ENGINE_UE;}     // UE
         else if (!strcmp(argv[i], "-w")) { format = JBXL_3D_FORMAT_OBJ;}    // OBJデータを出力
         else if (!strcmp(argv[i], "-l")) { format = JBXL_3D_FORMAT_STL_A;}  // STLデータを出力
         else if (!strcmp(argv[i], "-d")) { DebugMode = ON;}
@@ -63,8 +63,7 @@ int main(int argc, char** argv)
     //////////////////////////////////////////////////////////////////////////////////////////////
     // main process
     OARTool oar;
-    oar.setUE(forUE);
-    oar.setUnity(!forUE);
+    oar.SetEngine(engine);
     oar.SetPathInfo(format, (char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf);
     oar.GetDataInfo();  // -f オプションがあるので，成否は無視．
     oar.MakeOutputFolder(format);

@@ -89,7 +89,7 @@ public:
     void   ReadHeightData(const char* path);
 
     void   GenerateTexture(int format, tList* assets, const char* outpath);
-    void   GenerateTerrain(int format, const char* outpath, Vector<float> offset, bool ue5);
+    void   GenerateTerrain(int format, const char* outpath, Vector<float> offset, int engine);
 
     TerrainTexWeight  GetTextureWeight(int x, int y);
 
