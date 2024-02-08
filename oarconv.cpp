@@ -64,6 +64,7 @@ int main(int argc, char** argv)
     // main process
     OARTool oar;
     oar.setUE(forUE);
+    oar.setUnity(!forUE);
     oar.SetPathInfo(format, (char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf);
     oar.GetDataInfo();  // -f オプションがあるので，成否は無視．
     oar.MakeOutputFolder(format);
