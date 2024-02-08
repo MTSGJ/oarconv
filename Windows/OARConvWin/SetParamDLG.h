@@ -16,7 +16,7 @@ public:
 
 //
 protected:
-	int      outputFormat;
+	//int      outputFormat;
 	int      startNum;
 	int      stopNum;
 	float    terrainScale;
@@ -39,9 +39,9 @@ protected:
 	CEdit*   stopNumEBox;
 	CEdit*   terrainScaleEBox;
 
-	CButton* outputDaeButton;
-	CButton* outputObjButton;
-	CButton* outputStlButton;
+	//CButton* outputDaeButton;
+	//CButton* outputObjButton;
+	//CButton* outputStlButton;
 	CButton* outputTerrainButton;
 	CButton* debugModeButton;
 

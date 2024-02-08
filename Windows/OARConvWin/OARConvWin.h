@@ -104,6 +104,7 @@ public:
 	afx_msg void OnFileOpenQuick();
 	afx_msg void OnFolderOpenQuick();
 	afx_msg void OnSettingDialog();
+	afx_msg void OnOutFormatDialog();
 	afx_msg void OnLogWindow();
 	afx_msg void OnConvertData();
 	afx_msg void OnObjectsList();

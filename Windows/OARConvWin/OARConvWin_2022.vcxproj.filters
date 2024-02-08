@@ -22,6 +22,9 @@
     <ClCompile Include="SetParamDLG.cpp">
       <Filter>ソースコード</Filter>
     </ClCompile>
+    <ClCompile Include="OutFormatDLG.cpp">
+      <Filter>ソースコード</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrm.h">
@@ -49,6 +52,9 @@
       <Filter>ヘッダ</Filter>
     </ClInclude>
     <ClInclude Include="SetParamDLG.h">
+      <Filter>ヘッダ</Filter>
+    </ClInclude>
+    <ClInclude Include="OutFormatDLG.h">
       <Filter>ヘッダ</Filter>
     </ClInclude>
   </ItemGroup>

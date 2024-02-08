@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by OARConvWin.rc
+// Microsoft Visual C++ で生成されたインクルード ファイル。
+// OARConvWin.rc で使用
 //
 #define IDC_EDIT1                       1021
 #define IDC_EDIT_FNDSTR                 1021
@@ -23,9 +23,11 @@
 #define IDC_EDIT_PREFIX_OBJ             31119
 #define IDC_OBJLIST_CONV                31120
 #define IDC_RADIO_DAE                   31121
+#define IDC_RADIO_UNITY                 31122
 #define IDC_RADIO_OBJ                   31222
 #define IDC_RADIO_STL                   31223
 #define IDC_OBJLIST_FIND                31224
+#define IDC_RADIO_UE                    31224
 #define IDC_LIST_CONV                   31225
 #define IDC_LIST_OBJECTS                31226
 #define IDC_EDIT_TERRAIN_SCALE          31227
@@ -39,6 +41,7 @@
 #define IDD_DIALOG_OARSET               31400
 #define IDD_DIALOG_OBJLIST              31401
 #define IDD_DIALOG_OARINFO              31402
+#define IDD_DIALOG_OUTPUT               31405
 #define ID_FOLDER_OPEN                  31780
 #define ID_FILE_QUICK                   31782
 #define ID_FOLDER_QUICK                 31783
@@ -47,6 +50,7 @@
 #define ID_SETTING_DIALOG               31786
 #define ID_CONVERT_DATA                 31791
 #define ID_OBJ_LIST                     31801
+#define ID_OUTPUT_FORMAT                32805
 #define IDS_STR_CONVERT_NUM             57000
 #define IDS_STR_CONV_TERRAIN            57001
 #define IDS_STR_NOT_OAR                 57002
@@ -59,8 +63,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        135
-#define _APS_NEXT_COMMAND_VALUE         32803
+#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_COMMAND_VALUE         32806
 #define _APS_NEXT_CONTROL_VALUE         1022
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

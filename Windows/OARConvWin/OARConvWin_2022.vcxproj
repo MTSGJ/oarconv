@@ -266,6 +266,7 @@
   <ItemGroup>
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="ObjectsListDLG.cpp" />
+    <ClCompile Include="OutFormatDLG.cpp" />
     <ClCompile Include="ParameterSet.cpp" />
     <ClCompile Include="SetParamDLG.cpp" />
     <ClCompile Include="ShowInfoDLG.cpp" />
@@ -281,6 +282,7 @@
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OARConvWin_config.h" />
     <ClInclude Include="ObjectsListDLG.h" />
+    <ClInclude Include="OutFormatDLG.h" />
     <ClInclude Include="ParameterSet.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SetParamDLG.h" />

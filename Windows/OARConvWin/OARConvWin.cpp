@@ -18,6 +18,7 @@
 
 #include  "ShowInfoDLG.h"
 #include  "SetParamDLG.h"
+#include  "OutFormatDLG.h"
 #include  "ObjectsListDLG.h"
 
 #include  "tar32api.h"
@@ -50,6 +51,7 @@ BEGIN_MESSAGE_MAP(COARConvWinApp, CWinApp)
 	ON_COMMAND(ID_FILE_QUICK, &COARConvWinApp::OnFileOpenQuick)
 	ON_COMMAND(ID_FOLDER_QUICK, &COARConvWinApp::OnFolderOpenQuick)
 	ON_COMMAND(ID_LOG_WINDOW, &COARConvWinApp::OnLogWindow)
+	ON_COMMAND(ID_OUTPUT_FORMAT, &COARConvWinApp::OnOutFormatDialog)
 	ON_COMMAND(ID_SETTING_DIALOG, &COARConvWinApp::OnSettingDialog)
 	ON_COMMAND(ID_OBJ_LIST, &COARConvWinApp::OnObjectsList)
 END_MESSAGE_MAP()
@@ -355,6 +357,24 @@ void  COARConvWinApp::OnLogWindow()
 	}
 
 	updateMenuBar();
+	return;
+}
+
+
+void  COARConvWinApp::OnOutFormatDialog()
+{
+	COutFormatDLG* setdlg = new COutFormatDLG(&appParam, m_pMainWnd);
+	if (setdlg == NULL) return;
+	setdlg->DoModal();
+	setdlg->getParameters(&appParam);
+	delete (setdlg);
+
+	char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
+	oarTool.ChangePathInfo(NULL, outdir, NULL);
+	::free(outdir);
+
+	DebugMode = appParam.debugMode;
+	appParam.saveConfigFile();
 	return;
 }
 
