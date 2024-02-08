@@ -212,11 +212,13 @@ BOOL  COARConvWinApp::InitInstance()
 	// 初期化
 	appParam.readConfigFile();
 	DebugMode = appParam.debugMode;
+	oarTool.SetEngine(appParam.outputEngine);
 	//
 	updateMenuBar();
+	updateStatusBar(_T(""));
 
-	return TRUE;
 	// この後，メッセージループに入る．
+	return TRUE;
 }
 
 
@@ -390,6 +392,8 @@ void  COARConvWinApp::OnOutFormatDialog()
 	::free(outdir);
 
 	appParam.saveConfigFile();
+	updateStatusBar(_T(""));
+
 	return;
 }
 
@@ -402,12 +406,13 @@ void  COARConvWinApp::OnSettingDialog()
 	setdlg->getParameters(&appParam);
 	delete (setdlg);
 
-	char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
-	oarTool.ChangePathInfo(NULL, outdir, NULL);
-	::free(outdir);
+	//char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
+	//oarTool.ChangePathInfo(NULL, outdir, NULL);
+	//::free(outdir);
 
 	DebugMode = appParam.debugMode;
 	appParam.saveConfigFile();
+
 	return;
 }
 
@@ -480,6 +485,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 	oarTool.free();
 	oarTool.init();
 	oarTool.SetPathInfo(appParam.outputFormat, oardir, outdir, (char*)assetsFolder.buf);
+	oarTool.SetEngine(appParam.outputEngine);                                                                                                                                                   
  	::free(oardir);
 	::free(outdir);
 
@@ -535,6 +541,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 	oarTool.free();
 	oarTool.init();
 	oarTool.SetPathInfo(appParam.outputFormat, oardir, outdir, (char*)assetsFolder.buf);
+	oarTool.SetEngine(appParam.outputEngine);
 	::free(oardir);
 	::free(outdir);
 
@@ -827,15 +834,15 @@ void  COARConvWinApp::updateStatusBar(CString path)
 	if (pMainFrame==NULL) return;
 
     CString prefix;
-    if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T("DAE: ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ)   prefix = _T("OBJ: ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("STL_A: ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("STL_B: ");
+    if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T("DAE  ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ)   prefix = _T("OBJ  ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("STL  ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("STL  ");
 
-    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY: ");
-    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE: ");
+    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  ");
+    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  ");
 
-	CString mesg = prefix + _T("OAR Path: ") + path;
+	CString mesg = prefix + _T("OAR-Path: ") + path;
 	pMainFrame->SetStausBarText(mesg);
 
 	return;
