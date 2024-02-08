@@ -652,8 +652,9 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
     }
     else if (format==JBXL_3D_FORMAT_OBJ) {
-        obj = new OBJData(); 
+        obj = new OBJData();
         obj->setUE(forUE);     // UE
+        obj->setUnity(!forUE);
     }
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         useBrep = true;
