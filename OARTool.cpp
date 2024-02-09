@@ -163,7 +163,7 @@ pathAST : 追加のアセットデータ用のパス
 @param outdir  データ書き出し用ディレクトリ
 @param astdir  アセットデータの追加ディレクトリ（OARに含まれていないアッセットデータ用）
 */
-void  OARTool::SetPathInfo(int format, const char* oardir, const char* outdir, const char* astdir)
+void  OARTool::SetPathInfo(int format, int engine, const char* oardir, const char* outdir, const char* astdir)
 {
     clear_path();
 
@@ -202,9 +202,11 @@ void  OARTool::SetPathInfo(int format, const char* oardir, const char* outdir, c
     }
 
     pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
-    pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
     cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
-    cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
+    if (format!=JBXL_3D_FORMAT_OBJ || engine!=JBXL_3D_ENGINE_UE) {
+        pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
+        cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
+    }
 
     // ASSET
     if (astdir==NULL) {
@@ -469,18 +471,22 @@ bool  OARTool::GetDataInfo()
 
 void  OARTool::MakeOutputFolder(int format)
 {
-    mkdir((char*)pathOUT.buf, 0700);
+    if (pathOUT.buf!=NULL) mkdir((char*)pathOUT.buf, 0700);
     if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
-        mkdir((char*)pathPTM.buf, 0700);
-        mkdir((char*)pathTEX.buf, 0700);
+        if (pathPTM.buf!=NULL) mkdir((char*)pathPTM.buf, 0700);
+        if (pathTEX.buf!=NULL) mkdir((char*)pathTEX.buf, 0700);
         //
         if (format==JBXL_3D_FORMAT_OBJ) {
             Buffer mtl = dup_Buffer(pathOUT);
-            Buffer ptm_mtl = dup_Buffer(pathPTM);
-            cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
-            cat_s2Buffer(OART_DEFAULT_MTL_DIR, &ptm_mtl);
-            mkdir((char*)mtl.buf, 0700);
-            mkdir((char*)ptm_mtl.buf, 0700);
+            Buffer ptm_mtl=dup_Buffer(pathPTM);
+            if (mtl.buf != NULL) {
+                cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
+                mkdir((char*)mtl.buf, 0700);
+            }
+            if (ptm_mtl.buf!=NULL) {
+                mkdir((char*)ptm_mtl.buf, 0700);
+                cat_s2Buffer(OART_DEFAULT_MTL_DIR, &ptm_mtl);
+            }
             free_Buffer(&mtl);
             free_Buffer(&ptm_mtl);
         }
@@ -555,8 +561,9 @@ int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, boo
     while (lp!=NULL) {
         num++;
         if (num>=startnum && num<=stopnum) {
-            void* solid = generateSolidData(format, (char*)lp->ldat.val.buf, num, useBrep, command);
-            outputSolidData(format, (char*)lp->ldat.val.buf, solid);
+            char* file_path = (char*)lp->ldat.val.buf;
+            void* solid = generateSolidData(format, file_path, num, useBrep, command);
+            outputSolidData(format, get_file_name(file_path), solid);
             freeSolidData(format, solid);
             if (counter!=NULL) {
                 if (counter->cancel) break;
@@ -572,12 +579,12 @@ int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, boo
 }
 
 
-void  OARTool::GenerateSelectedDataFile(int format, char* fname, bool useBrep, char* command)
+void  OARTool::GenerateSelectedDataFile(int format, char* file_path, bool useBrep, char* command)
 {
-    if (fname==NULL) return;
+    if (file_path==NULL) return;
 
-    void* solid =generateSolidData(format, fname, 1, useBrep, command);
-    outputSolidData(format, fname, solid);
+    void* solid =generateSolidData(format, file_path, 1, useBrep, command);
+    outputSolidData(format, get_file_name(file_path), solid);
     freeSolidData(format, solid);
 
     return;
@@ -593,8 +600,9 @@ int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, boo
     int cnt = 0;
     while (lp!=NULL) {
         if (num==objlist[cnt]) {
-            void* solid =generateSolidData(format, (char*)lp->ldat.val.buf, num + 1, useBrep, command);
-            outputSolidData(format, (char*)lp->ldat.val.buf, solid);
+            char* file_path = (char*)lp->ldat.val.buf;
+            void* solid =generateSolidData(format, file_path, num + 1, useBrep, command);
+            outputSolidData(format, file_path, solid);
             freeSolidData(format, solid);
             if (counter!=NULL) {
                 if (counter->cancel) break;
@@ -841,6 +849,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 {
     if (solid==NULL || fname==NULL) return;
     //
+    fname = get_file_name(fname);
     Buffer out_path = init_Buffer();
 
     // fnameの拡張子は自動的に変換される
@@ -851,10 +860,18 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         dae->outputFile(fname, (char*)out_path.buf, XML_INDENT_FORMAT);
     }
     else if (format==JBXL_3D_FORMAT_OBJ) {
+        Buffer obj_fname = make_Buffer_str(fname);
         OBJData* obj = (OBJData*)solid;
-        if (obj->phantom_out) out_path = dup_Buffer(pathPTM);
-        else                  out_path = dup_Buffer(pathOUT);
-        obj->outputFile(fname, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
+        if (obj->engine==JBXL_3D_ENGINE_UE) {
+            out_path = dup_Buffer(pathOUT);
+            if (!obj->phantom_out) ins_s2Buffer("UCP_", &obj_fname);
+        }
+        else {
+            if (obj->phantom_out) out_path = dup_Buffer(pathPTM);
+            else                  out_path = dup_Buffer(pathOUT);
+        }
+        obj->outputFile((char*)obj_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
+        free_Buffer(&obj_fname);
     }
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         bool ascii = true;

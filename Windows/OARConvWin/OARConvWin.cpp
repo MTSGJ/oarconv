@@ -470,7 +470,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
-	oarTool.SetPathInfo(appParam.outputFormat, oardir, outdir, (char*)assetsFolder.buf);
+	oarTool.SetPathInfo(appParam.outputFormat, appParam.outputEngine, oardir, outdir, (char*)assetsFolder.buf);
 	oarTool.SetEngine(appParam.outputEngine);                                                                                                                                                   
  	::free(oardir);
 	::free(outdir);
@@ -526,7 +526,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
-	oarTool.SetPathInfo(appParam.outputFormat, oardir, outdir, (char*)assetsFolder.buf);
+	oarTool.SetPathInfo(appParam.outputFormat, appParam.outputEngine, oardir, outdir, (char*)assetsFolder.buf);
 	oarTool.SetEngine(appParam.outputEngine);
 	::free(oardir);
 	::free(outdir);

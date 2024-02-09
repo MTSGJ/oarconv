@@ -473,6 +473,7 @@ void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float
             OBJData*       obj = NULL;
             BrepSolidList* stl = NULL;
 
+            //Buffer fname = make_Buffer_bystr(get_file_name((char*)objname.buf));
             if (format==JBXL_3D_FORMAT_DAE) {
                 dae = new ColladaXML();
                 dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
@@ -493,7 +494,7 @@ void  TerrainTool::GenerateTerrain(int format, const char* outpath, Vector<float
                 if (format==JBXL_3D_FORMAT_STL_B) ascii = false;
                 stl = new BrepSolidList();
                 stl->addObject(data);
-                stl->outputFile((char*)objname.buf, (char*)path.buf, ascii);
+                stl->outputFile(get_file_name((char*)objname.buf), (char*)path.buf, ascii);
                 freeBrepSolidList(stl);
             }
             free_Buffer(&objname);

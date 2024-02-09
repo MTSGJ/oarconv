@@ -99,7 +99,7 @@ public:
     char*  get_outpath(int output);
 
 public:
-    void   SetPathInfo(int format, const char* oardir, const char* outdir, const char* astdir);
+    void   SetPathInfo(int format, int engine, const char* oardir, const char* outdir, const char* astdir);
     void   ChangePathInfo(const char* oardir, const char* outdir, const char* astdir);
     bool   GetDataInfo(void);
     void   MakeOutputFolder(int format);
