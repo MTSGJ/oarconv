@@ -540,7 +540,7 @@ int  OARTool::GenerateTerrainDataFile(int format)
     int num = 0;
     while (num<terrainNum) {
         terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf);
-        terrain[num].GenerateTerrain(format, (char*)pathOUT.buf, shift, engine);
+        terrain[num].GenerateTerrain(format, engine, (char*)pathOUT.buf, shift);
         num++;
 #ifdef WIN32
         DisPatcher(); 
@@ -864,7 +864,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         OBJData* obj = (OBJData*)solid;
         if (obj->engine==JBXL_3D_ENGINE_UE) {
             out_path = dup_Buffer(pathOUT);
-            if (!obj->phantom_out) ins_s2Buffer("UCP_", &obj_fname);
+            if (!obj->phantom_out) ins_s2Buffer(OART_UE_COLLIDER_NAME, &obj_fname);
         }
         else {
             if (obj->phantom_out) out_path = dup_Buffer(pathPTM);

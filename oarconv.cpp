@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     // main process
     OARTool oar;
     oar.SetEngine(engine);
-    oar.SetPathInfo(format, (char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf);
+    oar.SetPathInfo(format, engine, (char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf);
     oar.GetDataInfo();  // -f オプションがあるので，成否は無視．
     oar.MakeOutputFolder(format);
     oar.SetShift(xshift, yshift, zshift);

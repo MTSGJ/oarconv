@@ -30,4 +30,6 @@
 #endif
 
 
+#define  OART_UE_COLLIDER_NAME      "UCP_"
+
 #endif
