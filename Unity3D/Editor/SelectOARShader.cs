@@ -37,11 +37,11 @@ public sealed class SelectOARShader : AssetPostprocessor
     private float glow          = 0.0f;
     private float bright        = 0.0f;
     private float light         = 0.0f;
-    private float shiftU        = 0.0f;
-    private float shiftV        = 0.0f;
-    private float scaleU        = 1.0f;
-    private float scaleV        = 1.0f;
-    private float rotate        = 0.0f;
+//  private float shiftU        = 0.0f;
+//  private float shiftV        = 0.0f;
+//  private float scaleU        = 1.0f;
+//  private float scaleV        = 1.0f;
+//  private float rotate        = 0.0f;
     private char  kind          = 'O';        // Object
 
 
@@ -174,7 +174,7 @@ public sealed class SelectOARShader : AssetPostprocessor
             glow        = (float)dec[ 6] / 255.0f;
             bright      = (float)dec[ 7] / 255.0f;
             light       = (float)dec[ 8] / 255.0f;
-
+            /*
             short[] tmp = new short[1];
             Buffer.BlockCopy(dec, 13, tmp, 0, 2);
             shiftU      = (float)tmp[0] / 2000.0f;
@@ -186,7 +186,7 @@ public sealed class SelectOARShader : AssetPostprocessor
             scaleV      = (float)tmp[0] / 100.0f;
             Buffer.BlockCopy(dec, 21, tmp, 0, 2);
             rotate      = (float)tmp[0] / 2000.0f;
-
+            */
             kind        = (char) dec[23];
 
             if (cutoff > 0.9f) cutoff = 0.9f;
