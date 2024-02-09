@@ -377,7 +377,8 @@ void  COARConvWinApp::OnOutFormatDialog()
 	::free(outdir);
 
 	appParam.saveConfigFile();
-	updateStatusBar(getOARFolder());
+	if (hasData) updateStatusBar(getOARFolder());
+	else         updateStatusBar(_T(""));
 
 	return;
 }
