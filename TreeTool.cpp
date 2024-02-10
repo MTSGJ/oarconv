@@ -355,6 +355,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     MeshObjectData* data = new MeshObjectData((char*)shape.ObjectName.buf);
     for (int i=0; i<facetno; i++) {
         data->addData(tridata, trino, i, NULL, false);
+        //data->addData(tridata, trino, i, mparam, false);
     }
     freeTriPolygonData(tridata, trino);
 

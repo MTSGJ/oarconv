@@ -479,13 +479,13 @@ void  OARTool::MakeOutputFolder(int format)
         if (format==JBXL_3D_FORMAT_OBJ) {
             Buffer mtl = dup_Buffer(pathOUT);
             Buffer ptm_mtl=dup_Buffer(pathPTM);
-            if (mtl.buf != NULL) {
+            if (mtl.buf!=NULL) {
                 cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
                 mkdir((char*)mtl.buf, 0700);
             }
             if (ptm_mtl.buf!=NULL) {
-                mkdir((char*)ptm_mtl.buf, 0700);
                 cat_s2Buffer(OART_DEFAULT_MTL_DIR, &ptm_mtl);
+                mkdir((char*)ptm_mtl.buf, 0700);
             }
             free_Buffer(&mtl);
             free_Buffer(&ptm_mtl);

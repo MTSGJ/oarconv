@@ -459,9 +459,9 @@ void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, 
             param.setTransparent(1.0f);
             param.texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             //
-            char* paramstr = param.getBase64Params('E');   // E: Earth
+            char* paramstr = param.getBase64Params('E');    // E: Earth
             param.setParamString(paramstr);
-            param.setFullName(MTRL_IMAGE_TYPE);
+            param.setFullName(MTRL_IMAGE_TYPE);             // + .tga
             if (paramstr!=NULL) ::free(paramstr);
 
             MeshObjectData* data = new MeshObjectData();
@@ -512,88 +512,6 @@ void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, 
     return;
 }
 
-
-/*
-//
-// for STL
-//
-void  TerrainTool::GenerateSTL(const char* outpath, Vector<float> offset, bool binfile)
-{
-    if (r32.isNull()) return;
-
-    char num[L_OCT];
-    int  count = 0;
-
-    bool left;
-    bool right;
-    bool top;
-    bool bottom;
-
-    //
-    DEBUG_MODE PRINT_MESG("TerrainTool::GenerateSTL: generating sub region mesh.\n");
-    for (int rj=0; rj<rgnum; rj++) {
-        top = bottom = false;
-        int jsize = 257;                // 境界用
-        if (rj==0) top = true;
-        if (rj==rgnum-1) {
-            bottom = true;
-            jsize = 256;
-        }
-        int yy = rj*256*xsize;
-        //
-        for (int ri=0; ri<rgnum; ri++) {
-            left = right = false;
-            int isize = 257;            // 境界用
-            if (ri==0) left = true;
-            if (ri==rgnum-1) {
-                right = true;
-                isize = 256;
-            }
-            int xx = ri*256 + yy;
-
-            DEBUG_MODE if (rgnum>1) PRINT_MESG("TerrainTool::GenerateSTL: generating sub region mesh. %02d/%d\n", count, rgnum*rgnum-1);
-            Vector<float> shift = Vector<float>(ri*256.0f-xsize/2.0f+offset.x, rj*256.0f-ysize/2.0f+offset.y, -waterHeight+offset.z);
-            MSGraph<float> region;
-
-            region.getm(isize, jsize);
-            for (int j=0; j<jsize; j++) {
-                int jj = j*isize;
-                int ww = j*xsize + xx;
-                for (int i=0; i<isize; i++) {
-                    region.gp[jj+i] = r32.gp[ww+i];
-                }
-            }
-            ContourBaseData* facetdata = ContourBaseDataFromTerrainImage(region, shift, left, right, top, bottom, true);
-
-            //
-            Buffer stlname = dup_Buffer(trnName);
-            if (rgnum>1) {
-                snprintf(num, L_OCT-1, "_%02d", count);
-                cat_s2Buffer(num, &stlname);
-            }
-            rewrite_sBuffer_str(&stlname, " ", "_");
-            Buffer stlpath = make_Buffer_bystr(outpath);
-
-            MeshObjectData* data = new MeshObjectData();
-            data->addData(facetdata, NULL);
-
-            BrepSolidList* solids = new BrepSolidList();
-            solids->addObject(data);
-            solids->outputFile((char*)stlname.buf, (char*)stlpath.buf, binfile);
-
-            region.free();
-            free_Buffer(&stlname);
-            free_Buffer(&stlpath);
-            freeContourBaseData(facetdata);
-            freeMeshObjectData(data);
-            freeBrepSolidList(solids);
-
-            count++;
-        }
-    }
-    return;
-}
-*/
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -676,10 +594,4 @@ int  jbxl::GetScalingPixel(MSGraph<uByte>* vp, float scale, float x, float y, in
 
     return (int)(vp->gp[col*vp->xs*vp->ys + jj*vp->xs + ii]);
 }
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-// Junk
-//
 

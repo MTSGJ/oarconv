@@ -84,7 +84,7 @@
 #define  PRIM_HOLE_SQUARE           32                      // 0x20
 #define  PRIM_HOLE_TRIANGLE         48                      // 0x30
 
-#define  PRIM_PROF_TYPE_NUM          6
+#define  PRIM_PROF_TYPE_NUM         6
 #define  PRIM_PROF_CIRCLE_STR       "Circle"                // 0
 #define  PRIM_PROF_SQUARE_STR       "Square"                // 1
 #define  PRIM_PROF_ISOTRIANGLE_STR  "IsometricTriangle"     // 2
