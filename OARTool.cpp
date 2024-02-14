@@ -913,8 +913,8 @@ void  OARTool::freeSolidData(int format, void* solid)
 
 /**
 @param texture    コンバート元データのUUID．
-@param add_fname  コンバート先ファイル名の追加文字列．
-@param ext_fname  コンバート先ファイル名の拡張子．
+@param add_name   コンバート先ファイル名の追加文字列．
+@param ext_name   コンバート先ファイル名の拡張子． "." 付き
 @param dist       コンバート先のパス．
 @param comformat  内部処理が失敗した場合の外部処理コマンド．NULL の場合はデフォルトを使用する．
 */
@@ -944,134 +944,107 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
         rewrite_sBuffer_str(&outpath, ";", "\\;");
     #endif
 
-    bool make_dummy = true;
-
     if (!file_exist((char*)outpath.buf)) {
         //
         char* path = get_resource_path((char*)texture, assetsFiles);
         char* extn = get_file_extension(path);
         //
-        if (path!=NULL && extn!=NULL && (extn[0]=='j' || extn[0]=='J')) {   // for Jpeg2000
-            //
-            JPEG2KImage jpg = readJPEG2KFile(path);
-            if (jpg.state==0) {
-                MSGraph<uByte> vp = JPEG2KImage2MSGraph<uByte>(jpg);
-                DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: texture = %s [size = (%4d,%4d,%2d), mode = %d]\n", texture, jpg.ws, jpg.hs, jpg.col, jpg.cmode);
-                //
-                if (vp.zs>0) {
-                    TGAImage tga = MSGraph2TGAImage(vp);
-                    int err = writeTGAFile((char*)outpath.buf, tga);
-                    if (!err) converted = true;
-                    else      PRINT_MESG("OARTool::ConvertTexture: ERROR: write error (%d).\n", err);
-                    tga.free();
+        if (path!=NULL && extn!=NULL) {
+            char* check_ext = (char*)ext_name;
+            if (check_ext[0]=='.') check_ext = (char*)ext_name + 1;
+
+            // 同じ形式のファイル -> コピー
+            if (!strcasecmp(extn, check_ext)) {
+                int flsz = file_size(path);
+                int cpsz = copy_file(path, (char*)outpath.buf);
+                DEBUG_MODE {
+                    if (flsz==cpsz) {
+                        PRINT_MESG("OARTool::ConvertTexture: copy from %s to %s\n", path, (char*)outpath.buf);
+                    }
+                    else {
+                        PRINT_MESG("OARTool::ConvertTexture: ERROR: copy from %s to %s failed!\n", path, (char*)outpath.buf);
+                    }
+                }
+            }
+            // JPEG2000
+            else if (extn[0]=='j' || extn[0]=='J') {
+                JPEG2KImage jpg = readJPEG2KFile(path);
+                if (jpg.state==0) {
+                    MSGraph<uByte> vp = JPEG2KImage2MSGraph<uByte>(jpg);
+                    DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: texture = %s [size = (%4d,%4d,%2d), mode = %d]\n", texture, jpg.ws, jpg.hs, jpg.col, jpg.cmode);
+                    //
+                    if (vp.zs>0) {
+                        TGAImage tga = MSGraph2TGAImage(vp);
+                        int err = writeTGAFile((char*)outpath.buf, tga);
+                        if (!err) converted = true;
+                        else      PRINT_MESG("OARTool::ConvertTexture: ERROR: write error (%d).\n", err);
+                        tga.free();
+                    }
+                    else {
+                        PRINT_MESG("OARTool::ConvertTexture: ERROR: color num of %s is %d\n", texture, vp.zs);
+                    }
+                    vp.free();
+                    jpg.free();
                 }
                 else {
-                    PRINT_MESG("OARTool::ConvertTexture: ERROR: color num of %s is %d\n", texture, vp.zs);
+                    if (jpg.state==JBXL_GRAPH_IVDDATA_ERROR) {
+                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is invalid.\n", texture);
+                    }
+                    else {
+                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d).\n", texture, jpg.state);
+                    }
                 }
-                vp.free();
-                jpg.free();
+                //
+                // Retry convert using external command
+                if (!converted) {
+                    DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: RETRY: convert %s to %s\n", path, (char*)outpath.buf); 
+                    //
+                    char command[LMESG];
+                    memset(command, 0, LMESG);
+                    if (comformat!=NULL) {
+                        snprintf(command, LMESG-1, comformat, path, (char*)outpath.buf);
+                    }
+                    else {
+                        snprintf(command, LMESG-1, OART_JP2_DECOMP_COM, path, (char*)outpath.buf);
+                    }
+                    //
+                    int err = 0;
+                    #ifdef WIN32
+                        STARTUPINFOA sinfo;             // コマンドの実行
+                        PROCESS_INFORMATION pinfo;
+                        memset(&sinfo, 0, sizeof(STARTUPINFO));
+                        sinfo.cb = sizeof(STARTUPINFO); 
+                        sinfo.wShowWindow = SW_HIDE;
+                        CreateProcessA(NULL, (LPSTR)command, NULL, NULL, FALSE, CREATE_NO_WINDOW ,NULL, NULL, &sinfo, &pinfo);
+                        CloseHandle(pinfo.hThread);
+                        DWORD ret = WaitForSingleObject(pinfo.hProcess, INFINITE);
+                        CloseHandle(pinfo.hProcess);
+                        if (ret!=WAIT_OBJECT_0) err = 1;
+                    #else
+                        int ret = system(command);
+                        err = WEXITSTATUS(ret);
+                    #endif
+                    if (err!=0) {
+                        PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d).\n", texture, err);
+                    }
+                    else {
+                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: SUCCESS: texture %s is converted.\n", texture);
+                    }
+                }
             }
+            // unknown file extension
             else {
-                if (jpg.state==JBXL_GRAPH_IVDDATA_ERROR) {
-                    DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is invalid.\n", texture);
-                }
-                else {
-                    DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d).\n", texture, jpg.state);
-                }
-            }
-            //
-            // Retry convert using external command
-            if (!converted) {
-                DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: RETRY: convert %s to %s\n", path, (char*)outpath.buf); 
-                //
-                char command[LMESG];
-                memset(command, 0, LMESG);
-                if (comformat!=NULL) {
-                    snprintf(command, LMESG-1, comformat, path, (char*)outpath.buf);
-                }
-                else {
-                    snprintf(command, LMESG-1, OART_JP2_DECOMP_COM, path, (char*)outpath.buf);
-                }
-                //
-                int err = 0;
-                #ifdef WIN32
-                    STARTUPINFOA sinfo;             // コマンドの実行
-                    PROCESS_INFORMATION pinfo;
-                    memset(&sinfo, 0, sizeof(STARTUPINFO));
-                    sinfo.cb = sizeof(STARTUPINFO); 
-                    sinfo.wShowWindow = SW_HIDE;
-                    CreateProcessA(NULL, (LPSTR)command, NULL, NULL, FALSE, CREATE_NO_WINDOW ,NULL, NULL, &sinfo, &pinfo);
-                    CloseHandle(pinfo.hThread);
-                    DWORD ret = WaitForSingleObject(pinfo.hProcess, INFINITE);
-                    CloseHandle(pinfo.hProcess);
-                    if (ret!=WAIT_OBJECT_0) err = 1;
-                #else
-                    int ret = system(command);
-                    err = WEXITSTATUS(ret);
-                #endif
-                if (err!=0) {
-                    make_dummy = false;
-                    PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d).\n", texture, err);
-                }
-                else {
-                    DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: SUCCESS: texture %s is converted.\n", texture);
-                }
+                PRINT_MESG("OARTool::ConvertTexture: ERROR: unsupported file %s\n found!", path);
             }
         }
+        // Lost
         else {
-            make_dummy = false;
             PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is lost!\n", texture);
         }
     }
     free_Buffer(&outpath);
 
-    //
-//  if (make_dummy) MakeDummyTexture(texture, add_name, ext_name, dist);
-
     return;
 }
 
-
-/**
-テスト中！
-@param texture    コンバート元データのUUID．
-@param add_fname  コンバート先ファイル名の追加文字列．
-@param ext_fname  コンバート先ファイル名の拡張子．
-@param dist       コンバート先のパス．
-*/
-void  OARTool::MakeDummyTexture(const char* texture, const char* add_name, const char* ext_name, const char* dist)
-{
-    if (texture==NULL) return;
-
-    Buffer outpath;
-    if (dist==NULL) outpath = make_Buffer_bystr((char*)pathTEX.buf);
-    else            outpath = make_Buffer_bystr(dist);
-
-    cat_s2Buffer(texture, &outpath);
-    if (add_name!=NULL) {
-        cat_s2Buffer("_", &outpath);
-        cat_s2Buffer(add_name, &outpath);
-    }
-    if (ext_name!=NULL) {
-        if (ext_name[0]!='.') cat_s2Buffer(".", &outpath);
-        cat_s2Buffer(ext_name, &outpath);
-    }
-    #ifndef WIN32
-        rewrite_sBuffer_str(&outpath, " ", "\\ ");
-        rewrite_sBuffer_str(&outpath, ";", "\\;");
-    #endif
-
-    if (!file_exist((char*)outpath.buf)) {
-        //
-        Buffer inppath = dup_Buffer(pathAST);
-        cat_s2Buffer("dummy.tga", &inppath);
-
-        int ret = copy_file((char*)inppath.buf, (char*)outpath.buf);
-        //PRINT_MESG("====> %d %s\n", ret, inppath.buf);
-        free_Buffer(&inppath);
-    }
-    free_Buffer(&outpath);
-
-    return;
-}
 

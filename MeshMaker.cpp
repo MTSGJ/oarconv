@@ -28,16 +28,18 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     int tri_num   = 0;
     int facet_num = 0;
 
+    DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Mesh Type is 0x%02x\n", param.sculptType);
+
     // Mesh
     if ((param.sculptType&0x07)==SCULPT_TYPE_MESH) {
-        //DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Generate LLM Mesh\n");
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate LLM Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
         tridata = TriPolygonDataFromLLMeshFile(path, &facet_num, &tri_num);
     }
 
     // Sculpted Prim
     else if (param.sculptEntry) {
-        //DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Generate Sculpt Mesh\n");
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate Sculpt Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
         //facetdata = ContourBaseDataFromSculptJP2K(path, param.sculptType);
         tridata = TriPolygonDataFromSculptJP2K(path, param.sculptType, &tri_num);
@@ -46,14 +48,14 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
 
     // Normal Prim
     else {
-        //DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Generate Prim Mesh\n");
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate Prim Mesh\n");
         PrimMesh primMesh = GeneratePrimMesh(param);
         tridata = TriPolygonDataFromPrimMesh(primMesh, &facet_num, &tri_num);
         primMesh.free();
     }
 
     if (tridata==NULL && facetdata==NULL) {
-        PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: ERROR: get no data! return.\n");
+        PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No Data is generated!\n");
         param.free();
         return NULL;
     }
@@ -368,10 +370,10 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
     else {
         tridata = GenerateGrayScaleSculpt(pnum);
     }
-
     grd.free();
     jpg.free();
 
+    DEBUG_MODE if (tridata!=NULL) PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: Sculpt Mesh is generated form [%s]\n", jpegfile);
     return tridata;
 }
 
