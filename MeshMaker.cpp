@@ -8,6 +8,8 @@ using namespace jbxl;
 //
 
 /**
+MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tList* resourceList, bool useBrep)
+
 PrimBaseShapeデータから Colladaのデータを生成する．@n
 PrimBaseShapeデータは jbxl::CreatePrimBaseShapesFromXML() または PrimBaseShape::GenerateParam() で生成する．
 
@@ -245,28 +247,32 @@ ContourBaseData*  jbxl::ContourBaseDataFromSculptJP2K(const char* jpegfile, int 
     if (jpegfile==NULL) return NULL;
 
     DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
+    MSGraph<uByte> grd;
 
     JPEG2KImage jpg = readJPEG2KFile(jpegfile);
-    DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
-    if (jpg.isNull() || jpg.col<1) {
-        PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: WARNING: invalid jpeg 2000 image file! [%s]\n", jpegfile);
+    if (!jpg.isNull() && jpg.col>0) {
+        DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
+        grd = JPEG2KImage2MSGraph<uByte>(jpg);
         jpg.free();
-        return NULL;
-    }
-
-    MSGraph<uByte> grd = JPEG2KImage2MSGraph<uByte>(jpg);
-    ContourBaseData* facetdata = NULL;
-
-    /*
-    if (grd.zs>1) {
     }
     else {
+        /* not implement yet!
+        TGAImage tga = readTGAFile(jpegfile);
+        if (tga.state>0) {
+            DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
+            grd = TGAImage2MSGraph<uByte>(tga);
+            tga.free();
+        }
+        else {*/
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: WARNING: invalid JPEG2K image file! [%s]\n", jpegfile);
+            jpg.free();
+        //    tga.free();
+            return NULL;
+        //}
     }
-    */
+    ContourBaseData* facetdata = NULL;
     facetdata = ContourBaseDataFromSculptImage(grd, type);
-
     grd.free();
-    jpg.free();
 
     return facetdata;
 }
@@ -352,16 +358,29 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
     if (jpegfile==NULL) return NULL;
 
     DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
+    MSGraph<uByte> grd;
 
     JPEG2KImage jpg = readJPEG2KFile(jpegfile);
-    DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
-    if (jpg.isNull() || jpg.col<1) {
-        PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: ERROR: invalid jpeg 2000 image file! [%s]\n", jpegfile);
+    if (!jpg.isNull() && jpg.col>0) {
+        DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: JPEG2K size = (%d, %d, %d), color_mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
+        grd = JPEG2KImage2MSGraph<uByte>(jpg);
         jpg.free();
-        return NULL;
     }
-
-    MSGraph<uByte> grd = JPEG2KImage2MSGraph<uByte>(jpg);
+    else {
+        /* not implement yet!
+        TGAImage tga = readTGAFile(jpegfile);
+        if (tga.state>0) {
+            DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
+            grd = TGAImage2MSGraph<uByte>(tga);
+            tga.free();
+        }
+        else {*/
+            PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: ERROR: invalid JPEG2K/TGA image file! [%s]\n", jpegfile);
+            jpg.free();
+        //    tga.free();
+            return NULL;
+        //}
+    }
     TriPolygonData* tridata = NULL;
 
     if (grd.zs>1) {
@@ -371,7 +390,6 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
         tridata = GenerateGrayScaleSculpt(pnum);
     }
     grd.free();
-    jpg.free();
 
     DEBUG_MODE if (tridata!=NULL) PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: Sculpt Mesh is generated form [%s]\n", jpegfile);
     return tridata;
