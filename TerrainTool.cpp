@@ -374,6 +374,7 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
             char* filename = param.getTextureName();
             cat_s2Buffer(filename, &texfile);
             TGAImage tga = MSGraph2TGAImage(region);
+            setupTGAData(&tga, true);
             writeTGAFile((char*)texfile.buf, tga);
             tga.free();
 

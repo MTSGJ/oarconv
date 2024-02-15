@@ -44,7 +44,7 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "-x")) { if (i!=argc-1) xshift = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-y")) { if (i!=argc-1) yshift = (float)atof(argv[i+1]);}
         else if (!strcmp(argv[i], "-z")) { if (i!=argc-1) zshift = (float)atof(argv[i+1]);}
-        else if (!strcmp(argv[i], "-r")) { engine = JBXL_3D_ENGINE_UE;}     // UE
+        else if (!strcmp(argv[i], "-u")) { engine = JBXL_3D_ENGINE_UE;}     // UE
         else if (!strcmp(argv[i], "-w")) { format = JBXL_3D_FORMAT_OBJ;}    // OBJデータを出力
         else if (!strcmp(argv[i], "-l")) { format = JBXL_3D_FORMAT_STL_A;}  // STLデータを出力
         else if (!strcmp(argv[i], "-d")) { DebugMode = ON;}
