@@ -15,6 +15,7 @@ void UMyEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	if (ImportSubsystem != NULL)
 	{
 		OnAssetPostImportHandle = ImportSubsystem->OnAssetPostImport.AddUObject(this, &UMyEditorSubsystem::OnAssetPostImport);
+		OnAssetPreImportHandle = ImportSubsystem->OnAssetPreImport.AddUObject(this, &UMyEditorSubsystem::OnAssetPreImport);
 	}
 }
 
@@ -22,15 +23,22 @@ void UMyEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedObject)
 {
+
 	if (CreatedObject != NULL) {
-		FString _class = CreatedObject->GetClass()->GetName();
+		UClass* _uclass = CreatedObject->GetClass();
+		if (_uclass == NULL) return;
+
+		FString _class = _uclass->GetName();
+
+
 		if (_class.Equals(FString(TEXT("StaticMesh")))) {
 			UStaticMesh* mesh = Cast<UStaticMesh>(CreatedObject);
 
 			UE_LOG(LogTemp, Log, TEXT("Mesh Name = %s"), *(CreatedObject->GetName()));
-
+			
 			int i = 0;
 			auto* mtlif = mesh->GetMaterial(i);
+
 			while (mtlif != NULL) {
 				FString _path = mtlif->GetPathName();
 				FString _name = mtlif->GetName();
@@ -38,11 +46,14 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 				FString texture_path = GetTexturePath(_path, _name);
 				TArray<float> params = GetTextureParams(_name);
 
-
 				UE_LOG(LogTemp, Log, TEXT("Material Name = %d: %s (%f, %f, %f) %f"), i, *_name, 
 					params[0], params[1], params[2], params[23]);
 
 				UMaterialInstanceDynamic* material = UMaterialInstanceDynamic::Create(mtlif, NULL);
+				if (material == NULL) {
+					mtlif = mesh->GetMaterial(++i);
+					continue;
+				}
 
 				UTexture* texture = Cast<UTexture>(StaticLoadObject(UTexture::StaticClass(), NULL, *texture_path));
 				if (texture != NULL) {
@@ -254,6 +265,33 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 }
 
 
+
+void UMyEditorSubsystem::OnAssetPreImport(UFactory* Factory, UClass* InClass, UObject* CreatedObject, const FName& Name, const TCHAR* Type)
+{
+	return;
+	/**/
+	UE_LOG(LogTemp, Log, TEXT("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX name %s"), *Name.ToString());
+	UE_LOG(LogTemp, Log, TEXT("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX type %s"), Type);
+
+	if (Factory != NULL) {
+		FString _class = Factory->GetClass()->GetName();
+		UE_LOG(LogTemp, Log, TEXT("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Factory %s"), *_class);
+	}
+
+
+	if (CreatedObject != NULL) {
+		FString _class = CreatedObject->GetClass()->GetName();
+		UE_LOG(LogTemp, Log, TEXT("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Object %s"), *_class);
+	}
+
+	if (InClass != NULL) {
+		FString _class = InClass->GetClass()->GetName();
+		UE_LOG(LogTemp, Log, TEXT("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX class %s"), *_class);
+	}
+	/**/
+}
+
+
 void UMyEditorSubsystem::Deinitialize()
 {
 	if (GEditor != NULL)
@@ -262,6 +300,7 @@ void UMyEditorSubsystem::Deinitialize()
 		if (ImportSubsystem != NULL)
 		{
 			ImportSubsystem->OnAssetPostImport.Remove(OnAssetPostImportHandle);
+			ImportSubsystem->OnAssetPreImport.Remove(OnAssetPreImportHandle);
 		}
 	}
 	Super::Deinitialize();
@@ -288,6 +327,10 @@ FString UMyEditorSubsystem::GetTexturePath(FString mtl_path, FString mtl_name)
 
 TArray<float> UMyEditorSubsystem::GetTextureParams(FString mtl_name)
 {
+	TArray<float> params;
+	params.Init(0.0, 24);
+	params[3] = 1.0f;
+
 	int32 _end_name = mtl_name.Find(TEXT("_"), ESearchCase::CaseSensitive, ESearchDir::FromEnd, mtl_name.Len());
 	FString _params_str = mtl_name.Right(mtl_name.Len() - _end_name - 1);
 	_params_str = _params_str.Replace(TEXT("-"), TEXT("/"));
@@ -295,9 +338,7 @@ TArray<float> UMyEditorSubsystem::GetTextureParams(FString mtl_name)
 
 	TArray<uint8> dec;
 	FBase64::Decode(_params_str, dec);
-
-	TArray<float> params;
-	params.Init(0.0, 24);
+	if (dec.Num() != 24) return params;
 
 	params[0]  = 1.0f - (float)dec[0] / 255.0f;		// Red
 	params[1]  = 1.0f - (float)dec[1] / 255.0f;		// Green

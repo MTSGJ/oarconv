@@ -23,11 +23,14 @@ public:
 
 
 	FDelegateHandle OnAssetPostImportHandle;
+	FDelegateHandle OnAssetPreImportHandle;
 
 	//UPROPERTY(Transient)
 	void OnAssetPostImport(UFactory* Factory, UObject* CreatedObject);
+	void OnAssetPreImport(UFactory* InFactory, UClass* InClass, UObject* InParent, const FName& Name, const TCHAR* Type);
 
 
 	FString GetTexturePath(FString mtl_path, FString mtl_name);
+
 	TArray<float> GetTextureParams(FString mtl_name);
 };
