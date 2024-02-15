@@ -45,6 +45,11 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
         //facetdata = ContourBaseDataFromSculptJP2K(path, param.sculptType);
         tridata = TriPolygonDataFromSculptJP2K(path, param.sculptType, &tri_num);
+        if (tridata==NULL) {
+            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No Sculpt Mesh Data [%s]\n", path);
+            param.free();
+            return NULL;
+        }
         facet_num = 1;
     }
 
@@ -235,7 +240,9 @@ TriPolygonData*  jbxl::TriPolygonDataFromPrimMesh(PrimMesh primMesh, int* fnum, 
 // 
 
 /**
-Sculpted Primのファイル(JPEG 2000) からデータを読み込み，インデックス化された三角ポリゴンデータ ContourBaseDataを生成する．@n
+ContourBaseData*  jbxl::ContourBaseDataFromSculptJP2K(const char* jpegfile, int type)
+
+Sculpted Primのファイル(JPEG2K) からデータを読み込み，インデックス化された三角ポリゴンデータ ContourBaseDataを生成する．@n
 
 @param jpegfile  Sculpted Primのデータの入った JPEG 2000ファイル名．
 @param type      Sculpted Primのタイプ
@@ -256,19 +263,19 @@ ContourBaseData*  jbxl::ContourBaseDataFromSculptJP2K(const char* jpegfile, int 
         jpg.free();
     }
     else {
-        /* not implement yet!
+        // TGA
         TGAImage tga = readTGAFile(jpegfile);
-        if (tga.state>0) {
-            DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
+        if (tga.state>=0) {
+            DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
             grd = TGAImage2MSGraph<uByte>(tga);
             tga.free();
         }
-        else {*/
-            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: WARNING: invalid JPEG2K image file! [%s]\n", jpegfile);
+        else {
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid JPEG2K/TGA image file! [%s], (%d)\n", jpegfile, tga.state);
             jpg.free();
-        //    tga.free();
+            tga.free();
             return NULL;
-        //}
+        }
     }
     ContourBaseData* facetdata = NULL;
     facetdata = ContourBaseDataFromSculptImage(grd, type);
@@ -344,7 +351,9 @@ ContourBaseData*  jbxl::ContourBaseDataFromSculptImage(MSGraph<uByte> grd, int t
 
 
 /**
-Sculpted Primのファイル(JPEG 2000) からデータを読み込み，三角ポリゴンデータ TriPloyDataを生成する．@n
+TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int type, int* pnum)
+
+Sculpted Primのファイル(JPEG2K/TGA) からデータを読み込み，三角ポリゴンデータ TriPloyDataを生成する．@n
 
 @param jpegfile   Sculpted Primのデータの入った JPEG 2000ファイル名．
 @param type       Sculpted Primのタイプ
@@ -367,19 +376,19 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
         jpg.free();
     }
     else {
-        /* not implement yet!
+        // TGA
         TGAImage tga = readTGAFile(jpegfile);
-        if (tga.state>0) {
+        if (tga.state>=0) {
             DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
             grd = TGAImage2MSGraph<uByte>(tga);
             tga.free();
         }
-        else {*/
-            PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: ERROR: invalid JPEG2K/TGA image file! [%s]\n", jpegfile);
+        else {
+            PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: ERROR: Invalid JPEG2K/TGA image file! [%s], (%d)\n", jpegfile, tga.state);
             jpg.free();
-        //    tga.free();
+            tga.free();
             return NULL;
-        //}
+        }
     }
     TriPolygonData* tridata = NULL;
 
@@ -391,7 +400,6 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
     }
     grd.free();
 
-    DEBUG_MODE if (tridata!=NULL) PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: Sculpt Mesh is generated form [%s]\n", jpegfile);
     return tridata;
 }
 
