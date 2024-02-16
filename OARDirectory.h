@@ -1,10 +1,10 @@
-﻿#ifndef  __JBXL_OAR_DIRECTORY_H_
-#define  __JBXL_OAR_DIRECTORY_H_
+﻿#ifndef  __JBXL_OAR_GLOBAL_H_
+#define  __JBXL_OAR_GLOBAL_H_
 
 /**
-@brief OpenSimの OAR Directory用ヘッダ
+@brief OpenSimの OAR Global用ヘッダ
 
-@file    OARDirectory.h
+@file    OARGlobal.h
 @author  Fumi.Iseki 
 @date    2024 02/05
 */
@@ -30,7 +30,8 @@
 #endif
 
 
+#define  OART_UE_PHANTOM_PREFIX      "UNC_"
 #define  OART_UE_COLLIDER_PREFIX     "UCP_"
-#define  OART_UE_PHANTOM_PREFIX      "PTM_"
+
 
 #endif
