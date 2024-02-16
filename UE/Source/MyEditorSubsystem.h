@@ -1,7 +1,7 @@
 /**
 * Import Postèàóù for OAR   by Fumi.Iseki
 *
-*          ver1.0b  2024/02/16
+*          ver1.0É¿  2024/02/16
 **/
 
 #pragma once
@@ -17,6 +17,8 @@
 
 #include "CoreMinimal.h"
 #include "EditorSubsystem.h"
+#include "Subsystems/ImportSubsystem.h"
+#include "StaticMeshEditorSubsystem.h"
 #include "Editor/StaticMeshEditor/Public/StaticMeshEditorSubsystem.h"
 
 #include "MyEditorSubsystem.generated.h"
