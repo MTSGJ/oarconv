@@ -974,8 +974,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                     DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: texture = %s [size = (%4d,%4d,%2d), mode = %d]\n", texture, jpg.ws, jpg.hs, jpg.col, jpg.cmode);
                     //
                     if (vp.zs>0) {
-                        TGAImage tga = MSGraph2TGAImage(vp);
-                        setupTGAData(&tga, true);
+                        TGAImage tga = MSGraph2TGAImage(vp, true);
                         int err = writeTGAFile((char*)outpath.buf, tga);
                         if (!err) converted = true;
                         else      PRINT_MESG("OARTool::ConvertTexture: ERROR: write error (%d).\n", err);
