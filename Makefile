@@ -58,10 +58,10 @@ OBJS = oarconv_help.o OARTool.o TerrainTool.o TreeTool.o MeshMaker.o MaterialToo
 all: $(SUBJ)
 
 #
-OARTool.h: LogDocTool.h OARDirectory.h
+OARTool.h: LogDocTool.h OARGlobal.h
 	$(TH) OARTool.h
 
-TerrainTool.h: LogDocTool.h OARDirectory.h
+TerrainTool.h: LogDocTool.h OARGlobal.h
 	$(TH) TerrainTool.h
 
 MeshMaker.h: LogDocTool.h

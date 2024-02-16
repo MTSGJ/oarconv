@@ -24,7 +24,7 @@
 #include "TerrainTool.h"
 #include "LogDocTool.h"
 
-#include "OARDirectory.h"
+#include "OARGlobal.h"
 
 
 namespace  jbxl {
