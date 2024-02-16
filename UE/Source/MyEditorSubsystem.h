@@ -11,9 +11,14 @@
 #define  MATERIAL_PARAMS_SIZE   24
 #define  MATERIAL_BASE64_SIZE   32
 
+#define  OBJ_PHANTOM_PREFIX     "PTM_"
+#define  OBJ_COLLIDER_PREFIX    "UCP_"
+
 
 #include "CoreMinimal.h"
 #include "EditorSubsystem.h"
+#include "Editor/StaticMeshEditor/Public/StaticMeshEditorSubsystem.h"
+
 #include "MyEditorSubsystem.generated.h"
 
 

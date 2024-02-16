@@ -5,12 +5,12 @@
 
 void UMyImportSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	UE_LOG(LogTemp, Log, TEXT("UMyImportSubsystem::Initialize()"));
+	//UE_LOG(LogTemp, Log, TEXT("UMyImportSubsystem::Initialize()"));
 }
 
 void UMyImportSubsystem::Deinitialize()
 {
-	UE_LOG(LogTemp, Log, TEXT("UMyImportSubsystem::Deinitialize()"));
+	//UE_LOG(LogTemp, Log, TEXT("UMyImportSubsystem::Deinitialize()"));
 }
 
 
@@ -21,7 +21,7 @@ void UMyImportSubsystem::OnAssetPreImportFunc(UFactory* InFactory, UClass* InCla
 	UE_LOG(LogTemp, Log, TEXT("UMyImportSubsystem::OnAssetPreImportFunc()"));
 
 }*/
-/**/
+/*
 void UMyImportSubsystem::OnAssetPostImportFunc(UFactory* InFactory, UObject* InCreatedObject)
 {
 	UE_LOG(LogTemp, Log, TEXT("UMyImportSubsystem::OnAssetPostImportFunc()"));

@@ -9,12 +9,12 @@
 void UMyEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-
-	if (GEditor == NULL) return;
-	UImportSubsystem* ImportSubsystem = GEditor->GetEditorSubsystem<UImportSubsystem>();
-
-	if (ImportSubsystem != NULL){
-		OnAssetPostImportHandle = ImportSubsystem->OnAssetPostImport.AddUObject(this, &UMyEditorSubsystem::OnAssetPostImport);
+	//
+	if (GEditor != NULL) {
+		UImportSubsystem* ImportSubsystem = GEditor->GetEditorSubsystem<UImportSubsystem>();
+		if (ImportSubsystem != NULL) {
+			OnAssetPostImportHandle = ImportSubsystem->OnAssetPostImport.AddUObject(this, &UMyEditorSubsystem::OnAssetPostImport);
+		}
 	}
 }
 
@@ -36,17 +36,28 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 	if (CreatedObject != NULL) {
 		FString _class_name = CreatedObject->GetClass()->GetName();
 
-		// Mesh Object
+		// Static Mesh
 		if (_class_name.Equals(FString(TEXT("StaticMesh")))) {
 			UStaticMesh* mesh = Cast<UStaticMesh>(CreatedObject);
-			
+			FString _mesh_name = mesh->GetName();
+
+			// Collider
+			if (_mesh_name.Find(FString(TEXT(OBJ_PHANTOM_PREFIX))) == 0) {
+				UStaticMeshEditorSubsystem* MeshSubsystem = GEditor->GetEditorSubsystem<UStaticMeshEditorSubsystem>();
+				MeshSubsystem->RemoveCollisions(mesh);
+			}
+
+			UEditorEngine* EEngine = Cast<UEditorEngine>(GEngine);
+			FVector x(1.0, 1.0, 1.0);
+			EEngine->SetPivot(x, false, false);
+
 			int i = 0;
 			auto* mtlif = mesh->GetMaterial(i);
 			while (mtlif != NULL) {
-				FString _name = mtlif->GetName();
+				FString _mtl_name = mtlif->GetName();
 				//
-				TArray<float> params = GetTextureParams(_name);
-				if (params[23] == 0.0f) {
+				TArray<float> params = GetTextureParams(_mtl_name);
+				if (params[MATERIAL_PARAMS_SIZE - 1] == 0.0f) {
 					mtlif = mesh->GetMaterial(++i);
 					continue;
 				}
@@ -61,8 +72,8 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 				UMaterialInstanceDynamic* material = UMaterialInstanceDynamic::Create(new_mtlif, NULL);
 				if (material != NULL) {
 					// Texture
-					FString _path = mtlif->GetPathName();
-					FString texture_path = GetTexturePath(_path, _name);
+					FString _obj_path = mtlif->GetPathName();
+					FString texture_path = GetTexturePath(_obj_path, _mtl_name);
 					UTexture* texture = Cast<UTexture>(StaticLoadObject(UTexture::StaticClass(), NULL, *texture_path));
 					if (texture != NULL) {
 						material->SetTextureParameterValue(FName(TEXT("Texture")), texture);
@@ -77,9 +88,24 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 					material->SetScalarParameterValue(FName(TEXT("Light")), params[8]);
 					// Setup
 					mesh->SetMaterial(i, material);
+
+					//FString mpath = FString(TEXT("/Game/OBJ/")) + _name;
+					//UE_LOG(LogTemp, Log, TEXT("material = %s"), *mpath);
+					//::remove(TCHAR_TO_ANSI (*mpath));
+					//UMaterial* mat = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, *mpath));
+					//delete mat;
 				}
-				//
 				mtlif = mesh->GetMaterial(++i);
+			}
+		}
+
+		// Material
+		else if (CreatedObject->GetName().Find(FString(TEXT("MATERIAL_"))) == 0) {
+			if (_class_name.Equals(FString(TEXT("MaterialInstanceConstant")))) {
+				//UE_LOG(LogTemp, Log, TEXT("material = %s"), *(CreatedObject->GetName()));
+			}
+			else if (_class_name.Equals(FString(TEXT("Material")))) {
+				//UE_LOG(LogTemp, Log, TEXT("material = %s"), *(CreatedObject->GetName()));
 			}
 		}
 	}
@@ -89,8 +115,6 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 UMaterialInterface* UMyEditorSubsystem::SelectMaterialInterface(TArray<float> params)
 {
 	UMaterialInterface* mtlif = NULL;
-
-	UE_LOG(LogTemp, Log, TEXT("Material Params = (%f, %f)"), params[4], params[5]);
 
 	int kind = (int)(params[23] + 0.5f);
 	if (kind == 84 || kind == 71) {		// 'T' or 'G'
