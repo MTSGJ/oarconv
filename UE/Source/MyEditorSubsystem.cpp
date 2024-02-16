@@ -3,7 +3,7 @@
 **/
 
 #include "MyEditorSubsystem.h"
-#include "Subsystems/EditorAssetSubsystem.h"
+#include "Subsystems/ImportSubsystem.h"
 
 
 void UMyEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -41,34 +41,29 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 			UStaticMesh* mesh = Cast<UStaticMesh>(CreatedObject);
 			FString _mesh_name = mesh->GetName();
 
-			// Collider
+			// ファントム処理
 			if (_mesh_name.Find(FString(TEXT(OBJ_PHANTOM_PREFIX))) == 0) {
 				UStaticMeshEditorSubsystem* MeshSubsystem = GEditor->GetEditorSubsystem<UStaticMeshEditorSubsystem>();
 				MeshSubsystem->RemoveCollisions(mesh);
 			}
 
-			UEditorEngine* EEngine = Cast<UEditorEngine>(GEngine);
-			FVector x(1.0, 1.0, 1.0);
-			EEngine->SetPivot(x, false, false);
-
 			int i = 0;
 			auto* mtlif = mesh->GetMaterial(i);
 			while (mtlif != NULL) {
 				FString _mtl_name = mtlif->GetName();
-				//
+				// パラメータの復元
 				TArray<float> params = GetTextureParams(_mtl_name);
 				if (params[MATERIAL_PARAMS_SIZE - 1] == 0.0f) {
 					mtlif = mesh->GetMaterial(++i);
 					continue;
 				}
-
+				// マテリアルの選択
 				UMaterialInterface* new_mtlif = SelectMaterialInterface(params);
 				if (new_mtlif == NULL) {
 					mtlif = mesh->GetMaterial(++i);
 					continue;
 				}
-
-				// Setup Parameters
+				// パラメータの適用
 				UMaterialInstanceDynamic* material = UMaterialInstanceDynamic::Create(new_mtlif, NULL);
 				if (material != NULL) {
 					// Texture
@@ -88,12 +83,6 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 					material->SetScalarParameterValue(FName(TEXT("Light")), params[8]);
 					// Setup
 					mesh->SetMaterial(i, material);
-
-					//FString mpath = FString(TEXT("/Game/OBJ/")) + _name;
-					//UE_LOG(LogTemp, Log, TEXT("material = %s"), *mpath);
-					//::remove(TCHAR_TO_ANSI (*mpath));
-					//UMaterial* mat = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, *mpath));
-					//delete mat;
 				}
 				mtlif = mesh->GetMaterial(++i);
 			}
