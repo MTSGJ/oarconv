@@ -862,9 +862,10 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     else if (format==JBXL_3D_FORMAT_OBJ) {
         Buffer obj_fname = make_Buffer_str(fname);
         OBJData* obj = (OBJData*)solid;
-        if (obj->engine==JBXL_3D_ENGINE_UE) {
+        if (obj->engine==JBXL_3D_ENGINE_UE) {   // UE
             out_path = dup_Buffer(pathOUT);
-            if (!obj->phantom_out) ins_s2Buffer(OART_UE_COLLIDER_NAME, &obj_fname);
+            if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &obj_fname);
+            else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &obj_fname);
         }
         else {
             if (obj->phantom_out) out_path = dup_Buffer(pathPTM);

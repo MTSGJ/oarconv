@@ -485,7 +485,7 @@ void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, 
                 //obj->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
                 obj->setEngine(engine);
                 obj->addObject(data, true);
-                if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_NAME, &objname);
+                if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
                 obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
             }

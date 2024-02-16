@@ -30,6 +30,7 @@
 #endif
 
 
-#define  OART_UE_COLLIDER_NAME      "UCP_"
+#define  OART_UE_COLLIDER_PREFIX     "UCP_"
+#define  OART_UE_PHANTOM_PREFIX      "PTM_"
 
 #endif
