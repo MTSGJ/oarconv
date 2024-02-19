@@ -61,7 +61,7 @@ private:
     Buffer pathPTM;             // Phantom directory
     Buffer pathAST;             // Adding assets directory
 
-    Vector<float> shift;        //
+    Vector<double> terrainShift;// Terrain座標
 
     tList* settingsFiles;       // Files list in settings
     tList* terrainsFiles;       // Files list in terrains
@@ -105,8 +105,8 @@ public:
     void   MakeOutputFolder(int format);
 
     void   SetEngine(int e);
-    void   SetShift(Vector<float> vt) { shift = vt;}
-    void   SetShift(float x, float y, float z) { shift.set(x, y, z);}
+    void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
+    void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
 
     tList* GetObjectsList(void) { return objectsFiles;}
     void   ReadTerrainData(void);

@@ -65,9 +65,9 @@ int main(int argc, char** argv)
     OARTool oar;
     oar.SetEngine(engine);
     oar.SetPathInfo(format, engine, (char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf);
-    oar.GetDataInfo();  // -f オプションがあるので，成否は無視．
+    oar.GetDataInfo();  // -f オプション（個別ファイル指定）があるので，成否は無視．
     oar.MakeOutputFolder(format);
-    oar.SetShift(xshift, yshift, zshift);
+    oar.SetTerrainShift(xshift, yshift, zshift);
 
     if (infile.buf!=NULL) {
         oar.objectsNum = 1;

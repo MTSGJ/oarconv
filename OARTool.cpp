@@ -32,7 +32,7 @@ void  OARTool::init(void)
     xsize           = 256;      //
     ysize           = 256;      //
     waterHeight     = 20.0;     //
-    shift.set(0.0, 0.0, 0.0);
+    terrainShift.set(0.0, 0.0, 0.0);
 
     objectsNum      = 0;
 
@@ -540,7 +540,7 @@ int  OARTool::GenerateTerrainDataFile(int format)
     int num = 0;
     while (num<terrainNum) {
         terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf);
-        terrain[num].GenerateTerrain(format, engine, (char*)pathOUT.buf, shift);
+        terrain[num].GenerateTerrain(format, engine, (char*)pathOUT.buf, terrainShift);
         num++;
 #ifdef WIN32
         DisPatcher(); 
@@ -686,7 +686,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         // Tree
         if (shapes[s].PCode==PRIM_PCODE_NEWTREE || shapes[s].PCode==PRIM_PCODE_TREE) {
             //
-            shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
+            shapes[s].affineTrans.addShift(-xsize/2.0f + terrainShift.x, -ysize/2.0f + terrainShift.y, -waterHeight + terrainShift.z);
             MeshObjectData* mesh = treeTool.GenerateTree(shapes[s], 0);
             //
             if (mesh!=NULL) {
@@ -727,7 +727,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             //
             shapes[s].affineTrans.addShift(-xsize/2.0f, -ysize/2.0f, -waterHeight);
             MeshObjectData* mesh = treeTool.GenerateGrass(shapes[s], terrain);  // 1個の Terrainのみサポート．範囲チェックあり
-            shapes[s].affineTrans.addShift(shift.x, shift.y, shift.z);
+            if (mesh!=NULL && mesh->affine_trans!=NULL) mesh->affine_trans->addShift(terrainShift);
             //
             if (mesh!=NULL) {
                 // STLの場合は不必要
@@ -765,7 +765,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         // Prim (Sculpt, Meshを含む)
         else if (shapes[s].PCode==PRIM_PCODE_PRIM) { 
             //
-            shapes[s].affineTrans.addShift(-xsize/2.0f+shift.x, -ysize/2.0f+shift.y, -waterHeight+shift.z);
+            shapes[s].affineTrans.addShift(-xsize/2.0f + terrainShift.x, -ysize/2.0f + terrainShift.y, -waterHeight + terrainShift.z);
             MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep);
             //
             if (mesh!=NULL) {

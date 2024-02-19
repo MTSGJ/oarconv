@@ -244,12 +244,16 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv)
 
     double scale = (shape.affineTrans.scale.x + shape.affineTrans.scale.y + shape.affineTrans.scale.z)/3.0;
 
+/*
     AffineTrans<double> affine;
     affine.setScale(scale, scale, scale); 
     affine.rotate = shape.affineTrans.rotate;
     affine.setShift(shape.affineTrans.shift.x, shape.affineTrans.shift.y, shape.affineTrans.shift.z);
     data->setAffineTrans(affine);
-    affine.free();
+    affine.free();*/
+
+    data->setAffineTrans(shape.affineTrans);
+    data->affine_trans->setScale(scale, scale, scale);
 
     return data;
 }
@@ -261,7 +265,7 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv)
 @param pbs        基本情報が格納された形状変数．木の種類は pbs.Stateに格納されている．
 @param terrain    地形情報ツールへのポインタ．草の Z座標を決めるために必要．NULLなら Z座標は 0.0
 
-@return  Meshデータ．affine_trans は NULL.
+@return  data: Meshデータへのポインタ．
 */
 MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain)
 {
@@ -291,14 +295,14 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     
     int gnum = 0;
     for (int n=0; n<num_grass; n++) {
-        float xx = (float)shape.affineTrans.shift.x + (float)((Frand()-0.5f)*shape.affineTrans.scale.x); 
-        float yy = (float)shape.affineTrans.shift.y + (float)((Frand()-0.5f)*shape.affineTrans.scale.y); 
+        float xx = (float)((Frand()-0.5f)*shape.affineTrans.scale.x); 
+        float yy = (float)((Frand()-0.5f)*shape.affineTrans.scale.y); 
         float height = 0.0f;
         bool  valid_pos = true;
         //
         if (terrain!=NULL) {
-            float aa = xx + terrain->xsize/2.0f;
-            float bb = yy + terrain->ysize/2.0f;
+            float aa = xx + (float)shape.affineTrans.shift.x + terrain->xsize/2.0f;
+            float bb = yy + (float)shape.affineTrans.shift.y + terrain->ysize/2.0f;
             if (aa<0.0 || bb<0.0 || aa>(float)terrain->xsize-1.0f || bb>(float)terrain->ysize-1.0f) {   // ex. 0.0 - 255.0
                 valid_pos = false;
             }
@@ -355,11 +359,9 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     MeshObjectData* data = new MeshObjectData((char*)shape.ObjectName.buf);
     for (int i=0; i<facetno; i++) {
         data->addData(tridata, trino, i, NULL, false);
-        //data->addData(tridata, trino, i, mparam, false);
     }
     freeTriPolygonData(tridata, trino);
 
-    //for (int i=0; i<num_grass; i++) { 
     for (int i=0; i<gnum; i++) { 
         data->setMaterialParam(mparam[0]);
         data->setMaterialParam(mparam[1]);
@@ -369,6 +371,9 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
         data->setMaterialParam(mparam[0]);
     }
     for (int i=0; i<3; i++) mparam[i].free();
+
+    data->setAffineTrans(shape.affineTrans);
+    data->affine_trans->setScale(1.0, 1.0, 1.0);
 
     return data;
 }

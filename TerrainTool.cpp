@@ -394,7 +394,7 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
 //
 // for DAE/OBJ/STL
 //
-void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, Vector<float> offset)
+void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, Vector<double> offset)
 {
     if (r32.isNull()) return;
 
