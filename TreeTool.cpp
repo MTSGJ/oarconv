@@ -246,8 +246,8 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv)
 
     AffineTrans<double> affine;
     affine.setScale(scale, scale, scale); 
-    affine.setShift(shape.affineTrans.shift.x, shape.affineTrans.shift.y, shape.affineTrans.shift.z); 
     affine.rotate = shape.affineTrans.rotate;
+    affine.setShift(shape.affineTrans.shift.x, shape.affineTrans.shift.y, shape.affineTrans.shift.z);
     data->setAffineTrans(affine);
     affine.free();
 
@@ -325,7 +325,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
             //
             for (int i=0; i<trino; i++) {
                 dupdata[i].execRotate(Quaternion<double>(th*n, Vector<double>(0.0, 0.0, 1.0)));
-                dupdata[i].execShift(Vector<double>(xx, yy, height+grassParam[shape.State].size.z/2.0));
+                dupdata[i].execShift(Vector<double>(xx, yy, height + grassParam[shape.State].size.z / 2.0));
             }
             tridata = joinTriPolygonData(tridata, trino*gnum, dupdata, trino);
             gnum++;
