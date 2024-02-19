@@ -593,7 +593,7 @@ int   COARConvWinApp::convertAllFiles()
 	if (strtnum<1) strtnum = 1;
 	prognum -= strtnum + 1;
 	//
-	oarTool.SetShift(appParam.xShift, appParam.yShift, appParam.zShift);
+	oarTool.SetTerrainShift(appParam.xShift, appParam.yShift, appParam.zShift);
 
 	//////////////////////////////////////////////////////////////////////////////
 	// Convert
@@ -664,7 +664,7 @@ int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
 
 	DebugMode   = appParam.debugMode;
 	int prognum = selectedNums;
-	oarTool.SetShift(appParam.xShift, appParam.yShift, appParam.zShift);
+	oarTool.SetTerrainShift(appParam.xShift, appParam.yShift, appParam.zShift);
 
 	//////////////////////////////////////////////////////////////////////////////
 	// Convert
@@ -721,7 +721,7 @@ void  COARConvWinApp::convertOneData(int index, BOOL outputDae)
 int   COARConvWinApp::convertOneFile(int index, BOOL outputDae)
 {
 	DebugMode = appParam.debugMode;
-	oarTool.SetShift(appParam.xShift, appParam.yShift, appParam.zShift);
+	oarTool.SetTerrainShift(appParam.xShift, appParam.yShift, appParam.zShift);
 
 	//////////////////////////////////////////////////////////////////////////////
 	// Convert

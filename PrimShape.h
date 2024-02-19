@@ -56,6 +56,7 @@
 
 #include "Vector.h"
 #include "Rotation.h"
+#include "AffineTrans.h"
 #include "txml.h"
 #include "xtools.h"
 

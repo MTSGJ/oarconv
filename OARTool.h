@@ -124,7 +124,7 @@ public:
     void   ConvertTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL, const char* command=NULL);
 
     // ReadTerrainData と GenerateTerrainDataFile の間で呼ぶこと．
-    void  SetTerrainTextureScale(float sc) { if(terrain!=NULL) for(int i=0; i<terrainNum; i++) terrain[i].set_scale((float)sc);}
+    void   SetTerrainTextureScale(float sc) { if(terrain!=NULL) for(int i=0; i<terrainNum; i++) terrain[i].set_scale((float)sc);}
 
     TreeTool* GetTreeTool(void) { return &treeTool;}
 

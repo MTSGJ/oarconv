@@ -105,7 +105,7 @@ public:
     double iX, iY;
 
 public:
-    PrimAngleList(void) {}
+    PrimAngleList(void) { iX = iY = 0.0; }
     virtual ~PrimAngleList(void) {}
 
 public:

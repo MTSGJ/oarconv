@@ -68,7 +68,7 @@
     <ClInclude Include="..\..\LogDocTool.h">
       <Filter>ヘッダファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\OARDirectory.h">
+    <ClInclude Include="..\..\OARGlobal.h">
       <Filter>ヘッダファイル</Filter>
     </ClInclude>
   </ItemGroup>

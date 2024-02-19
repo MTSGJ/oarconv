@@ -828,7 +828,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             return (void*)dae;
         }
         else if (format==JBXL_3D_FORMAT_OBJ) {
-            obj->execAffineTrans(false);    // no shift
+            Vector<double> offset = obj->execAffineTrans(true);
+            obj->affine_trans->setShift(offset);
             return (void*)obj;
         }
         else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {

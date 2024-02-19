@@ -16,6 +16,7 @@
 
 #include "Vector.h"
 #include "Rotation.h"
+#include "AffineTrans.h"
 #include "ColladaTool.h"
 #include "OBJDataTool.h"
 

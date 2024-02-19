@@ -429,7 +429,10 @@ void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, 
             int xx = ri*256 + yy;
 
             DEBUG_MODE if (rgnum>1) PRINT_MESG("TerrainTool::GenerateTerrain: generating sub region mesh. %02d/%d\n", count, rgnum*rgnum-1);
-            Vector<float> shift = Vector<float>(ri*256.0f-xsize/2.0f+offset.x, rj*256.0f-ysize/2.0f+offset.y, -waterHeight+offset.z);
+            float shiftx = ri * 256.0f - xsize / 2.0f + (float)offset.x;
+            float shifty = rj * 256.0f - ysize / 2.0f + (float)offset.y;
+            float shiftz = -waterHeight + (float)offset.z;
+            Vector<float> shift = Vector<float>(shiftx, shifty, shiftz);
             MSGraph<float> region;
 
             region.getm(isize, jsize);
