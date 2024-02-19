@@ -743,15 +743,17 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                         facet = facet->next;
                     }
                 }
-                //
+                // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
                     dae->addObject(mesh, false);
                 }
+                // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     obj->phantom_out = true;
                     obj->addObject(mesh, false);
                 }
+                // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
                     stl->addObject(mesh);
                 }
@@ -800,15 +802,17 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
                     collider = false;
                 }
-                //
+                // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
                     dae->addObject(mesh, collider);
                 }
+                // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     if (collider) obj->phantom_out = false;
                     obj->addObject(mesh, collider);
                 }
+                // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
                     stl->addObject(mesh);
                 }
@@ -823,15 +827,19 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     ::free(shapes);
 
     if (count>0) {
+        // DAE
         if (format==JBXL_3D_FORMAT_DAE) {
             if (count==1 && forUnity4) dae->addCenterObject();  // for Unity4.x
             return (void*)dae;
         }
+        //  OBJ
         else if (format==JBXL_3D_FORMAT_OBJ) {
-            Vector<double> offset = obj->execAffineTrans(true);
+            Vector<double> offset = obj->execAffineTrans(true);     // 原点縮退
+            if (obj->affine_trans==NULL) obj->affine_trans = new AffineTrans<double>();
             obj->affine_trans->setShift(offset);
             return (void*)obj;
         }
+        // STL
         else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
             return (void*)stl;
         }
@@ -854,19 +862,35 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     Buffer out_path = init_Buffer();
 
     // fnameの拡張子は自動的に変換される
+    // DAE
     if (format==JBXL_3D_FORMAT_DAE) {
         ColladaXML* dae = (ColladaXML*)solid;
         if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
         else                  out_path = dup_Buffer(pathOUT);
         dae->outputFile(fname, (char*)out_path.buf, XML_INDENT_FORMAT);
     }
+    // OBJ
     else if (format==JBXL_3D_FORMAT_OBJ) {
-        Buffer obj_fname = make_Buffer_str(fname);
         OBJData* obj = (OBJData*)solid;
-        if (obj->engine==JBXL_3D_ENGINE_UE) {   // UE
-            out_path = dup_Buffer(pathOUT);
+        Buffer obj_fname = make_Buffer_str(fname);
+        // UE
+        if (obj->engine==JBXL_3D_ENGINE_UE) {
+            float offset[3];
+            int len = sizeof(float)*3;
+            memset(offset, 0, len);
+            if (obj->affine_trans!=NULL) {
+                offset[0] = obj->affine_trans->shift.x;
+                offset[1] = obj->affine_trans->shift.y;
+                offset[2] = obj->affine_trans->shift.z;
+            }
+            char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
+            del_file_extension_Buffer(&obj_fname);
+            cat_s2Buffer("_", &obj_fname);
+            cat_s2Buffer(params, &obj_fname);
+            cat_s2Buffer(".", &obj_fname);
             if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &obj_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &obj_fname);
+            out_path = dup_Buffer(pathOUT);
         }
         else {
             if (obj->phantom_out) out_path = dup_Buffer(pathPTM);
@@ -875,6 +899,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         obj->outputFile((char*)obj_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
         free_Buffer(&obj_fname);
     }
+    // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         bool ascii = true;
         if (format==JBXL_3D_FORMAT_STL_B) ascii = false;
@@ -892,14 +917,17 @@ void  OARTool::freeSolidData(int format, void* solid)
 {
     if (solid==NULL) return;
 
+    // DAE
     if (format==JBXL_3D_FORMAT_DAE) {
         ColladaXML* dae = (ColladaXML*)solid;
         freeColladaXML(dae);
     }
+    // OBJ
     else if (format==JBXL_3D_FORMAT_OBJ) {
         OBJData* obj = (OBJData*)solid;
         freeOBJData(obj);
     }
+    // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         BrepSolidList* stl = (BrepSolidList*)solid;
         freeBrepSolidList(stl);
