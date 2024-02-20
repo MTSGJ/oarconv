@@ -879,9 +879,9 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             int len = sizeof(float)*3;
             memset(offset, 0, len);
             if (obj->affine_trans!=NULL) {
-                offset[0] = obj->affine_trans->shift.x;
-                offset[1] = obj->affine_trans->shift.y;
-                offset[2] = obj->affine_trans->shift.z;
+                offset[0] = (float)obj->affine_trans->shift.x;
+                offset[1] = (float)obj->affine_trans->shift.y;
+                offset[2] = (float)obj->affine_trans->shift.z;
             }
             char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
             del_file_extension_Buffer(&obj_fname);
