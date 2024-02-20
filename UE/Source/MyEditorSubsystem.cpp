@@ -5,6 +5,16 @@
 #include "MyEditorSubsystem.h"
 #include "Subsystems/ImportSubsystem.h"
 
+//#include <Editor/UnrealEdEngine.h>
+//#include <WorldPartition/ContentBundle/ContentBundleEngineSubsystem.h>
+
+//#include "Subsystems/EditorAssetSubsystem.h"
+//#include <Subsystems/AssetEditorSubsystem.h>
+//#include <Subsystems/ActorEditorContextSubsystem.h>
+//#include <Toolkits/AssetEditorModeUILayer.h>
+//#include <TransformMeshesTool.h>
+//#include <Subsystems/EditorActorSubsystem.h>
+
 
 void UMyEditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -45,22 +55,164 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 			if (_mesh_name.Find(FString(TEXT(OBJ_PHANTOM_PREFIX))) == 0) {
 				UStaticMeshEditorSubsystem* MeshSubsystem = GEditor->GetEditorSubsystem<UStaticMeshEditorSubsystem>();
 				MeshSubsystem->RemoveCollisions(mesh);
+				
 			}
 
-			int i = 0;
-			auto* mtlif = mesh->GetMaterial(i);
+			FString path = mesh->GetPathName();
+			FString xxxx = path.Left(path.Find("."));
+			UE_LOG(LogTemp, Log, TEXT("NNNNN %s"), *xxxx);
+
+			FVector center = mesh->GetBoundingBox().GetCenter();
+			
+			UPackage* pack = (UPackage*)mesh->GetOuter();
+			
+			TArray<UObject*> abcs;
+			pack->GetDefaultSubobjects(abcs);
+			for (auto* aaa : abcs) {
+				FString xxx = aaa->GetClass()->GetName();
+				UE_LOG(LogTemp, Log, TEXT("-------------------> %s"), *xxx);
+			}
+
+
+			//UMetaData* dat = pack->GetMetaDatas();
+			//TMap<FName, FString> values;
+			//values.
+			//dat->SetObjectValues(dat, values);
+			//pack->set
+
+			//UE_LOG(LogTemp, Log, TEXT("-------------------> %s"), *xxx);
+			
+			
+			//mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, *path));
+			//smhc->AddLocalOffset(-center);
+			
+			//UAssetImportData* dat = mesh->GetAssetImportData();
+
+			//mesh->SetAssetImportData();
+
+			//mesh->RemoveFromRoot();
+			//mesh->get
+			//UActorEditorContextSubsystem* ac = GEditor->GetEditorSubsystem<UActorEditorContextSubsystem>();
+			//FFrame ff;
+			//ProjectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMeshComponent"));
+			//ProjectileMeshComponent->SetStaticMesh(mesh);
+			//ProjectileMeshComponent->AddLocalOffset(-center);
+			//UPROPERTY(EditAnywhere, Category = Projectile)
+			//UStaticMeshComponent sm;
+			//sm.InitializeComponent();
+			//a.SetStaticMesh(mesh);
+			//a.AddLocalOffset(-center);
+
+		
+
+
+
+			
+
+			/**/
+			//UStaticMeshComponent* smhc = mesh->GetTypedOuter<UStaticMeshComponent>();
+			UStaticMeshComponent* smhc = mesh->GetTypedOuter<UStaticMeshComponent>();
+			//FVector center = mesh->GetBoundingBox().GetCenter();
+			//UStaticMeshComponent* smhc = NewObject<UStaticMeshComponent>(mesh);
+			if (smhc != NULL) {
+			//smhc->RegisterComponent();
+			//smhc->SetupAttachment(NULL);
+			//if (smhc->SetStaticMesh(mesh)) {
+					smhc->AddLocalOffset(-center);
+			//		mesh = smhc->GetStaticMesh();
+			//	}
+
+				//FTransform trans(-center);
+				//smhc->SetWorldTransform(trans);
+				//memcpy(mesh, smhc->GetStaticMesh(), sizeof(UStaticMesh));
+			}
+			else{
+				UE_LOG(LogTemp, Log, TEXT("NNNNNNNNNNNNNNNNNNNNNNNUUUUUULL"));
+
+				AActor* act = mesh->GetTypedOuter<AActor>();
+				if (act != NULL) {
+					act->SetPivotOffset(center);
+					//o->offcet > SetoffLocalOffset(-center);
+				}
+				else {
+					UE_LOG(LogTemp, Log, TEXT("NNNNNNNNNNNNNNNNNNNNNNNUUUUUULL222222222222"));
+				}
+ 
+			}
+
+
+			/*
+			UEditorAssetSubsystem* EditorAssetSubsystem = GEditor->GetEditorSubsystem<UEditorAssetSubsystem>();
+			FString xxxx= EditorAssetSubsystem->GetMetadataTag(CreatedObject, FName(TEXT("offset_translation")));
+			UE_LOG(LogTemp, Log, TEXT("XXXXXXXXXXXXXX = %s"), *xxxx);
+
+			EditorAssetSubsystem->SetMetadataTag(CreatedObject, FName(TEXT("ImportOffsetTranslation")), TEXT("{X:0.0, Y:0.0, Z:1000.0}"));
+			*/
+
+			//GEditor->SetPivot(FVector(0.0, 0.0, 0.0), false, false);
+			//FVector vv = GEditor->GetPivotLocation();
+			//GEditor->ResetPivot();
+			//GEditor->SetPivot(center, false, false, true);
+			//GEditor->
+			//UStaticMeshComponent* aaa = CreateDefaultSubobject<UStaticMeshComponent>(mesh->GetName());
+
+			//UE_LOG(LogTemp, Log, TEXT("center = %lf %lf %lf"), center.X, center.Y, center.Z);
+
+			//UStaticMeshComponent* bbb = Cast<UStaticMeshComponent>(StaticLoadObject(UTexture::StaticClass(), NULL, *mesh->GetPathName()));
+			//bbb->AddLocalOffset(-center);
+
+			//UContentBundleEngineSubsystem* engine = GEngine->GetEngineSubsystem<UContentBundleEngineSubsystem>();
+			//engine->execTransformConst()
+			//engine- SetPivot(center, true, false);
+
+
+			//UEditorEngine* engine = Cast<UEditorEngine>(GEngine);
+			//UUnrealEdEngine* enginex = Cast<UUnrealEdEngine>(GEngine);
+
+			//UE_LOG(LogTemp, Log, TEXT("center = %lf %lf %lf"), center.X, center.Y, center.Z);
+			//UE_LOG(LogTemp, Log, TEXT("pivot  = %lf %lf %lf"), vv.X, vv.Y, vv.Z);
+
+			//engine->SetPivot(center, true, false);
+			//FVector vv = engine->GetPivotLocation();
+			//UE_LOG(LogTemp, Log, TEXT("pivot  = %lf %lf %lf"), vv.X, vv.Y, vv.Z);
+
+			//FTransform()
+			//UStaticMeshComponent* meshcmp; // = UStaticMeshComponent::AddLo
+			//mesh->
+			//Factory->
+
+			//	::Create(new_mtlif, NULL);
+			//UStaticMeshComponent* meshcmp = UStaticMeshComponent::Create Create(new_mtlif, NULL);
+			//UStaticMeshComponent* meshcmp = Cast<UStaticMeshComponent>(CreatedObject);
+			//UMeshComponent* meshcmp = Cast<UMeshComponent>(CreatedObject);
+			//meshcmp->AddLocalOffset(-center);
+			//meshcmp->pivot
+
+			//mesh->execTransformConst
+			//mesh->AddlocalRotation()
+			//UStaticMesh::execTransformConst(mesh, )
+
+			//mesh->execTransformConst()
+			//FFrame
+			// UAssetUserData::pivo
+			//UAssetUserData::execTransformConst(mesh, NULL, NULL);
+			//mesh->AddAssetUserData()
+
+
+			int lod = 0;
+			auto* mtlif = mesh->GetMaterial(lod);
 			while (mtlif != NULL) {
 				FString _mtl_name = mtlif->GetName();
 				// パラメータの復元
 				TArray<float> params = GetTextureParams(_mtl_name);
-				if (params[MATERIAL_PARAMS_SIZE - 1] == 0.0f) {
-					mtlif = mesh->GetMaterial(++i);
+				if (params[MATERIAL_PARAMS_KIND] == 0.0f) {
+					mtlif = mesh->GetMaterial(++lod);
 					continue;
 				}
 				// マテリアルの選択
 				UMaterialInterface* new_mtlif = SelectMaterialInterface(params);
 				if (new_mtlif == NULL) {
-					mtlif = mesh->GetMaterial(++i);
+					mtlif = mesh->GetMaterial(++lod);
 					continue;
 				}
 				// パラメータの適用
@@ -82,21 +234,29 @@ void UMyEditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedOb
 					material->SetScalarParameterValue(FName(TEXT("Bright")), params[7]);
 					material->SetScalarParameterValue(FName(TEXT("Light")), params[8]);
 					// Setup
-					mesh->SetMaterial(i, material);
+					mesh->SetMaterial(lod, material);
 				}
-				mtlif = mesh->GetMaterial(++i);
+				//mtlif->ClearGarbage();// ->InitDefaultMaterials();
+				mtlif = mesh->GetMaterial(++lod);
+			}
+			memcpy(CreatedObject, mesh, sizeof(UStaticMesh));
+		}
+
+		// Material or MaterialInstanceConstant
+		else if (CreatedObject->GetName().Find(FString(TEXT("MATERIAL_"))) == 0) {
+			if (_class_name.Equals(FString(TEXT("MaterialInstanceConstant")))) {
+				//UE_LOG(LogTemp, Log, TEXT("Material Instance = %s"), *(CreatedObject->GetName()));
+			}
+			else if (_class_name.Equals(FString(TEXT("Material")))) {
+				//UE_LOG(LogTemp, Log, TEXT("Material = %s"), *(CreatedObject->GetName()));
 			}
 		}
 
-		// Material
-		else if (CreatedObject->GetName().Find(FString(TEXT("MATERIAL_"))) == 0) {
-			if (_class_name.Equals(FString(TEXT("MaterialInstanceConstant")))) {
-				//UE_LOG(LogTemp, Log, TEXT("material = %s"), *(CreatedObject->GetName()));
-			}
-			else if (_class_name.Equals(FString(TEXT("Material")))) {
-				//UE_LOG(LogTemp, Log, TEXT("material = %s"), *(CreatedObject->GetName()));
-			}
+		// Texture2D
+		else if (_class_name.Equals(FString(TEXT("Texture2D")))) {
+			//UE_LOG(LogTemp, Log, TEXT("Texture2D = %s"), *(CreatedObject->GetName()));
 		}
+
 	}
 }
 
@@ -105,15 +265,21 @@ UMaterialInterface* UMyEditorSubsystem::SelectMaterialInterface(TArray<float> pa
 {
 	UMaterialInterface* mtlif = NULL;
 
-	int kind = (int)(params[23] + 0.5f);
+	int kind = (int)(params[MATERIAL_PARAMS_KIND] + 0.5f);
 	if (kind == 84 || kind == 71) {		// 'T' or 'G'
 		mtlif = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), NULL,
 			*FString(TEXT(MATERIAL_SHADER_ALPHA))));
 	}
 	else if (kind == 79) {				// 'O'
-		if (params[3] < 0.99f && params[4] < 0.01f) {	 // Transparent & Cutoff
-			mtlif = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), NULL,
-				*FString(TEXT(MATERIAL_SHADER_ALPHA))));
+		if (params[3] < 0.99f) {			// Transparent
+			if (params[4] < 0.01f) {			// Cutoff
+				mtlif = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), NULL,
+					*FString(TEXT(MATERIAL_SHADER_ALPHA))));
+			}
+			else {
+				mtlif = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), NULL,
+					*FString(TEXT(MATERIAL_SHADER_MASK))));
+			}
 		}
 		else {
 			mtlif = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), NULL,
