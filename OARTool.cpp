@@ -642,7 +642,6 @@ void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char
 
 Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) から指定された形式で SOLIDデータを生成する．
 
-@@aram format   ファイル形式（JBXL_3D_FORMAT_DAE, JBXL_3D_FORMAT_OBJ, JBXL_3D_FORMAT_SLT_A/B）
 @param fname    オブジェクト名（xmlファイル名）
 @param num      表示用の処理番号．
 @param useBrep  頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
