@@ -30,6 +30,7 @@ int main(int argc, char** argv)
     int   format  = JBXL_3D_FORMAT_DAE;
     int   engine  = JBXL_3D_ENGINE_UNITY;
 
+    bool  degeneracy = false;
     bool  useBrep = true;
 
     for (int i=1; i<argc; i++) {
@@ -47,6 +48,7 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "-r")) { engine = JBXL_3D_ENGINE_UE;}     // UE
         else if (!strcmp(argv[i], "-w")) { format = JBXL_3D_FORMAT_OBJ;}    // OBJデータを出力
         else if (!strcmp(argv[i], "-l")) { format = JBXL_3D_FORMAT_STL_A;}  // STLデータを出力
+        else if (!strcmp(argv[i], "-g")) { degeneracy = true;}
         else if (!strcmp(argv[i], "-d")) { DebugMode = ON;}
         else if (!strcmp(argv[i], "-h")) { oarconv_help(stdout); exit(0);}
         else if (!strcmp(argv[i], "-v")) { fprintf(stdout, " Version is %s\n", OARCONV_VERSION); exit(0);}
@@ -68,6 +70,7 @@ int main(int argc, char** argv)
     oar.GetDataInfo();  // -f オプション（個別ファイル指定）があるので，成否は無視．
     oar.MakeOutputFolder(format);
     oar.SetTerrainShift(xshift, yshift, zshift);
+    oar.SetDegeneracy(degeneracy);
 
     if (infile.buf!=NULL) {
         oar.objectsNum = 1;

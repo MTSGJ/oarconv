@@ -27,4 +27,3 @@
 //#define OARCONV_VERSION           "1.1.0" // 20150531 for hollow, phantom, texture....
 //#define OARCONV_VERSION           "1.0.0" // 20141014 first version
 
-

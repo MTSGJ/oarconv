@@ -46,7 +46,9 @@ void  OARTool::init(void)
     forUnity4       = false;    // for Unity v4.x
     forUnity5       = false;    // for Unity v5.x
     forUnity        = true;     // for Unity
+
     engine          = JBXL_3D_ENGINE_UNITY;
+    degeneracy      = false;
     terrainNum      = 0;
     terrain         = NULL;     // pointer to TerrainSetteings
 
@@ -829,12 +831,12 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     if (count>0) {
         // DAE
         if (format==JBXL_3D_FORMAT_DAE) {
-            if (count==1 && forUnity4) dae->addCenterObject();  // for Unity4.x
+            if (count==1 && forUnity4) dae->addCenterObject();          // for Unity4.x
             return (void*)dae;
         }
         //  OBJ
         else if (format==JBXL_3D_FORMAT_OBJ) {
-            Vector<double> offset = obj->execAffineTrans(true);     // 原点縮退
+            Vector<double> offset = obj->execAffineTrans(degeneracy);   // degeneracy: 原点縮退
             if (obj->affine_trans==NULL) obj->affine_trans = new AffineTrans<double>();
             obj->affine_trans->setShift(offset);
             return (void*)obj;
@@ -879,9 +881,9 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             int len = sizeof(float)*3;
             memset(offset, 0, len);
             if (obj->affine_trans!=NULL) {
-                offset[0] = (float)obj->affine_trans->shift.x;
-                offset[1] = (float)obj->affine_trans->shift.y;
-                offset[2] = (float)obj->affine_trans->shift.z;
+                offset[0] =  (float)obj->affine_trans->shift.x * 100.;
+                offset[1] = -(float)obj->affine_trans->shift.y * 100.;
+                offset[2] =  (float)obj->affine_trans->shift.z * 100.;
             }
             char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
             del_file_extension_Buffer(&obj_fname);
