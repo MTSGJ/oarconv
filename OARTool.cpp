@@ -161,12 +161,11 @@ pathTEX : テクスチャ出力用のパス
 pathPTM : ファントムデータ出力用のパス
 pathAST : 追加のアセットデータ用のパス
 
-@param format  出力データフォーマット（JBXL_3D_FORMAT_DAE, JBXL_3D_FORMAT_OBJ, JBXL_3D_FORMAT_STL_A/B）
 @param oardir  読み込むOARファイルのトップディレクトリ
 @param outdir  データ書き出し用ディレクトリ
 @param astdir  アセットデータの追加ディレクトリ（OARに含まれていないアッセットデータ用）
 */
-void  OARTool::SetPathInfo(int format, int engine, const char* oardir, const char* outdir, const char* astdir)
+void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* astdir)
 {
     clear_path();
 
@@ -193,13 +192,20 @@ void  OARTool::SetPathInfo(int format, int engine, const char* oardir, const cha
         #endif
     }
     else {
+        // DAE
         if (format==JBXL_3D_FORMAT_DAE) {
             pathOUT = make_Buffer_bystr(OART_DEFAULT_DAE_DIR);
         }
+        // OBJ
         else if (format==JBXL_3D_FORMAT_OBJ) {
             pathOUT = make_Buffer_bystr(OART_DEFAULT_OBJ_DIR);
         }
-        else {  // STL
+        // FBX
+        else if (format==JBXL_3D_FORMAT_FBX) {
+            pathOUT = make_Buffer_bystr(OART_DEFAULT_FBX_DIR);
+        }
+        // STL
+        else { 
             pathOUT = make_Buffer_bystr(OART_DEFAULT_STL_DIR);
         }
     }
@@ -291,6 +297,7 @@ objectsFiles : Files list in objects
 bool  OARTool::GetDataInfo()
 {
     clear_list();
+    PRINT_MESG("OARTool::GetDatanInfo: read OAR files from %s\n", pathOAR.buf);
     //
     // archive.xml
     Buffer arc_path = dup_Buffer(pathOAR);
@@ -315,7 +322,7 @@ bool  OARTool::GetDataInfo()
         del_xml(&arc_xml);
     }
     else {
-        DEBUG_MODE PRINT_MESG("OARTool::GetDatanInfo: WARNING: not found archive  file! [%sarchive.xml]\n", pathOAR.buf);
+        PRINT_MESG("OARTool::GetDatanInfo: ERROR: not found archive file! [%sarchive.xml]\n", pathOAR.buf);
         return false;
     }
 
@@ -472,7 +479,7 @@ bool  OARTool::GetDataInfo()
 }
 
 
-void  OARTool::MakeOutputFolder(int format)
+void  OARTool::MakeOutputFolder(void)
 {
     if (pathOUT.buf!=NULL) mkdir((char*)pathOUT.buf, 0700);
     if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
@@ -504,6 +511,7 @@ void  OARTool::ReadTerrainData(void)
     terrain = (TerrainTool*)malloc(terrainNum*sizeof(TerrainTool));
     if (terrain==NULL) return;
 
+
     int count  = 0;
     tList* lps = settingsFiles;
     tList* lpt = terrainsFiles;
@@ -511,6 +519,9 @@ void  OARTool::ReadTerrainData(void)
     if (lps!=NULL) {
         while (count<terrainNum && lps!=NULL && lpt!=NULL) {
             terrain[count] = TerrainTool((char*)lps->ldat.key.buf, xsize, ysize);
+            terrain[count].SetEngine(engine);
+            terrain[count].SetFormat(format);
+            terrain[count].SetDegeneracy(degeneracy);
             terrain[count].ReadSettings((char*)lps->ldat.val.buf);
             terrain[count].ReadHeightData((char*)lpt->ldat.val.buf);
             lps = lps->next;
@@ -521,6 +532,9 @@ void  OARTool::ReadTerrainData(void)
     else {
         while (count<terrainNum && lpt!=NULL) {
             terrain[count] = TerrainTool((char*)lpt->ldat.key.buf, xsize, ysize);
+            terrain[count].SetEngine(engine);
+            terrain[count].SetFormat(format);
+            terrain[count].SetDegeneracy(degeneracy);
             terrain[count].ReadHeightData((char*)lpt->ldat.val.buf);
             lpt = lpt->next;
             count++;
@@ -535,15 +549,15 @@ void  OARTool::ReadTerrainData(void)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // for DAE/OBJ/STL
 
-int  OARTool::GenerateTerrainDataFile(int format)
+int  OARTool::GenerateTerrainDataFile(void)
 {
     if (terrainNum==0) return 0;
 
     PRINT_MESG("GenerateTerrainSolid: generating terrain datafile file (%d)\n", format);
     int num = 0;
     while (num<terrainNum) {
-        terrain[num].GenerateTexture(format, assetsFiles, (char*)pathTEX.buf);
-        terrain[num].GenerateTerrain(format, engine, (char*)pathOUT.buf, terrainShift);
+        terrain[num].GenerateTexture(assetsFiles, (char*)pathTEX.buf);
+        terrain[num].GenerateTerrain((char*)pathOUT.buf, terrainShift);
         num++;
 #ifdef WIN32
         DisPatcher(); 
@@ -553,7 +567,7 @@ int  OARTool::GenerateTerrainDataFile(int format)
 }
 
 
-int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, bool useBrep, char* command)
+int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, char* command)
 {
     tList* lp = objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
@@ -565,9 +579,9 @@ int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, boo
         num++;
         if (num>=startnum && num<=stopnum) {
             char* file_path = (char*)lp->ldat.val.buf;
-            void* solid = generateSolidData(format, file_path, num, useBrep, command);
-            outputSolidData(format, get_file_name(file_path), solid);
-            freeSolidData(format, solid);
+            void* solid = generateSolidData(file_path, num, useBrep, command);
+            outputSolidData(get_file_name(file_path), solid);
+            freeSolidData(solid);
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
@@ -582,19 +596,19 @@ int  OARTool::GenerateObjectsDataFile(int format, int startnum, int stopnum, boo
 }
 
 
-void  OARTool::GenerateSelectedDataFile(int format, char* file_path, bool useBrep, char* command)
+void  OARTool::GenerateSelectedDataFile(char* file_path, bool useBrep, char* command)
 {
     if (file_path==NULL) return;
 
-    void* solid =generateSolidData(format, file_path, 1, useBrep, command);
-    outputSolidData(format, get_file_name(file_path), solid);
-    freeSolidData(format, solid);
+    void* solid =generateSolidData(file_path, 1, useBrep, command);
+    outputSolidData(get_file_name(file_path), solid);
+    freeSolidData(solid);
 
     return;
 }
 
 
-int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep, char* command)
+int  OARTool::GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep, char* command)
 {
     tList* lp = objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
@@ -604,9 +618,9 @@ int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, boo
     while (lp!=NULL) {
         if (num==objlist[cnt]) {
             char* file_path = (char*)lp->ldat.val.buf;
-            void* solid =generateSolidData(format, file_path, num + 1, useBrep, command);
-            outputSolidData(format, file_path, solid);
-            freeSolidData(format, solid);
+            void* solid = generateSolidData(file_path, num + 1, useBrep, command);
+            outputSolidData(file_path, solid);
+            freeSolidData(solid);
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
@@ -624,7 +638,7 @@ int  OARTool::GenerateSelectedDataFile(int format, int objnum, int* objlist, boo
 
 
 /**
-void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
+void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char* command)
 
 Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) から指定された形式で SOLIDデータを生成する．
 
@@ -635,7 +649,7 @@ Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１�
 @param command  JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
 @retval 生成されたデータへのポインタ．それぞれのデータ型でキャストして使用する．
 */
-void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
+void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char* command)
 {
     if (fname==NULL) return NULL;
     PRINT_MESG("[%d/%d] GenerateSolid: generating %s\n", num, objectsNum, fname);
@@ -663,16 +677,24 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     OBJData*       obj = NULL;
     BrepSolidList* stl = NULL;
 
+    // DAE
     if (format==JBXL_3D_FORMAT_DAE) {
         dae = new ColladaXML();
         dae->forUnity5 = forUnity5;
         dae->forUnity  = forUnity;
         dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
     }
+    // OBJ
     else if (format==JBXL_3D_FORMAT_OBJ) {
         obj = new OBJData(); 
         obj->setEngine(engine);
     }
+    // FBX
+    else if (format==JBXL_3D_FORMAT_FBX) {
+        obj = NULL;
+        //obj->setEngine(engine);
+    }
+    // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         useBrep = true;
         command = NULL;
@@ -706,15 +728,22 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                         facet = facet->next;
                     }
                 }
-                //
+                // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
                     dae->addObject(mesh, false);
                 }
+                // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     obj->phantom_out = true;
                     obj->addObject(mesh, false);
                 }
+                // FBX
+                else if (format==JBXL_3D_FORMAT_FBX) {
+                    //obj->phantom_out = true;
+                    //obj->addObject(mesh, false);
+                }
+                // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
                     stl->addObject(mesh);
                 }
@@ -730,7 +759,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             //
             shapes[s].affineTrans.addShift(-xsize/2.0f, -ysize/2.0f, -waterHeight);
             MeshObjectData* mesh = treeTool.GenerateGrass(shapes[s], terrain);  // 1個の Terrainのみサポート．範囲チェックあり
-            if (mesh!=NULL && mesh->affine_trans!=NULL) mesh->affine_trans->addShift(terrainShift);
+            if (mesh!=NULL && mesh->affineTrans!=NULL) mesh->affineTrans->addShift(terrainShift);
             //
             if (mesh!=NULL) {
                 // STLの場合は不必要
@@ -755,6 +784,11 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     obj->phantom_out = true;
                     obj->addObject(mesh, false);
+                }
+                // FBX
+                else if (format==JBXL_3D_FORMAT_FBX) {
+                    //obj->phantom_out = true;
+                    //obj->addObject(mesh, false);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -815,6 +849,11 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                     if (collider) obj->phantom_out = false;
                     obj->addObject(mesh, collider);
                 }
+                // FBX
+                else if (format==JBXL_3D_FORMAT_FBX) {
+                    //if (collider) obj->phantom_out = false;
+                    //obj->addObject(mesh, collider);
+                }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
                     stl->addObject(mesh);
@@ -838,9 +877,16 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         //  OBJ
         else if (format==JBXL_3D_FORMAT_OBJ) {
             Vector<double> offset = obj->execAffineTrans(degeneracy);   // degeneracy: 原点縮退
-            if (obj->affine_trans==NULL) obj->affine_trans = new AffineTrans<double>();
-            obj->affine_trans->setShift(offset);
+            if (obj->affineTrans==NULL) obj->affineTrans = new AffineTrans<double>();
+            obj->affineTrans->setShift(offset);
             return (void*)obj;
+        }
+        //  FBX
+        else if (format==JBXL_3D_FORMAT_FBX) {
+            //Vector<double> offset = obj->execAffineTrans(degeneracy);   // degeneracy: 原点縮退
+            //if (obj->affineTrans==NULL) obj->affineTrans = new AffineTrans<double>();
+            //obj->affineTrans->setShift(offset);
+            return NULL;
         }
         // STL
         else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -852,12 +898,12 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
 
 
 /**
-void  OARTool::outputSolidData(int format, const char* fname, void* solid)
+void  OARTool::outputSolidData(const char* fname, void* solid)
 
 それぞれの形式の SOLIDデータからファイルを出力する．
 出力先は 大域変数 pathOUT, pathPTM で指定されたディレクトリ．
 */
-void  OARTool::outputSolidData(int format, const char* fname, void* solid)
+void  OARTool::outputSolidData(const char* fname, void* solid)
 {
     if (solid==NULL || fname==NULL) return;
     //
@@ -878,14 +924,14 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         Buffer obj_fname = make_Buffer_str(fname);
         // UE
         if (obj->engine==JBXL_3D_ENGINE_UE) {
-            if (degeneracy) {
+            if (degeneracy) {   // 縮退状態
                 float offset[3];
                 int len = sizeof(float) * 3;
                 memset(offset, 0, len);
-                if (obj->affine_trans != NULL) {
-                    offset[0] = (float)(obj->affine_trans->shift.x * 100.);    // 100 is Unreal Unit
-                    offset[1] = -(float)(obj->affine_trans->shift.y * 100.);
-                    offset[2] = (float)(obj->affine_trans->shift.z * 100.);
+                if (obj->affineTrans != NULL) {
+                    offset[0] =  (float)(obj->affineTrans->shift.x * 100.);    // 100 is Unreal Unit
+                    offset[1] = -(float)(obj->affineTrans->shift.y * 100.);
+                    offset[2] =  (float)(obj->affineTrans->shift.z * 100.);
                 }
                 char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
                 del_file_extension_Buffer(&obj_fname);
@@ -904,6 +950,10 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         obj->outputFile((char*)obj_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
         free_Buffer(&obj_fname);
     }
+    // FBX
+    else if (format==JBXL_3D_FORMAT_FBX) {
+        //
+    }
     // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         bool ascii = true;
@@ -918,7 +968,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 }
 
 
-void  OARTool::freeSolidData(int format, void* solid)
+void  OARTool::freeSolidData(void* solid)
 {
     if (solid==NULL) return;
 
@@ -931,6 +981,11 @@ void  OARTool::freeSolidData(int format, void* solid)
     else if (format==JBXL_3D_FORMAT_OBJ) {
         OBJData* obj = (OBJData*)solid;
         freeOBJData(obj);
+    }
+    // FBX
+    else if (format==JBXL_3D_FORMAT_FBX) {
+        //OBJData* obj = (OBJData*)solid;
+        //freeOBJData(obj);
     }
     // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {

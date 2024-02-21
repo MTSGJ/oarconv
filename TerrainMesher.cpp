@@ -142,7 +142,7 @@ void  TerrainMesh::GenerateMeshData(Vector<float> shift, bool autoseabed)
         TERRAIN_VECTOR_ARRAY topSeabed;
         topSeabed.push_back(top);
         for (int i=1; i<xs-1; i++) {
-            top.x    = (float)(i-1);
+            top.x = (float)(i-1);
             topSeabed.push_back(top);
         }
         top.x = (float)(oxs-1);

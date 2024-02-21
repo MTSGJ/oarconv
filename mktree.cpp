@@ -49,7 +49,10 @@ int main(int argc, char** argv)
     //////////////////////////////////////////////////////////////////////////////////////////////
     // main process
     OARTool oar;
-    oar.SetPathInfo(format, JBXL_3D_ENGINE_UNITY, (char*)inpdir.buf, (char*)outdir.buf, (char*)adddir.buf);
+    oar.SetEngine(JBXL_3D_ENGINE_UNITY);
+    oar.SetFormat(format);
+    //oar.SetDegeneracy(degeneracy);
+    oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)adddir.buf);
     oar.GetDataInfo();  // OARファイルから情報を得る．
 //  oar.MakeOutputFolder(makedir);
 //  oar.SetShift(xshift, yshift, zshift);

@@ -47,16 +47,19 @@ struct TerrainTexWeight
 class TerrainTool
 {
 public:
-    Buffer trnName;         // Terrain name
+    Buffer terrainName;     // Terrain name
 
     int   xsize;            // Region X size
     int   ysize;            // Region Y size
-    int   rgnum;            // Region Number
+    int   region_num;       // Region Number
     float scale;            // Texture Scale
+
+    int   engine;
+    int   format;
+    bool  degeneracy;
 
     MSGraph<float> r32;     // r32 data
 
-//  Buffer textureFile;     // Texture file name;
     Buffer texture[4];
     Buffer defaultTexture[4];
 
@@ -85,11 +88,15 @@ public:
     float  water_height(void)   { return waterHeight;}
 
 public:
+    void   SetEngine(int e) { engine = e;}
+    void   SetFormat(int f) { format = f;}
+    void   SetDegeneracy(bool b) { degeneracy = b;}
+
     void   ReadSettings(const char* path);
     void   ReadHeightData(const char* path);
 
-    void   GenerateTexture(int format, tList* assets, const char* outpath);
-    void   GenerateTerrain(int format, int engine, const char* outpath, Vector<double> offset);
+    void   GenerateTexture(tList* assets, const char* outpath);
+    void   GenerateTerrain(const char* outpath, Vector<double> offset);
 
     TerrainTexWeight  GetTextureWeight(int x, int y);
 
@@ -109,3 +116,4 @@ int    GetScalingPixel(MSGraph<uByte>* vp, float scale, float x, float y, int co
 }
 
 #endif
+

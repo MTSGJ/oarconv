@@ -11,9 +11,9 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "[-i OAR_directory] [-o output_directory] [-a adding_assets_directories_that_separated_by_':'] [-f object_xml_file]\n");
     fprintf(fp, "         [-t terrain_texture_scale] [-c external_convert_command_of_jp2]\n");
     fprintf(fp, "         [-s start_no.] [-e end_no.]\n");
-    fprintf(fp, "         [-w | -l] [-r] [-g]\n");
     fprintf(fp, "         [-x shift_of_x_direction] [-y shift_of_y_direction] [-z shift_of_z_direction]\n");
-    fprintf(fp, "         [-b] [-d] [-v] [-h]\n");
+    fprintf(fp, "         [--dae | --obj | --stl] [--unity | --ue] [-g]\n");
+    fprintf(fp, "         [-d] [-v] [-h | --help]\n");
     fprintf(fp, "\n");
 
     fprintf(fp, "   -i : specify OAR directory. default is %s\n", OART_DEFAULT_INP_DIR);
@@ -27,15 +27,20 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   -x : specify shift of x direction of all objects. default is 0.0\n");
     fprintf(fp, "   -y : specify shift of y direction of all objects. default is 0.0\n");
     fprintf(fp, "   -z : specify shift of z direction of all objects. default is 0.0\n");
-    fprintf(fp, "   -w : output Wavefront OBJ file(s) using BREP.\n");
-    fprintf(fp, "   -l : output STL file(s) using BREP.\n");
-    fprintf(fp, "   -r : for Unreal Engine.\n");
-    fprintf(fp, "   -g : shrinkage to the origin with OBJ file for UE.\n");
+
+    fprintf(fp, "   --dae : output Collada DAE file(s).\n");
+    fprintf(fp, "   --obj : output Wavefront OBJ file(s).\n");
+    fprintf(fp, "   --stl : output STL ASCII file(s).\n");
+    fprintf(fp, "   --unity : for Unity Engine.\n");
+    fprintf(fp, "   --ue : for Unreal Engine.\n");
+    fprintf(fp, "   --dg : shrinkage to the origin with OBJ file for UE.\n");
+
     fprintf(fp, "   -d : debug mode. display debug information. \n");
     fprintf(fp, "   -v : display version information. \n");
     fprintf(fp, "   -h : display this help messages. \n");
+    fprintf(fp, "   --help : display this help messages. \n");
     fprintf(fp, "\n");
-    fprintf(fp, " ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets -d\n");
+    fprintf(fp, " ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --obj --ue --dg -d\n");
     fprintf(fp, "\n");
 
     fflush(fp);

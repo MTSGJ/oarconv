@@ -101,10 +101,10 @@ public:
     char*  get_outpath(int output);
 
 public:
-    void   SetPathInfo(int format, int engine, const char* oardir, const char* outdir, const char* astdir);
+    void   SetPathInfo(const char* oardir, const char* outdir, const char* astdir);
     void   ChangePathInfo(const char* oardir, const char* outdir, const char* astdir);
     bool   GetDataInfo(void);
-    void   MakeOutputFolder(int format);
+    void   MakeOutputFolder(void);
 
     void   SetEngine(int e);
     void   SetDegeneracy(bool b) { degeneracy = b; }
@@ -116,14 +116,14 @@ public:
     void   ReadTerrainData(void);
 
     // DAE/OBJ/STL
-    int    GenerateTerrainDataFile (int format);
-    int    GenerateObjectsDataFile (int format, int startnum=1, int stopnum=-1, bool useBrep=true, char* command=NULL);
-    void   GenerateSelectedDataFile(int format, char* fname, bool useBrep=true, char* command=NULL);
-    int    GenerateSelectedDataFile(int format, int objnum, int* objlist, bool useBrep=true, char* command=NULL);
+    int    GenerateTerrainDataFile (void);
+    int    GenerateObjectsDataFile (int startnum=1, int stopnum=-1, bool useBrep=true, char* command=NULL);
+    void   GenerateSelectedDataFile(char* fname, bool useBrep=true, char* command=NULL);
+    int    GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep=true, char* command=NULL);
 
-    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, char* command=NULL);
-    void   outputSolidData(int format, const char* fname, void* solid);
-    void   freeSolidData(int format, void* solid);
+    void*  generateSolidData(const char* fname, int num=1, bool useBrep=true, char* command=NULL);
+    void   outputSolidData(const char* fname, void* solid);
+    void   freeSolidData(void* solid);
 
     void   ConvertTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL, const char* command=NULL);
 

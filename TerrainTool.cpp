@@ -17,11 +17,11 @@ using namespace jbxl;
 
 void  TerrainTool::init(char* name, int xs, int ys)
 {
-    trnName = make_Buffer_bystr(name);
+    terrainName = make_Buffer_bystr(name);
 
     xsize = xs;
     ysize = ys;
-    rgnum = xs/256;
+    region_num = xs/256;
     scale = (float)TRNT_DEFAULT_TEX_SCALE;
 
     r32.init();
@@ -50,7 +50,7 @@ void  TerrainTool::free(void)
 {
     r32.free();
 
-    free_Buffer(&trnName);
+    free_Buffer(&terrainName);
 
     for (int i=0; i<4; i++) {
         free_Buffer(&texture[i]);
@@ -185,7 +185,7 @@ MSGraph<uByte>  TerrainTool::GenerateDioramaTexture(MSGraph<uByte>* vp, int mode
     MSGraph<uByte> msg;
     if (mode<=0) return msg;
 
-    int lsize = TRNT_TEXTURE_SIZE*rgnum;
+    int lsize = TRNT_TEXTURE_SIZE*region_num;
 
     //
     if (mode>4) {
@@ -247,7 +247,7 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
 {
     MSGraph<uByte> msg;
 
-    int lsize = TRNT_TEXTURE_SIZE*rgnum;
+    int lsize = TRNT_TEXTURE_SIZE*region_num;
     msg.getm(lsize, lsize, 3);
     if (msg.isNull()) return msg;
 
@@ -279,12 +279,11 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
             }
         }
     }
-    //
     return msg;
 }
 
 
-void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpath)
+void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
 {
     if (format!=JBXL_3D_FORMAT_DAE && format!=JBXL_3D_FORMAT_OBJ) return; 
     if (assets==NULL) return;
@@ -323,14 +322,14 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
 
     //
     // Textureファイルの生成（256x256以上のTerrainは分割される）
-    for (int rj=0; rj<rgnum; rj++) {
-        int yy = (rgnum-rj-1)*TRNT_TEXTURE_SIZE*msg.xs;
-        for (int ri=0; ri<rgnum; ri++) {
+    for (int rj=0; rj<region_num; rj++) {
+        int yy = (region_num-rj-1)*TRNT_TEXTURE_SIZE*msg.xs;
+        for (int ri=0; ri<region_num; ri++) {
             int xx = ri*TRNT_TEXTURE_SIZE + yy;
 
             DEBUG_MODE {
-                if (rgnum>1) PRINT_MESG("TerrainTool::GenerateTexture: generating sub region texture. %02d/%d\n", count, rgnum*rgnum-1);
-                else         PRINT_MESG("TerrainTool::GenerateTexture: generating region texture file.\n");
+                if (region_num>1) PRINT_MESG("TerrainTool::GenerateTexture: generating sub region texture. %02d/%d\n", count, region_num*region_num-1);
+                else              PRINT_MESG("TerrainTool::GenerateTexture: generating region texture file.\n");
             }
 #ifdef WIN32
             DisPatcher();   // Windows用ディスパッチャー
@@ -351,14 +350,11 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
             }
             region.color = GRAPH_COLOR_RGB;
 
-            Buffer trrntex = dup_Buffer(trnName);
-            if (rgnum>1) {
+            Buffer trrntex = dup_Buffer(terrainName);
+            if (region_num>1) {
                 snprintf(num, L_OCT-1, "_%02d", count);
                 cat_s2Buffer(num, &trrntex);
             }
-            rewrite_sBuffer_str(&trrntex, "?", "_");
-            rewrite_sBuffer_str(&trrntex, " ", "_");
-
             Buffer texfile = make_Buffer_bystr(outpath);
 
             MaterialParam param;
@@ -394,7 +390,7 @@ void  TerrainTool::GenerateTexture(int format, tList* assets, const char* outpat
 //
 // for DAE/OBJ/STL
 //
-void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, Vector<double> offset)
+void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
 {
     if (r32.isNull()) return;
 
@@ -408,33 +404,29 @@ void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, 
 
     //
     DEBUG_MODE PRINT_MESG("TerrainTool::GenerateTerrain: generating sub region mesh.\n");
-    for (int rj=0; rj<rgnum; rj++) {
+    for (int rj=0; rj<region_num; rj++) {
         top = bottom = false;
         int jsize = 257;                // 境界用
         if (rj==0) top = true;
-        if (rj==rgnum-1) {
+        if (rj==region_num-1) {
             bottom = true;
             jsize = 256;
         }
         int yy = rj*256*xsize;
         //
-        for (int ri=0; ri<rgnum; ri++) {
+        for (int ri=0; ri<region_num; ri++) {
             left = right = false;
             int isize = 257;            // 境界用
             if (ri==0) left = true;
-            if (ri==rgnum-1) {
+            if (ri==region_num-1) {
                 right = true;
                 isize = 256;
             }
             int xx = ri*256 + yy;
 
-            DEBUG_MODE if (rgnum>1) PRINT_MESG("TerrainTool::GenerateTerrain: generating sub region mesh. %02d/%d\n", count, rgnum*rgnum-1);
-            float shiftx = ri * 256.0f - xsize / 2.0f + (float)offset.x;
-            float shifty = rj * 256.0f - ysize / 2.0f + (float)offset.y;
-            float shiftz = -waterHeight + (float)offset.z;
-            Vector<float> shift = Vector<float>(shiftx, shifty, shiftz);
-            MSGraph<float> region;
+            if (region_num>1) PRINT_MESG("TerrainTool::GenerateTerrain: generating sub region mesh. %02d/%d\n", count, region_num*region_num-1);
 
+            MSGraph<float> region;
             region.getm(isize, jsize);
             for (int j=0; j<jsize; j++) {
                 int jj = j*isize;
@@ -443,16 +435,23 @@ void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, 
                     region.gp[jj+i] = r32.gp[ww+i];
                 }
             }
-            ContourBaseData* facetdata = ContourBaseDataFromTerrainImage(region, shift, left, right, top, bottom, false);
+
+            Vector<float>  shift = Vector<float>(ri*256.0f + (float)offset.x, rj*256.0f + (float)offset.y, (float)offset.z);
+            Vector<float> center = Vector<float>(-xsize/2.0f, -ysize/2.0f, -waterHeight);
+            ContourBaseData* facetdata;
+            if (format==JBXL_3D_FORMAT_OBJ && engine==JBXL_3D_ENGINE_UE && degeneracy) {   // 縮退状態
+                facetdata = ContourBaseDataFromTerrainImage(region, center, left, right, top, bottom, false);
+            }
+            else {
+                facetdata = ContourBaseDataFromTerrainImage(region, center + shift, left, right, top, bottom, false);
+            }
 
             //
-            Buffer objname = dup_Buffer(trnName);
-            if (rgnum>1) {
+            Buffer objname = dup_Buffer(terrainName);
+            if (region_num>1) {
                 snprintf(num, L_OCT-1, "_%02d", count);
                 cat_s2Buffer(num, &objname);
             }
-            rewrite_sBuffer_str(&objname, "?", "_");
-            rewrite_sBuffer_str(&objname, " ", "_");
 
             Buffer path = make_Buffer_bystr(outpath);
             Buffer texfile = dup_Buffer(objname);
@@ -476,6 +475,7 @@ void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, 
             OBJData*       obj = NULL;
             BrepSolidList* stl = NULL;
 
+            // DAE
             if (format==JBXL_3D_FORMAT_DAE) {
                 dae = new ColladaXML();
                 dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
@@ -483,15 +483,36 @@ void  TerrainTool::GenerateTerrain(int format, int engine, const char* outpath, 
                 dae->outputFile((char*)objname.buf, (char*)path.buf, XML_INDENT_FORMAT);
                 freeColladaXML(dae);
             }
+            // OBJ
             else if (format==JBXL_3D_FORMAT_OBJ) {
                 obj = new OBJData();
-                //obj->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
                 obj->setEngine(engine);
                 obj->addObject(data, true);
-                if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
+                //
+                if (engine==JBXL_3D_ENGINE_UE) {
+                    ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
+                    if (degeneracy) {   // 縮退状態
+                        float position[3];
+                        int len = sizeof(float) * 3;
+                        memset(position, 0, len);
+                        position[0] =  (float)(shift.x*100.0);    // 100 is Unreal Unit
+                        position[1] = -(float)(shift.y*100.0);
+                        position[2] =  (float)(shift.z*100.0);
+                        char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
+                        del_file_extension_Buffer(&objname);
+                        cat_s2Buffer("_", &objname);
+                        cat_s2Buffer(params, &objname);
+                        cat_s2Buffer(".", &objname);
+                    }
+                }
                 obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
             }
+            // FBX
+            else if (format==JBXL_3D_FORMAT_FBX) {
+                // No Implement
+            }
+            // STL
             else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
                 bool ascii = true;
                 if (format==JBXL_3D_FORMAT_STL_B) ascii = false;
