@@ -166,7 +166,10 @@ void    CBREPView::SetState()
 //	D3DXMatrixLookAtLH(&matView, &D3DXVECTOR3(0,0,1.5*msize*sizeFac), &D3DXVECTOR3(0,0,0), &D3DXVECTOR3(0,1,0));
 //	D3DXMatrixLookAtLH(&matView, &D3DXVECTOR3(0,-1.5f*msize*sizeFac,0), &D3DXVECTOR3(0,0,0), &D3DXVECTOR3(0,0,-1));
 //	lpD3DDevice->SetTransform(D3DTS_VIEW, &matView);
-	if (mWheelAc==0.0) mWheelAc = -1.5*msize*sizeFac;
+	if (mWheelAc == 0.0) {
+		mWheelNotch = -1.0;
+		mWheelAc = -1.5 * msize * sizeFac;
+	}
 	ExMouseWheel();
 
 	// 頂点フォーマット設定
@@ -192,10 +195,11 @@ void    CBREPView::ExecRender()
 {
 	HRESULT hr;
 
-	// 画面のクリア
-//	hr = lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,96), 1.0f, 0);
-//	hr = lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(10,10,120), 1.0f, 0);
-	hr = lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(30,30,200), 1.0f, 0);
+	// 画面のクリア・背景色
+//	hr = lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 96), 1.0f, 0);
+//	hr = lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(10, 10, 120), 1.0f, 0);
+//	hr = lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(30, 30, 200), 1.0f, 0);
+	hr = lpD3DDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(30, 30, 240), 1.0f, 0);
 	if (FAILED(hr)) { DEBUG_MODE PRINT_MESG("CBREPView::ExecRender: Failed to clear window\n"); return;}
 
 	// シーンの描画開始

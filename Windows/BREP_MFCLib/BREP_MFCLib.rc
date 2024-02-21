@@ -32,10 +32,10 @@ BEGIN
     BUTTON      ID_SOLID
     SEPARATOR
     BUTTON      ID_INFO
-    SEPARATOR
-    BUTTON      ID_SAVE_D
-    SEPARATOR
-    BUTTON      ID_SAVE_S
+//    SEPARATOR
+//    BUTTON      ID_SAVE_D
+//    SEPARATOR
+//    BUTTON      ID_SAVE_S
 END
 
 

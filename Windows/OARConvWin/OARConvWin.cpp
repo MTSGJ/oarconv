@@ -695,25 +695,18 @@ int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
 }
 
 
-void  COARConvWinApp::convertOneData(int index, int format)
+void  COARConvWinApp::convertOneData(int index)
 {
-FILE* fp = fopen("AAAAAA.txt", "a");
-//	fprintf(fp, "zzzzzzzzzzzzz %s   %d  %d\n", (char*)comDecomp.buf, oarTool.format, oarTool.engine);
-
-fprintf(fp, "zzzzzzzzzzzzzzzzzzzzzzzz\n");
-fclose(fp);
-
 	isConverting = true;
 	updateMenuBar();
 	oarTool.MakeOutputFolder();
-	if (format==JBXL_3D_FORMAT_NONE) format = appParam.outputFormat;
 	//
-	int num = convertOneFile(index, format);
+	int num = convertOneFile(index);
 	if (num>=0) {
-		CString format;
+		CString strformat;
 		CString mesg;
-		format.LoadString(IDS_STR_CONVERT_NUM);
-		mesg.Format(format, num);
+		strformat.LoadString(IDS_STR_CONVERT_NUM);
+		mesg.Format(strformat, num);
 		MessageBoxDLG(IDS_STR_CNFRM, mesg, MB_OK, m_pMainWnd);
 	}
 	else {
@@ -728,16 +721,15 @@ fclose(fp);
 
 
 //
-int   COARConvWinApp::convertOneFile(int index, int format)
+int   COARConvWinApp::convertOneFile(int index)
 {
 	DebugMode = appParam.debugMode;
-	oarTool.SetFormat(format);
 	oarTool.SetTerrainShift(appParam.xShift, appParam.yShift, appParam.zShift);
 
 	//////////////////////////////////////////////////////////////////////////////
 	// Convert
 	int num = oarTool.GenerateObjectsDataFile(index, index, true, (char*)comDecomp.buf);
-	
+
 	return num;
 }
 
@@ -831,22 +823,22 @@ void  COARConvWinApp::updateStatusBar(CString path)
 	if (pMainFrame==NULL) return;
 
     CString prefix;
-    if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T("DAE  |  ");
+    if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T(" DAE  |  ");
 	else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
-		if (!appParam.degeneracy) prefix = _T("OBJ  |  ");
-		else                      prefix = _T("OBJ: NO_OFFSET  |  ");
+		if (!appParam.degeneracy) prefix = _T(" OBJ  |  ");
+		else                      prefix = _T(" OBJ: NO_OFFSET  |  ");
 	}
 	else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
-		if (!appParam.degeneracy) prefix = _T("FBX | ");
-		else                      prefix = _T("FBX: NO_OFFSET  |  ");
+		if (!appParam.degeneracy) prefix = _T(" BX | ");
+		else                      prefix = _T(" FBX: NO_OFFSET  |  ");
 	}
-	else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("STL  |  ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("STL  |  ");
-	else                                                    prefix = _T("NONE  |  ");
-
+	else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T(" STL  |  ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T(" STL  |  ");
+	else                                                    prefix = _T(" NONE  |  ");
+	//
     if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
     else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  |  ");
-
+	//
 	CString mesg = prefix + _T("OAR-Path: ") + path;
 	pMainFrame->SetStausBarText(mesg);
 

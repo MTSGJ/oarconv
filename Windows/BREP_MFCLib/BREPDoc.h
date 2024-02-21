@@ -43,8 +43,8 @@ public:
 public:
 	void	 SolidRepair(int method);
 	void	 ContoursRepair(int method, bool mode);
-	void	 SaveFile(int format);
-	void	 ShowSolidInfo();
+	void	 SaveFile(void);
+	void	 ShowSolidInfo(void);
 
 public:
 	int  DataNum;

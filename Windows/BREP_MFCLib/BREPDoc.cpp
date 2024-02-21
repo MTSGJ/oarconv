@@ -256,10 +256,10 @@ void  CBREPDoc::ContoursRepair(int method, bool mode)
 }
 
 
-void CBREPDoc::SaveFile(int format) 
+void CBREPDoc::SaveFile() 
 {
 	if (WinApp!=NULL && DataNum>=0) {
-		WinApp->convertOneData(DataNum, format);
+		WinApp->convertOneData(DataNum);
 	}
 
 /*

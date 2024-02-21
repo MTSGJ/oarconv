@@ -78,8 +78,8 @@ public:
 	void     convertSelectedData (int selectedNums, int* selectedObjs);
 	int      convertSelectedFiles(int selectedNums, int* selectedObjs);
 
-	void     convertOneData(int index, int format);
-	int      convertOneFile(int index, int format);
+	void     convertOneData(int index);
+	int      convertOneFile(int index);
 
 public:
 	void     solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num);

@@ -57,10 +57,10 @@ protected:
 	afx_msg void OnWired();
 	afx_msg void OnSolid();
 	afx_msg void OnSolidInfo();
-	afx_msg void OnSaveD();
-	afx_msg void OnSaveS();
-	afx_msg void OnRepairNext();
-	afx_msg void OnRepairNear();
+	//afx_msg void OnSaveD();
+	//afx_msg void OnSaveS();
+	//afx_msg void OnRepairNext();
+	//afx_msg void OnRepairNear();
 //	afx_msg void OnRepairCancel();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

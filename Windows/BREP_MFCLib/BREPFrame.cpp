@@ -31,11 +31,11 @@ BEGIN_MESSAGE_MAP(CBREPFrame, CExFrame)
 	ON_COMMAND(ID_SOLID, OnSolid)
 	ON_WM_CREATE()
 	ON_COMMAND(ID_ROTATION, OnRotation)
-	ON_COMMAND(ID_REPAIR_NX,  OnRepairNext)
-	ON_COMMAND(ID_REPAIR_NR,  OnRepairNear)
+	//ON_COMMAND(ID_REPAIR_NX,  OnRepairNext)
+	//ON_COMMAND(ID_REPAIR_NR,  OnRepairNear)
 	//ON_COMMAND(ID_REPAIR_C,  OnRepairCancel)
-	ON_COMMAND(ID_SAVE_D, OnSaveD)
-	ON_COMMAND(ID_SAVE_S, OnSaveS)
+	//ON_COMMAND(ID_SAVE_D, OnSaveD)
+	//ON_COMMAND(ID_SAVE_S, OnSaveS)
 	ON_COMMAND(ID_INFO, OnSolidInfo)
 	//}}AFX_MSG_MAP
 	ON_WM_CLOSE()
@@ -135,6 +135,7 @@ void CBREPFrame::OnRotation()
 }
 
 
+/**
 void CBREPFrame::OnRepairNext() 
 {
 	bool  start_r = false;
@@ -159,9 +160,10 @@ void CBREPFrame::OnRepairNext()
 		}
 		if (start_r) pviw->SwitchRotation();
 	}
-}
+}*/
 
 
+/*
 void CBREPFrame::OnRepairNear() 
 {
 	bool  start_r = false;
@@ -186,7 +188,7 @@ void CBREPFrame::OnRepairNear()
 		}
 		if (start_r) pviw->SwitchRotation();
 	}
-}
+}*/
 
 
 //void CBREPFrame::OnRepairCancel() 
@@ -194,16 +196,17 @@ void CBREPFrame::OnRepairNear()
 //}
 
 
+/*
 void CBREPFrame::OnSaveD() 
 {
-	((CBREPDoc*)pDoc)->SaveFile(JBXL_3D_FORMAT_DAE);	
+	((CBREPDoc*)pDoc)->SaveFile();	
 }
 
 
 void CBREPFrame::OnSaveS() 
 {
-	((CBREPDoc*)pDoc)->SaveFile(JBXL_3D_FORMAT_STL_A);
-}
+	((CBREPDoc*)pDoc)->SaveFile();
+}*/
 
 
 // Solid の状態を表示する．
