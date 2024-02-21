@@ -43,7 +43,7 @@ public:
 public:
 	void	 SolidRepair(int method);
 	void	 ContoursRepair(int method, bool mode);
-	void	 SaveFile(bool mode);
+	void	 SaveFile(int format);
 	void	 ShowSolidInfo();
 
 public:

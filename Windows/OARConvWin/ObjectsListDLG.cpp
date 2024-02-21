@@ -257,7 +257,6 @@ void CObjectsListDLG::OnCancel()
 
 void CObjectsListDLG::OnOK()
 {
-
 	//CDialogEx::OnOK();	// 何もしない
 }
 
@@ -329,20 +328,24 @@ void  CObjectsListDLG::OpenPreviewWindow(int idx)
 		num++;
 		lp = lp->next;
 	}
-
 	char* fname = get_file_name(obj);
 	if (obj!=NULL) PRINT_MESG("Objects List: selected [%d]: %s\n", num+1, fname);
-
 	//
 	CProgressBarDLG* counter = new CProgressBarDLG(_T("Create Preview Window"), FALSE);
 	//BrepSolidList* slist = winApp->oarTool.GenerateSolidList(obj);
+
+    int format = winApp->oarTool.format;
+	winApp->oarTool.SetFormat(JBXL_3D_FORMAT_STL);
 	BrepSolidList* slist = (BrepSolidList*)winApp->oarTool.generateSolidData(obj);
 	BREP_SOLID* solid = slist->getMerge(counter);
+
 	freeBrepSolidList(slist);
 	if (counter!=NULL) {
 		counter->PutFill();
 		delete counter;
 	}
-	//
 	winApp->solidOpenBrep(solid, mbs2ts(fname), num + 1);	// solid は呼び出された関数が解放する
+	
+	winApp->oarTool.SetFormat(format);
+	return;
 }

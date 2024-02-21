@@ -41,8 +41,6 @@ CBREPDoc::CBREPDoc()
 
 CBREPDoc::~CBREPDoc()
 {
-//	if (ChangeData && !CallSave) SaveFile(false);
-
 	CString  tname = Title + _T(" deleting data");
 	CProgressBarDLG* counter = new CProgressBarDLG(IDD_PROGBAR, (LPCTSTR)tname);
 	Solid->counter = counter;
@@ -258,11 +256,10 @@ void  CBREPDoc::ContoursRepair(int method, bool mode)
 }
 
 
-void CBREPDoc::SaveFile(bool mode) 
+void CBREPDoc::SaveFile(int format) 
 {
 	if (WinApp!=NULL && DataNum>=0) {
-		if (mode) WinApp->convertOneData(DataNum, TRUE);
-		else      WinApp->convertOneData(DataNum, FALSE);
+		WinApp->convertOneData(DataNum, format);
 	}
 
 /*

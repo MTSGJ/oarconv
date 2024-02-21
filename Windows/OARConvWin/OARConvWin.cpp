@@ -695,13 +695,20 @@ int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
 }
 
 
-void  COARConvWinApp::convertOneData(int index, BOOL outputDae)
+void  COARConvWinApp::convertOneData(int index, int format)
 {
+FILE* fp = fopen("AAAAAA.txt", "a");
+//	fprintf(fp, "zzzzzzzzzzzzz %s   %d  %d\n", (char*)comDecomp.buf, oarTool.format, oarTool.engine);
+
+fprintf(fp, "zzzzzzzzzzzzzzzzzzzzzzzz\n");
+fclose(fp);
+
 	isConverting = true;
 	updateMenuBar();
 	oarTool.MakeOutputFolder();
+	if (format==JBXL_3D_FORMAT_NONE) format = appParam.outputFormat;
 	//
-	int num = convertOneFile(index, outputDae);
+	int num = convertOneFile(index, format);
 	if (num>=0) {
 		CString format;
 		CString mesg;
@@ -721,9 +728,10 @@ void  COARConvWinApp::convertOneData(int index, BOOL outputDae)
 
 
 //
-int   COARConvWinApp::convertOneFile(int index, BOOL outputDae)
+int   COARConvWinApp::convertOneFile(int index, int format)
 {
 	DebugMode = appParam.debugMode;
+	oarTool.SetFormat(format);
 	oarTool.SetTerrainShift(appParam.xShift, appParam.yShift, appParam.zShift);
 
 	//////////////////////////////////////////////////////////////////////////////

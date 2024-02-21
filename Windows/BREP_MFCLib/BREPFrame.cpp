@@ -196,13 +196,13 @@ void CBREPFrame::OnRepairNear()
 
 void CBREPFrame::OnSaveD() 
 {
-	((CBREPDoc*)pDoc)->SaveFile(true);	
+	((CBREPDoc*)pDoc)->SaveFile(JBXL_3D_FORMAT_DAE);	
 }
 
 
 void CBREPFrame::OnSaveS() 
 {
-	((CBREPDoc*)pDoc)->SaveFile(false);
+	((CBREPDoc*)pDoc)->SaveFile(JBXL_3D_FORMAT_STL_A);
 }
 
 
@@ -216,14 +216,12 @@ void CBREPFrame::OnSolidInfo()
 void CBREPFrame::OnClose()
 {
 	// TODO : ここにメッセージ ハンドラ コードを追加するか、既定の処理を呼び出します。
-	//if (((CBREPDoc*)pDoc)->ChangeData) ((CBREPDoc*)pDoc)->SaveFile(false);
 	CExFrame::OnClose();
 }
 
 
 void CBREPFrame::OnDestroy()
 {
-//	if (((CBREPDoc*)pDoc)->ChangeData) ((CBREPDoc*)pDoc)->SaveFile(false);
 	CExFrame::OnDestroy();
 
 	// TODO : ここにメッセージ ハンドラ コードを追加します。
