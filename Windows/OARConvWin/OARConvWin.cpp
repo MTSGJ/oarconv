@@ -471,11 +471,11 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
-	oarTool.SetPathInfo(appParam.outputFormat, appParam.outputEngine, oardir, outdir, (char*)assetsFolder.buf);
 	oarTool.SetEngine(appParam.outputEngine);
 	oarTool.SetFormat(appParam.outputFormat);
 	oarTool.SetDegeneracy(appParam.degeneracy);
- 	::free(oardir);
+	oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
+	::free(oardir);
 	::free(outdir);
 
 	bool chk = oarTool.GetDataInfo();
@@ -529,10 +529,10 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 	char* outdir = ts2mbs(getOutFolder());
 	oarTool.free();
 	oarTool.init();
-	oarTool.SetPathInfo(appParam.outputFormat, appParam.outputEngine, oardir, outdir, (char*)assetsFolder.buf);
 	oarTool.SetEngine(appParam.outputEngine);
 	oarTool.SetFormat(appParam.outputFormat);
 	oarTool.SetDegeneracy(appParam.degeneracy);
+	oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
 	::free(oardir);
 	::free(outdir);
 
@@ -560,7 +560,7 @@ void  COARConvWinApp::convertAllData()
 	isConverting = true;
 	updateMenuBar();
 
-	oarTool.MakeOutputFolder(appParam.outputFormat);;
+	oarTool.MakeOutputFolder();
 
 	int num = convertAllFiles();
 	if (num>=0) {
@@ -609,7 +609,7 @@ int   COARConvWinApp::convertAllFiles()
 		//
 		oarTool.ReadTerrainData();
 		oarTool.SetTerrainTextureScale(appParam.terrainScale);
-		num = oarTool.GenerateTerrainDataFile(appParam.outputFormat);
+		num = oarTool.GenerateTerrainDataFile();
 
 		if (mbox!=NULL) delete mbox;
 	}
@@ -624,7 +624,7 @@ int   COARConvWinApp::convertAllFiles()
 			SetGlobalCounter(progress);
 		}
 		//
-		num = oarTool.GenerateObjectsDataFile(appParam.outputFormat, strtnum, stopnum, true, (char*)comDecomp.buf);
+		num = oarTool.GenerateObjectsDataFile(strtnum, stopnum, true, (char*)comDecomp.buf);
 		//
 		if (progress!=NULL) {
 			progress->PutFill();
@@ -640,7 +640,7 @@ void  COARConvWinApp::convertSelectedData(int selectedNums, int* selectedObjs)
 {
 	isConverting = true;
 	updateMenuBar();
-	oarTool.MakeOutputFolder(appParam.outputFormat);
+	oarTool.MakeOutputFolder();
 
 	//
 	int num = convertSelectedFiles(selectedNums, selectedObjs);
@@ -683,7 +683,7 @@ int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
 		SetGlobalCounter(progress);
 	}
 	//
-	num = oarTool.GenerateSelectedDataFile(appParam.outputFormat, selectedNums, selectedObjs, true, (char*)comDecomp.buf);
+	num = oarTool.GenerateSelectedDataFile(selectedNums, selectedObjs, true, (char*)comDecomp.buf);
 	//
 	if (progress!=NULL) {
 		progress->PutFill();
@@ -699,9 +699,7 @@ void  COARConvWinApp::convertOneData(int index, BOOL outputDae)
 {
 	isConverting = true;
 	updateMenuBar();
-	if (outputDae) oarTool.MakeOutputFolder(true);
-	else           oarTool.MakeOutputFolder(false);
-
+	oarTool.MakeOutputFolder();
 	//
 	int num = convertOneFile(index, outputDae);
 	if (num>=0) {
@@ -730,7 +728,7 @@ int   COARConvWinApp::convertOneFile(int index, BOOL outputDae)
 
 	//////////////////////////////////////////////////////////////////////////////
 	// Convert
-	int num = oarTool.GenerateObjectsDataFile(appParam.outputFormat, index, index, true, (char*)comDecomp.buf);
+	int num = oarTool.GenerateObjectsDataFile(index, index, true, (char*)comDecomp.buf);
 	
 	return num;
 }
@@ -825,21 +823,21 @@ void  COARConvWinApp::updateStatusBar(CString path)
 	if (pMainFrame==NULL) return;
 
     CString prefix;
-    if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T("DAE  ");
+    if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T("DAE  |  ");
 	else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
-		if (!appParam.degeneracy) prefix = _T("OBJ  ");
-		else                      prefix = _T("OBJ: NO_OFFSET  ");
+		if (!appParam.degeneracy) prefix = _T("OBJ  |  ");
+		else                      prefix = _T("OBJ: NO_OFFSET  |  ");
 	}
 	else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
-		if (!appParam.degeneracy) prefix = _T("FBX  ");
-		else                      prefix = _T("FBX: NO_OFFSET  ");
+		if (!appParam.degeneracy) prefix = _T("FBX | ");
+		else                      prefix = _T("FBX: NO_OFFSET  |  ");
 	}
-	else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("STL  ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("STL  ");
-	else                                                    prefix = _T("NONE  ");
+	else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("STL  |  ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("STL  |  ");
+	else                                                    prefix = _T("NONE  |  ");
 
-    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  ");
-    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  ");
+    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
+    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  |  ");
 
 	CString mesg = prefix + _T("OAR-Path: ") + path;
 	pMainFrame->SetStausBarText(mesg);
