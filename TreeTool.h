@@ -71,8 +71,7 @@ public:
     UVMap<double>  scale;
 
 public:
-//  TreeParam(void) { init();}
-    TreeParam(void) {}
+    TreeParam(void) { init();}
     virtual ~TreeParam(void) {}
 
     void init(void);
@@ -132,4 +131,3 @@ public:
 
 
 #endif
-

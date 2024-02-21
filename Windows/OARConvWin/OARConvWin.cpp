@@ -212,7 +212,10 @@ BOOL  COARConvWinApp::InitInstance()
 	// 初期化
 	appParam.readConfigFile();
 	DebugMode = appParam.debugMode;
+
 	oarTool.SetEngine(appParam.outputEngine);
+	oarTool.SetFormat(appParam.outputFormat);
+	oarTool.SetDegeneracy(appParam.degeneracy);
 	//
 	updateMenuBar();
 	updateStatusBar(_T(""));
@@ -372,6 +375,9 @@ void  COARConvWinApp::OnOutFormatDialog()
 	delete (setdlg);
 
     oarTool.SetEngine(appParam.outputEngine);
+    oarTool.SetFormat(appParam.outputFormat);
+    oarTool.SetDegeneracy(appParam.degeneracy);
+
 	char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
 	oarTool.ChangePathInfo(NULL, outdir, NULL);
 	::free(outdir);
@@ -392,13 +398,8 @@ void  COARConvWinApp::OnSettingDialog()
 	setdlg->getParameters(&appParam);
 	delete (setdlg);
 
-	//char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
-	//oarTool.ChangePathInfo(NULL, outdir, NULL);
-	//::free(outdir);
-
 	DebugMode = appParam.debugMode;
 	appParam.saveConfigFile();
-
 	return;
 }
 
@@ -471,7 +472,9 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 	oarTool.free();
 	oarTool.init();
 	oarTool.SetPathInfo(appParam.outputFormat, appParam.outputEngine, oardir, outdir, (char*)assetsFolder.buf);
-	oarTool.SetEngine(appParam.outputEngine);                                                                                                                                                   
+	oarTool.SetEngine(appParam.outputEngine);
+	oarTool.SetFormat(appParam.outputFormat);
+	oarTool.SetDegeneracy(appParam.degeneracy);
  	::free(oardir);
 	::free(outdir);
 
@@ -528,6 +531,8 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 	oarTool.init();
 	oarTool.SetPathInfo(appParam.outputFormat, appParam.outputEngine, oardir, outdir, (char*)assetsFolder.buf);
 	oarTool.SetEngine(appParam.outputEngine);
+	oarTool.SetFormat(appParam.outputFormat);
+	oarTool.SetDegeneracy(appParam.degeneracy);
 	::free(oardir);
 	::free(outdir);
 
@@ -821,9 +826,17 @@ void  COARConvWinApp::updateStatusBar(CString path)
 
     CString prefix;
     if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T("DAE  ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ)   prefix = _T("OBJ  ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("STL  ");
+	else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
+		if (!appParam.degeneracy) prefix = _T("OBJ  ");
+		else                      prefix = _T("OBJ: NO_OFFSET  ");
+	}
+	else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
+		if (!appParam.degeneracy) prefix = _T("FBX  ");
+		else                      prefix = _T("FBX: NO_OFFSET  ");
+	}
+	else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("STL  ");
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("STL  ");
+	else                                                    prefix = _T("NONE  ");
 
     if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  ");
     else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  ");

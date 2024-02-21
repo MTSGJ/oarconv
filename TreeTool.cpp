@@ -384,8 +384,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
 
 void TreeParam::init(void)
 {
-    texture.init();
-
+    //texture.init();
     size.set (1.0, 0.0001, 1.0);
     shift.set(0.0, 0.0);
     scale.set(1.0, 1.0);

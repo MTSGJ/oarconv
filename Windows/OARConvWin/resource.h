@@ -23,8 +23,11 @@
 #define IDC_EDIT_PREFIX_OBJ             31119
 #define IDC_OBJLIST_CONV                31120
 #define IDC_RADIO_DAE                   31121
-#define IDC_RADIO_OBJ                   31122
-#define IDC_RADIO_STL                   31123
+#define IDC_RADIO_OBJ                   31124
+#define IDC_RADIO_OBJ_NO                31125
+#define IDC_RADIO_FBX                   31127
+#define IDC_RADIO_FBX_NO                31128
+#define IDC_RADIO_STL                   31130
 #define IDC_RADIO_UNITY                 31222
 #define IDC_RADIO_UE                    31223
 #define IDC_OBJLIST_FIND                31244

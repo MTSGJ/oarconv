@@ -48,6 +48,7 @@ void  OARTool::init(void)
     forUnity        = true;     // for Unity
 
     engine          = JBXL_3D_ENGINE_UNITY;
+    format          = JBXL_3D_FORMAT_DAE;
     degeneracy      = false;
     terrainNum      = 0;
     terrain         = NULL;     // pointer to TerrainSetteings
@@ -877,19 +878,21 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         Buffer obj_fname = make_Buffer_str(fname);
         // UE
         if (obj->engine==JBXL_3D_ENGINE_UE) {
-            float offset[3];
-            int len = sizeof(float)*3;
-            memset(offset, 0, len);
-            if (obj->affine_trans!=NULL) {
-                offset[0] =  (float)obj->affine_trans->shift.x * 100.;
-                offset[1] = -(float)obj->affine_trans->shift.y * 100.;
-                offset[2] =  (float)obj->affine_trans->shift.z * 100.;
+            if (degeneracy) {
+                float offset[3];
+                int len = sizeof(float) * 3;
+                memset(offset, 0, len);
+                if (obj->affine_trans != NULL) {
+                    offset[0] = (float)(obj->affine_trans->shift.x * 100.);    // 100 is Unreal Unit
+                    offset[1] = -(float)(obj->affine_trans->shift.y * 100.);
+                    offset[2] = (float)(obj->affine_trans->shift.z * 100.);
+                }
+                char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
+                del_file_extension_Buffer(&obj_fname);
+                cat_s2Buffer("_", &obj_fname);
+                cat_s2Buffer(params, &obj_fname);
+                cat_s2Buffer(".", &obj_fname);
             }
-            char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
-            del_file_extension_Buffer(&obj_fname);
-            cat_s2Buffer("_", &obj_fname);
-            cat_s2Buffer(params, &obj_fname);
-            cat_s2Buffer(".", &obj_fname);
             if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &obj_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &obj_fname);
             out_path = dup_Buffer(pathOUT);

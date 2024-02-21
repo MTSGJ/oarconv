@@ -54,6 +54,8 @@ public:
 	
 	int     outputEngine;		// Unity or UE
 	int     outputFormat;		// ファイルフォーマット DAE, OBJ, STL
+	BOOL    degeneracy;
+
 	float   terrainScale;
 	float   xShift;
 	float   yShift;
@@ -63,6 +65,7 @@ public:
 	CString prefixOUT;
 	CString prefixDAE;
 	CString prefixOBJ;
+	CString prefixFBX;
 	CString prefixSTL;
 };
 

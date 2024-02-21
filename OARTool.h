@@ -79,6 +79,7 @@ public:
     bool   forUE;               // Unreal Engine
 
     int    engine;
+    int    format;
     bool   degeneracy;          // UE用 縮退
 
     int    terrainNum;
@@ -106,9 +107,10 @@ public:
     void   MakeOutputFolder(int format);
 
     void   SetEngine(int e);
+    void   SetDegeneracy(bool b) { degeneracy = b; }
+    void   SetFormat(int f) { format = f; }
     void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
     void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
-    void   SetDegeneracy(bool b) { degeneracy = b;}
 
     tList* GetObjectsList(void) { return objectsFiles;}
     void   ReadTerrainData(void);
