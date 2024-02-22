@@ -18,7 +18,7 @@ public:
 
 	/** This function will be bound to Command. */
 	void PluginButtonClicked();
-	FVector GetLocationFromName(FString mtl_name);
+	FVector GetLocationFromName(FString mtl_name, bool& rslt);
 
 private:
 

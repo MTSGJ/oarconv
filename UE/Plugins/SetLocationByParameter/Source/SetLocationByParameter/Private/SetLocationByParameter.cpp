@@ -62,11 +62,12 @@ void FSetLocationByParameterModule::PluginButtonClicked()
 				UStaticMesh* mesh = smhc->GetStaticMesh();
 				if (mesh != NULL) {
 					FString mesh_name = mesh->GetName();
-					FVector vv = GetLocationFromName(mesh_name);
-					if (vv != FVector(0.0, 0.0, 0.0)) {
-						vv += act->GetActorLocation();
+					bool rslt = false;
+					FVector vv = GetLocationFromName(mesh_name, rslt);
+					if (rslt && vv!= act->GetActorLocation()) {
 						act->SetActorLocation(vv);
-						UE_LOG(LogTemp, Log, TEXT("Actor %s is relocated to (%f, %f, %f)"), *mesh_name, vv.X, vv.Y, vv.Z);
+						UE_LOG(LogTemp, Log, TEXT("FSetLocationByParameterModule: Actor %s is relocated to (%lf, %lf, %lf)"), 
+							*mesh_name, vv.X, vv.Y, vv.Z);
 					}
 				}
 			}
@@ -76,7 +77,7 @@ void FSetLocationByParameterModule::PluginButtonClicked()
 }
 
 
-FVector FSetLocationByParameterModule::GetLocationFromName(FString mesh_name)
+FVector FSetLocationByParameterModule::GetLocationFromName(FString mesh_name, bool& rslt)
 {
 	FVector location(0.0, 0.0, 0.0);
 
@@ -94,6 +95,7 @@ FVector FSetLocationByParameterModule::GetLocationFromName(FString mesh_name)
 	float position[3];
 	memcpy(position, dec.GetData(), dec_size);
 	location.Set(position[0], position[1], position[2]);
+	rslt = true;
 	return location;
 }
 
