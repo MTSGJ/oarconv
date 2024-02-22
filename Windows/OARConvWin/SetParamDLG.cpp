@@ -187,11 +187,5 @@ void CSetParamDLG::OnOK()
 }
 
 BEGIN_MESSAGE_MAP(CSetParamDLG, CDialogEx)
-	ON_BN_CLICKED(IDC_RADIO_OBJ, &CSetParamDLG::OnBnClickedRadioObj)
+	//
 END_MESSAGE_MAP()
-
-
-void CSetParamDLG::OnBnClickedRadioObj()
-{
-	// TODO: ここにコントロール通知ハンドラー コードを追加します。
-}

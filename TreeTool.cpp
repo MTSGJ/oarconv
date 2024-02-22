@@ -297,7 +297,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     for (int n=0; n<num_grass; n++) {
         float xx = (float)((Frand()-0.5f)*shape.affineTrans.scale.x); 
         float yy = (float)((Frand()-0.5f)*shape.affineTrans.scale.y); 
-        float height = 0.0f;
+        float height = -(float)shape.affineTrans.shift.z;
         bool  valid_pos = true;
         //
         if (terrain!=NULL) {
@@ -319,7 +319,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
                 float h1 = (float)terrain->height(i1, terrain->ysize-1-j0);
                 float h2 = (float)terrain->height(i0, terrain->ysize-1-j1);
                 float h3 = (float)terrain->height(i1, terrain->ysize-1-j1);
-                height = h0*(1.0f-alph)*(1.0f-beta) + h1*alph*(1.0f-beta) + h2*(1.0f-alph)*beta + h3*alph*beta - terrain->waterHeight;
+                height += h0*(1.0f-alph)*(1.0f-beta) + h1*alph*(1.0f-beta) + h2*(1.0f-alph)*beta + h3*alph*beta - terrain->waterHeight;
             }
         }
         //
@@ -329,7 +329,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
             //
             for (int i=0; i<trino; i++) {
                 dupdata[i].execRotate(Quaternion<double>(th*n, Vector<double>(0.0, 0.0, 1.0)));
-                dupdata[i].execShift(Vector<double>(xx, yy, height + grassParam[shape.State].size.z / 2.0));
+                dupdata[i].execShift(Vector<double>(xx, yy, height + grassParam[shape.State].size.z*3.0/8.0)); // *(1/4 + 1/8)
             }
             tridata = joinTriPolygonData(tridata, trino*gnum, dupdata, trino);
             gnum++;
