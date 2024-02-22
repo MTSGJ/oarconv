@@ -331,12 +331,8 @@ void  CObjectsListDLG::OpenPreviewWindow(int idx)
 	char* fname = get_file_name(obj);
 	if (obj!=NULL) PRINT_MESG("Objects List: selected [%d]: %s\n", num + 1, fname);
 	//
-    int format = winApp->oarTool.format;
-	winApp->oarTool.SetFormat(JBXL_3D_FORMAT_STL);
-
-	BrepSolidList* slist = (BrepSolidList*)winApp->oarTool.generateSolidData(obj);
+	BrepSolidList* slist = (BrepSolidList*)winApp->oarTool.generateSolidData(JBXL_3D_FORMAT_STL, obj);
 	if (slist == NULL) {
-		winApp->oarTool.SetFormat(format);
 		return;
 	}
 
@@ -348,8 +344,8 @@ void  CObjectsListDLG::OpenPreviewWindow(int idx)
 		counter->PutFill();
 		delete counter;
 	}
-	if (solid!=NULL) winApp->solidOpenBrep(solid, mbs2ts(fname), num + 1);	// solid は呼び出された関数が解放する
-	
-	winApp->oarTool.SetFormat(format);
+	if (solid != NULL) {
+		winApp->solidOpenBrep(solid, mbs2ts(fname), num + 1);	// solid は呼び出された関数が解放する
+	}
 	return;
 }
