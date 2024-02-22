@@ -48,7 +48,7 @@ void  OARTool::init(void)
     forUnity        = true;     // for Unity
 
     engine          = JBXL_3D_ENGINE_UNITY;
-    format          = JBXL_3D_FORMAT_DAE;
+    dataformat      = JBXL_3D_FORMAT_DAE;
     degeneracy      = false;
     terrainNum      = 0;
     terrain         = NULL;     // pointer to TerrainSetteings
@@ -193,15 +193,15 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
     }
     else {
         // DAE
-        if (format==JBXL_3D_FORMAT_DAE) {
+        if (dataformat==JBXL_3D_FORMAT_DAE) {
             pathOUT = make_Buffer_bystr(OART_DEFAULT_DAE_DIR);
         }
         // OBJ
-        else if (format==JBXL_3D_FORMAT_OBJ) {
+        else if (dataformat==JBXL_3D_FORMAT_OBJ) {
             pathOUT = make_Buffer_bystr(OART_DEFAULT_OBJ_DIR);
         }
         // FBX
-        else if (format==JBXL_3D_FORMAT_FBX) {
+        else if (dataformat==JBXL_3D_FORMAT_FBX) {
             pathOUT = make_Buffer_bystr(OART_DEFAULT_FBX_DIR);
         }
         // STL
@@ -210,9 +210,10 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
         }
     }
 
+    // Set Phantom Path (pathPTM)
     pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
     cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
-    if (format!=JBXL_3D_FORMAT_OBJ || engine!=JBXL_3D_ENGINE_UE) {
+    if (dataformat!=JBXL_3D_FORMAT_OBJ || engine!=JBXL_3D_ENGINE_UE) {
         pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
         cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
     }
@@ -482,11 +483,11 @@ bool  OARTool::GetDataInfo()
 void  OARTool::MakeOutputFolder(void)
 {
     if (pathOUT.buf!=NULL) mkdir((char*)pathOUT.buf, 0700);
-    if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
+    if (dataformat==JBXL_3D_FORMAT_DAE || dataformat==JBXL_3D_FORMAT_OBJ) {
         if (pathPTM.buf!=NULL) mkdir((char*)pathPTM.buf, 0700);
         if (pathTEX.buf!=NULL) mkdir((char*)pathTEX.buf, 0700);
         //
-        if (format==JBXL_3D_FORMAT_OBJ) {
+        if (dataformat==JBXL_3D_FORMAT_OBJ) {
             Buffer mtl = dup_Buffer(pathOUT);
             Buffer ptm_mtl=dup_Buffer(pathPTM);
             if (mtl.buf!=NULL) {
@@ -520,7 +521,7 @@ void  OARTool::ReadTerrainData(void)
         while (count<terrainNum && lps!=NULL && lpt!=NULL) {
             terrain[count] = TerrainTool((char*)lps->ldat.key.buf, xsize, ysize);
             terrain[count].SetEngine(engine);
-            terrain[count].SetFormat(format);
+            terrain[count].SetFormat(dataformat);
             terrain[count].SetDegeneracy(degeneracy);
             terrain[count].ReadSettings((char*)lps->ldat.val.buf);
             terrain[count].ReadHeightData((char*)lpt->ldat.val.buf);
@@ -533,7 +534,7 @@ void  OARTool::ReadTerrainData(void)
         while (count<terrainNum && lpt!=NULL) {
             terrain[count] = TerrainTool((char*)lpt->ldat.key.buf, xsize, ysize);
             terrain[count].SetEngine(engine);
-            terrain[count].SetFormat(format);
+            terrain[count].SetFormat(dataformat);
             terrain[count].SetDegeneracy(degeneracy);
             terrain[count].ReadHeightData((char*)lpt->ldat.val.buf);
             lpt = lpt->next;
@@ -553,7 +554,7 @@ int  OARTool::GenerateTerrainDataFile(void)
 {
     if (terrainNum==0) return 0;
 
-    PRINT_MESG("GenerateTerrainSolid: generating terrain datafile file (%d)\n", format);
+    PRINT_MESG("GenerateTerrainSolid: generating terrain datafile file (%d)\n", dataformat);
     int num = 0;
     while (num<terrainNum) {
         terrain[num].GenerateTexture(assetsFiles, (char*)pathTEX.buf);
@@ -579,9 +580,9 @@ int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, c
         num++;
         if (num>=startnum && num<=stopnum) {
             char* file_path = (char*)lp->ldat.val.buf;
-            void* solid = generateSolidData(file_path, num, useBrep, command);
-            outputSolidData(get_file_name(file_path), solid);
-            freeSolidData(solid);
+            void* solid = generateSolidData(dataformat, file_path, num, useBrep, command);
+            outputSolidData(dataformat, get_file_name(file_path), solid);
+            freeSolidData(dataformat, solid);
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
@@ -600,9 +601,9 @@ void  OARTool::GenerateSelectedDataFile(char* file_path, bool useBrep, char* com
 {
     if (file_path==NULL) return;
 
-    void* solid =generateSolidData(file_path, 1, useBrep, command);
-    outputSolidData(get_file_name(file_path), solid);
-    freeSolidData(solid);
+    void* solid =generateSolidData(dataformat, file_path, 1, useBrep, command);
+    outputSolidData(dataformat, get_file_name(file_path), solid);
+    freeSolidData(dataformat, solid);
 
     return;
 }
@@ -618,9 +619,9 @@ int  OARTool::GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep, c
     while (lp!=NULL) {
         if (num==objlist[cnt]) {
             char* file_path = (char*)lp->ldat.val.buf;
-            void* solid = generateSolidData(file_path, num + 1, useBrep, command);
-            outputSolidData(file_path, solid);
-            freeSolidData(solid);
+            void* solid = generateSolidData(dataformat, file_path, num + 1, useBrep, command);
+            outputSolidData(dataformat, file_path, solid);
+            freeSolidData(dataformat, solid);
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
@@ -638,17 +639,18 @@ int  OARTool::GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep, c
 
 
 /**
-void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char* command)
+void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
 
 Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) から指定された形式で SOLIDデータを生成する．
 
+@param format   生成データフォーマット
 @param fname    オブジェクト名（xmlファイル名）
 @param num      表示用の処理番号．
 @param useBrep  頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
 @param command  JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
 @retval 生成されたデータへのポインタ．それぞれのデータ型でキャストして使用する．
 */
-void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char* command)
+void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
 {
     if (fname==NULL) return NULL;
     PRINT_MESG("[%d/%d] GenerateSolid: generating %s\n", num, objectsNum, fname);
@@ -714,13 +716,10 @@ void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char
             MeshObjectData* mesh = treeTool.GenerateTree(shapes[s], 0);
             //
             if (mesh!=NULL) {
-                // STLの場合は不必要
-                if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
+                if (isRequiredTexture(format)) {    // STLの場合は不必要
                     MeshFacetNode* facet = mesh->facet;
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
-                            // convert texture
-                            //char* addname = facet->material_param.getAdditionalName();
                             ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
                             facet->material_param.setFullName(MTRL_IMAGE_TYPE);
                         }
@@ -761,13 +760,10 @@ void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char
             if (mesh!=NULL && mesh->affineTrans!=NULL) mesh->affineTrans->addShift(terrainShift);
             //
             if (mesh!=NULL) {
-                // STLの場合は不必要
-                if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
+                if (isRequiredTexture(format)) {    // STLの場合は不必要
                     MeshFacetNode* facet = mesh->facet;
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
-                            // convert texture
-                            //char* addname = facet->material_param.getAdditionalName();
                             ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
                             facet->material_param.setFullName(MTRL_IMAGE_TYPE);
                         }
@@ -807,8 +803,7 @@ void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char
             MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep);
             //
             if (mesh!=NULL) {
-                // STLの場合は不必要
-                if (format==JBXL_3D_FORMAT_DAE || format==JBXL_3D_FORMAT_OBJ) {
+                if (isRequiredTexture(format)) {    // STLの場合は不必要
                     MeshFacetNode* facet = mesh->facet;
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
@@ -822,9 +817,6 @@ void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char
                             //      ::free(paramstr);
                             //  }
                             //}
-
-                            // convert texture
-                            //char* addname = facet->material_param.getAdditionalName();
                             ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
                             ConvertTexture(facet->material_param.getBumpMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
                             ConvertTexture(facet->material_param.getSpecMapName(), NULL, MTRL_IMAGE_TYPE, NULL, command);
@@ -897,12 +889,16 @@ void*  OARTool::generateSolidData(const char* fname, int num, bool useBrep, char
 
 
 /**
-void  OARTool::outputSolidData(const char* fname, void* solid)
+void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 
 それぞれの形式の SOLIDデータからファイルを出力する．
 出力先は 大域変数 pathOUT, pathPTM で指定されたディレクトリ．
+
+@param format   出力用データフォーマット
+@param format   出力ファイル名
+@param solid    出力データ
 */
-void  OARTool::outputSolidData(const char* fname, void* solid)
+void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 {
     if (solid==NULL || fname==NULL) return;
     //
@@ -967,7 +963,7 @@ void  OARTool::outputSolidData(const char* fname, void* solid)
 }
 
 
-void  OARTool::freeSolidData(void* solid)
+void  OARTool::freeSolidData(int format, void* solid)
 {
     if (solid==NULL) return;
 
@@ -991,7 +987,6 @@ void  OARTool::freeSolidData(void* solid)
         BrepSolidList* stl = (BrepSolidList*)solid;
         freeBrepSolidList(stl);
     }
-
     return;
 }
 

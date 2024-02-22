@@ -78,10 +78,6 @@ public:
     bool   forUnity;            // Unityサポート
     bool   forUE;               // Unreal Engine
 
-    int    engine;
-    int    format;
-    bool   degeneracy;          // UE用 縮退
-
     int    terrainNum;
     int    objectsNum;
 
@@ -100,6 +96,11 @@ public:
     void   clear_list(void);
     char*  get_outpath(int output);
 
+private:
+    int    engine;
+    int    dataformat;
+    bool   degeneracy;          // UE用 縮退
+
 public:
     void   SetPathInfo(const char* oardir, const char* outdir, const char* astdir);
     void   ChangePathInfo(const char* oardir, const char* outdir, const char* astdir);
@@ -107,10 +108,14 @@ public:
     void   MakeOutputFolder(void);
 
     void   SetEngine(int e);
+    void   SetDataFormat(int f) { dataformat = f; }
     void   SetDegeneracy(bool b) { degeneracy = b; }
-    void   SetFormat(int f) { format = f; }
     void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
     void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
+
+    int    GetEngine(void) { return engine;}
+    int    GetDataFormat(void) { return dataformat;}
+    bool   GetDegeneracy(void) { return degeneracy; }
 
     tList* GetObjectsList(void) { return objectsFiles;}
     void   ReadTerrainData(void);
@@ -121,10 +126,12 @@ public:
     void   GenerateSelectedDataFile(char* fname, bool useBrep=true, char* command=NULL);
     int    GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep=true, char* command=NULL);
 
-    void*  generateSolidData(const char* fname, int num=1, bool useBrep=true, char* command=NULL);
-    void   outputSolidData(const char* fname, void* solid);
-    void   freeSolidData(void* solid);
+    // 要データ形式
+    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, char* command=NULL);
+    void   outputSolidData(int format, const char* fname, void* solid);
+    void   freeSolidData(int format, void* solid);
 
+    bool   isRequiredTexture(int format) { return (format!=JBXL_3D_FORMAT_STL_A && format!=JBXL_3D_FORMAT_STL_B);} 
     void   ConvertTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL, const char* command=NULL);
 
     // ReadTerrainData と GenerateTerrainDataFile の間で呼ぶこと．

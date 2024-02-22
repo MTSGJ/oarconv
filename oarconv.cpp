@@ -79,7 +79,7 @@ int main(int argc, char** argv)
     // main process
     OARTool oar;
     oar.SetEngine(engine);
-    oar.SetFormat(format);
+    oar.SetDataFormat(format);
     oar.SetDegeneracy(degeneracy);
     oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf);
     oar.GetDataInfo();  // -f オプション（個別ファイル指定）があるので，成否は無視．
