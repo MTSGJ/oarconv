@@ -29,6 +29,7 @@ CSetParamDLG::CSetParamDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 	prefixOAR = param->prefixOAR;
 	prefixOBJ = param->prefixOBJ;
 	prefixDAE = param->prefixDAE;
+	prefixFBX = param->prefixFBX;
 	prefixSTL = param->prefixSTL;
 
 	startNumEBox = NULL;
@@ -70,6 +71,7 @@ void  CSetParamDLG::getParameters(CParameterSet* param)
 	param->prefixOAR = prefixOAR;
 	param->prefixDAE = prefixDAE;
 	param->prefixOBJ = prefixOBJ;
+	param->prefixFBX = prefixFBX;
 	param->prefixSTL = prefixSTL;
 
 	return;
@@ -107,6 +109,7 @@ BOOL CSetParamDLG::OnInitDialog()
 	prefixOarEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_OAR);
 	prefixDaeEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_DAE);
 	prefixObjEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_OBJ);
+	prefixFbxEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_FBX);
 	prefixStlEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_STL);
 
 	sntprintf(buf, LNAME, _T("%d"), startNum);
@@ -135,6 +138,8 @@ BOOL CSetParamDLG::OnInitDialog()
 	prefixDaeEBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%s"), prefixOBJ.GetString());
 	prefixObjEBox->SetWindowText(buf);
+	sntprintf(buf, LNAME, _T("%s"), prefixFBX.GetString());
+	prefixFbxEBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%s"), prefixSTL.GetString());
 	prefixStlEBox->SetWindowText(buf);
 
@@ -173,6 +178,8 @@ void CSetParamDLG::OnOK()
 	prefixDAE = buf;
 	prefixObjEBox->GetWindowText(buf, LNAME);
 	prefixOBJ = buf;
+	prefixFbxEBox->GetWindowText(buf, LNAME);
+	prefixFBX = buf;
 	prefixStlEBox->GetWindowText(buf, LNAME);
 	prefixSTL = buf;
 

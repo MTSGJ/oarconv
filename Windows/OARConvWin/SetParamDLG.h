@@ -16,7 +16,6 @@ public:
 
 //
 protected:
-	//int      outputFormat;
 	int      startNum;
 	int      stopNum;
 	float    terrainScale;
@@ -31,6 +30,7 @@ protected:
 	CString  prefixOAR;
 	CString  prefixDAE;
 	CString  prefixOBJ;
+	CString  prefixFBX;
 	CString  prefixSTL;
 
 //
@@ -52,6 +52,7 @@ protected:
 	CEdit*   prefixOarEBox;
 	CEdit*   prefixDaeEBox;
 	CEdit*   prefixObjEBox;
+	CEdit*   prefixFbxEBox;
 	CEdit*   prefixStlEBox;
 
 public:
