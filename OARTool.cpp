@@ -482,24 +482,25 @@ bool  OARTool::GetDataInfo()
 
 void  OARTool::MakeOutputFolder(void)
 {
-    if (pathOUT.buf!=NULL) mkdir((char*)pathOUT.buf, 0700);
+    if (pathOUT.buf!=NULL) mkdir((char*)pathOUT.buf, 0700);             // OUTPUT Folder
+
+    // Texture, Material and Phantom Folder
     if (dataformat==JBXL_3D_FORMAT_DAE || dataformat==JBXL_3D_FORMAT_OBJ) {
-        if (pathPTM.buf!=NULL) mkdir((char*)pathPTM.buf, 0700);
-        if (pathTEX.buf!=NULL) mkdir((char*)pathTEX.buf, 0700);
-        //
-        if (dataformat==JBXL_3D_FORMAT_OBJ) {
+        if (pathTEX.buf!=NULL) mkdir((char*)pathTEX.buf, 0700);         // Texture Folder
+        if (dataformat==JBXL_3D_FORMAT_OBJ) {                           // Material Folder
             Buffer mtl = dup_Buffer(pathOUT);
-            Buffer ptm_mtl=dup_Buffer(pathPTM);
-            if (mtl.buf!=NULL) {
-                cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
-                mkdir((char*)mtl.buf, 0700);
-            }
-            if (ptm_mtl.buf!=NULL) {
-                cat_s2Buffer(OART_DEFAULT_MTL_DIR, &ptm_mtl);
-                mkdir((char*)ptm_mtl.buf, 0700);
-            }
+            cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
+            mkdir((char*)mtl.buf, 0700);
             free_Buffer(&mtl);
-            free_Buffer(&ptm_mtl);
+        }
+        //  Phantom Folder
+        if (engine != JBXL_3D_ENGINE_UE) {
+            if (pathPTM.buf!=NULL) mkdir((char*)pathPTM.buf, 0700);     // Phantom Folder
+            if (dataformat==JBXL_3D_FORMAT_OBJ) {                       // Phantom/Material Folder
+                Buffer mtl = dup_Buffer(pathOUT);
+                cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
+                free_Buffer(&mtl);
+            }
         }
     }
     return;

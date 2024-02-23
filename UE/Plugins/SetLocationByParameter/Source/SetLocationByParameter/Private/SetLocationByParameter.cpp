@@ -51,9 +51,12 @@ void FSetLocationByParameterModule::ShutdownModule()
 
 void FSetLocationByParameterModule::PluginButtonClicked()
 {
+	UE_LOG(LogTemp, Log, TEXT("FSetLocationByParameterModule: Start"));
+	
 	TArray<AActor*> actors;
 	UWorld* World = GEditor->GetEditorWorldContext().World();
 	UGameplayStatics::GetAllActorsOfClass(World, AActor::StaticClass(), actors);
+
 	for (AActor* act : actors) {
 		FString class_name = act->GetClass()->GetName();
 		if (class_name.Find(TEXT("StaticMeshActor")) == 0) {
@@ -73,6 +76,7 @@ void FSetLocationByParameterModule::PluginButtonClicked()
 			}
 		}
 	}
+	UE_LOG(LogTemp, Log, TEXT("FSetLocationByParameterModule: End"));
 	return;
 }
 
