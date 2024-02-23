@@ -50,7 +50,7 @@ void UOAREditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedO
 		if (_class_name.Equals(FString(TEXT("StaticMesh")))) {
 			UStaticMesh* mesh = Cast<UStaticMesh>(CreatedObject);
 			FString _mesh_name = mesh->GetName();
-			UE_LOG(LogTemp, Log, TEXT("UOAREditorSubsystem: Start processing for %s"), *_mesh_name);
+			UE_LOG(LogTemp, Log, TEXT("UOAREditorSubsystem: Processing for %s"), *_mesh_name);
 
 			// ÉtÉ@ÉìÉgÉÄèàóù
 			if (_mesh_name.Find(FString(TEXT(OBJ_PHANTOM_PREFIX))) == 0) {
