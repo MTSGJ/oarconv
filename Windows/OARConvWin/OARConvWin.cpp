@@ -749,9 +749,9 @@ void  COARConvWinApp::solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num)
         ((CBREPDoc*)(pfrm->pDoc))->WinApp  = this;
         int ret = ExecDocFrmView(pfrm);
         if (pfrm->pDoc->pView!=NULL) pfrm->pDoc->pView->SetTitle(title);
-
-        ExecDocFrmViewError(m_pMainWnd->m_hWnd, ret); 
+        //
         if (ret==0) pfrm->pView->TimerStart();
+        else ExecDocFrmViewError(m_pMainWnd->m_hWnd, ret);
     }
 
     return;

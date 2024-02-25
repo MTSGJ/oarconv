@@ -41,19 +41,23 @@ CBREPDoc::CBREPDoc()
 
 CBREPDoc::~CBREPDoc()
 {
-	CString  tname = Title + _T(" deleting data");
-	CProgressBarDLG* counter = new CProgressBarDLG(IDD_PROGBAR, (LPCTSTR)tname);
-	Solid->counter = counter;
-	counter->Start(100);
-	//DEBUG_ERR("BREP_FACET  = %d", Solid->facetno);
-	//DEBUG_ERR("BREP_VERTEX = %d", Solid->vertexno);
+	if (Solid != NULL) {
+		CString  tname = Title + _T(" deleting data");
+		CProgressBarDLG* counter = new CProgressBarDLG(IDD_PROGBAR, (LPCTSTR)tname);
+		Solid->counter = counter;
+		if (counter) {
+			counter->Start(100);
+		}
+		//DEBUG_ERR("BREP_FACET  = %d", Solid->facetno);
+		//DEBUG_ERR("BREP_VERTEX = %d", Solid->vertexno);
 
-	delete Solid;		// Shellと verticesのdeleteでカウンター表示
-
-	if (counter!=NULL) {
-		counter->PutFill();
-		delete counter;
+		delete Solid;		// Shellと verticesのdeleteでカウンター表示
+		if (counter != NULL) {
+			counter->PutFill();
+			delete counter;
+		}
 	}
+	Solid = NULL;
 }
 
 
