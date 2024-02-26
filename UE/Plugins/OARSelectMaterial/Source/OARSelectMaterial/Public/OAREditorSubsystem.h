@@ -1,7 +1,7 @@
 /**
 * Import Postèàóù for OAR   by Fumi.Iseki
 *
-*          ver1.0  2024/02/23
+*          ver1.1.0  2024/02/26
 **/
 
 #pragma once
@@ -11,7 +11,7 @@
 #define  MATERIAL_PARAMS_KIND   (MATERIAL_PARAMS_SIZE - 1)
 
 #define  MATERIAL_SHADER_OBJ    "/OARSelectMaterial/Material/OAR_OBJ"
-#define  MATERIAL_SHADER_MASK   "/OARSelecrMaterial/Material/OAR_Mask"
+#define  MATERIAL_SHADER_MASK   "/OARSelectMaterial/Material/OAR_Mask"
 #define  MATERIAL_SHADER_ALPHA  "/OARSelectMaterial/Material/OAR_Alpha"
 
 #define  OBJ_PHANTOM_PREFIX     "UNC_"

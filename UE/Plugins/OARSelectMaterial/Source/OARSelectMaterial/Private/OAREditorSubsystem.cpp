@@ -1,19 +1,10 @@
 /**
 * Import Post処理 for OAR   by Fumi.Iseki
-**/
+*                                  v1.1.0 
+*/
 
 #include "OAREditorSubsystem.h"
 #include "Subsystems/ImportSubsystem.h"
-
-//#include <Editor/UnrealEdEngine.h>
-//#include <WorldPartition/ContentBundle/ContentBundleEngineSubsystem.h>
-
-//#include "Subsystems/EditorAssetSubsystem.h"
-//#include <Subsystems/AssetEditorSubsystem.h>
-//#include <Subsystems/ActorEditorContextSubsystem.h>
-//#include <Toolkits/AssetEditorModeUILayer.h>
-//#include <TransformMeshesTool.h>
-//#include <Subsystems/EditorActorSubsystem.h>
 
 
 void UOAREditorSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -44,27 +35,26 @@ void UOAREditorSubsystem::Deinitialize()
 void UOAREditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedObject)
 {
 	if (CreatedObject != NULL) {
-		FString _class_name = CreatedObject->GetClass()->GetName();
+		FString class_name = CreatedObject->GetClass()->GetName();
 
 		// Static Mesh
-		if (_class_name.Equals(FString(TEXT("StaticMesh")))) {
+		if (class_name.Equals(FString(TEXT("StaticMesh")))) {
 			UStaticMesh* mesh = Cast<UStaticMesh>(CreatedObject);
-			FString _mesh_name = mesh->GetName();
-			UE_LOG(LogTemp, Log, TEXT("UOAREditorSubsystem: Processing for %s"), *_mesh_name);
+			FString mesh_name = mesh->GetName();
+			UE_LOG(LogTemp, Log, TEXT("UOAREditorSubsystem: Processing for %s"), *mesh_name);
 
 			// ファントム処理
-			if (_mesh_name.Find(FString(TEXT(OBJ_PHANTOM_PREFIX))) == 0) {
+			if (mesh_name.Find(FString(TEXT(OBJ_PHANTOM_PREFIX))) == 0) {
 				UStaticMeshEditorSubsystem* MeshSubsystem = GEditor->GetEditorSubsystem<UStaticMeshEditorSubsystem>();
 				MeshSubsystem->RemoveCollisions(mesh);
-
 			}
 
 			int lod = 0;
 			auto* mtlif = mesh->GetMaterial(lod);
 			while (mtlif != NULL) {
-				FString _mtl_name = mtlif->GetName();
+				FString mtl_name = mtlif->GetName();
 				// パラメータの復元
-				TArray<float> params = GetTextureParams(_mtl_name);
+				TArray<float> params = GetTextureParams(mtl_name);
 				if (params[MATERIAL_PARAMS_KIND] == 0.0f) {
 					mtlif = mesh->GetMaterial(++lod);
 					continue;
@@ -75,12 +65,14 @@ void UOAREditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedO
 					mtlif = mesh->GetMaterial(++lod);
 					continue;
 				}
+				mesh->SetMaterial(lod, new_mtlif);		// Static Materialを登録
+
 				// パラメータの適用
-				UMaterialInstanceDynamic* material = UMaterialInstanceDynamic::Create(new_mtlif, NULL);
+				UMaterialInstanceDynamic* material = UMaterialInstanceDynamic::Create(new_mtlif, mesh);
 				if (material != NULL) {
 					// Texture
-					FString _obj_path = mtlif->GetPathName();
-					FString texture_path = GetTexturePath(_obj_path, _mtl_name);
+					FString mtl_path = mtlif->GetPathName();
+					FString texture_path = GetTexturePath(mtl_path, mtl_name);
 					UTexture* texture = Cast<UTexture>(StaticLoadObject(UTexture::StaticClass(), NULL, *texture_path));
 					if (texture != NULL) {
 						material->SetTextureParameterValue(FName(TEXT("Texture")), texture);
@@ -96,27 +88,24 @@ void UOAREditorSubsystem::OnAssetPostImport(UFactory* Factory, UObject* CreatedO
 					// Setup
 					mesh->SetMaterial(lod, material);
 				}
-				//mtlif->ClearGarbage();// ->InitDefaultMaterials();
 				mtlif = mesh->GetMaterial(++lod);
 			}
-			memcpy(CreatedObject, mesh, sizeof(UStaticMesh));
 		}
 
 		// Material or MaterialInstanceConstant
 		else if (CreatedObject->GetName().Find(FString(TEXT("MATERIAL_"))) == 0) {
-			if (_class_name.Equals(FString(TEXT("MaterialInstanceConstant")))) {
+			if (class_name.Equals(FString(TEXT("MaterialInstanceConstant")))) {
 				//UE_LOG(LogTemp, Log, TEXT("Material Instance = %s"), *(CreatedObject->GetName()));
 			}
-			else if (_class_name.Equals(FString(TEXT("Material")))) {
+			else if (class_name.Equals(FString(TEXT("Material")))) {
 				//UE_LOG(LogTemp, Log, TEXT("Material = %s"), *(CreatedObject->GetName()));
 			}
 		}
 
 		// Texture2D
-		else if (_class_name.Equals(FString(TEXT("Texture2D")))) {
+		else if (class_name.Equals(FString(TEXT("Texture2D")))) {
 			//UE_LOG(LogTemp, Log, TEXT("Texture2D = %s"), *(CreatedObject->GetName()));
 		}
-
 	}
 }
 
@@ -150,7 +139,6 @@ UMaterialInterface* UOAREditorSubsystem::SelectMaterialInterface(TArray<float> p
 		mtlif = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), NULL,
 			*FString(TEXT(MATERIAL_SHADER_OBJ))));
 	}
-
 	return mtlif;
 }
 

@@ -1,4 +1,7 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+/**
+* Set Locationèàóù for OAR   by Fumi.Iseki
+*                               ver1.1.0
+*/
 
 #include "SetLocationByParameter.h"
 #include "SetLocationByParameterStyle.h"

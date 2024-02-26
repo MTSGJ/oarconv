@@ -1,4 +1,8 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+/**
+* Set Locationèàóù for OAR   by Fumi.Iseki
+* 
+*                     ver1.1.0  2024/02/26
+*/
 
 #pragma once
 
