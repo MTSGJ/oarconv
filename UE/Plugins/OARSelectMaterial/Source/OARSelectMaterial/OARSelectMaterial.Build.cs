@@ -39,7 +39,7 @@ public class OARSelectMaterial : ModuleRules
 				"Slate",
 				"SlateCore",
 				"StaticMeshEditor",
-				"UnrealEd",            // Editor 以外でで使用できない
+				"UnrealEd",            // Editor 以外で使用できない
                 "EditorSubsystem",
 				// ... add private dependencies that you statically link with here ...	
 			}
