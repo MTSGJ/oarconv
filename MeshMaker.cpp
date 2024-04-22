@@ -10,13 +10,13 @@ using namespace jbxl;
 /**
 MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tList* resourceList, bool useBrep)
 
-PrimBaseShapeデータから Colladaのデータを生成する．@n
+PrimBaseShapeデータから メッシュデータを生成する．@n
 PrimBaseShapeデータは jbxl::CreatePrimBaseShapesFromXML() または PrimBaseShape::GenerateParam() で生成する．
 
 @param shape         PrimBaseShape データ
 @param resourceList  key部にリソース名，val部に assetリソースのパスを格納したリスト．Sculpted Image, llmeshデータの検索用．
 @param useBrep       BREPを使用して頂点を配置する．速度は若干遅くなるが，頂点数（データ量）は減る．
-@return  MeshObjectData  Colladaデータ
+@return  MeshObjectData  メッシュデータ
 
 @sa OpenSim/Region/Physics/Meshing/Meshmerizer.cs
 */
@@ -36,6 +36,10 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     if ((param.sculptType&0x07)==SCULPT_TYPE_MESH) {
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate LLM Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
+        if (pat==NULL) {
+            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such a file %s\n", (char*)param.sculptTexture.buf);
+            return NULL; 
+        }
         tridata = TriPolygonDataFromLLMeshFile(path, &facet_num, &tri_num);
     }
 
@@ -43,6 +47,10 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     else if (param.sculptEntry) {
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate Sculpt Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
+        if (path==NULL) {
+            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such a file %s\n", (char*)param.sculptTexture.buf);
+            return NULL;
+        }
         //facetdata = ContourBaseDataFromSculptJP2K(path, param.sculptType);
         tridata = TriPolygonDataFromSculptJP2K(path, param.sculptType, &tri_num);
         if (tridata==NULL) {
