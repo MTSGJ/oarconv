@@ -37,7 +37,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate LLM Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
         if (path==NULL) {
-            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such a file %s\n", (char*)param.sculptTexture.buf);
+            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such a file: %s\n", (char*)param.sculptTexture.buf);
             return NULL; 
         }
         tridata = TriPolygonDataFromLLMeshFile(path, &facet_num, &tri_num);
@@ -48,7 +48,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate Sculpt Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
         if (path==NULL) {
-            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such a file %s\n", (char*)param.sculptTexture.buf);
+            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such a file: %s\n", (char*)param.sculptTexture.buf);
             return NULL;
         }
         //facetdata = ContourBaseDataFromSculptJP2K(path, param.sculptType);
