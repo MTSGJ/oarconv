@@ -36,7 +36,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     if ((param.sculptType&0x07)==SCULPT_TYPE_MESH) {
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate LLM Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
-        if (pat==NULL) {
+        if (path==NULL) {
             PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such a file %s\n", (char*)param.sculptTexture.buf);
             return NULL; 
         }
