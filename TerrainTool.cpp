@@ -362,7 +362,7 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
             param.setTransparent(1.0f);
             param.texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             //
-            char* paramstr = param.getBase64Params('E');   // E: Earth
+            char* paramstr = param.getBase64Params('E');    // E: Earth
             param.setParamString(paramstr);
             param.setFullName(MTRL_IMAGE_TYPE);
             if (paramstr!=NULL) ::free(paramstr);
