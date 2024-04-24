@@ -497,8 +497,10 @@ void  OARTool::MakeOutputFolder(void)
         if (engine != JBXL_3D_ENGINE_UE) {
             if (pathPTM.buf!=NULL) mkdir((char*)pathPTM.buf, 0700);     // Phantom Folder
             if (dataformat==JBXL_3D_FORMAT_OBJ) {                       // Phantom/Material Folder
-                Buffer mtl = dup_Buffer(pathOUT);
+                //Buffer mtl = dup_Buffer(pathOUT);
+                Buffer mtl = dup_Buffer(pathPTM);
                 cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
+                mkdir((char*)mtl.buf, 0700);
                 free_Buffer(&mtl);
             }
         }

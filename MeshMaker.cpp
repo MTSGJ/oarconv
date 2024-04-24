@@ -306,7 +306,7 @@ ContourBaseData*  jbxl::ContourBaseDataFromSculptImage(MSGraph<uByte> grd, int t
 
     // Gray Scale
     if (grd.zs==1){
-        if (grd.color==GRAPH_COLOR_MONO) {
+        if (grd.color==GRAPH_COLOR_GRAY) {
             grd.xs = grd.xs/2;
             grd.ys = grd.ys/2;
             grd.zs = 4;
@@ -428,7 +428,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptImage(MSGraph<uByte> grd, int typ
 
     // Gray Scale
     if (grd.zs==1){
-        if (grd.color==GRAPH_COLOR_MONO) {
+        if (grd.color==GRAPH_COLOR_GRAY) {
             grd.xs = grd.xs/2;
             grd.ys = grd.ys/2;
             grd.zs = 4;
