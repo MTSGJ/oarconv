@@ -164,7 +164,7 @@ BOOL  COARConvWinApp::InitInstance()
     // ウィンドウサイズ
     int wx = OARCONV_WND_XSIZE;
     int wy = OARCONV_WND_YSIZE;
-    int rx = GetSystemMetrics(SM_CXSCREEN);            // X方向の解像度
+    int rx = GetSystemMetrics(SM_CXSCREEN);         // X方向の解像度
     int ry = GetSystemMetrics(SM_CYSCREEN) - 14;    // Y方向の解像度（-ツールバー）
 
     // Default Size

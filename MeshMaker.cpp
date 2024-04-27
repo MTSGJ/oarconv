@@ -37,7 +37,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate LLM Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
         if (path==NULL) {
-            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such a file: %s\n", (char*)param.sculptTexture.buf);
+            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such file: %s\n", (char*)param.sculptTexture.buf);
             return NULL; 
         }
         tridata = TriPolygonDataFromLLMeshFile(path, &facet_num, &tri_num);
@@ -48,7 +48,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate Sculpt Mesh\n");
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
         if (path==NULL) {
-            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such a file: %s\n", (char*)param.sculptTexture.buf);
+            PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such file: %s\n", (char*)param.sculptTexture.buf);
             return NULL;
         }
         //facetdata = ContourBaseDataFromSculptJP2K(path, param.sculptType);
@@ -693,12 +693,15 @@ llmeshファイルのヘッダ部分の keyを参照し，圧縮されたボデ�
 
 @param buf  llmeshファイルのヘッダ部分のバイナリデータ
 @param sz   buf のサイズ
-@param key  取り出すデータのキー．Ex.) "hight_lod", "medium_lod", "low_lod", "lowest_lod", etc...
+@param key  取り出すデータのキー．Ex.) "hight_lod", "medium_lod", "low_lod", "lowest_lod", "physics_convex", "skin", etc...
 
 @return  指定された keyのデータの XML形式．
 */
 tXML*  jbxl::GetLLsdXMLFromLLMesh(uByte* buf, int sz, const char* key)
 {
+    tXML* xml = llsd_bin_get_blockdata(buf, sz, key);
+    return xml;
+/*
     int hdsz  = llsd_bin_get_length(buf, sz);
     tXML* xml = llsd_bin_parse(buf, hdsz);
 
@@ -718,6 +721,7 @@ tXML*  jbxl::GetLLsdXMLFromLLMesh(uByte* buf, int sz, const char* key)
     xml  = llsd_bin_parse(dec.buf, hdsz);
 
     return xml;
+*/
 }
 
 
