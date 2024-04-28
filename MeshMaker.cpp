@@ -485,6 +485,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptImage(MSGraph<uByte> grd, int typ
 }
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // for LLMesh
 //
@@ -525,17 +526,18 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     }
 
     //
-    int vertex_num  = 0;     // 頂点数
+    int index_num   = 0;     // インデックス数
     int polygon_idx = 0;     // インデックスデータ中のFACET数 
     int polygon_pos = 0;     // 座標データ中のFACET数
 
+    // データ数のカウント
     // TriangleList (Vertex Indices)
     tList* lpidx = lpindex;
     while (lpidx!=NULL) {
         if (lpidx->altp!=NULL) {
             polygon_idx++;
             Buffer dec = decode_base64_Buffer(lpidx->altp->ldat.key);
-            vertex_num += dec.vldsz/2;
+            index_num += dec.vldsz/2;  // 2Byte / index
             free_Buffer(&dec);
         }
         lpidx = lpidx->next;
@@ -551,7 +553,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
 
     if (polygon_idx!=polygon_pos) PRINT_MESG("WARNING: TriPolygonDataFromLLMesh: missmatch facet number!\n");
     int facet_num = Min(polygon_idx, polygon_pos);  // FACET数．通常は一致する．
-    int plygn_num = vertex_num/3;               // ポリゴン数
+    int plygn_num = index_num/3;                    // ポリゴン数
 
     //
     size_t len = sizeof(TriPolygonData)*plygn_num;
@@ -561,6 +563,8 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     // Option: 法線ベクトル，UVマップ
     tList* lpnorml = get_xml_content_list_bystr(xml, "<map><key>Normal</key><binary>");
     tList* lptxtur = get_xml_content_list_bystr(xml, "<map><key>TexCoord0</key><binary>");
+    // Weights of Skin
+    tList* lpweght = get_xml_content_list_bystr(xml, "<map><key>Weights</key><binary>");
 
     // Max, Min
     Vector<float>* pos_max = GetLLMeshPositionDomainMax(xml, facet_num);
@@ -573,33 +577,41 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     lppos = lppostn;
     tList*  lpnrm = lpnorml;
     tList*  lptxt = lptxtur;
+    tList*  lpwgt = lpweght;
 
     Buffer  idx = init_Buffer();
     Buffer  pos = init_Buffer();
     Buffer  nrm = init_Buffer();
     Buffer  tex = init_Buffer();
+    Buffer  wgt = init_Buffer();
 
     int tri_num = 0;
     unsigned short index[3];
     //
     for (int facet=0; facet<facet_num; facet++) {
-        idx = decode_base64_Buffer(lpidx->altp->ldat.key);
-        pos = decode_base64_Buffer(lppos->altp->ldat.key);
-        if (lpnrm!=NULL) nrm = decode_base64_Buffer(lpnrm->altp->ldat.key);
-        if (lptxt!=NULL) tex = decode_base64_Buffer(lptxt->altp->ldat.key);
+        if (lpidx!=NULL && lpidx->altp!=NULL) idx = decode_base64_Buffer(lpidx->altp->ldat.key);
+        if (lppos!=NULL && lppos->altp!=NULL) pos = decode_base64_Buffer(lppos->altp->ldat.key);
+        if (lpnrm!=NULL && lpnrm->altp!=NULL) nrm = decode_base64_Buffer(lpnrm->altp->ldat.key);
+        if (lptxt!=NULL && lptxt->altp!=NULL) tex = decode_base64_Buffer(lptxt->altp->ldat.key);
+
+        uWord* weight = NULL;
+        if (lpwgt!=NULL && lpwgt->altp!=NULL) {
+            wgt = decode_base64_Buffer(lpwgt->altp->ldat.key);
+            weight = llsd_bin_get_skin_weight((uByte*)wgt.buf, wgt.vldsz, pos.vldsz/6);
+        }
 
         for (int tri=0; tri<idx.vldsz/6; tri++) {   // ポリゴンループ
             for (int vtx=0; vtx<3; vtx++) index[vtx] = ushort_from_little_endian(idx.buf+6*tri+2*vtx);  // 頂点インデックス
 
             tridata[tri_num].polygonNum = facet;
-            tridata[tri_num].has_normal = true;
-            tridata[tri_num].has_texcrd = true;
             for (int vtx=0; vtx<3; vtx++) {
                 tridata[tri_num].vertex[vtx].x = LLMeshUint16toFloat(pos.buf+6*index[vtx]+0, pos_max[facet].x, pos_min[facet].x);
                 tridata[tri_num].vertex[vtx].y = LLMeshUint16toFloat(pos.buf+6*index[vtx]+2, pos_max[facet].y, pos_min[facet].y);
                 tridata[tri_num].vertex[vtx].z = LLMeshUint16toFloat(pos.buf+6*index[vtx]+4, pos_max[facet].z, pos_min[facet].z);
             }
+            //
             if (lpnrm!=NULL) {
+                tridata[tri_num].has_normal = true;
                 for (int vtx=0; vtx<3; vtx++) {
                     tridata[tri_num].normal[vtx].x = (float)ushort_from_little_endian(nrm.buf+6*index[vtx]+0)/SWORDMAX - 1.0f;
                     tridata[tri_num].normal[vtx].y = (float)ushort_from_little_endian(nrm.buf+6*index[vtx]+2)/SWORDMAX - 1.0f;
@@ -607,13 +619,23 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                 }
             }
             if (lptxt!=NULL) {
+                tridata[tri_num].has_texcrd = true;
                 for (int vtx=0; vtx<3; vtx++) {
                     tridata[tri_num].texcrd[vtx].u = LLMeshUint16toFloat(tex.buf+4*index[vtx]+0, tex_max[facet].u, tex_min[facet].u);
                     tridata[tri_num].texcrd[vtx].v = LLMeshUint16toFloat(tex.buf+4*index[vtx]+2, tex_max[facet].v, tex_min[facet].v);
                 }
             }
+            if (lpwgt!=NULL) {
+                tridata[tri_num].has_weight = true;
+                for (int vtx=0; vtx<3; vtx++) {
+                    for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
+                        tridata[tri_num].weight[vtx].weight[j] = weight[index[vtx]*LLSD_JOINT_MAX_NUMBER + j];
+                    }
+                }
+            }
             tri_num++;
         }
+        freeNull(weight);
 
         free_Buffer(&idx);
         free_Buffer(&pos);
@@ -628,6 +650,10 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
             free_Buffer(&tex);
             lptxt = lptxt->next;
         }
+        if (lpwgt!=NULL) {
+            free_Buffer(&wgt);
+            lpwgt = lpwgt->next;
+        }
     }
 
     freeNull(pos_max);
@@ -639,6 +665,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     del_tList(&lppostn);
     if (lpnorml!=NULL) del_tList(&lpnorml);
     if (lptxtur!=NULL) del_tList(&lptxtur);
+    if (lpweght!=NULL) del_tList(&lpweght);
 
     del_xml(&xml);
 
@@ -699,7 +726,7 @@ llmeshファイルのヘッダ部分の keyを参照し，圧縮されたボデ�
 */
 tXML*  jbxl::GetLLsdXMLFromLLMesh(uByte* buf, int sz, const char* key)
 {
-    tXML* xml = llsd_bin_get_blockdata(buf, sz, key);
+    tXML* xml = llsd_bin_get_block_data(buf, sz, key);
     return xml;
 /*
     int hdsz  = llsd_bin_get_length(buf, sz);

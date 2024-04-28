@@ -81,11 +81,11 @@ float  LLMeshUint16toFloat(uByte* ptr, float max, float min);
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // for Terrain Mesh
 
-ContourBaseData*  ContourBaseDataFromTerrainImage(MSGraph<float> grd, Vector<float> shift, bool left, bool right, bool top, bool bottom, bool autosea);
-ContourBaseData*  ContourBaseDataFromTerrainR32(char* r32file, int xsize, int ysize, Vector<float> shift, bool autosea);            // 未使用
+ContourBaseData* ContourBaseDataFromTerrainImage(MSGraph<float> grd, Vector<float> shift, bool left, bool right, bool top, bool bottom, bool autosea);
+ContourBaseData* ContourBaseDataFromTerrainR32(char* r32file, int xsize, int ysize, Vector<float> shift, bool autosea);            // 未使用
 
-TriPolygonData*   TriPolygonDataFromTerrainImage(MSGraph<float> grd, int* pnum, Vector<float> shift, bool left, bool right, bool top, bool bottom, bool autosea);// 未使用
-TriPolygonData*   TriPolygonDataFromTerrainR32(char* r32file, int* pnum, int xsize, int ysize, Vector<float> shift, bool autosea);   // 未使用
+TriPolygonData*  TriPolygonDataFromTerrainImage(MSGraph<float> grd, int* pnum, Vector<float> shift, bool left, bool right, bool top, bool bottom, bool autosea);// 未使用
+TriPolygonData*  TriPolygonDataFromTerrainR32(char* r32file, int* pnum, int xsize, int ysize, Vector<float> shift, bool autosea);   // 未使用
 
 
 
