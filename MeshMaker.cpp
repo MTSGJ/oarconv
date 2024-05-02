@@ -30,6 +30,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     int tri_num   = 0;
     int facet_num = 0;
 
+    DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: start.\n");
     DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Mesh Type is 0x%02x\n", param.sculptType);
 
     // Mesh
@@ -40,6 +41,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
             PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such file: %s\n", (char*)param.sculptTexture.buf);
             return NULL; 
         }
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: tridata from TriPolygonDataFromLLMeshFile()\n");
         tridata = TriPolygonDataFromLLMeshFile(path, &facet_num, &tri_num);
     }
 
@@ -51,6 +53,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
             PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such file: %s\n", (char*)param.sculptTexture.buf);
             return NULL;
         }
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: tridata from TriPolygonDataFromSculptJP2K()\n");
         //facetdata = ContourBaseDataFromSculptJP2K(path, param.sculptType);
         tridata = TriPolygonDataFromSculptJP2K(path, param.sculptType, &tri_num);
         if (tridata==NULL) {
@@ -63,8 +66,9 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
 
     // Normal Prim
     else {
-        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate Prim Mesh\n");
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to GeneratePrimMesh()\n");
         PrimMesh primMesh = GeneratePrimMesh(param);
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: tridata from TriPolygonDataFromPrimMesh()\n");
         tridata = TriPolygonDataFromPrimMesh(primMesh, &facet_num, &tri_num);
         primMesh.free();
     }
@@ -75,11 +79,13 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         return NULL;
     }
 
+    DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to new MeshObjectData()\n");
     MeshObjectData* data = new MeshObjectData((char*)param.objectName.buf);
     data->setAffineTrans(param.affineTrans);
 
     // ポリゴンデータの追加とTextureデータの設定
     if (tridata!=NULL) {            // for TriPolygonData
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: for TriPolygonData\n");
         for (int i=0; i<facet_num; i++) {
             int facet = i;
             if (facet>=PRIM_MATERIAL_NUM) facet = PRIM_MATERIAL_NUM - 1;
@@ -95,6 +101,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
                     ::free(paramstr);
                 }
                 //
+                DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: addData(%d/%d)\n", i, facet_num-1);
                 data->addData(tridata, tri_num, i, &mparam, useBrep);
                 mparam.free();
             }
@@ -105,6 +112,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     }
     //
     else if (facetdata!=NULL) {     // for ContourBaseData
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: for ContourBaseData\n");
         if (param.materialParam->enable) {
             MaterialParam mparam;
             mparam.dup(param.materialParam[0]);
@@ -117,6 +125,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
                 ::free(paramstr);
             }
             //
+            DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: addData()\n");
             data->addData(facetdata, &mparam);
             mparam.free();
         }
@@ -125,10 +134,14 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         }
     }
 
+    DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: freeTriPolygonData()\n");
     freeTriPolygonData(tridata, tri_num);
+    DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: freeContourBaseData()\n");
     freeContourBaseData(facetdata);
+    DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: param.free()\n");
     param.free();
 
+    DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: end.\n");
     return data;
 }
 
@@ -208,7 +221,7 @@ PrimMeshデータから三角ポリゴンデータの TriPolygonDataを生成す
 
 @param primMesh   PrimMeshデータ
 @param[out] fnum  生成したFACETの数
-@param[out] pnum  生成した三角ポリゴンデータの数
+@param[out] pnum  生成した三角ポリゴンデータの数．リターンする TriPolygonData の数．
 
 @return  三角ポリゴンデータの配列へのポインタ
 */
@@ -221,7 +234,9 @@ TriPolygonData*  jbxl::TriPolygonDataFromPrimMesh(PrimMesh primMesh, int* fnum, 
     TriPolygonData* tridata = (TriPolygonData*)malloc(len*sizeof(TriPolygonData));
     if (tridata==NULL) return NULL;
 
+    memset(tridata, 0, len*sizeof(TriPolygonData));
     for (int i=0; i<len; i++) {
+        tridata[i].init();
         tridata[i].has_normal = true;
         tridata[i].has_texcrd = true;
         tridata[i].polygonNum = primMesh.primTriArray[i].contourNum;
@@ -449,13 +464,15 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptImage(MSGraph<uByte> grd, int typ
         sculptMesh.GenerateMeshData();
 
         tnum = (int)sculptMesh.sculptTriArray.size();
-        tridata = (TriPolygonData*)malloc(tnum*sizeof(TriPolygonData));
+        tridata = (TriPolygonData*)malloc(sizeof(TriPolygonData)*tnum);
         if (tridata==NULL) {
             sculptMesh.free();
             return NULL;
         }
 
+        memset(tridata, 0, sizeof(TriPolygonData)*tnum);
         for (int i=0; i<tnum; i++) {
+            tridata[i].init();
             tridata[i].has_normal = true;
             tridata[i].has_texcrd = true;
             tridata[i].polygonNum = sculptMesh.sculptTriArray[i].contourNum;
@@ -505,6 +522,8 @@ llmeshデータから三角ポリゴンデータ TriPloyDataを生成する．@n
 TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, int* pnum)
 {
     if (mesh==NULL || fnum==NULL || pnum==NULL) return NULL;
+
+    DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromLLMesh: start.\n");
 
     tXML* xml = GetLLsdXMLFromLLMesh(mesh, sz, "high_lod");
     if (xml==NULL) xml = GetLLsdXMLFromLLMesh(mesh, sz, "medium_lod");
@@ -559,6 +578,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     size_t len = sizeof(TriPolygonData)*plygn_num;
     TriPolygonData* tridata = (TriPolygonData*)malloc(len);
     memset(tridata, 0, len);
+    for (int i=0; i<plygn_num; i++) tridata[i].init();
 
     // Option: 法線ベクトル，UVマップ
     tList* lpnorml = get_xml_content_list_bystr(xml, "<map><key>Normal</key><binary>");
@@ -625,11 +645,16 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                     tridata[tri_num].texcrd[vtx].v = LLMeshUint16toFloat(tex.buf+4*index[vtx]+2, tex_max[facet].v, tex_min[facet].v);
                 }
             }
-            if (lpwgt!=NULL) {
+            if (lpwgt!=NULL && weight!=NULL) {
                 tridata[tri_num].has_weight = true;
                 for (int vtx=0; vtx<3; vtx++) {
+                    tridata[tri_num].weight[vtx].init(JBXL_JOINT_MAX_NUMBER);
+                    double total = 0.0;
                     for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
-                        tridata[tri_num].weight[vtx].weight[j] = weight[index[vtx]*LLSD_JOINT_MAX_NUMBER + j];
+                        total += (double)weight[index[vtx]*LLSD_JOINT_MAX_NUMBER + j];
+                    }
+                    for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
+                        tridata[tri_num].weight[vtx].set_value(j, (double)weight[index[vtx]*LLSD_JOINT_MAX_NUMBER + j]/total);
                     }
                 }
             }
@@ -637,6 +662,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
         }
         freeNull(weight);
 
+        free_Buffer(&wgt);
         free_Buffer(&idx);
         free_Buffer(&pos);
         lpidx = lpidx->next;
@@ -656,6 +682,11 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
         }
     }
 
+    if (plygn_num !=  tri_num) {
+        PRINT_MESG("WARNNING: JBXL::TriPolygonDataFromLLMesh:  plygn_num and trinum are missmath! (%d != %d)\n", plygn_num, tri_num);
+        tri_num = Min(plygn_num, tri_num);
+    }
+
     freeNull(pos_max);
     freeNull(pos_min);
     freeNull(tex_max);
@@ -671,6 +702,8 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
 
     *fnum = facet_num;
     *pnum = tri_num;
+
+    DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromLLMesh: end.\n");
     return tridata;
 }
 
@@ -1046,6 +1079,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromTerrainImage(MSGraph<float> grd, int* p
     }
 
     for (int i=0; i<tnum; i++) {
+        tridata[i].init();
         tridata[i].has_normal = true;
         tridata[i].has_texcrd = true;
         tridata[i].polygonNum = terrainMesh.terrainTriArray[i].contourNum;
