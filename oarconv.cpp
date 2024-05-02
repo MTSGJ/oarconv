@@ -31,6 +31,7 @@ int main(int argc, char** argv)
     int   engine  = JBXL_3D_ENGINE_UNITY;
 
     bool  degeneracy = false;
+    //bool  useBrep = false;
     bool  useBrep = true;
 
     for (int i=1; i<argc; i++) {

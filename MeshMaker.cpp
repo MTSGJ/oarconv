@@ -39,7 +39,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         char* path = get_resource_path((char*)param.sculptTexture.buf, resourceList);
         if (path==NULL) {
             PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No such file: %s\n", (char*)param.sculptTexture.buf);
-            return NULL; 
+            return NULL;
         }
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: tridata from TriPolygonDataFromLLMeshFile()\n");
         tridata = TriPolygonDataFromLLMeshFile(path, &facet_num, &tri_num);
@@ -161,7 +161,7 @@ PrimMesh  jbxl::GeneratePrimMesh(PrimMeshParam param)
 
     if (param.profCurve==PRIM_PROF_CIRCLE) {
         sides = 24;
-        if (param.pathCurve==PRIM_PATH_CIRCLE) { 
+        if (param.pathCurve==PRIM_PATH_CIRCLE) {
             if (param.sculptEntry) type = PRIM_TYPE_SCULPT;
             else                   type = PRIM_TYPE_TORUS;
         }
@@ -172,7 +172,7 @@ PrimMesh  jbxl::GeneratePrimMesh(PrimMeshParam param)
     //
     else if (param.profCurve==PRIM_PROF_SQUARE) {
         sides = 4;
-        if (param.pathCurve==PRIM_PATH_CIRCLE) { 
+        if (param.pathCurve==PRIM_PATH_CIRCLE) {
             type = PRIM_TYPE_TUBE;
         }
         else if (param.pathCurve==PRIM_PATH_LINE) {
@@ -260,7 +260,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromPrimMesh(PrimMesh primMesh, int* fnum, 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // @sa http://wiki.secondlife.com/wiki/Sculpted_Prims:_Technical_Explanation
-// 
+//
 
 /**
 ContourBaseData*  jbxl::ContourBaseDataFromSculptJP2K(const char* jpegfile, int type)
@@ -507,7 +507,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptImage(MSGraph<uByte> grd, int typ
 // for LLMesh
 //
 // @sa http://wiki.secondlife.com/wiki/Mesh/Mesh_Asset_Format
-// 
+//
 
 /**
 llmeshデータから三角ポリゴンデータ TriPloyDataを生成する．@n
@@ -546,7 +546,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
 
     //
     int index_num   = 0;     // インデックス数
-    int polygon_idx = 0;     // インデックスデータ中のFACET数 
+    int polygon_idx = 0;     // インデックスデータ中のFACET数
     int polygon_pos = 0;     // 座標データ中のFACET数
 
     // データ数のカウント
@@ -570,7 +570,9 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
         lppos = lppos->next;
     }
 
-    if (polygon_idx!=polygon_pos) PRINT_MESG("WARNING: TriPolygonDataFromLLMesh: missmatch facet number!\n");
+    if (polygon_idx != polygon_pos) {
+        PRINT_MESG("WARNING: TriPolygonDataFromLLMesh: missmatch facet number! (%d != %d)\n", polygon_idx, polygon_pos);
+    }
     int facet_num = Min(polygon_idx, polygon_pos);  // FACET数．通常は一致する．
     int plygn_num = index_num/3;                    // ポリゴン数
 
@@ -646,6 +648,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                 }
             }
             if (lpwgt!=NULL && weight!=NULL) {
+/*
                 tridata[tri_num].has_weight = true;
                 for (int vtx=0; vtx<3; vtx++) {
                     tridata[tri_num].weight[vtx].init(JBXL_JOINT_MAX_NUMBER);
@@ -657,6 +660,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                         tridata[tri_num].weight[vtx].set_value(j, (double)weight[index[vtx]*LLSD_JOINT_MAX_NUMBER + j]/total);
                     }
                 }
+*/
             }
             tri_num++;
         }
@@ -683,7 +687,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     }
 
     if (plygn_num !=  tri_num) {
-        PRINT_MESG("WARNNING: JBXL::TriPolygonDataFromLLMesh:  plygn_num and trinum are missmath! (%d != %d)\n", plygn_num, tri_num);
+        PRINT_MESG("WARNING: JBXL::TriPolygonDataFromLLMesh:  plygn_num and trinum are missmath! (%d != %d)\n", plygn_num, tri_num);
         tri_num = Min(plygn_num, tri_num);
     }
 
@@ -823,16 +827,17 @@ Vector<float>*  jbxl::GetLLMeshPositionDomainMaxMin(tXML* xml, int facet, bool m
     }
 
     // PositionDomainが存在しない．
-    if (vnum==0) {
+    if (vnum == 0) {
         free_Buffer(&buf);
         del_tList(&lptop);
-        return vect;        
+        return vect;
     }
-    else if (vnum!=facet) {
-        PRINT_MESG("WARNING: GetLLMeshPositionDomainMaxMin: facet number missmatch\n");
-        free_Buffer(&buf);
-        del_tList(&lptop);
-        return vect;        
+    else if (vnum != facet) {
+        PRINT_MESG("WARNING: GetLLMeshPositionDomainMaxMin: facet number missmatch! (%d != %d)\n", vnum, facet);
+        //free_Buffer(&buf);
+        //del_tList(&lptop);
+        //return vect;
+        facet = Min(vnum, facet);
     }
 
     //
@@ -845,7 +850,7 @@ Vector<float>*  jbxl::GetLLMeshPositionDomainMaxMin(tXML* xml, int facet, bool m
             vect[count].y = (float)atof((char*)lpreal->ysis->next->ldat.key.buf);
             vect[count].z = (float)atof((char*)lpreal->ysis->ysis->next->ldat.key.buf);
             count++;
-        }   
+        }
         lp = lp->next;
     }
 
@@ -898,13 +903,13 @@ UVMap<float>*  jbxl::GetLLMeshTexCoordDomainMaxMin(tXML* xml, int facet, bool ma
     if (tnum==0) {
         free_Buffer(&buf);
         del_tList(&lptop);
-        return uvmp;        
+        return uvmp;
     }
     else if (tnum!=facet) {
         PRINT_MESG("WARNING: GetLLMeshTexCoordDomainMaxMin: facet number missmatch\n");
         free_Buffer(&buf);
         del_tList(&lptop);
-        return uvmp;        
+        return uvmp;
     }
 
     //
@@ -916,7 +921,7 @@ UVMap<float>*  jbxl::GetLLMeshTexCoordDomainMaxMin(tXML* xml, int facet, bool ma
             uvmp[count].u = (float)atof((char*)lpreal->next->ldat.key.buf);
             uvmp[count].v = (float)atof((char*)lpreal->ysis->next->ldat.key.buf);
             count++;
-        }   
+        }
         lp = lp->next;
     }
 
