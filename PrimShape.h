@@ -93,7 +93,7 @@
 #define  PRIM_PROF_RGTTRIANGLE_STR  "RightTrianble"         // 4
 #define  PRIM_PROF_HALFCIRCLE_STR   "HalfCircle"            // 5
 
-#define  PRIM_HOLE_TYPE_NUM          4
+#define  PRIM_HOLE_TYPE_NUM         4
 #define  PRIM_HOLE_SAME_STR         "Same"                  // 0
 #define  PRIM_HOLE_CIRCLE_STR       "Circle"                // 16
 #define  PRIM_HOLE_SQUARE_STR       "Square"                // 32
