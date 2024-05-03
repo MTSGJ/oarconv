@@ -631,10 +631,10 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
             wgt = decode_base64_Buffer(lpwgt->altp->ldat.key);
             weight = llsd_bin_get_skin_weight((uByte*)wgt.buf, wgt.vldsz, vertex_num);
         }
-
-        tridata[tri_num].polygonNum = facet;
         //
         for (int tri=0; tri<polygon_num; tri++) {   // ポリゴンループ
+            //
+            tridata[tri_num].polygonNum = facet;
             //
             for (int vtx=0; vtx<3; vtx++) {
                 index[vtx] = ushort_from_little_endian(idx.buf + 6*tri + 2*vtx);  // 頂点インデックス
@@ -654,7 +654,6 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                     tridata[tri_num].normal[vtx].z = (float)ushort_from_little_endian(nrm.buf + 6*index[vtx] + 4)/SWORDMAX - 1.0f;
                 }
             }
-            else DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromLLMesh: No normal");
             //
             if (tex.buf!=NULL) {
                 tridata[tri_num].has_texcrd = true;
@@ -663,7 +662,6 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                     tridata[tri_num].texcrd[vtx].v = LLMeshUint16toFloat(tex.buf + 4*index[vtx] + 2, tex_max[facet].v, tex_min[facet].v);
                 }
             }
-            else DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromLLMesh: No texture");
             //
             if (wgt.buf!=NULL) {
                 tridata[tri_num].has_weight = true;
@@ -678,7 +676,6 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                     }
                 }
             }
-            else DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromLLMesh: No weight");
             //
             tri_num++;
         }
