@@ -633,19 +633,19 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
         }
         //
         for (int tri=0; tri<polygon_num; tri++) {   // ポリゴンループ
-            //
             tridata[tri_num].polygonNum = facet;
             //
+            // INDEX
             for (int vtx=0; vtx<3; vtx++) {
                 index[vtx] = ushort_from_little_endian(idx.buf + 6*tri + 2*vtx);  // 頂点インデックス
             }
-
+            // POSITION
             for (int vtx=0; vtx<3; vtx++) {
                 tridata[tri_num].vertex[vtx].x = LLMeshUint16toFloat(pos.buf + 6*index[vtx] + 0, pos_max[facet].x, pos_min[facet].x);
                 tridata[tri_num].vertex[vtx].y = LLMeshUint16toFloat(pos.buf + 6*index[vtx] + 2, pos_max[facet].y, pos_min[facet].y);
                 tridata[tri_num].vertex[vtx].z = LLMeshUint16toFloat(pos.buf + 6*index[vtx] + 4, pos_max[facet].z, pos_min[facet].z);
             }
-            //
+            // NORMAL
             if (nrm.buf!=NULL) {
                 tridata[tri_num].has_normal = true;
                 for (int vtx=0; vtx<3; vtx++) {
@@ -654,7 +654,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                     tridata[tri_num].normal[vtx].z = (float)ushort_from_little_endian(nrm.buf + 6*index[vtx] + 4)/SWORDMAX - 1.0f;
                 }
             }
-            //
+            // UVMAP
             if (tex.buf!=NULL) {
                 tridata[tri_num].has_texcrd = true;
                 for (int vtx=0; vtx<3; vtx++) {
@@ -662,7 +662,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                     tridata[tri_num].texcrd[vtx].v = LLMeshUint16toFloat(tex.buf + 4*index[vtx] + 2, tex_max[facet].v, tex_min[facet].v);
                 }
             }
-            //
+            // WEIGHT
             if (wgt.buf!=NULL) {
                 tridata[tri_num].has_weight = true;
                 for (int vtx=0; vtx<3; vtx++) {
