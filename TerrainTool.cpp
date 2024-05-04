@@ -479,7 +479,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             if (format==JBXL_3D_FORMAT_DAE) {
                 dae = new ColladaXML();
                 dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
-                dae->addObject(data, true);
+                dae->addObject(data, true, NULL);
                 dae->outputFile((char*)objname.buf, (char*)path.buf, XML_INDENT_FORMAT);
                 freeColladaXML(dae);
             }

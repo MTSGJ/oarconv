@@ -710,8 +710,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     }
 
     int  count = 0;
-    for (int s=0; s<shno; s++) {
-        //
+    for (int s=0; s<shno; s++) {    // SHELL
         // Tree
         if (shapes[s].PCode==PRIM_PCODE_NEWTREE || shapes[s].PCode==PRIM_PCODE_TREE) {
             //
@@ -732,7 +731,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
-                    dae->addObject(mesh, false);
+                    dae->addObject(mesh, false, NULL);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
@@ -742,7 +741,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     //obj->phantom_out = true;
-                    //obj->addObject(mesh, false);
+                    //obj->addObject(mesh, false, NULL);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -776,7 +775,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
-                    dae->addObject(mesh, false);
+                    dae->addObject(mesh, false, NULL);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
@@ -786,7 +785,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     //obj->phantom_out = true;
-                    //obj->addObject(mesh, false);
+                    //obj->addObject(mesh, false, NULL);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -802,8 +801,9 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         // Prim (Sculpt, Meshを含む)
         else if (shapes[s].PCode==PRIM_PCODE_PRIM) { 
             //
+            SkinJointData* skin_joint = NULL;
             shapes[s].affineTrans.addShift(-xsize/2.0f + terrainShift.x, -ysize/2.0f + terrainShift.y, -waterHeight + terrainShift.z);
-            MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep);
+            MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, &skin_joint);
             //
             if (mesh!=NULL) {
                 if (isRequiredTexture(format)) {    // STLの場合は不必要
@@ -836,7 +836,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
-                    dae->addObject(mesh, collider);
+                    dae->addObject(mesh, collider, skin_joint);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
@@ -846,7 +846,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     //if (collider) obj->phantom_out = false;
-                    //obj->addObject(mesh, collider);
+                    //obj->addObject(mesh, collider, skin_joint);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -856,6 +856,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 //
                 count++;
             }
+            if (skin_joint!=NULL) skin_joint->free();
         }
     }
 

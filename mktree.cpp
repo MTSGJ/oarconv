@@ -77,7 +77,7 @@ int main(int argc, char** argv)
         }
         facet = facet->next;
     }
-    dae->addObject(data, false);
+    dae->addObject(data, false, NULL);
     dae->outputFile("test_tree.dae", oar.get_outpath(true));
 
     /////////////////////////////////////////////////////////////

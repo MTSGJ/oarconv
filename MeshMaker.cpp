@@ -8,7 +8,7 @@ using namespace jbxl;
 //
 
 /**
-MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tList* resourceList, bool useBrep)
+MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tList* resourceList, bool useBrep, SkinJointData** skin_joint)
 
 PrimBaseShapeデータから メッシュデータを生成する．@n
 PrimBaseShapeデータは jbxl::CreatePrimBaseShapesFromXML() または PrimBaseShape::GenerateParam() で生成する．
@@ -17,10 +17,11 @@ PrimBaseShapeデータは jbxl::CreatePrimBaseShapesFromXML() または PrimBase
 @param resourceList  key部にリソース名，val部に assetリソースのパスを格納したリスト．Sculpted Image, llmeshデータの検索用．
 @param useBrep       BREPを使用して頂点を配置する．速度は若干遅くなるが，頂点数（データ量）は減る．
 @return  MeshObjectData  メッシュデータ
+@retval  skin_joint  Jointデータへのポインタ．
 
 @sa OpenSim/Region/Physics/Meshing/Meshmerizer.cs
 */
-MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tList* resourceList, bool useBrep)
+MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tList* resourceList, bool useBrep, SkinJointData** skin_joint)
 {
     PrimMeshParam param;
     param.GetParamFromBaseShape(baseShape);
@@ -42,7 +43,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
             return NULL;
         }
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: tridata from TriPolygonDataFromLLMeshFile()\n");
-        tridata = TriPolygonDataFromLLMeshFile(path, &facet_num, &tri_num);
+        tridata = TriPolygonDataFromLLMeshFile(path, &facet_num, &tri_num, skin_joint);
     }
 
     // Sculpted Prim
@@ -509,7 +510,150 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptImage(MSGraph<uByte> grd, int typ
 // @sa http://wiki.secondlife.com/wiki/Mesh/Mesh_Asset_Format
 //
 
+
 /**
+SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
+
+llmesh データから joint情報を読み出す．@n
+
+@param mesh llmeshのデータ．ファイルイメージ．
+@param sz   meshのサイズ
+
+@return  生成した SkinJointData へのポインタ．
+
+*/
+SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
+{
+    if (mesh!=NULL) return NULL;
+
+    tXML* skin = GetLLsdXMLFromLLMesh(mesh, sz, "skin");
+    if (skin==NULL) return NULL;
+
+    SkinJointData* skin_joint = NULL;
+    int joint_num = 0;
+
+    // joint number and names
+    tList* jointnm = get_xml_node_list_bystr(skin, "<map><key>joint_names</key><array><string>");
+    if (jointnm!=NULL) {
+        tList* pp = jointnm->altp;
+        while (pp!=NULL) {
+            if (pp->next!=NULL) joint_num++;
+            pp = pp->ysis;
+        }
+
+        skin_joint = new SkinJointData(joint_num);
+        if (skin_joint==NULL) {
+            del_tList(&jointnm);
+            del_xml(&skin);
+            return NULL;
+        }
+
+        joint_num = 0;
+        pp = jointnm->altp;
+        while (pp!=NULL) {
+            if (pp->next!=NULL) {
+                char* ptr = (char*)malloc(pp->next->ldat.key.vldsz+1);
+                memcpy(ptr, pp->next->ldat.key.buf, pp->next->ldat.key.vldsz+1);
+                skin_joint->joint_names.set_value(joint_num, ptr);
+                joint_num++;
+            }
+            pp = pp->ysis;
+        }
+    }
+    del_tList(&jointnm);
+    if (skin_joint==NULL) {
+        del_xml(&skin);
+        return NULL;
+    }
+
+    // pelvis_offset
+    tList* poffset = get_xml_content_list_bystr(skin, "<map><key>pelvis_offset</key><real>");
+    if (poffset!=NULL && poffset->altp!=NULL) {
+        skin_joint->pelvis_offset = atof((char*)poffset->altp->ldat.key.buf);
+    }   
+    del_tList(&poffset);
+
+    // bind_shape_matrix
+    tList* bshape = get_xml_node_list_bystr(skin, "<map><key>bind_shape_matrix</key><array><real>");
+    if (bshape!=NULL) {
+        int idx = 0;
+        tList* pp = bshape->altp;
+        while (pp!=NULL) {
+            if (pp->next!=NULL) {
+                skin_joint->bind_shape.element(idx%4+1, idx/4+1) = atof((char*)pp->next->ldat.key.buf);
+                idx++;
+            }
+            pp = pp->ysis;
+        }
+    }
+    del_tList(&bshape);
+
+    // inverse_bind_matrix
+    tList* ivbind = get_xml_node_list_bystr(skin, "<map><key>inverse_bind_matrix</key><array><array>");
+    if (ivbind!=NULL) {
+        int jdx = 0;
+        tList* joint = ivbind->altp;
+        while (joint!=NULL) {
+            if (joint->next!=NULL) {
+                int idx = 0;
+                tList* pp = joint->next;
+                while (pp!=NULL) {
+                    if (pp->next!=NULL) {
+                        skin_joint->inverse_bind[jdx].element(idx%4+1, idx/4+1) = atof((char*)pp->next->ldat.key.buf);
+                        idx++;
+                    }
+                    pp = pp->ysis;
+                }
+            }
+            jdx++;
+            joint = joint->ysis;
+        }
+    }
+    del_tList(&ivbind);
+
+    // alt_inverse_bind_matrix
+    ivbind = get_xml_node_list_bystr(skin, "<map><key>alt_inverse_bind_matrix</key><array><array>");
+    if (ivbind!=NULL) {
+        int jdx = 0;
+        tList* joint = ivbind->altp;
+        while (joint!=NULL) {
+            if (joint->next!=NULL) {
+                int idx = 0;
+                tList* pp = joint->next;
+                while (pp!=NULL) {
+                    if (pp->next!=NULL) {
+                        skin_joint->alt_inverse_bind[jdx].element(idx%4+1, idx/4+1) = atof((char*)pp->next->ldat.key.buf);
+                        idx++;
+                    }
+                    pp = pp->ysis;
+                }
+            }
+            jdx++;
+            joint = joint->ysis;
+        }
+    }
+    del_tList(&ivbind);
+
+/*
+    PRINT_MESG("joint number = %d\n", skin_joint->joint_names.get_size());
+    PRINT_MESG("previus offset = %lf\n", skin_joint->pelvis_offset);
+    for (int j=0; j<joint_num; j++) {
+        PRINT_MESG("%s\n", skin_joint->joint_names.get_value(j));
+    }
+    print_Matrix(stdout, skin_joint->bind_shape);
+    for (int j=0; j<joint_num; j++) {
+        print_Matrix(stdout, skin_joint->alt_inverse_bind[j]);
+        printf("=============================\n");
+    }
+*/
+    del_xml(&skin);
+    return skin_joint; 
+}
+
+
+/**
+TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, int* pnum)
+
 llmeshデータから三角ポリゴンデータ TriPloyDataを生成する．@n
 
 @param mesh       llmeshのデータ．ファイルイメージ．
@@ -525,13 +669,13 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
 
     DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromLLMesh: start.\n");
 
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    // LOD
     tXML* xml = GetLLsdXMLFromLLMesh(mesh, sz, "high_lod");
     if (xml==NULL) xml = GetLLsdXMLFromLLMesh(mesh, sz, "medium_lod");
     if (xml==NULL) xml = GetLLsdXMLFromLLMesh(mesh, sz, "low_lod");
     if (xml==NULL) return NULL;
-
-    /////////////////////////////////////////////////////////
-    //DEBUG_MODE print_xml(stderr, xml, XML_INDENT_FORMAT); // llmeshデータ
+    //DEBUG_MODE print_xml(stderr, xml, XML_INDENT_FORMAT);
 
     // インデックス，座標データ
     tList* lpindex = get_xml_content_list_bystr(xml, "<map><key>TriangleList</key><binary>");
@@ -584,9 +728,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     memset(tridata, 0, len);
     for (int i=0; i<plygn_num; i++) {
         tridata[i].init();
-        tridata[i].weight[0].init(LLSD_JOINT_MAX_NUMBER);
-        tridata[i].weight[1].init(LLSD_JOINT_MAX_NUMBER);
-        tridata[i].weight[2].init(LLSD_JOINT_MAX_NUMBER);
+        for (int j=0; j<3; j++) tridata[i].weight[j].init();
     }
 
     // Option: 法線ベクトル，UVマップ, Weights of Skin
@@ -666,6 +808,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
             if (wgt.buf!=NULL) {
                 tridata[tri_num].has_weight = true;
                 for (int vtx=0; vtx<3; vtx++) {
+                    tridata[tri_num].weight[vtx].init(LLSD_JOINT_MAX_NUMBER);
                     int ppos = index[vtx]*LLSD_JOINT_MAX_NUMBER;
                     double total = 0.0;
                     for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
@@ -709,7 +852,6 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     if (lpnorml!=NULL) del_tList(&lpnorml);
     if (lptxtur!=NULL) del_tList(&lptxtur);
     if (lpweght!=NULL) del_tList(&lpweght);
-
     del_xml(&xml);
 
     *fnum = facet_num;
@@ -721,6 +863,8 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
 
 
 /**
+TriPolygonData*  jbxl::TriPolygonDataFromLLMeshFile(const char* filename, int* fnum, int* pnum, SkinJointData** skin_joint)
+
 llmeshのファイルからデータを読み込み，三角ポリゴンデータ TriPloyDataを生成する．@n
 
 @param filename   llmeshファイル名．
@@ -728,8 +872,9 @@ llmeshのファイルからデータを読み込み，三角ポリゴンデー�
 @param[out] pnum  生成したポリゴンデータ（配列）の数．
 
 @return  生成したポリゴンデータの配列へのポインタ．
+@retval  skin_joint  Jointデータへのポインタ．
 */
-TriPolygonData*  jbxl::TriPolygonDataFromLLMeshFile(const char* filename, int* fnum, int* pnum)
+TriPolygonData*  jbxl::TriPolygonDataFromLLMeshFile(const char* filename, int* fnum, int* pnum, SkinJointData** skin_joint)
 {
     if (filename==NULL || fnum==NULL || pnum==NULL) return NULL;
     *fnum = *pnum = 0;
@@ -751,6 +896,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMeshFile(const char* filename, int* f
 
     int facet_num, tri_num;
     TriPolygonData* tridata = TriPolygonDataFromLLMesh(buf, (int)sz, &facet_num, &tri_num);
+    if (skin_joint!=NULL) *skin_joint = SkinJointDataFromLLMesh(buf, (int)sz);
 
     freeNull(buf);
 
@@ -761,6 +907,8 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMeshFile(const char* filename, int* f
 
 
 /**
+tXML*  jbxl::GetLLsdXMLFromLLMesh(uByte* buf, int sz, const char* key)
+
 llmeshファイルのヘッダ部分の keyを参照し，圧縮されたボディデータから該当データを取り出してXML形式に変換する．
 
 @param buf  llmeshファイルのヘッダ部分のバイナリデータ

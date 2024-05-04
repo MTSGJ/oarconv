@@ -6,7 +6,7 @@
 @file  MeshMaker.h
 
 @author  Fumi.Iseki 
-@date    2014 9/16
+@date    2024 5/3
 
 @sa OpenSim/Region/Physics/Meshing/Meshmerizer.cs
 */
@@ -39,7 +39,7 @@ namespace  jbxl {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 
-MeshObjectData* MeshObjectDataFromPrimShape(PrimBaseShape shape, tList* resourceList, bool useBrep);
+MeshObjectData* MeshObjectDataFromPrimShape(PrimBaseShape shape, tList* resourceList, bool useBrep, SkinJointData** skin_joint);
 
 PrimMesh        GeneratePrimMesh(PrimMeshParam param);
 TriPolygonData* TriPolygonDataFromPrimMesh(PrimMesh primMesh, int* fnum, int* pnum);
@@ -62,8 +62,9 @@ TriPolygonData*  GenerateGrayScaleSculpt(int* pnum);
 // for LLMesh
 // @sa http://wiki.secondlife.com/wiki/Mesh/Mesh_Asset_Format
 
+SkinJointData*   SkinJointDataFromLLMesh(uByte* mesh, int sz);
 TriPolygonData*  TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, int* pnum);
-TriPolygonData*  TriPolygonDataFromLLMeshFile(const char* filename,  int* fnum, int* pnum);
+TriPolygonData*  TriPolygonDataFromLLMeshFile(const char* filename,  int* fnum, int* pnum, SkinJointData** skin_joint);
 
 tXML*            GetLLsdXMLFromLLMesh(uByte* mesh, int sz, const char* key);
 
