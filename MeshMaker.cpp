@@ -642,6 +642,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
         PRINT_MESG("%s\n", skin_joint->joint_names.get_value(j));
     }
     print_Matrix(stdout, skin_joint->bind_shape);
+    printf("=============================\n");
     for (int j=0; j<joint_num; j++) {
         print_Matrix(stdout, skin_joint->alt_inverse_bind[j]);
         printf("=============================\n");
