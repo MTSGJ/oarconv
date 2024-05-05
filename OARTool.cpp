@@ -731,7 +731,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
-                    dae->addObject(mesh, false, NULL);
+                    dae->addObject(mesh, false);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
@@ -741,7 +741,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     //obj->phantom_out = true;
-                    //obj->addObject(mesh, false, NULL);
+                    //obj->addObject(mesh, false);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -775,7 +775,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
-                    dae->addObject(mesh, false, NULL);
+                    dae->addObject(mesh, false);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
@@ -785,7 +785,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     //obj->phantom_out = true;
-                    //obj->addObject(mesh, false, NULL);
+                    //obj->addObject(mesh, false);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -836,7 +836,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
-                    dae->addObject(mesh, collider, skin_joint);
+                    tXML* joints_template = xml_parse_file("joint_template.xml");   // not del
+                    dae->addObject(mesh, collider, skin_joint, joints_template);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {

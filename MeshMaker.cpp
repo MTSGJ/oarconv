@@ -524,7 +524,7 @@ llmesh データから joint情報を読み出す．@n
 */
 SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
 {
-    if (mesh!=NULL) return NULL;
+    if (mesh==NULL) return NULL;
 
     tXML* skin = GetLLsdXMLFromLLMesh(mesh, sz, "skin");
     if (skin==NULL) return NULL;
@@ -535,6 +535,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
     // joint number and names
     tList* jointnm = get_xml_node_list_bystr(skin, "<map><key>joint_names</key><array><string>");
     if (jointnm!=NULL) {
+        // Joint数を数える
         tList* pp = jointnm->altp;
         while (pp!=NULL) {
             if (pp->next!=NULL) joint_num++;
@@ -645,8 +646,9 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
         print_Matrix(stdout, skin_joint->alt_inverse_bind[j]);
         printf("=============================\n");
     }
-*/
     del_xml(&skin);
+*/
+
     return skin_joint; 
 }
 
@@ -896,7 +898,9 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMeshFile(const char* filename, int* f
 
     int facet_num, tri_num;
     TriPolygonData* tridata = TriPolygonDataFromLLMesh(buf, (int)sz, &facet_num, &tri_num);
-    if (skin_joint!=NULL) *skin_joint = SkinJointDataFromLLMesh(buf, (int)sz);
+    if (skin_joint!=NULL) {
+        *skin_joint = SkinJointDataFromLLMesh(buf, (int)sz);
+    }
 
     freeNull(buf);
 

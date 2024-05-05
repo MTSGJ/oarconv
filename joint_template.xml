@@ -1,0 +1,81 @@
+<node id="avatar" name="avatar" type="NODE">
+  <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+  <node id="mPelvis" name="mPelvis" sid="mPelvis" type="JOINT">
+    <matrix sid="transform"></matrix>
+    <node id="mTorso" name="mTorso" sid="mTorso" type="JOINT">
+      <matrix sid="transform"></matrix>
+      <node id="mChest" name="mChest" sid="mChest" type="JOINT">
+        <matrix sid="transform"></matrix>
+        <node id="mNeck" name="mNeck" sid="mNeck" type="JOINT">
+          <matrix sid="transform"></matrix>
+          <node id="mHead" name="mHead" sid="mHead" type="JOINT">
+            <matrix sid="transform"></matrix>
+            <node id="mSkull" name="mSkull" sid="mSkull" type="JOINT">
+              <matrix sid="transform"></matrix>
+            </node>
+            <node id="mEyeRight" name="mEyeRight" sid="mEyeRight" type="JOINT">
+              <matrix sid="transform"></matrix>
+            </node>
+            <node id="mEyeLeft" name="mEyeLeft" sid="mEyeLeft" type="JOINT">
+              <matrix sid="transform"></matrix>
+            </node>
+          </node>
+        </node>
+        <node id="mCollarLeft" name="mCollarLeft" sid="mCollarLeft" type="JOINT">
+          <matrix sid="transform"></matrix>
+          <node id="mShoulderLeft" name="mShoulderLeft" sid="mShoulderLeft" type="JOINT">
+            <matrix sid="transform"></matrix>
+            <node id="mElbowLeft" name="mElbowLeft" sid="mElbowLeft" type="JOINT">
+              <matrix sid="transform"></matrix>
+              <node id="mWristLeft" name="mWristLeft" sid="mWristLeft" type="JOINT">
+                <matrix sid="transform"></matrix>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node id="mCollarRight" name="mCollarRight" sid="mCollarRight" type="JOINT">
+          <matrix sid="transform"></matrix>
+          <node id="mShoulderRight" name="mShoulderRight" sid="mShoulderRight" type="JOINT">
+            <matrix sid="transform"></matrix>
+            <node id="mElbowRight" name="mElbowRight" sid="mElbowRight" type="JOINT">
+              <matrix sid="transform"></matrix>
+              <node id="mWristRight" name="mWristRight" sid="mWristRight" type="JOINT">
+                <matrix sid="transform"></matrix>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node id="mHipRight" name="mHipRight" sid="mHipRight" type="JOINT">
+      <matrix sid="transform"></matrix>
+      <node id="mKneeRight" name="mKneeRight" sid="mKneeRight" type="JOINT">
+        <matrix sid="transform"></matrix>
+        <node id="mAnkleRight" name="mAnkleRight" sid="mAnkleRight" type="JOINT">
+          <matrix sid="transform"></matrix>
+          <node id="mFootRight" name="mFootRight" sid="mFootRight" type="JOINT">
+            <matrix sid="transform"></matrix>
+            <node id="mToeRight" name="mToeRight" sid="mToeRight" type="JOINT">
+              <matrix sid="transform"></matrix>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node id="mHipLeft" name="mHipLeft" sid="mHipLeft" type="JOINT">
+      <matrix sid="transform"></matrix>
+      <node id="mKneeLeft" name="mKneeLeft" sid="mKneeLeft" type="JOINT">
+        <matrix sid="transform"></matrix>
+        <node id="mAnkleLeft" name="mAnkleLeft" sid="mAnkleLeft" type="JOINT">
+          <matrix sid="transform"></matrix>
+          <node id="mFootLeft" name="mFootLeft" sid="mFootLeft" type="JOINT">
+            <matrix sid="transform"></matrix>
+            <node id="mToeLeft" name="mToeLeft" sid="mToeLeft" type="JOINT">
+              <matrix sid="transform"></matrix>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+</node>
