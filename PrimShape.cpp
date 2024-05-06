@@ -899,6 +899,7 @@ PrimBaseShape*  jbxl::CreatePrimBaseShapesFromXML(tXML* xml, tList* rsclist, int
 
     PrimBaseShape* shapes = (PrimBaseShape*)malloc(count*sizeof(PrimBaseShape));
     if (shapes==NULL) return NULL;
+    memset(shapes, 0, count*sizeof(PrimBaseShape));
 
     AffineTrans<double> base;   // ROOTプリムのアフィン変換
     int n = 0;

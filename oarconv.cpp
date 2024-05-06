@@ -60,7 +60,7 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "--dg"))   { degeneracy = true;}
         else if (!strcmp(argv[i], "--help")) { oarconv_help(stdout); exit(0);}
         else  {
-            print_message("%s : unknown option [%s]\n", argv[0], argv[i]);
+            PRINT_MESG("%s : unknown option [%s]\n", argv[0], argv[i]);
             exit(1);
         }
     }

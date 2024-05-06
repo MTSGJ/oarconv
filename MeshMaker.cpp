@@ -234,8 +234,8 @@ TriPolygonData*  jbxl::TriPolygonDataFromPrimMesh(PrimMesh primMesh, int* fnum, 
     int len = (int)primMesh.primTriArray.size();
     TriPolygonData* tridata = (TriPolygonData*)malloc(len*sizeof(TriPolygonData));
     if (tridata==NULL) return NULL;
-
     memset(tridata, 0, len*sizeof(TriPolygonData));
+
     for (int i=0; i<len; i++) {
         tridata[i].init();
         tridata[i].has_normal = true;
@@ -470,8 +470,8 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptImage(MSGraph<uByte> grd, int typ
             sculptMesh.free();
             return NULL;
         }
-
         memset(tridata, 0, sizeof(TriPolygonData)*tnum);
+
         for (int i=0; i<tnum; i++) {
             tridata[i].init();
             tridata[i].has_normal = true;
@@ -887,6 +887,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMeshFile(const char* filename, int* f
 
     uByte* buf = (uByte*)malloc(sz);
     if (buf==NULL) return NULL;
+    memset(buf, 0, sz);
 
     DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromLLMeshFile: reading mesh file %s\n", filename);
     FILE* fp = fopen(filename, "rb");
@@ -1243,6 +1244,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromTerrainImage(MSGraph<float> grd, int* p
         terrainMesh.free();
         return NULL;
     }
+    memset(tridata, 0, tnum*sizeof(TriPolygonData));
 
     for (int i=0; i<tnum; i++) {
         tridata[i].init();

@@ -123,6 +123,7 @@ void  CObjectsListDLG::OnBnClickedObjlistConv()
 
 	int* tmp = (int*)malloc(sizeof(int)*objNum);
 	if (tmp!=NULL) {
+	    memset(tmp, 0, sizeof(int)*objNum);
 		selNum = listLBox->GetSelItems(objNum, tmp);
 		if (selNum>0) {
 			size_t len = sizeof(int)*selNum;
@@ -149,6 +150,7 @@ void CObjectsListDLG::OnBnClickedObjlistPreview()
 
 	int* tmp = (int*)malloc(sizeof(int)*objNum);
 	if (tmp!=NULL) {
+	    memset(tmp, 0, sizeof(int)*objNum);
 		selNum = listLBox->GetSelItems(objNum, tmp);
 		if (selNum>0) {
 			size_t len = sizeof(int)*selNum;

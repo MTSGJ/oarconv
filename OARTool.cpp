@@ -514,7 +514,7 @@ void  OARTool::ReadTerrainData(void)
     if (terrainNum==0) return;
     terrain = (TerrainTool*)malloc(terrainNum*sizeof(TerrainTool));
     if (terrain==NULL) return;
-
+    memset(terrain, 0, terrainNum*sizeof(TerrainTool));
 
     int count  = 0;
     tList* lps = settingsFiles;
