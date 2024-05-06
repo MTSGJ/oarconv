@@ -813,12 +813,19 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                 for (int vtx=0; vtx<3; vtx++) {
                     tridata[tri_num].weight[vtx].init(LLSD_JOINT_MAX_NUMBER);
                     int ppos = index[vtx]*LLSD_JOINT_MAX_NUMBER;
-                    double total = 0.0;
+                    int total = 0;
                     for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
-                        total += (double)weight[ppos + j];
+                        total += (int)weight[ppos + j];
                     }
-                    for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
-                        tridata[tri_num].weight[vtx].set_value(j, (double)weight[ppos + j]/total);
+                    if (total>0) {
+                        for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
+                            tridata[tri_num].weight[vtx].set_value(j, (double)weight[ppos + j]/(double)total);
+                        }
+                    }
+                    else {
+                        for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
+                            tridata[tri_num].weight[vtx].set_value(j, 0.0);
+                        }
                     }
                 }
             }
