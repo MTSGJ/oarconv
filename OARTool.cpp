@@ -433,7 +433,7 @@ bool  OARTool::GetDataInfo()
     }
 
     // Assets Files
-    tList*  extn = add_tList_node_str(NULL, "txt", NULL);
+    tList*  extn = add_tList_node_str(NULL, "txt", NULL);   // 除外拡張子
     //
     #ifdef WIN32
         // Windowsの場合は : で区切れない
@@ -604,7 +604,7 @@ void  OARTool::GenerateSelectedDataFile(char* file_path, bool useBrep, char* com
 {
     if (file_path==NULL) return;
 
-    void* solid =generateSolidData(dataformat, file_path, 1, useBrep, command);
+    void* solid = generateSolidData(dataformat, file_path, 1, useBrep, command);
     outputSolidData(dataformat, get_file_name(file_path), solid);
     freeSolidData(dataformat, solid);
 
@@ -836,7 +836,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
-                    tXML* joints_template = xml_parse_file("joint_template.xml");   // not del
+                    char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
+                    tXML* joints_template = xml_parse_file(path);   // not del
                     dae->addObject(mesh, collider, skin_joint, joints_template);
                 }
                 // OBJ
