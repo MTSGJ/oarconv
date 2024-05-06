@@ -1,5 +1,5 @@
 <node id="avatar" name="avatar" type="NODE">
-  <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+  <matrix sid="transform"></matrix>
   <node id="mPelvis" name="mPelvis" sid="mPelvis" type="JOINT">
     <matrix sid="transform"></matrix>
     <node id="mTorso" name="mTorso" sid="mTorso" type="JOINT">
