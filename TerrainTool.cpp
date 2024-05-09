@@ -480,7 +480,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 dae = new ColladaXML();
                 dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
                 dae->addObject(data, true, NULL);
-                dae->outputFile((char*)objname.buf, (char*)path.buf, XML_INDENT_FORMAT);
+                dae->outputFile((char*)objname.buf, (char*)path.buf, XML_SPACE_FORMAT);
                 freeColladaXML(dae);
             }
             // OBJ

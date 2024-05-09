@@ -348,7 +348,7 @@ void  PrimBaseShape::GetBaseParamFromXML(tXML* xml, AffineTrans<double>* base)
     double scly = (double)get_xml_float_content_bystr(xml, "<Scale><Y>");
     double sclz = (double)get_xml_float_content_bystr(xml, "<Scale><Z>");
     affineTrans.scale.set(sclx, scly, sclz);
-    affineTrans.computeMatrix(false);
+    affineTrans.computeMatrix();
 
     // Flags  "Physics Phantom TemporaryOnRez"
     char* objflags = get_xml_str_content_bystr(xml, "<Flags>");

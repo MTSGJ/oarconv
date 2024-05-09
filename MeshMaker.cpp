@@ -13,7 +13,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
 PrimBaseShapeデータから メッシュデータを生成する．@n
 PrimBaseShapeデータは jbxl::CreatePrimBaseShapesFromXML() または PrimBaseShape::GenerateParam() で生成する．
 
-@param shape         PrimBaseShape データ
+@param baseShape     PrimBaseShape データ
 @param resourceList  key部にリソース名，val部に assetリソースのパスを格納したリスト．Sculpted Image, llmeshデータの検索用．
 @param useBrep       BREPを使用して頂点を配置する．速度は若干遅くなるが，頂点数（データ量）は減る．
 @return  MeshObjectData  メッシュデータ
@@ -574,66 +574,87 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
     }   
     del_tList(&poffset);
 
-    // bind_shape_matrix
+    // bind_shape_matrix  4x4 matrix
     tList* bshape = get_xml_node_list_bystr(skin, "<map><key>bind_shape_matrix</key><array><real>");
     if (bshape!=NULL) {
         int idx = 0;
         tList* pp = bshape->altp;
         while (pp!=NULL) {
             if (pp->next!=NULL) {
-                skin_joint->bind_shape.element(idx%4+1, idx/4+1) = atof((char*)pp->next->ldat.key.buf);
+                int i = idx%4 + 1;
+                int j = idx/4 + 1;
+                skin_joint->bind_shape.matrix.element(i, j) = atof((char*)pp->next->ldat.key.buf);
                 idx++;
             }
             pp = pp->ysis;
         }
+        skin_joint->bind_shape.computeComponents();
     }
     del_tList(&bshape);
 
     // inverse_bind_matrix
-    tList* ivbind = get_xml_node_list_bystr(skin, "<map><key>inverse_bind_matrix</key><array><array>");
-    if (ivbind!=NULL) {
-        int jdx = 0;
-        tList* joint = ivbind->altp;
+    int joint_idx = 0;
+    tList* invbind = get_xml_node_list_bystr(skin, "<map><key>inverse_bind_matrix</key><array><array>");
+    if (invbind!=NULL) {
+        tList* joint = invbind->altp;
         while (joint!=NULL) {
             if (joint->next!=NULL) {
                 int idx = 0;
                 tList* pp = joint->next;
-                while (pp!=NULL) {
+                while (pp!=NULL) {          // 4x4 matrix
                     if (pp->next!=NULL) {
-                        skin_joint->inverse_bind[jdx].element(idx%4+1, idx/4+1) = atof((char*)pp->next->ldat.key.buf);
+                        int i = idx%4 + 1;
+                        int j = idx/4 + 1;
+                        skin_joint->inverse_bind[joint_idx].matrix.element(i, j) = atof((char*)pp->next->ldat.key.buf);
                         idx++;
                     }
                     pp = pp->ysis;
                 }
             }
-            jdx++;
+            skin_joint->inverse_bind[joint_idx].computeComponents();
+            joint_idx++;
             joint = joint->ysis;
         }
     }
-    del_tList(&ivbind);
+    del_tList(&invbind);
 
     // alt_inverse_bind_matrix
-    ivbind = get_xml_node_list_bystr(skin, "<map><key>alt_inverse_bind_matrix</key><array><array>");
-    if (ivbind!=NULL) {
-        int jdx = 0;
-        tList* joint = ivbind->altp;
+    joint_idx = 0;
+    invbind = get_xml_node_list_bystr(skin, "<map><key>alt_inverse_bind_matrix</key><array><array>");
+    if (invbind!=NULL) {
+        tList* joint = invbind->altp;
         while (joint!=NULL) {
             if (joint->next!=NULL) {
                 int idx = 0;
                 tList* pp = joint->next;
-                while (pp!=NULL) {
+                while (pp!=NULL) {          // 4x4 matrix
                     if (pp->next!=NULL) {
-                        skin_joint->alt_inverse_bind[jdx].element(idx%4+1, idx/4+1) = atof((char*)pp->next->ldat.key.buf);
+                        int i = idx%4 + 1;
+                        int j = idx/4 + 1;
+                        skin_joint->alt_inverse_bind[joint_idx].matrix.element(i, j) = atof((char*)pp->next->ldat.key.buf);
                         idx++;
                     }
                     pp = pp->ysis;
                 }
             }
-            jdx++;
+            skin_joint->alt_inverse_bind[joint_idx].computeComponents();
+            joint_idx++;
             joint = joint->ysis;
         }
     }
-    del_tList(&ivbind);
+    del_tList(&invbind);
+
+    // Scale, Rotation を無視
+    for (int jnt=0; jnt<joint_idx; jnt++) {
+        for (int i=1; i<=4; i++) {
+            for (int j=1; j<=4; j++) {
+                if (i==j)      skin_joint->alt_inverse_bind[jnt].matrix.element(i, j) = 1.0;
+                else if (j!=4) skin_joint->alt_inverse_bind[jnt].matrix.element(i, j) = 0.0;
+            }
+        }
+        skin_joint->alt_inverse_bind[jnt].computeComponents();
+    }
+
 
 /*
     PRINT_MESG("joint number = %d\n", skin_joint->joint_names.get_size());
@@ -834,6 +855,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
         }
 
         freeNull(weight);
+        //if (weight!=NULL) ::free(weight);
         free_Buffer(&idx);
         free_Buffer(&pos);
         free_Buffer(&nrm);
@@ -847,7 +869,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
         if (lpwgt!=NULL) lpwgt = lpwgt->next;
     }
 
-    if (plygn_num !=  tri_num) {
+    if (plygn_num != tri_num) {
         PRINT_MESG("WARNING: JBXL::TriPolygonDataFromLLMesh:  plygn_num and trinum are missmath! (%d != %d)\n", plygn_num, tri_num);
         tri_num = Min(plygn_num, tri_num);
     }

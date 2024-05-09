@@ -836,8 +836,11 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
-                    char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
-                    tXML* joints_template = xml_parse_file(path);   // not del
+                    tXML* joints_template = NULL;
+                    if (count==0) {
+                        char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
+                        joints_template = xml_parse_file(path);   // not del
+                    }
                     dae->addObject(mesh, collider, skin_joint, joints_template);
                 }
                 // OBJ
@@ -865,10 +868,13 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     for (int s=0; s<shno; s++) shapes[s].free();
     ::free(shapes);
 
+    // Object の終了処理
     if (count>0) {
         // DAE
         if (format==JBXL_3D_FORMAT_DAE) {
-            if (count==1 && forUnity4) dae->addCenterObject();          // for Unity4.x
+            if (count==1 & forUnity4) dae->addCenterObject();          // for Unity4.x
+            dae->getObjectCenter();
+            dae->setJointLocation();
             return (void*)dae;
         }
         //  OBJ
@@ -917,7 +923,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         ColladaXML* dae = (ColladaXML*)solid;
         if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
         else                  out_path = dup_Buffer(pathOUT);
-        dae->outputFile(fname, (char*)out_path.buf, XML_INDENT_FORMAT);
+        dae->outputFile(fname, (char*)out_path.buf, XML_SPACE_FORMAT);
     }
     // OBJ
     else if (format==JBXL_3D_FORMAT_OBJ) {
