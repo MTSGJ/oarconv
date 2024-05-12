@@ -571,7 +571,7 @@ int  OARTool::GenerateTerrainDataFile(void)
 }
 
 
-int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, char* command)
+int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, bool procJoint, char* command)
 {
     tList* lp = objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
@@ -583,7 +583,7 @@ int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, c
         num++;
         if (num>=startnum && num<=stopnum) {
             char* file_path = (char*)lp->ldat.val.buf;
-            void* solid = generateSolidData(dataformat, file_path, num, useBrep, command);
+            void* solid = generateSolidData(dataformat, file_path, num, useBrep, procJoint, command);
             outputSolidData(dataformat, get_file_name(file_path), solid);
             freeSolidData(dataformat, solid);
             if (counter!=NULL) {
@@ -600,11 +600,11 @@ int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, c
 }
 
 
-void  OARTool::GenerateSelectedDataFile(char* file_path, bool useBrep, char* command)
+void  OARTool::GenerateSelectedDataFile(char* file_path, bool useBrep, bool procJoint, char* command)
 {
     if (file_path==NULL) return;
 
-    void* solid = generateSolidData(dataformat, file_path, 1, useBrep, command);
+    void* solid = generateSolidData(dataformat, file_path, 1, useBrep, procJoint, command);
     outputSolidData(dataformat, get_file_name(file_path), solid);
     freeSolidData(dataformat, solid);
 
@@ -612,7 +612,7 @@ void  OARTool::GenerateSelectedDataFile(char* file_path, bool useBrep, char* com
 }
 
 
-int  OARTool::GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep, char* command)
+int  OARTool::GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep, bool procJoint, char* command)
 {
     tList* lp = objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
@@ -622,7 +622,7 @@ int  OARTool::GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep, c
     while (lp!=NULL) {
         if (num==objlist[cnt]) {
             char* file_path = (char*)lp->ldat.val.buf;
-            void* solid = generateSolidData(dataformat, file_path, num + 1, useBrep, command);
+            void* solid = generateSolidData(dataformat, file_path, num + 1, useBrep, procJoint, command);
             outputSolidData(dataformat, file_path, solid);
             freeSolidData(dataformat, solid);
             if (counter!=NULL) {
@@ -642,18 +642,19 @@ int  OARTool::GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep, c
 
 
 /**
-void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
+void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, bool procJoint, char* command)
 
 Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) から指定された形式で SOLIDデータを生成する．
 
-@param format   生成データフォーマット
-@param fname    オブジェクト名（xmlファイル名）
-@param num      表示用の処理番号．
-@param useBrep  頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
-@param command  JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
+@param format     生成データフォーマット
+@param fname      オブジェクト名（xmlファイル名）
+@param num        表示用の処理番号．
+@param useBrep    頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
+@param procJoint  Joints データを処理するか？ 処理すると処理時間はかかる．
+@param command    JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
 @retval 生成されたデータへのポインタ．それぞれのデータ型でキャストして使用する．
 */
-void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
+void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, bool procJoint, char* command)
 {
     if (fname==NULL) return NULL;
     PRINT_MESG("[%d/%d] GenerateSolid: generating %s\n", num, objectsNum, fname);
@@ -692,6 +693,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     else if (format==JBXL_3D_FORMAT_OBJ) {
         obj = new OBJData(); 
         obj->setEngine(engine);
+        procJoint = false;
     }
     // FBX
     else if (format==JBXL_3D_FORMAT_FBX) {
@@ -701,6 +703,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         useBrep = true;
+        procJoint = false;
         command = NULL;
         stl = new BrepSolidList();
     }
@@ -801,9 +804,12 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         // Prim (Sculpt, Meshを含む)
         else if (shapes[s].PCode==PRIM_PCODE_PRIM) { 
             //
-            SkinJointData* skin_joint = NULL;
+            SkinJointData*  skin_joint = NULL;
+            SkinJointData** ptr_joints = &skin_joint;
+            if (!procJoint) ptr_joints = NULL;
+
             shapes[s].affineTrans.addShift(-xsize/2.0f + terrainShift.x, -ysize/2.0f + terrainShift.y, -waterHeight + terrainShift.z);
-            MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, &skin_joint);
+            MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, ptr_joints);
             //
             if (mesh!=NULL) {
                 if (isRequiredTexture(format)) {    // STLの場合は不必要

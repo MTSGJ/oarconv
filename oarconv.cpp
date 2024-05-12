@@ -33,6 +33,7 @@ int main(int argc, char** argv)
     bool  degeneracy = false;
     //bool  useBrep = false;
     bool  useBrep = true;
+    bool  procJoint = false;
 
     for (int i=1; i<argc; i++) {
         if      (!strcmp(argv[i], "-i")) { if (i!=argc-1){ copy_s2Buffer(argv[i+1], &inpdir); i++;}}
@@ -58,6 +59,7 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "--fbx"))  { format = JBXL_3D_FORMAT_FBX;}    // FBXデータを出力
         else if (!strcmp(argv[i], "--stl"))  { format = JBXL_3D_FORMAT_STL_A;}  // STLデータを出力
         else if (!strcmp(argv[i], "--dg"))   { degeneracy = true;}
+        else if (!strcmp(argv[i], "--joint")){ procJoint  = true;}
         else if (!strcmp(argv[i], "--help")) { oarconv_help(stdout); exit(0);}
         else  {
             PRINT_MESG("%s : unknown option [%s]\n", argv[0], argv[i]);
@@ -89,7 +91,7 @@ int main(int argc, char** argv)
 
     if (infile.buf!=NULL) {
         oar.objectsNum = 1;
-        oar.GenerateSelectedDataFile((char*)infile.buf, useBrep, (char*)cmmnd.buf);
+        oar.GenerateSelectedDataFile((char*)infile.buf, useBrep, procJoint, (char*)cmmnd.buf);
     }
     else {
         if (strtnum==0) {
@@ -99,7 +101,7 @@ int main(int argc, char** argv)
             strtnum = 1;
         }
         if (stopnum!=0) {
-            oar.GenerateObjectsDataFile(strtnum, stopnum, useBrep, (char*)cmmnd.buf);
+            oar.GenerateObjectsDataFile(strtnum, stopnum, useBrep, procJoint, (char*)cmmnd.buf);
         }
     }
     oar.free();

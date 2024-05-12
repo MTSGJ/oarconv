@@ -123,12 +123,12 @@ public:
 
     // DAE/OBJ/STL
     int    GenerateTerrainDataFile (void);
-    int    GenerateObjectsDataFile (int startnum=1, int stopnum=-1, bool useBrep=true, char* command=NULL);
-    void   GenerateSelectedDataFile(char* fname, bool useBrep=true, char* command=NULL);
-    int    GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep=true, char* command=NULL);
+    int    GenerateObjectsDataFile (int startnum=1, int stopnum=-1, bool useBrep=true, bool procJoint=false, char* command=NULL);
+    void   GenerateSelectedDataFile(char* fname, bool useBrep=true, bool procJoint=false, char* command=NULL);
+    int    GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep=true, bool procJoint=false, char* command=NULL);
 
     // 要データ形式
-    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, char* command=NULL);
+    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, bool procJoint=false, char* command=NULL);
     void   outputSolidData(int format, const char* fname, void* solid);
     void   freeSolidData(int format, void* solid);
 
