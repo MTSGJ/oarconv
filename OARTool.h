@@ -101,6 +101,7 @@ private:
     int    engine;
     int    dataformat;
     bool   degeneracy;          // UE用 縮退
+    bool   procJoints;
 
 public:
     void   SetPathInfo(const char* oardir, const char* outdir, const char* astdir);
@@ -109,8 +110,9 @@ public:
     void   MakeOutputFolder(void);
 
     void   SetEngine(int e);
-    void   SetDataFormat(int f) { dataformat = f; }
+    void   SetDataFormat(int f)  { dataformat = f; }
     void   SetDegeneracy(bool b) { degeneracy = b; }
+    void   SetProcJoints(bool b) { procJoints = b; }
     void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
     void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
 
@@ -123,12 +125,12 @@ public:
 
     // DAE/OBJ/STL
     int    GenerateTerrainDataFile (void);
-    int    GenerateObjectsDataFile (int startnum=1, int stopnum=-1, bool useBrep=true, bool procJoint=false, char* command=NULL);
-    void   GenerateSelectedDataFile(char* fname, bool useBrep=true, bool procJoint=false, char* command=NULL);
-    int    GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep=true, bool procJoint=false, char* command=NULL);
+    int    GenerateObjectsDataFile (int startnum=1, int stopnum=-1, bool useBrep=true, char* command=NULL);
+    void   GenerateSelectedDataFile(char* fname, bool useBrep=true, char* command=NULL);
+    int    GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep=true, char* command=NULL);
 
     // 要データ形式
-    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, bool procJoint=false, char* command=NULL);
+    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, char* command=NULL);
     void   outputSolidData(int format, const char* fname, void* solid);
     void   freeSolidData(int format, void* solid);
 
