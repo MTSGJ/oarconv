@@ -18,6 +18,7 @@ COutFormatDLG::COutFormatDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 	outputEngine = param->outputEngine;
 	outputFormat = param->outputFormat;
 	degeneracy   = param->degeneracy;
+	procJoints   = param->procJoints;
 
 	outputDaeButton   = NULL;
 	outputObjButton   = NULL;
@@ -28,6 +29,8 @@ COutFormatDLG::COutFormatDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 
 	outputUnityButton = NULL;
 	outputUEButton    = NULL;
+
+	procJointsButton  = NULL;
 }
 
 
@@ -41,6 +44,7 @@ void  COutFormatDLG::getParameters(CParameterSet* param)
 	param->outputEngine = outputEngine;
 	param->outputFormat = outputFormat;
 	param->degeneracy   = degeneracy;
+	param->procJoints   = procJoints;
 
 	if (outputFormat == JBXL_3D_FORMAT_DAE) {
 		param->prefixOUT = param->prefixDAE;
@@ -79,6 +83,7 @@ BOOL COutFormatDLG::OnInitDialog()
 	outputStlButton   = (CButton*)GetDlgItem(IDC_RADIO_STL);
 	outputUnityButton = (CButton*)GetDlgItem(IDC_RADIO_UNITY);
 	outputUEButton    = (CButton*)GetDlgItem(IDC_RADIO_UE);
+	procJointsButton  = (CButton*)GetDlgItem(IDC_CHECK_JOINTS);
 
 	outputDaeButton->SetCheck(0);
 	outputObjButton->SetCheck(0);
@@ -131,6 +136,9 @@ BOOL COutFormatDLG::OnInitDialog()
 		outputUEButton->SetCheck(1);
 	}
 
+	if (procJoints) procJointsButton->SetCheck(1);
+	else            procJointsButton->SetCheck(0);
+
 	return TRUE;
 }
 
@@ -157,6 +165,9 @@ void COutFormatDLG::OnOK()
 	if (outputUnityButton->GetCheck())   outputEngine = JBXL_3D_ENGINE_UNITY;
 	else if (outputUEButton->GetCheck()) outputEngine = JBXL_3D_ENGINE_UE;
 
+	if (procJointsButton->GetCheck()) procJoints = TRUE;
+	else                              procJoints = FALSE;
+
 	CDialogEx::OnOK();
 }
 
@@ -167,7 +178,7 @@ BEGIN_MESSAGE_MAP(COutFormatDLG, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO_FBX, &COutFormatDLG::OnBnClickedRadioFbx)
 	ON_BN_CLICKED(IDC_RADIO_FBX_NO, &COutFormatDLG::OnBnClickedRadioFbxNo)
 	ON_BN_CLICKED(IDC_RADIO_STL, &COutFormatDLG::OnBnClickedRadioStl)
-	ON_BN_CLICKED(IDC_CHECK_DEBUGMODE, &COutFormatDLG::OnBnClickedCheckDebugmode)
+	//ON_BN_CLICKED(IDC_CHECK_JOINTS, &COutFormatDLG::OnBnClickedCheckJoints)
 END_MESSAGE_MAP()
 
 
@@ -178,6 +189,7 @@ void COutFormatDLG::OnBnClickedRadioDae()
 	outputUEButton->EnableWindow(FALSE);
 	outputUEButton->SetCheck(0);
 	outputEngine = JBXL_3D_ENGINE_UNITY;
+	procJointsButton->EnableWindow(TRUE);
 }
 
 
@@ -190,6 +202,7 @@ void COutFormatDLG::OnBnClickedRadioObj()
 		outputUnityButton->SetCheck(1);
 		outputUEButton->SetCheck(0);
 	}
+	procJointsButton->EnableWindow(FALSE);
 }
 
 
@@ -200,6 +213,7 @@ void COutFormatDLG::OnBnClickedRadioObjNo()   // with No Offset for UE only
 	outputUnityButton->SetCheck(0);
 	outputUEButton->EnableWindow(TRUE);
 	outputUEButton->SetCheck(1);
+	procJointsButton->EnableWindow(FALSE);
 }
 
 
@@ -211,6 +225,7 @@ void COutFormatDLG::OnBnClickedRadioFbx()
 		outputEngine = JBXL_3D_ENGINE_UNITY;
 		outputUnityButton->SetCheck(1);
 		outputUEButton->SetCheck(0);
+		procJointsButton->EnableWindow(TRUE);
 	}
 }
 
@@ -222,6 +237,7 @@ void COutFormatDLG::OnBnClickedRadioFbxNo()		// with No Offset for UE only
 	outputUnityButton->SetCheck(0);
 	outputUEButton->EnableWindow(TRUE);
 	outputUEButton->SetCheck(1);
+	procJointsButton->EnableWindow(TRUE);
 }
 
 
@@ -232,10 +248,12 @@ void COutFormatDLG::OnBnClickedRadioStl()
 	outputUnityButton->SetCheck(0);
 	outputUEButton->EnableWindow(FALSE);
 	outputUEButton->SetCheck(0);
+	procJointsButton->EnableWindow(FALSE);
 }
 
-
-void COutFormatDLG::OnBnClickedCheckDebugmode()
+/*
+void COutFormatDLG::OnBnClickedCheckJoints()
 {
 	// TODO: ここにコントロール通知ハンドラー コードを追加します。
 }
+*/

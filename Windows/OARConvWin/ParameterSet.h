@@ -55,6 +55,7 @@ public:
 	int     outputEngine;		// Unity or UE
 	int     outputFormat;		// ファイルフォーマット DAE, OBJ, STL
 	BOOL    degeneracy;
+	BOOL    procJoints;
 
 	float   terrainScale;
 	float   xShift;

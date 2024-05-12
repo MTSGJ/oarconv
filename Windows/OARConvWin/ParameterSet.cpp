@@ -23,6 +23,7 @@ void  CParameterSet::init(void)
 	outputTerrain = TRUE;
 	debugMode     = FALSE;
 	degeneracy    = FALSE;
+	procJoints    = FALSE;
 
 	outputEngine  = JBXL_3D_ENGINE_UNITY;
 	outputFormat  = JBXL_3D_FORMAT_DAE;
@@ -55,6 +56,7 @@ void  CParameterSet::readConfigFile(void)
 	outputTerrain = get_bool_param_tList (lt, "outputTerrain", outputTerrain);
 	debugMode     = get_bool_param_tList (lt, "debugMode",  debugMode);
 	degeneracy    = get_bool_param_tList (lt, "degeneracy", degeneracy);
+	procJoints    = get_bool_param_tList (lt, "procJoints", procJoints);
 
 	outputEngine  = get_int_param_tList  (lt, "outputEngine", outputEngine);
     outputFormat  = get_int_param_tList  (lt, "outputFormat", outputFormat);
@@ -129,6 +131,8 @@ void  CParameterSet::saveConfigFile(void)
 	else               fprintf(fp, "outputTerrain %s\n", "FALSE");
 	if (degeneracy)    fprintf(fp, "degeneracy %s\n", "TRUE");
 	else               fprintf(fp, "degeneracy %s\n", "FALSE");
+	if (procJoints)    fprintf(fp, "procJoints %s\n", "TRUE");
+	else               fprintf(fp, "procJoints %s\n", "FALSE");
 	if (debugMode)     fprintf(fp, "debugMode %s\n", "TRUE");
 	else               fprintf(fp, "debugMode %s\n", "FALSE");
 
