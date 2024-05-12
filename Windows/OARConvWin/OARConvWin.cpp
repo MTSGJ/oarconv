@@ -216,6 +216,7 @@ BOOL  COARConvWinApp::InitInstance()
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
     oarTool.SetDegeneracy(appParam.degeneracy);
+    oarTool.SetProcJoints(appParam.procJoints);
     //
     updateMenuBar();
     updateStatusBar(_T(""));
@@ -377,6 +378,7 @@ void  COARConvWinApp::OnOutFormatDialog()
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
     oarTool.SetDegeneracy(appParam.degeneracy);
+    oarTool.SetProcJoints(appParam.procJoints);
 
     char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
     oarTool.ChangePathInfo(NULL, outdir, NULL);
@@ -474,6 +476,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
     oarTool.SetDegeneracy(appParam.degeneracy);
+    oarTool.SetProcJoints(appParam.procJoints);
     oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
     ::free(oardir);
     ::free(outdir);
@@ -532,6 +535,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
     oarTool.SetDegeneracy(appParam.degeneracy);
+    oarTool.SetProcJoints(appParam.procJoints);
     oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
     ::free(oardir);
     ::free(outdir);
@@ -823,14 +827,18 @@ void  COARConvWinApp::updateStatusBar(CString path)
     if (pMainFrame==NULL) return;
 
     CString prefix;
-    if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE)   prefix = _T(" DAE  |  ");
+    if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
+        prefix = _T(" DAE  |  ");
+        if (appParam.procJoints)  prefix += _T("JOINTS  |  ");
+    }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
         if (!appParam.degeneracy) prefix = _T(" OBJ  |  ");
         else                      prefix = _T(" OBJ: NO_OFFSET  |  ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
-        if (!appParam.degeneracy) prefix = _T(" BX | ");
+        if (!appParam.degeneracy) prefix = _T(" FBX | ");
         else                      prefix = _T(" FBX: NO_OFFSET  |  ");
+        if (appParam.procJoints)  prefix += _T("JOINTS  |  ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T(" STL  |  ");
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T(" STL  |  ");
