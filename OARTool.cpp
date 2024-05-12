@@ -872,7 +872,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     if (count>0) {
         // DAE
         if (format==JBXL_3D_FORMAT_DAE) {
-            if (count==1 & forUnity4) dae->addCenterObject();          // for Unity4.x
+            if (count==1 && forUnity4) dae->addCenterObject();          // for Unity4.x
             dae->getObjectCenter();
             dae->setJointLocationMatrix();
             return (void*)dae;
