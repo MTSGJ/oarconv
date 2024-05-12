@@ -10,7 +10,7 @@
 
 
 #define OARCONV_VERSION             "1.6.1" // 2024 for Joints File
-//#define OARCONV_VERSION           "1.6.0" // 20240331 OBJ File
+//#define OARCONV_VERSION           "1.6.0" // 20240421 for OBJ File
 //#define OARCONV_VERSION           "1.5.0" // 20240126 less texture
 //#define OARCONV_VERSION           "1.4.6" // 20240105 Unity 2022 support
 //#define OARCONV_VERSION           "1.4.5" // 20201205 for latest JunkBox Library
