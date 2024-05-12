@@ -47,4 +47,5 @@ public:
 	afx_msg void OnBnClickedRadioObjNo();
 	afx_msg void OnBnClickedRadioFbx();
 	afx_msg void OnBnClickedRadioFbxNo();
+	afx_msg void OnBnClickedCheckDebugmode();
 };

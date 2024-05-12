@@ -167,6 +167,7 @@ BEGIN_MESSAGE_MAP(COutFormatDLG, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO_FBX, &COutFormatDLG::OnBnClickedRadioFbx)
 	ON_BN_CLICKED(IDC_RADIO_FBX_NO, &COutFormatDLG::OnBnClickedRadioFbxNo)
 	ON_BN_CLICKED(IDC_RADIO_STL, &COutFormatDLG::OnBnClickedRadioStl)
+	ON_BN_CLICKED(IDC_CHECK_DEBUGMODE, &COutFormatDLG::OnBnClickedCheckDebugmode)
 END_MESSAGE_MAP()
 
 
@@ -231,4 +232,10 @@ void COutFormatDLG::OnBnClickedRadioStl()
 	outputUnityButton->SetCheck(0);
 	outputUEButton->EnableWindow(FALSE);
 	outputUEButton->SetCheck(0);
+}
+
+
+void COutFormatDLG::OnBnClickedCheckDebugmode()
+{
+	// TODO: ここにコントロール通知ハンドラー コードを追加します。
 }

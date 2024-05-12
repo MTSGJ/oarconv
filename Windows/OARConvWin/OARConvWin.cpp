@@ -64,8 +64,8 @@ COARConvWinApp::COARConvWinApp()
     pDocTemplBREP = NULL;
 
     pMainFrame    = NULL;
-    pLogFrame      = NULL;
-    pLogDoc          = NULL;
+    pLogFrame     = NULL;
+    pLogDoc       = NULL;
     aboutBox      = NULL;
     objListBox    = NULL;
 
