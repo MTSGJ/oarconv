@@ -788,7 +788,7 @@ void  PrimBaseShape::GetMaterialParams(tList* resourceList)
                     }
                     //
                     materialParam[i].enable = true;
-                    del_xml(&xml);
+                    del_all_xml(&xml);
                 }
 
             }

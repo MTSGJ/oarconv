@@ -95,7 +95,7 @@ void  TerrainTool::ReadSettings(const char* path)
     maxSE = get_xml_float_content_bystr(xml, "<RegionSettings><GroundTextures><ElevationHighSE>");
     waterHeight = get_xml_float_content_bystr(xml, "<RegionSettings><Terrain><WaterHeight>");
 
-    del_xml(&xml);
+    del_all_xml(&xml);
     return;
 }
 

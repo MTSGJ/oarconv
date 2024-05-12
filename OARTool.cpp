@@ -321,7 +321,7 @@ bool  OARTool::GetDataInfo()
             ::free(xstrsz);
             ::free(ystrsz);
         }
-        del_xml(&arc_xml);
+        del_all_xml(&arc_xml);
     }
     else {
         PRINT_MESG("OARTool::GetDatanInfo: ERROR: not found archive file! [%sarchive.xml]\n", pathOAR.buf);
@@ -406,7 +406,7 @@ bool  OARTool::GetDataInfo()
         if (land_xml!=NULL) {
             char* name = get_xml_str_content_bystr(land_xml, "<LandData><Name>"); // パーセル名
             regionName = make_Buffer_bystr(name);
-            del_xml(&land_xml);
+            del_all_xml(&land_xml);
         }
     }*/
 
@@ -666,7 +666,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     tXML* sxml = xml_parse_file(fname);
     if (sxml!=NULL) {
         shapes = CreatePrimBaseShapesFromXML(sxml, assetsFiles, &shno); // Shapeデータ．shnoはデータの数
-        del_xml(&sxml);
+        del_all_xml(&sxml);
         if (shapes==NULL || shno<=0) {
             PRINT_MESG("OARTool::GenerateSolid: WARNING: not found shape data in %s (skip)\n", fname);
             return NULL;

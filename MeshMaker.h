@@ -39,10 +39,10 @@ namespace  jbxl {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 
-MeshObjectData* MeshObjectDataFromPrimShape(PrimBaseShape shape, tList* resourceList, bool useBrep, SkinJointData** skin_joint);
+MeshObjectData*  MeshObjectDataFromPrimShape(PrimBaseShape shape, tList* resourceList, bool useBrep, SkinJointData** skin_joint);
 
-PrimMesh        GeneratePrimMesh(PrimMeshParam param);
-TriPolygonData* TriPolygonDataFromPrimMesh(PrimMesh primMesh, int* fnum, int* pnum);
+PrimMesh         GeneratePrimMesh(PrimMeshParam param);
+TriPolygonData*  TriPolygonDataFromPrimMesh(PrimMesh primMesh, int* fnum, int* pnum);
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

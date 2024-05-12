@@ -545,7 +545,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
         skin_joint = new SkinJointData(joint_num);
         if (skin_joint==NULL) {
             del_tList(&jointnm);
-            del_xml(&skin);
+            del_all_xml(&skin);
             return NULL;
         }
 
@@ -553,8 +553,8 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
         pp = jointnm->altp;
         while (pp!=NULL) {
             if (pp->next!=NULL) {
-                char* ptr = (char*)malloc(pp->next->ldat.key.vldsz+1);
-                memcpy(ptr, pp->next->ldat.key.buf, pp->next->ldat.key.vldsz+1);
+                char* ptr = (char*)malloc(pp->next->ldat.key.vldsz + 1);
+                memcpy(ptr, pp->next->ldat.key.buf, pp->next->ldat.key.vldsz + 1);
                 skin_joint->joint_names.set_value(joint_num, ptr);
                 joint_num++;
             }
@@ -563,7 +563,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
     }
     del_tList(&jointnm);
     if (skin_joint==NULL) {
-        del_xml(&skin);
+        del_all_xml(&skin);
         return NULL;
     }
 
@@ -668,7 +668,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
         print_Matrix(stdout, skin_joint->alt_inverse_bind[j]);
         printf("=============================\n");
     }
-    del_xml(&skin);
+    del_all_xml(&skin);
 */
 
     return skin_joint; 
@@ -707,7 +707,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     if (lpindex==NULL || lppostn==NULL) {
         if (lpindex!=NULL) del_tList(&lpindex);
         if (lppostn!=NULL) del_tList(&lppostn);
-        del_xml(&xml);
+        del_all_xml(&xml);
         *fnum = 0;
         *pnum = 0;
         return NULL;
@@ -873,7 +873,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     if (lpnorml!=NULL) del_tList(&lpnorml);
     if (lptxtur!=NULL) del_tList(&lptxtur);
     if (lpweght!=NULL) del_tList(&lpweght);
-    del_xml(&xml);
+    del_all_xml(&xml);
 
     *fnum = facet_num;
     *pnum = tri_num;
@@ -954,7 +954,7 @@ tXML*  jbxl::GetLLsdXMLFromLLMesh(uByte* buf, int sz, const char* key)
         ofst = llsd_xml_get_content_int(xml, key, "offset");
         size = llsd_xml_get_content_int(xml, key, "size");
     }
-    del_xml(&xml);
+    del_all_xml(&xml);
     if (ofst<0 || size<=0) return NULL;
 
     //
