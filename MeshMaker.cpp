@@ -785,6 +785,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
     for (int facet=0; facet<facet_num; facet++) {
         DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromLLMesh: start setup tridata (%d/%d).\n", facet+1, facet_num);
         //
+        int joints_num = 0;
         idx = decode_base64_Buffer(lpidx->altp->ldat.key);
         pos = decode_base64_Buffer(lppos->altp->ldat.key);
         int polygon_num = idx.vldsz/6;
@@ -795,7 +796,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
         uWord* weight = NULL;
         if (lpwgt!=NULL && lpwgt->altp!=NULL) {
             wgt = decode_base64_Buffer(lpwgt->altp->ldat.key);
-            weight = llsd_bin_get_skin_weight((uByte*)wgt.buf, wgt.vldsz, vertex_num);
+            weight = llsd_bin_get_skin_weight((uByte*)wgt.buf, wgt.vldsz, vertex_num, &joints_num);
         }
         //
         for (int tri=0; tri<polygon_num; tri++) {   // ポリゴンループ
@@ -829,33 +830,21 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
                 }
             }
             // WEIGHT
-            if (wgt.buf!=NULL) {
+            if (wgt.buf!=NULL && joints_num>0) {
                 tridata[tri_num].has_weight = true;
                 for (int vtx=0; vtx<3; vtx++) {
-                    tridata[tri_num].weight[vtx].init(LLSD_JOINT_MAX_NUMBER);
-                    int ppos = index[vtx]*LLSD_JOINT_MAX_NUMBER;
-                    int total = 0;
-                    for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
-                        total += (int)weight[ppos + j];
-                    }
-                    if (total>0) {
-                        for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
-                            tridata[tri_num].weight[vtx].set_value(j, (double)weight[ppos + j]/(double)total);
-                        }
-                    }
-                    else {
-                        for (int j=0; j<LLSD_JOINT_MAX_NUMBER; j++) {
-                            tridata[tri_num].weight[vtx].set_value(j, 0.0);
-                        }
+                    tridata[tri_num].weight[vtx].init(joints_num);
+                    int ppos = index[vtx]*joints_num;
+                    for (int j=0; j<joints_num; j++) {
+                        tridata[tri_num].weight[vtx].set_value(j, (int)weight[ppos + j]);
                     }
                 }
             }
             //
             tri_num++;
         }
-
         freeNull(weight);
-        //if (weight!=NULL) ::free(weight);
+
         free_Buffer(&idx);
         free_Buffer(&pos);
         free_Buffer(&nrm);

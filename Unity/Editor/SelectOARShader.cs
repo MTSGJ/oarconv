@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2023 (C) v1.6.0
+// SelectOARShader for oarconv by Fumi.Iseki 2023 (C) v1.6.1
 //
 // see also http://www.nsl.tuis.ac.jp/xoops/modules/xpwiki/?OAR%20Converter
 //

@@ -138,12 +138,12 @@ TerrainTexWeight  TerrainTool::GetTextureWeight(int x, int y)
     TerrainTexWeight sw = GetTerrainBaseTextureWeight(h, minSW, maxSW);
     TerrainTexWeight se = GetTerrainBaseTextureWeight(h, minSE, maxSE);
 
-    TerrainTexWeight weight;
+    TerrainTexWeight tweight;
     for (int i=0; i<4; i++) {
-        weight.w[i] = (1.0f-alph)*(1.0f-beta)*sw.w[i] + alph*(1.0f-beta)*se.w[i] + (1.0f-alph)*beta*nw.w[i] + alph*beta*ne.w[i];
+        tweight.w[i] = (1.0f-alph)*(1.0f-beta)*sw.w[i] + alph*(1.0f-beta)*se.w[i] + (1.0f-alph)*beta*nw.w[i] + alph*beta*ne.w[i];
     }
 
-    return weight;
+    return tweight;
 }
 
 
@@ -251,7 +251,7 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
     msg.getm(lsize, lsize, 3);
     if (msg.isNull()) return msg;
 
-    TerrainTexWeight weight;
+    TerrainTexWeight tweight;
     float vscale = scale/xsize;
     for (int k=0; k<3; k++) {
         PRINT_MESG("GenerateWeightedTexture: generating region texture. %d/3\n", k+1);
@@ -266,13 +266,13 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
             for (int i=0; i<lsize; i++) {
                 float dx = (float)i/lsize;
                 float rx = dx*xsize;                                // Region X座標
-                weight = GetTextureWeight((int)rx, (int)ry);
+                tweight = GetTextureWeight((int)rx, (int)ry);
                 //
                 float sum = 0.0f;
                 for (int m=0; m<4; m++) {
                     int cl = k;
                     if (vp[m].zs==1) cl = 0;
-                    sum += weight.w[m] * GetScalingPixel(&vp[m], vscale*vp[m].xs, dx*vp[m].xs, dy*vp[m].ys, cl);
+                    sum += tweight.w[m] * GetScalingPixel(&vp[m], vscale*vp[m].xs, dx*vp[m].xs, dy*vp[m].ys, cl);
                 }
                 if (sum>=256.0f) sum = 255.0f;
                 msg.gp[jj+i] = (int)sum;
@@ -547,7 +547,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
 */
 TerrainTexWeight  jbxl::GetTerrainBaseTextureWeight(float h, float min, float max)
 {
-    TerrainTexWeight weight;
+    TerrainTexWeight tweight;
 
     float hsz = (max - min)/2.0f;
     float dh  = hsz/4.0f;
@@ -556,39 +556,39 @@ TerrainTexWeight  jbxl::GetTerrainBaseTextureWeight(float h, float min, float ma
     float h1  = min + hsz;
     float h2  = max;
 
-    if      (h<h0-dh) weight.w[0] = 1.0f;
-    else if (h>h0+dh) weight.w[0] = 0.0f;
-    else              weight.w[0] = 1.0f - 0.5f/dh*(h - h0+dh);
+    if      (h<h0-dh) tweight.w[0] = 1.0f;
+    else if (h>h0+dh) tweight.w[0] = 0.0f;
+    else              tweight.w[0] = 1.0f - 0.5f/dh*(h - h0+dh);
 
-    if      (h<h0-dh) weight.w[1] = 0.0f;
-    else if (h>h1+dh) weight.w[1] = 0.0f;
-    else if (h>=h0-dh && h<=h0+dh) weight.w[1] = 0.5f/dh*(h - h0+dh);
-    else if (h>=h1-dh && h<=h1+dh) weight.w[1] = 1.0f - 0.5f/dh*(h - h1+dh);
-    else              weight.w[1] = 1.0f;
+    if      (h<h0-dh) tweight.w[1] = 0.0f;
+    else if (h>h1+dh) tweight.w[1] = 0.0f;
+    else if (h>=h0-dh && h<=h0+dh) tweight.w[1] = 0.5f/dh*(h - h0+dh);
+    else if (h>=h1-dh && h<=h1+dh) tweight.w[1] = 1.0f - 0.5f/dh*(h - h1+dh);
+    else              tweight.w[1] = 1.0f;
     
-    if      (h<h1-dh) weight.w[2] = 0.0f;
-    else if (h>h2+dh) weight.w[2] = 0.0f;
-    else if (h>=h1-dh && h<=h1+dh) weight.w[2] = 0.5f/dh*(h - h1+dh);
-    else if (h>=h2-dh && h<=h2+dh) weight.w[2] = 1.0f - 0.5f/dh*(h - h2+dh);
-    else              weight.w[2] = 1.0f;
+    if      (h<h1-dh) tweight.w[2] = 0.0f;
+    else if (h>h2+dh) tweight.w[2] = 0.0f;
+    else if (h>=h1-dh && h<=h1+dh) tweight.w[2] = 0.5f/dh*(h - h1+dh);
+    else if (h>=h2-dh && h<=h2+dh) tweight.w[2] = 1.0f - 0.5f/dh*(h - h2+dh);
+    else              tweight.w[2] = 1.0f;
         
-    if      (h<h2-dh) weight.w[3] = 0.0f;
-    else if (h>h2+dh) weight.w[3] = 1.0f;
-    else              weight.w[3] = 0.5f/dh*(h - h2+dh);
+    if      (h<h2-dh) tweight.w[3] = 0.0f;
+    else if (h>h2+dh) tweight.w[3] = 1.0f;
+    else              tweight.w[3] = 0.5f/dh*(h - h2+dh);
 
-    float ttl = weight.w[0] + weight.w[1] + weight.w[2] + weight.w[3];
+    float ttl = tweight.w[0] + tweight.w[1] + tweight.w[2] + tweight.w[3];
     if (ttl<=0.0f) {
-        weight.w[1] = 1.0f;
-        weight.w[0] = weight.w[2] = weight.w[3] = 0.0f;
+        tweight.w[1] = 1.0f;
+        tweight.w[0] = tweight.w[2] = tweight.w[3] = 0.0f;
     }
     else {
-        weight.w[0] /= ttl;
-        weight.w[1] /= ttl;
-        weight.w[2] /= ttl;
-        weight.w[3] /= ttl;
+        tweight.w[0] /= ttl;
+        tweight.w[1] /= ttl;
+        tweight.w[2] /= ttl;
+        tweight.w[3] /= ttl;
     }
 
-    return weight;
+    return tweight;
 }
 
 
