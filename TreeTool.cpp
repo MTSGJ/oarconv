@@ -255,6 +255,7 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv)
     data->setAffineTrans(shape.affineTrans);
     data->affineTrans->setScale(scale, scale, scale);
 
+    primMesh.clear();
     return data;
 }
 
@@ -375,6 +376,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     data->setAffineTrans(shape.affineTrans);
     data->affineTrans->setScale(1.0, 1.0, 1.0);
 
+    primMesh.clear();
     return data;
 }
 

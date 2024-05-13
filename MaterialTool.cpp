@@ -24,9 +24,9 @@ bool  jbxl::CheckAlphaChannel(const char* texture, tList* resourceList)
     if (texture==NULL) return ret;
 
     Buffer inppath = make_Buffer_bystr(texture);
-    #ifndef WIN32
-        rewrite_sBuffer_str(&inppath, " ", "\\ ");
-    #endif
+#ifndef WIN32
+    rewrite_sBuffer_str(&inppath, " ", "\\ ");
+#endif
 
     tList* pp = strncasecmp_tList(AlphaChannelList, (char*)inppath.buf, 0, 1);
     if (pp!=NULL) {

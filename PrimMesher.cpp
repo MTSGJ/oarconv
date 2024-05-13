@@ -54,6 +54,20 @@ using namespace jbxl;
 // PrimAngleList
 //
 
+void  PrimAngleList::clear(void)
+{
+    clear_data();
+}
+
+
+//
+void  PrimAngleList::clear_data(void)
+{
+    angles.clear();
+    normals.clear();
+}
+
+
 const  Vector<double> PrimAngleList::normals3[4] =
 {
     Vector<double>(0.25,  0.4330127, 0.0).normalize(),
@@ -248,6 +262,29 @@ void  PrimProfile::init(void)
     numBottomFacet  = 0;
 
     calcVertexNormals = false;
+}
+
+
+void  PrimProfile::clear(void)
+{
+    clear_data();
+}
+
+
+//
+void  PrimProfile::clear_data(void)
+{
+    coords.clear();
+    normals.clear();
+    primTriIndex.clear();
+    triUVs.clear();
+    triNums.clear();
+    us.clear();
+
+    outerCoordIndex.clear();
+    hollowCoordIndex.clear();
+    cut1CoordIndex.clear();
+    cut2CoordIndex.clear();
 }
 
 
@@ -518,6 +555,11 @@ PrimProfile::PrimProfile(int sides, PrimMeshParam mparam, double hollow, int hol
 
         numPrimFacets = fnum;
     }
+
+    angles.clear();
+    hollowAngles.clear();
+
+    return;
 }
 
 
@@ -842,13 +884,29 @@ void  PrimMeshParam::CreatePathNodes(int pathType, int steps)
 // PrimMesh
 //
 
+PrimMesh::PrimMesh(int sds, int hsds, PrimMeshParam mesh)
+{
+    init();
+
+    sides = sds;
+    hollowSides = hsds;
+    meshParam.dup(mesh);
+
+    if (sides<3) sides = 3;
+    if (hollowSides<3) hollowSides = 3;
+    if (meshParam.profBegin<0.0f) meshParam.profBegin = 0.0f;
+    if (meshParam.profEnd>1.0f)   meshParam.profEnd = 1.0f;
+    if (meshParam.profEnd<0.02f)  meshParam.profEnd = 0.02f;
+    if (meshParam.profBegin>=meshParam.profEnd) meshParam.profBegin = meshParam.profEnd - 0.02f;
+    
+    if (meshParam.profHollow>0.99f) meshParam.profHollow = 0.99f;
+    if (meshParam.profHollow<0.0f ) meshParam.profHollow = 0.0f;
+}
+
+
 void  PrimMesh::init(void)
 {
-    coords.clear();
-    normals.clear();
-    primTriIndex.clear();
-    primTriArray.clear();
-    uvs.clear();
+    clear_data();
 
     shapeType = 0;
     sides = 4;
@@ -869,23 +927,20 @@ void  PrimMesh::init(void)
 }
 
 
-PrimMesh::PrimMesh(int sds, int hsds, PrimMeshParam mesh)
+void  PrimMesh::clear(void)
 {
-    init();
+    clear_data();
+}
 
-    sides = sds;
-    hollowSides = hsds;
-    meshParam.dup(mesh);
 
-    if (sides<3) sides = 3;
-    if (hollowSides<3) hollowSides = 3;
-    if (meshParam.profBegin<0.0f) meshParam.profBegin = 0.0f;
-    if (meshParam.profEnd>1.0f)   meshParam.profEnd = 1.0f;
-    if (meshParam.profEnd<0.02f)  meshParam.profEnd = 0.02f;
-    if (meshParam.profBegin>=meshParam.profEnd) meshParam.profBegin = meshParam.profEnd - 0.02f;
-    
-    if (meshParam.profHollow>0.99f) meshParam.profHollow = 0.99f;
-    if (meshParam.profHollow<0.0f ) meshParam.profHollow = 0.0f;
+//
+void  PrimMesh::clear_data(void)
+{
+    coords.clear();
+    normals.clear();
+    uvs.clear();
+    primTriIndex.clear();
+    primTriArray.clear();
 }
 
 
@@ -1255,8 +1310,9 @@ void  PrimMesh::Extrude(int pathType)
                 primTriArray.push_back(primTri);
             }
         }
-
+        layer.clear();
     }
+    profile.clear();
 }
 
 

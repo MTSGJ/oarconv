@@ -591,6 +591,7 @@ int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, c
                 if (counter->cancel) break;
                 counter->StepIt();
             }
+            del_tList(&AlphaChannelList);
             cnt++;
         }
         lp = lp->next;
@@ -608,6 +609,7 @@ void  OARTool::GenerateSelectedDataFile(char* file_path, bool useBrep, char* com
     void* solid = generateSolidData(dataformat, file_path, 1, useBrep, command);
     outputSolidData(dataformat, get_file_name(file_path), solid);
     freeSolidData(dataformat, solid);
+    del_tList(&AlphaChannelList);
 
     return;
 }
@@ -657,7 +659,12 @@ Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１�
 void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
 {
     if (fname==NULL) return NULL;
-    PRINT_MESG("[%d/%d] GenerateSolid: generating %s\n", num, objectsNum, fname);
+
+    unsigned long int used_memory = 0;
+#ifndef WIN32
+    used_memory = memory_check();
+#endif
+    PRINT_MESG("[%d/%d] GenerateSolid: generating %s (%'ldkB)\n", num, objectsNum, fname, used_memory);
     
     // read XML
     int shno = 0;

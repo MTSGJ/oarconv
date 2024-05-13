@@ -108,6 +108,10 @@ public:
     PrimAngleList(void) { iX = iY = 0.0; }
     virtual ~PrimAngleList(void) {}
 
+    void  free(void) { clear();}
+    void  clear(void);
+    void  clear_data(void);
+
 public:
     void  MakeAngles(int sides, double sttAngle, double endAngle);
 
@@ -167,7 +171,10 @@ public:
     PrimProfile(int sides, PrimMeshParam mparam, double hollow, int hollowSides, bool calcNormals);
     virtual ~PrimProfile(void) {}
 
-    void init(void);
+    void  init(void);
+    void  free(void) { clear();}
+    void  clear(void);
+    void  clear_data(void);
 
 public:
     void MakeTriUVs(void);
@@ -201,8 +208,9 @@ public:
     PrimMeshParam(void) { init(false);}
     virtual ~PrimMeshParam(void) {}
 
-    void    free(void) { PrimShapeParam::free();}
     void    init(bool base_init=true);
+    void    free(void)  { clear();}
+    void    clear(void) { PrimShapeParam::free(); pathNodes.clear();}
     void    dup(PrimMeshParam p);
 
 public:
@@ -252,8 +260,10 @@ public:
     PrimMesh(int sides, int hollowsides, PrimMeshParam mesh);
     virtual ~PrimMesh(void) {}
 
-    void  free(void) {}
     void  init(void);
+    void  free(void) { clear();}
+    void  clear(void);
+    void  clear_data(void);
 
 public:
     void  Extrude(int pathType);

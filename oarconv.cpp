@@ -14,6 +14,8 @@ using namespace jbxl;
 
 int main(int argc, char** argv)
 {
+    setlocale(LC_NUMERIC, "");      // 数字表記．システムから．
+
     Buffer inpdir = init_Buffer();
     Buffer outdir = init_Buffer();
     Buffer astdir = init_Buffer();
@@ -90,16 +92,23 @@ int main(int argc, char** argv)
     oar.GetDataInfo();  // -f オプション（個別ファイル指定）があるので，成否は無視．
     oar.MakeOutputFolder();
     oar.SetTerrainShift(xshift, yshift, zshift);
+ 
+#ifndef WIN32
+    memory_check_start();
+#endif
 
+    //PRINT_MESG("START==> %'ld\n", memory_check());
     if (infile.buf!=NULL) {
         oar.objectsNum = 1;
         oar.GenerateSelectedDataFile((char*)infile.buf, useBrep, (char*)cmmnd.buf);
     }
     else {
         if (strtnum==0) {
+            //PRINT_MESG("Terrain start ==> %'ld\n", memory_check());
             oar.ReadTerrainData();
             oar.SetTerrainTextureScale(scale);
             oar.GenerateTerrainDataFile();
+            //PRINT_MESG("Terrain end   ==> %'ld\n", memory_check());
             strtnum = 1;
         }
         if (stopnum!=0) {
@@ -108,7 +117,6 @@ int main(int argc, char** argv)
     }
     oar.free();
     
-    del_tList(&AlphaChannelList);
     //
     free_Buffer(&inpdir);
     free_Buffer(&outdir);

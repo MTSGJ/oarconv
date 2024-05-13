@@ -34,6 +34,10 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: start.\n");
     DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Mesh Type is 0x%02x\n", param.sculptType);
 
+#ifndef WIN32
+    //PRINT_MESG("MeshObjectDataFromPrimShape: start: Used Memory = %ld\n", get_used_memory());
+#endif
+
     // Mesh
     if ((param.sculptType&0x07)==SCULPT_TYPE_MESH) {
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate LLM Mesh\n");
@@ -110,6 +114,8 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
                 data->addData(tridata, tri_num, i, NULL, useBrep);
             }
         }
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: freeTriPolygonData()\n");
+        freeTriPolygonData(tridata, tri_num);
     }
     //
     else if (facetdata!=NULL) {     // for ContourBaseData
@@ -133,16 +139,18 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         else {
             data->addData(facetdata, NULL);
         }
+        DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: freeContourBaseData()\n");
+        freeContourBaseData(facetdata);
     }
 
-    DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: freeTriPolygonData()\n");
-    freeTriPolygonData(tridata, tri_num);
-    DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: freeContourBaseData()\n");
-    freeContourBaseData(facetdata);
     DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: param.free()\n");
     param.free();
 
     DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: end.\n");
+
+#ifndef WIN32
+    //PRINT_MESG("MeshObjectDataFromPrimShape:   end: Used Memory = %ld\n", get_used_memory());
+#endif
     return data;
 }
 
@@ -400,6 +408,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
         jpg.free();
     }
     else {
+        jpg.free();
         // TGA
         TGAImage tga = readTGAFile(jpegfile);
         if (tga.state>=0) {
@@ -409,7 +418,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
         }
         else {
             PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: ERROR: Invalid JPEG2K/TGA image file! [%s], (%d)\n", jpegfile, tga.state);
-            jpg.free();
+            //jpg.free();
             tga.free();
             return NULL;
         }
