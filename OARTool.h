@@ -82,20 +82,22 @@ public:
     int    terrainNum;
     int    objectsNum;
 
+public:
     OARTool(void) { init();}
     virtual ~OARTool(void) {}
 
     void   init(void);
     void   free(void);
 
+    void   clear_terrain(void);
+    void   clear_path(void);
+    void   clear_list(void);
+    char*  get_outpath(int output);
+
     void   setUnity4(bool); 
     void   setUnity5(bool);
     void   setUnity(bool);
     void   setUE(bool);
-
-    void   clear_path(void);
-    void   clear_list(void);
-    char*  get_outpath(int output);
 
 private:
     int    engine;
@@ -110,16 +112,16 @@ public:
     void   MakeOutputFolder(void);
 
     void   SetEngine(int e);
-    void   SetDataFormat(int f)  { dataformat = f; }
-    void   SetDegeneracy(bool b) { degeneracy = b; }
-    void   SetProcJoints(bool b) { procJoints = b; }
+    void   SetDataFormat(int f) { dataformat = f; }
+    void   SetDegeneracy(bool b){ degeneracy = b; }
+    void   SetProcJoints(bool b){ procJoints = b; }
     void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
     void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
 
-    int    GetEngine(void) { return engine;}
-    int    GetDataFormat(void) { return dataformat;}
-    bool   GetDegeneracy(void) { return degeneracy; }
-
+    int    GetEngine(void)      { return engine;}
+    int    GetDataFormat(void)  { return dataformat;}
+    bool   GetDegeneracy(void)  { return degeneracy;}
+    bool   GetProcJoints(void)  { return procJoints;}
     tList* GetObjectsList(void) { return objectsFiles;}
     void   ReadTerrainData(void);
 

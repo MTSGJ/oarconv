@@ -614,7 +614,7 @@ int   COARConvWinApp::convertAllFiles()
         oarTool.ReadTerrainData();
         oarTool.SetTerrainTextureScale(appParam.terrainScale);
         num = oarTool.GenerateTerrainDataFile();
-
+        //
         if (mbox!=NULL) delete mbox;
     }
     //
@@ -636,6 +636,10 @@ int   COARConvWinApp::convertAllFiles()
             ClearGlobalCounter();
         }
     }
+
+    // Clear Data
+    oarTool.clear_terrain();
+
     return num;
 }
 

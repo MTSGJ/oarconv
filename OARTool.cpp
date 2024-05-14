@@ -65,17 +65,23 @@ void  OARTool::init(void)
 //
 void  OARTool::free(void)
 {
+    treeTool.free();
+    clear_terrain();
+    clear_path();
+    clear_list();
+    //
+    free_Buffer(&regionName);
+}
+
+
+void  OARTool::clear_terrain(void)
+{
     if (terrain!=NULL) {
         for (int i=0; i<terrainNum; i++) terrain[i].free();
         ::free(terrain);
         terrain = NULL;
         terrainNum = 0;
     }
-    treeTool.free();
-    clear_path();
-    clear_list();
-    //
-    free_Buffer(&regionName);
 }
 
 
@@ -660,11 +666,11 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
 {
     if (fname==NULL) return NULL;
 
-    unsigned long int used_memory = 0;
-#ifndef WIN32
-    used_memory = memory_check();
+#ifdef WIN32
+    PRINT_MESG("[%d/%d] GenerateSolid: generating %s\n", num, objectsNum, fname);
+#else
+    PRINT_MESG("[%d/%d] GenerateSolid: generating %s (%'ldkB)\n", num, objectsNum, fname, memory_check());
 #endif
-    PRINT_MESG("[%d/%d] GenerateSolid: generating %s (%'ldkB)\n", num, objectsNum, fname, used_memory);
     
     // read XML
     int shno = 0;

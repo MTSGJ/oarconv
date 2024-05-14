@@ -97,18 +97,15 @@ int main(int argc, char** argv)
     memory_check_start();
 #endif
 
-    //PRINT_MESG("START==> %'ld\n", memory_check());
     if (infile.buf!=NULL) {
         oar.objectsNum = 1;
         oar.GenerateSelectedDataFile((char*)infile.buf, useBrep, (char*)cmmnd.buf);
     }
     else {
         if (strtnum==0) {
-            //PRINT_MESG("Terrain start ==> %'ld\n", memory_check());
             oar.ReadTerrainData();
             oar.SetTerrainTextureScale(scale);
             oar.GenerateTerrainDataFile();
-            //PRINT_MESG("Terrain end   ==> %'ld\n", memory_check());
             strtnum = 1;
         }
         if (stopnum!=0) {

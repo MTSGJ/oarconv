@@ -418,7 +418,6 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
         }
         else {
             PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: ERROR: Invalid JPEG2K/TGA image file! [%s], (%d)\n", jpegfile, tga.state);
-            //jpg.free();
             tga.free();
             return NULL;
         }
