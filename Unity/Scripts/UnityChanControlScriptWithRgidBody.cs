@@ -35,7 +35,7 @@ namespace UnityChan
         public float walkSpeed = 2.5f;      // 前進速度（歩き）
         public float backwardSpeed = 2.0f;  // 後退速度
         public float rotateSpeed = 0.8f;    // 旋回速度
-        public float jumpPower = 3.0f;        // ジャンプ威力
+        public float jumpPower = 3.0f;      // ジャンプ威力
         // キャラクターコントローラ（カプセルコライダ）の参照
         private CapsuleCollider col;
         private Rigidbody rb;
@@ -59,7 +59,7 @@ namespace UnityChan
          * by Fumi.Iseki
          */
         private int flying = 0;         // 0: Land, 1: Flaying
-        private int forward = 0;        // 0: Stop, 1: forwarding, 2:Running
+        private int forward = 0;        // 0: Stop, 1: Forwarding, 2:Running
         private uint keycnt = 0;
 
         private bool uparrowKey = false;
