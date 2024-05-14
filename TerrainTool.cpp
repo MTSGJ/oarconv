@@ -382,7 +382,6 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
         }
     }
     msg.free();
-
     return;
 }
 

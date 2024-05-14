@@ -563,7 +563,6 @@ void  OARTool::ReadTerrainData(void)
 int  OARTool::GenerateTerrainDataFile(void)
 {
     if (terrainNum==0) return 0;
-
     PRINT_MESG("GenerateTerrainSolid: generating terrain datafile file (%d)\n", dataformat);
     int num = 0;
     while (num<terrainNum) {
@@ -854,9 +853,14 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
                     tXML* joints_template = NULL;
-                    if (count==0) {
+                    if (count==0 && this->procJoints) {
                         char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
-                        joints_template = xml_parse_file(path);   // not del
+                        if (path != NULL) {
+                            joints_template = xml_parse_file(path);   // not del
+                        }
+                        else {
+                            PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
+                        }
                     }
                     dae->addObject(mesh, collider, skin_joint, joints_template);
                 }
