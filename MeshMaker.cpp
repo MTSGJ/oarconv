@@ -639,7 +639,9 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
                     if (pp->next!=NULL) {
                         int i = idx%4 + 1;
                         int j = idx/4 + 1;
-                        skin_joint->alt_inverse_bind[joint_idx].matrix.element(i, j) = atof((char*)pp->next->ldat.key.buf);
+                        double element = atof((char*)pp->next->ldat.key.buf);
+                        if (element>1.0e3) element = 0.0;
+                        skin_joint->alt_inverse_bind[joint_idx].matrix.element(i, j) = element;
                         idx++;
                     }
                     pp = pp->ysis;
