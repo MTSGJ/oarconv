@@ -638,7 +638,7 @@ int   COARConvWinApp::convertAllFiles()
     }
 
     // Clear Data
-    oarTool.clear_terrain();
+    //oarTool.clear_terrain();
 
     return num;
 }
