@@ -853,7 +853,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
                     tXML*  joints_template = NULL;
-                    tList* joints_name = NULL;
+                    //tList* joints_name = NULL;
                     if (count==0 && this->procJoints) {
                         //
                         char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
@@ -864,15 +864,17 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                             PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
                         }
                         //
+                        /*
                         path = get_resource_path(OART_JOINT_BENTO_NAME_FILE, assetsFiles);
                         if (path != NULL) {
                             joints_name = read_tList_file(path, 2);     // not free
                         }
                         else {
                             PRINT_MESG("OARTool::generateSolidData: WARNING: Bento joints name file is not found!\n");
-                        }
+                        }*/
                     }
-                    dae->addObject(mesh, collider, skin_joint, joints_template, joints_name);
+                    //dae->addObject(mesh, collider, skin_joint, joints_template, joints_name);
+                    dae->addObject(mesh, collider, skin_joint, joints_template);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
