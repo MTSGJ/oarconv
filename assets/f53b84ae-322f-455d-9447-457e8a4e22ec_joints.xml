@@ -1,4 +1,5 @@
 <node id="Avatar" name="Avatar" type="NODE">
+  <matrix sid="transform" />
   <node id="mPelvis" layer="16" name="mPelvis" sid="mPelvis" type="JOINT">
     <matrix sid="transform" />
     <extra>
