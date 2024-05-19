@@ -38,8 +38,8 @@ namespace  jbxl {
 
 #define  OART_FLAGS_PHANTOM         "Phantom"
 
-#define  OART_JOINT_TEMPLATE_FILE   "f53b84ae-322f-455d-9447-457e8a4e22ec"
-//#define  OART_JOINT_TEMPLATE_FILE   "f5df7c06-6636-44c1-8406-68da93408cde"
+//#define  OART_JOINT_TEMPLATE_FILE   "f53b84ae-322f-455d-9447-457e8a4e22ec"
+#define  OART_JOINT_TEMPLATE_FILE   "f5df7c06-6636-44c1-8406-68da93408cde"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
