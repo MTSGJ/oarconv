@@ -908,7 +908,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             if (count==1 && forUnity4) dae->addCenterObject();          // for Unity4.x
             //dae->getObjectCenter();
             //dae->setJointLocationMatrix();
-            dae->closeObject();
+            dae->closeSolid();
             return (void*)dae;
         }
         //  OBJ
@@ -916,7 +916,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             Vector<double> offset = obj->execAffineTrans(degeneracy);   // degeneracy: 原点縮退
             if (obj->affineTrans==NULL) obj->affineTrans = new AffineTrans<double>();
             obj->affineTrans->setShift(offset);
-            obj->closeObject();
+            obj->closeSolid();
             return (void*)obj;
         }
         //  FBX
@@ -924,7 +924,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             //Vector<double> offset = fbx->execAffineTrans(degeneracy);   // degeneracy: 原点縮退
             //if (obj->affineTrans==NULL) fbx->affineTrans = new AffineTrans<double>();
             //fbx->affineTrans->setShift(offset);
-            //fbx->closeObject();
+            //fbx->closeSolid();
             return NULL;
         }
         // STL
