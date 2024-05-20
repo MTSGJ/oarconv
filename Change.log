@@ -1,10 +1,15 @@
 #
-1.6.0
-  support Wavefront obj file
+1.8.0
   developing...
 
-1.5.0  2024 1/17
+1.7.0  2024 05/20
+  support Joints of DAE
+
+1.6.0  2024 04/21
+  support Wavefront obj file
+
+1.5.0  2024 01/17
   less texture
 
-1.4.6  2024 1/2
+1.4.6  2024 01/2
   support Unity 2022
