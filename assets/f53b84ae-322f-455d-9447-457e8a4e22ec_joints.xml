@@ -1,7 +1,7 @@
 <node id="Avatar" name="Avatar" type="NODE">
   <matrix sid="transform" />
   <node id="mPelvis" layer="16" name="mPelvis" sid="mPelvis" type="JOINT">
-    <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 1.067 0 0 0 1</matrix>
+    <matrix sid="transform" />
     <extra>
       <technique profile="blender">
         <layer>16</layer>
