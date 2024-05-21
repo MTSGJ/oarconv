@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2014-2024 (C) v1.6.2
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.6.2
 //
 // see also https://github.com/MTSGJ/oarconv
 //
