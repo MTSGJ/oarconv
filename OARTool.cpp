@@ -705,11 +705,13 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     // OBJ
     else if (format==JBXL_3D_FORMAT_OBJ) {
         obj = new OBJData(); 
+        obj->no_offset = noShiftOffset;
         obj->setEngine(engine);
     }
     // FBX
     else if (format==JBXL_3D_FORMAT_FBX) {
         obj = NULL;
+        obj->no_offset = noShiftOffset;
         //obj->setEngine(engine);
     }
     // STL
@@ -895,13 +897,13 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     if (count>0) {
         // DAE
         if (format==JBXL_3D_FORMAT_DAE) {
-            if (count==1 && forUnity4) dae->addCenterObject();          // for Unity4.x
+            if (count==1 && forUnity4) dae->addCenterObject();      // for Unity4.x
             dae->closeSolid();
             return (void*)dae;
         }
         //  OBJ
         else if (format==JBXL_3D_FORMAT_OBJ) {
-            Vector<double> offset = obj->execAffineTrans(noShiftOffset);   // noShiftOffset: 原点縮退
+            Vector<double> offset = obj->execAffineTrans();         // no_offset==true の場合，原点縮退
             if (obj->affineTrans==NULL) obj->affineTrans = new AffineTrans<double>();
             obj->affineTrans->setShift(offset);
             obj->closeSolid();
@@ -909,7 +911,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         //  FBX
         else if (format==JBXL_3D_FORMAT_FBX) {
-            //Vector<double> offset = fbx->execAffineTrans(noShiftOffset);   // noShiftOffset: 原点縮退
+            //Vector<double> offset = obj->execAffineTrans();         // no_offset==true の場合，原点縮退
             //if (obj->affineTrans==NULL) fbx->affineTrans = new AffineTrans<double>();
             //fbx->affineTrans->setShift(offset);
             //fbx->closeSolid();
@@ -952,9 +954,9 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             float offset[3];
             int len = sizeof(float) * 3;
             memset(offset, 0, len);
-            offset[0] = (float)(dae->affineTrans->shift.x);
-            offset[1] = (float)(dae->affineTrans->shift.z);
-            offset[2] = (float)(dae->affineTrans->shift.y);
+            offset[0] = -(float)(dae->affineTrans->shift.x);
+            offset[1] =  (float)(dae->affineTrans->shift.z);
+            offset[2] = -(float)(dae->affineTrans->shift.y);
             char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
             del_file_extension_Buffer(&dae_fname);
             cat_s2Buffer("_", &dae_fname);

@@ -28,12 +28,14 @@ public sealed class SetLocationByPatameter : EditorWindow
         // Scene 中の全ての Objectを探す
         foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll(typeof(GameObject))) {
             if (AssetDatabase.GetAssetOrScenePath(gameObject).Contains(".unity")) {
-                gameObjectList.Add(gameObject);
+                if (gameObject.name!=null) gameObjectList.Add(gameObject);
             }
         }
 
         foreach (GameObject gameObject in gameObjectList) {
-            Vector3 position = getLocationFromName(gameObject.name);
+            //UnityEngine.Debug.Log("File Name = " + gameObject.name);
+            string obj_name = (string)gameObject.name;
+            Vector3 position = getLocationFromName(obj_name);
             if (position!=Vector3.zero) {
                 gameObject.transform.position = position;
             }
@@ -47,11 +49,12 @@ public sealed class SetLocationByPatameter : EditorWindow
         int pos_len = 16;    // POSITION LENGTH (4*3/3*4 = 16)
         float[] shift = new float[3];
         //
-        if (name.Length >= pos_len) {
-            int pos = name.LastIndexOf("_");
-            if (pos>=0) {
-                string sub = name.Substring(pos+1, pos_len);
-                //UnityEngine.Debug.Log("Base64 String = " + sub);
+        int pos = name.LastIndexOf("_");
+        if (pos>=0) {
+            string sub = name.Substring(pos + 1);
+            if (sub.Length >= pos_len) {
+                sub = sub.Substring(0, pos_len);
+               // UnityEngine.Debug.Log("Base64 String = " + sub);
                 string enc = sub.Replace('-', '/');
                 if (enc.Length == pos_len) {
                     try {
@@ -62,7 +65,7 @@ public sealed class SetLocationByPatameter : EditorWindow
                         //UnityEngine.Debug.Log(name + " ===> " + shift[0] + ", " + shift[1] + ", " + shift[2]);
                     }
                     catch {
-                        UnityEngine.Debug.Log("Not Supported File Name = " + name);
+                        UnityEngine.Debug.Log("SetLocationByPatameter: Base64 Decode Error = " + enc);
                     }
                 }
             }

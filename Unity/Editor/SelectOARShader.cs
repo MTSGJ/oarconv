@@ -192,7 +192,7 @@ public sealed class SelectOARShader : AssetPostprocessor
                     if (cutoff > 0.9f) cutoff = 0.9f;
                 }
                 catch {
-                    UnityEngine.Debug.Log("Not Supported Material Name = " + name);
+                    UnityEngine.Debug.Log("SelectOARShader: Base64 Decode Error = " + enc);
                 }
             }
         }
