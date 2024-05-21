@@ -30,7 +30,8 @@
 #define IDC_RADIO_STL                   31130
 #define IDC_RADIO_UNITY                 31222
 #define IDC_RADIO_UE                    31223
-#define IDC_CHECK_JOINTS                31225
+#define IDC_CHECK_OFFSET                31225
+#define IDC_CHECK_JOINTS                31228
 #define IDC_OBJLIST_FIND                31244
 #define IDC_LIST_CONV                   31245
 #define IDC_LIST_OBJECTS                31246
