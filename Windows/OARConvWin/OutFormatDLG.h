@@ -18,21 +18,20 @@ public:
 protected:
 	int      outputFormat;
 	int      outputEngine;
-	BOOL     degeneracy;		// No Offset
+	BOOL     noShiftOffset;			// No Offset
 	BOOL	 procJoints;
 //
 protected:
 	CButton* outputDaeButton;
 	CButton* outputObjButton;
-	CButton* outputONOButton;	// OBJ with No Offset
 	CButton* outputFbxButton;
-	CButton* outputFNOButton;	// FBX with No Offset
 	CButton* outputStlButton;
 
 	CButton* outputUnityButton;
 	CButton* outputUEButton;
 
 	CButton* procJointsButton;
+	CButton* noOffsetButton;
 
 public:
 	void     getParameters(CParameterSet* param);
@@ -47,8 +46,6 @@ public:
 	afx_msg void OnBnClickedRadioObj();
 	afx_msg void OnBnClickedRadioDae();
 	afx_msg void OnBnClickedRadioStl();
-	afx_msg void OnBnClickedRadioObjNo();
 	afx_msg void OnBnClickedRadioFbx();
-	afx_msg void OnBnClickedRadioFbxNo();
 	//afx_msg void OnBnClickedCheckJoints();
 };

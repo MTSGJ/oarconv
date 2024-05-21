@@ -215,7 +215,7 @@ BOOL  COARConvWinApp::InitInstance()
 
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetNoShiftOffset(appParam.degeneracy);
+    oarTool.SetNoShiftOffset(appParam.noShiftOffset);
     oarTool.SetProcJoints(appParam.procJoints);
     //
     updateMenuBar();
@@ -377,7 +377,7 @@ void  COARConvWinApp::OnOutFormatDialog()
 
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetNoShiftOffset(appParam.degeneracy);
+    oarTool.SetNoShiftOffset(appParam.noShiftOffset);
     oarTool.SetProcJoints(appParam.procJoints);
 
     char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
@@ -475,7 +475,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     oarTool.init();
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetNoShiftOffset(appParam.degeneracy);
+    oarTool.SetNoShiftOffset(appParam.noShiftOffset);
     oarTool.SetProcJoints(appParam.procJoints);
     oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
     ::free(oardir);
@@ -534,7 +534,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
     oarTool.init();
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetNoShiftOffset(appParam.degeneracy);
+    oarTool.SetNoShiftOffset(appParam.noShiftOffset);
     oarTool.SetProcJoints(appParam.procJoints);
     oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
     ::free(oardir);
@@ -833,23 +833,22 @@ void  COARConvWinApp::updateStatusBar(CString path)
     CString prefix;
     if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
         prefix = _T(" DAE  |  ");
-        if (appParam.procJoints)  prefix += _T("JOINTS  |  ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
-        if (!appParam.degeneracy) prefix = _T(" OBJ  |  ");
-        else                      prefix = _T(" OBJ: NO_OFFSET  |  ");
+        prefix = _T(" OBJ  |  ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
-        if (!appParam.degeneracy) prefix = _T(" FBX | ");
-        else                      prefix = _T(" FBX: NO_OFFSET  |  ");
-        if (appParam.procJoints)  prefix += _T("JOINTS  |  ");
+        prefix = _T(" FBX | ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T(" STL  |  ");
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T(" STL  |  ");
     else                                                    prefix = _T(" NONE  |  ");
-    //
-    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
-    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  |  ");
+
+    if (appParam.noShiftOffset) prefix += _T(" NO_OFFSET  |  ");
+    if (appParam.procJoints)    prefix += _T(" JOINTS  |  ");
+
+    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T(" UNITY  |  ");
+    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T(" UE  |  ");
     //
     CString mesg = prefix + _T("OAR-Path: ") + path;
     pMainFrame->SetStausBarText(mesg);
