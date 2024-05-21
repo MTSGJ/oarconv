@@ -438,7 +438,8 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             Vector<float>  shift = Vector<float>(ri*256.0f + (float)offset.x, rj*256.0f + (float)offset.y, (float)offset.z);
             Vector<float> center = Vector<float>(-xsize/2.0f, -ysize/2.0f, -waterHeight);
             ContourBaseData* facetdata;
-            if (format==JBXL_3D_FORMAT_OBJ && engine==JBXL_3D_ENGINE_UE && degeneracy) {   // 縮退状態
+            //if (format==JBXL_3D_FORMAT_OBJ && engine==JBXL_3D_ENGINE_UE && noShiftOffset) {   // 縮退状態
+            if (noShiftOffset) {   // 縮退状態
                 facetdata = ContourBaseDataFromTerrainImage(region, center, left, right, top, bottom, false);
             }
             else {
@@ -479,6 +480,22 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 dae = new ColladaXML();
                 dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
                 dae->addObject(data, true, NULL);
+                dae->closeSolid();
+                //
+                if (noShiftOffset) {   // 縮退状態
+                    float position[3];
+                    int len = sizeof(float) * 3;
+                    memset(position, 0, len);
+                    position[0] = (float)(shift.x);
+                    position[1] = (float)(shift.y);
+                    position[2] = (float)(shift.z);
+                    char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
+                    del_file_extension_Buffer(&objname);
+                    cat_s2Buffer("_", &objname);
+                    cat_s2Buffer(params, &objname);
+                    cat_s2Buffer(".", &objname);
+                }
+                //
                 dae->outputFile((char*)objname.buf, (char*)path.buf, XML_SPACE_FORMAT);
                 freeColladaXML(dae);
             }
@@ -487,23 +504,23 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 obj = new OBJData();
                 obj->setEngine(engine);
                 obj->addObject(data, true);
+                obj->closeSolid();
                 //
-                if (engine==JBXL_3D_ENGINE_UE) {
-                    ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
-                    if (degeneracy) {   // 縮退状態
-                        float position[3];
-                        int len = sizeof(float) * 3;
-                        memset(position, 0, len);
-                        position[0] =  (float)(shift.x*100.0);    // 100 is Unreal Unit
-                        position[1] = -(float)(shift.y*100.0);
-                        position[2] =  (float)(shift.z*100.0);
-                        char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
-                        del_file_extension_Buffer(&objname);
-                        cat_s2Buffer("_", &objname);
-                        cat_s2Buffer(params, &objname);
-                        cat_s2Buffer(".", &objname);
-                    }
+                if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
+                if (noShiftOffset) {   // 縮退状態
+                    float position[3];
+                    int len = sizeof(float) * 3;
+                    memset(position, 0, len);
+                    position[0] =  (float)(shift.x*100.0);    // 100 is Unreal Unit
+                    position[1] = -(float)(shift.y*100.0);
+                    position[2] =  (float)(shift.z*100.0);
+                    char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
+                    del_file_extension_Buffer(&objname);
+                    cat_s2Buffer("_", &objname);
+                    cat_s2Buffer(params, &objname);
+                    cat_s2Buffer(".", &objname);
                 }
+                //
                 obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
             }
@@ -517,6 +534,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 if (format==JBXL_3D_FORMAT_STL_B) ascii = false;
                 stl = new BrepSolidList();
                 stl->addObject(data);
+                stl->closeSolid();
                 stl->outputFile(get_file_name((char*)objname.buf), (char*)path.buf, ascii);
                 freeBrepSolidList(stl);
             }

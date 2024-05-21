@@ -49,30 +49,30 @@ class TerrainTool
 public:
     Buffer terrainName;     // Terrain name
 
-    int   xsize;            // Region X size
-    int   ysize;            // Region Y size
-    int   region_num;       // Region Number
-    float scale;            // Texture Scale
+    int    xsize;            // Region X size
+    int    ysize;            // Region Y size
+    int    region_num;       // Region Number
+    float  scale;            // Texture Scale
 
-    int   engine;
-    int   format;
-    bool  degeneracy;
+    int    engine;
+    int    format;
+    bool   noShiftOffset;
 
     MSGraph<float> r32;     // r32 data
 
     Buffer texture[4];
     Buffer defaultTexture[4];
 
-    float minNW;
-    float maxNW;
-    float minNE;
-    float maxNE;
-    float minSW;
-    float maxSW;
-    float minSE;
-    float maxSE;
+    float  minNW;
+    float  maxNW;
+    float  minNE;
+    float  maxNE;
+    float  minSW;
+    float  maxSW;
+    float  minSE;
+    float  maxSE;
 
-    float waterHeight;      // Water Height
+    float  waterHeight;      // Water Height
 
 public:
     TerrainTool(char* name, int xs=256, int ys=256) { init(name, xs, ys);}
@@ -90,7 +90,7 @@ public:
 public:
     void   SetEngine(int e) { engine = e;}
     void   SetFormat(int f) { format = f;}
-    void   SetDegeneracy(bool b) { degeneracy = b;}
+    void   SetNoShiftOffset(bool b) { noShiftOffset = b;}
 
     void   ReadSettings(const char* path);
     void   ReadHeightData(const char* path);

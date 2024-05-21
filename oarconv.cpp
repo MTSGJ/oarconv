@@ -61,6 +61,7 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "--fbx"))  { format = JBXL_3D_FORMAT_FBX;}    // FBXデータを出力
         else if (!strcmp(argv[i], "--stl"))  { format = JBXL_3D_FORMAT_STL_A;}  // STLデータを出力
         else if (!strcmp(argv[i], "--dg"))   { degeneracy = true;}
+        else if (!strcmp(argv[i], "--nooffset")) { degeneracy = true;}
         else if (!strcmp(argv[i], "--joint")){ procJoints = true;}
         else if (!strcmp(argv[i], "--help")) { oarconv_help(stdout); exit(0);}
         else  {
@@ -86,7 +87,7 @@ int main(int argc, char** argv)
     OARTool oar;
     oar.SetEngine(engine);
     oar.SetDataFormat(format);
-    oar.SetDegeneracy(degeneracy);
+    oar.SetNoShiftOffset(degeneracy);
     oar.SetProcJoints(procJoints);
     oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf);
     oar.GetDataInfo();  // -f オプション（個別ファイル指定）があるので，成否は無視．

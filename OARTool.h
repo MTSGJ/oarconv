@@ -104,7 +104,7 @@ public:
 private:
     int    engine;
     int    dataformat;
-    bool   degeneracy;          // UE用 縮退
+    bool   noShiftOffset;          // UE用 縮退
     bool   procJoints;
 
 public:
@@ -115,15 +115,15 @@ public:
 
     void   SetEngine(int e);
     void   SetDataFormat(int f) { dataformat = f; }
-    void   SetDegeneracy(bool b){ degeneracy = b; }
+    void   SetNoShiftOffset(bool b){ noShiftOffset = b; }
     void   SetProcJoints(bool b){ procJoints = b; }
     void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
     void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
 
-    int    GetEngine(void)      { return engine;}
-    int    GetDataFormat(void)  { return dataformat;}
-    bool   GetDegeneracy(void)  { return degeneracy;}
-    bool   GetProcJoints(void)  { return procJoints;}
+    int    GetEngine(void) { return engine;}
+    int    GetDataFormat(void) { return dataformat;}
+    bool   GetNoShiftOffset(void) { return noShiftOffset;}
+    bool   GetProcJoints(void) { return procJoints;}
     tList* GetObjectsList(void) { return objectsFiles;}
     void   ReadTerrainData(void);
 

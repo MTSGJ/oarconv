@@ -13,24 +13,21 @@ using UnityEditor;
 
 public sealed class SetLocationByPatameter : EditorWindow
 {
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^i‹N“®‚ÉŒÄ‚Ño‚³‚ê‚éj.
     static SetLocationByPatameter()
     {
         SetLocation();
     }
 
-    // ƒƒjƒ…[‚ÉƒAƒCƒeƒ€‚ğ’Ç‰Á
     [MenuItem("Tools/Set Location By Patameter")]
+
 
     //
     public static void SetLocation()
     {
         List<GameObject> gameObjectList = new List<GameObject>();
-        foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll(typeof(GameObject)))
-        {
-            //ƒV[ƒ“ã‚É‘¶İ‚·‚éGameObject‚¾‚¯æ“¾
-            if (AssetDatabase.GetAssetOrScenePath(gameObject).Contains(".unity"))
-            {
+        // Scene ä¸­ã®å…¨ã¦ã® Objectã‚’æ¢ã™
+        foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll(typeof(GameObject))) {
+            if (AssetDatabase.GetAssetOrScenePath(gameObject).Contains(".unity")) {
                 gameObjectList.Add(gameObject);
             }
         }

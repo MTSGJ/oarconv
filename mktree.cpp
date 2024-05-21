@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     OARTool oar;
     oar.SetEngine(JBXL_3D_ENGINE_UNITY);
     oar.SetDataFormat(format);
-    //oar.SetDegeneracy(degeneracy);
+    //oar.SetNoShiftOffset(noShiftOffset);
     oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)adddir.buf);
     oar.GetDataInfo();  // OARファイルから情報を得る．
 //  oar.MakeOutputFolder(makedir);

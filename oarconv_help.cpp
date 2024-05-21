@@ -34,6 +34,7 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   --unity : for Unity Engine.\n");
     fprintf(fp, "   --ue : for Unreal Engine.\n");
     fprintf(fp, "   --dg : shrinkage to the origin with OBJ file for UE.\n");
+    fprintf(fp, "   --nooffset : same for --dg\n");
     fprintf(fp, "   --joint : Process Joints\n");
 
     fprintf(fp, "   -d : debug mode. display debug information. \n");

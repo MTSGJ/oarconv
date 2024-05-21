@@ -49,7 +49,7 @@ void  OARTool::init(void)
 
     engine          = JBXL_3D_ENGINE_UNITY;
     dataformat      = JBXL_3D_FORMAT_DAE;
-    degeneracy      = false;
+    noShiftOffset   = false;
     procJoints      = false;
     terrainNum      = 0;
     terrain         = NULL;     // pointer to TerrainSetteings
@@ -532,7 +532,7 @@ void  OARTool::ReadTerrainData(void)
             terrain[count] = TerrainTool((char*)lps->ldat.key.buf, xsize, ysize);
             terrain[count].SetEngine(engine);
             terrain[count].SetFormat(dataformat);
-            terrain[count].SetDegeneracy(degeneracy);
+            terrain[count].SetNoShiftOffset(noShiftOffset);
             terrain[count].ReadSettings((char*)lps->ldat.val.buf);
             terrain[count].ReadHeightData((char*)lpt->ldat.val.buf);
             lps = lps->next;
@@ -545,7 +545,7 @@ void  OARTool::ReadTerrainData(void)
             terrain[count] = TerrainTool((char*)lpt->ldat.key.buf, xsize, ysize);
             terrain[count].SetEngine(engine);
             terrain[count].SetFormat(dataformat);
-            terrain[count].SetDegeneracy(degeneracy);
+            terrain[count].SetNoShiftOffset(noShiftOffset);
             terrain[count].ReadHeightData((char*)lpt->ldat.val.buf);
             lpt = lpt->next;
             count++;
@@ -697,6 +697,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     // DAE
     if (format==JBXL_3D_FORMAT_DAE) {
         dae = new ColladaXML();
+        dae->no_offset = noShiftOffset;
         dae->forUnity5 = forUnity5;
         dae->forUnity  = forUnity;
         dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
@@ -853,9 +854,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
                     tXML*  joints_template = NULL;
-                    //tList* joints_name = NULL;
+                    //
                     if (count==0 && this->procJoints) {
-                        //
                         char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
                         if (path != NULL) {
                             joints_template = xml_parse_file(path);     // not free
@@ -863,17 +863,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                         else {
                             PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
                         }
-                        //
-                        /*
-                        path = get_resource_path(OART_JOINT_BENTO_NAME_FILE, assetsFiles);
-                        if (path != NULL) {
-                            joints_name = read_tList_file(path, 2);     // not free
-                        }
-                        else {
-                            PRINT_MESG("OARTool::generateSolidData: WARNING: Bento joints name file is not found!\n");
-                        }*/
                     }
-                    //dae->addObject(mesh, collider, skin_joint, joints_template, joints_name);
                     dae->addObject(mesh, collider, skin_joint, joints_template);
                 }
                 // OBJ
@@ -906,14 +896,12 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         // DAE
         if (format==JBXL_3D_FORMAT_DAE) {
             if (count==1 && forUnity4) dae->addCenterObject();          // for Unity4.x
-            //dae->getObjectCenter();
-            //dae->setJointLocationMatrix();
             dae->closeSolid();
             return (void*)dae;
         }
         //  OBJ
         else if (format==JBXL_3D_FORMAT_OBJ) {
-            Vector<double> offset = obj->execAffineTrans(degeneracy);   // degeneracy: 原点縮退
+            Vector<double> offset = obj->execAffineTrans(noShiftOffset);   // noShiftOffset: 原点縮退
             if (obj->affineTrans==NULL) obj->affineTrans = new AffineTrans<double>();
             obj->affineTrans->setShift(offset);
             obj->closeSolid();
@@ -921,7 +909,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         //  FBX
         else if (format==JBXL_3D_FORMAT_FBX) {
-            //Vector<double> offset = fbx->execAffineTrans(degeneracy);   // degeneracy: 原点縮退
+            //Vector<double> offset = fbx->execAffineTrans(noShiftOffset);   // noShiftOffset: 原点縮退
             //if (obj->affineTrans==NULL) fbx->affineTrans = new AffineTrans<double>();
             //fbx->affineTrans->setShift(offset);
             //fbx->closeSolid();
@@ -944,7 +932,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 出力先は 大域変数 pathOUT, pathPTM で指定されたディレクトリ．
 
 @param format   出力用データフォーマット
-@param format   出力ファイル名
+@param fname    出力ファイル名
 @param solid    出力データ
 */
 void  OARTool::outputSolidData(int format, const char* fname, void* solid)
@@ -952,37 +940,62 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     if (solid==NULL || fname==NULL) return;
     //
     fname = get_file_name(fname);
+    Buffer dae_fname = make_Buffer_str(fname);
     Buffer out_path = init_Buffer();
 
     // fnameの拡張子は自動的に変換される
     // DAE
     if (format==JBXL_3D_FORMAT_DAE) {
         ColladaXML* dae = (ColladaXML*)solid;
+        // 縮退状態
+        if (noShiftOffset && dae->affineTrans!=NULL) {
+            float offset[3];
+            int len = sizeof(float) * 3;
+            memset(offset, 0, len);
+            offset[0] = (float)(dae->affineTrans->shift.x);
+            offset[1] = (float)(dae->affineTrans->shift.z);
+            offset[2] = (float)(dae->affineTrans->shift.y);
+            char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
+            del_file_extension_Buffer(&dae_fname);
+            cat_s2Buffer("_", &dae_fname);
+            cat_s2Buffer(params, &dae_fname);
+            cat_s2Buffer(".", &dae_fname);
+        }
+        //
         if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
         else                  out_path = dup_Buffer(pathOUT);
-        dae->outputFile(fname, (char*)out_path.buf, XML_SPACE_FORMAT);
+        //
+        dae->outputFile((char*)dae_fname.buf, (char*)out_path.buf, XML_SPACE_FORMAT);
+        free_Buffer(&dae_fname);
     }
+
     // OBJ
     else if (format==JBXL_3D_FORMAT_OBJ) {
         OBJData* obj = (OBJData*)solid;
         Buffer obj_fname = make_Buffer_str(fname);
-        // UE
-        if (obj->engine==JBXL_3D_ENGINE_UE) {
-            if (degeneracy) {   // 縮退状態
-                float offset[3];
-                int len = sizeof(float) * 3;
-                memset(offset, 0, len);
-                if (obj->affineTrans != NULL) {
-                    offset[0] =  (float)(obj->affineTrans->shift.x * 100.);    // 100 is Unreal Unit
-                    offset[1] = -(float)(obj->affineTrans->shift.y * 100.);
-                    offset[2] =  (float)(obj->affineTrans->shift.z * 100.);
-                }
-                char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
-                del_file_extension_Buffer(&obj_fname);
-                cat_s2Buffer("_", &obj_fname);
-                cat_s2Buffer(params, &obj_fname);
-                cat_s2Buffer(".", &obj_fname);
+        // 縮退状態
+        if (noShiftOffset && obj->affineTrans != NULL) {
+            float offset[3];
+            int len = sizeof(float) * 3;
+            memset(offset, 0, len);
+            if (obj->engine==JBXL_3D_ENGINE_UE) {   // UE
+                offset[0] =  (float)(obj->affineTrans->shift.x * 100.);    // 100 is Unreal Unit
+                offset[1] = -(float)(obj->affineTrans->shift.y * 100.);
+                offset[2] =  (float)(obj->affineTrans->shift.z * 100.);
             }
+            else {                                  // Unity
+                offset[0] = -(float)(obj->affineTrans->shift.x);
+                offset[1] =  (float)(obj->affineTrans->shift.z);
+                offset[2] = -(float)(obj->affineTrans->shift.y);
+            }
+            char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
+            del_file_extension_Buffer(&obj_fname);
+            cat_s2Buffer("_", &obj_fname);
+            cat_s2Buffer(params, &obj_fname);
+            cat_s2Buffer(".", &obj_fname);
+        }
+        //
+        if (obj->engine==JBXL_3D_ENGINE_UE) {
             if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &obj_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &obj_fname);
             out_path = dup_Buffer(pathOUT);
@@ -991,13 +1004,16 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             if (obj->phantom_out) out_path = dup_Buffer(pathPTM);
             else                  out_path = dup_Buffer(pathOUT);
         }
+        //
         obj->outputFile((char*)obj_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
         free_Buffer(&obj_fname);
     }
+
     // FBX
     else if (format==JBXL_3D_FORMAT_FBX) {
         //
     }
+
     // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
         bool ascii = true;
