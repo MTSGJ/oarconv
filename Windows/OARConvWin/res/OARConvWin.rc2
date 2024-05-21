@@ -1,14 +1,14 @@
 //
-// STLView.RC2 - Microsoft Visual C++ で直接編集しないリソース 
+// STLView.RC2 - Microsoft Visual C++ �Œ��ڕҏW���Ȃ����\�[�X 
 //
 
 #ifdef APSTUDIO_INVOKED
-#error このファイルは、Microsoft Visual C++ で編集できません。
+#error ���̃t�@�C���́AMicrosoft Visual C++ �ŕҏW�ł��܂���B
 #endif //APSTUDIO_INVOKED
 
 
 /////////////////////////////////////////////////////////////////////////////
-// 手動で編集されたりソースをここに追加します...
+// �蓮�ŕҏW���ꂽ��\�[�X�������ɒǉ����܂�...
 #include "WinLib.rc"
 #include "BREP_MFCLib.rc"
 /////////////////////////////////////////////////////////////////////////////

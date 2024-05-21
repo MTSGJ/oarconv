@@ -215,7 +215,7 @@ BOOL  COARConvWinApp::InitInstance()
 
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetDegeneracy(appParam.degeneracy);
+    oarTool.SetNoShiftOffset(appParam.degeneracy);
     oarTool.SetProcJoints(appParam.procJoints);
     //
     updateMenuBar();
@@ -377,7 +377,7 @@ void  COARConvWinApp::OnOutFormatDialog()
 
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetDegeneracy(appParam.degeneracy);
+    oarTool.SetNoShiftOffset(appParam.degeneracy);
     oarTool.SetProcJoints(appParam.procJoints);
 
     char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
@@ -475,7 +475,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     oarTool.init();
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetDegeneracy(appParam.degeneracy);
+    oarTool.SetNoShiftOffset(appParam.degeneracy);
     oarTool.SetProcJoints(appParam.procJoints);
     oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
     ::free(oardir);
@@ -534,7 +534,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
     oarTool.init();
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetDegeneracy(appParam.degeneracy);
+    oarTool.SetNoShiftOffset(appParam.degeneracy);
     oarTool.SetProcJoints(appParam.procJoints);
     oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
     ::free(oardir);
