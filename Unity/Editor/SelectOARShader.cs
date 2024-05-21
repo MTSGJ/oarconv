@@ -1,7 +1,7 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2023 (C) v1.6.1
+// SelectOARShader for oarconv by Fumi.Iseki 2014-2024 (C) v1.6.2
 //
-// see also http://www.nsl.tuis.ac.jp/xoops/modules/xpwiki/?OAR%20Converter
+// see also https://github.com/MTSGJ/oarconv
 //
 //
 
@@ -162,34 +162,39 @@ public sealed class SelectOARShader : AssetPostprocessor
             string sub = name.Substring(name.Length - atr_len, atr_len);
             string enc = sub.Replace('-', '/');
             enc = enc.Replace('$', '/');           // for old version
-            //UnityEngine.Debug.Log("Base64 String = " + enc);
-            byte[] dec = Convert.FromBase64String(enc);    // MTRL_ATTR_LEN (32/4*3 = 24)
-
-            colorRed    = 1.0f - (float)dec[0] / 255.0f;
-            colorGreen  = 1.0f - (float)dec[1] / 255.0f;
-            colorBlue   = 1.0f - (float)dec[2] / 255.0f;
-            transparent = 1.0f - (float)dec[3] / 255.0f;
-            cutoff      = (float)dec[ 4] / 255.0f;
-            shininess   = (float)dec[ 5] / 255.0f;
-            glow        = (float)dec[ 6] / 255.0f;
-            bright      = (float)dec[ 7] / 255.0f;
-            light       = (float)dec[ 8] / 255.0f;
-            /*
-            short[] tmp = new short[1];
-            Buffer.BlockCopy(dec, 13, tmp, 0, 2);
-            shiftU      = (float)tmp[0] / 2000.0f;
-            Buffer.BlockCopy(dec, 15, tmp, 0, 2);
-            shiftV      = (float)tmp[0] / 2000.0f;
-            Buffer.BlockCopy(dec, 17, tmp, 0, 2);
-            scaleU      = (float)tmp[0] / 100.0f;
-            Buffer.BlockCopy(dec, 19, tmp, 0, 2);
-            scaleV      = (float)tmp[0] / 100.0f;
-            Buffer.BlockCopy(dec, 21, tmp, 0, 2);
-            rotate      = (float)tmp[0] / 2000.0f;
-            */
-            kind        = (char) dec[23];
-
-            if (cutoff > 0.9f) cutoff = 0.9f;
+            //
+            if (enc.Length == atr_len) {
+                try {
+                    byte[] dec = Convert.FromBase64String(enc);    // MTRL_ATTR_LEN (32/4*3 = 24)
+                    colorRed = 1.0f - (float)dec[0] / 255.0f;
+                    colorGreen = 1.0f - (float)dec[1] / 255.0f;
+                    colorBlue = 1.0f - (float)dec[2] / 255.0f;
+                    transparent = 1.0f - (float)dec[3] / 255.0f;
+                    cutoff = (float)dec[4] / 255.0f;
+                    shininess = (float)dec[5] / 255.0f;
+                    glow = (float)dec[6] / 255.0f;
+                    bright = (float)dec[7] / 255.0f;
+                    light = (float)dec[8] / 255.0f;
+                    /*
+                    short[] tmp = new short[1];
+                    Buffer.BlockCopy(dec, 13, tmp, 0, 2);
+                    shiftU      = (float)tmp[0] / 2000.0f;
+                    Buffer.BlockCopy(dec, 15, tmp, 0, 2);
+                    shiftV      = (float)tmp[0] / 2000.0f;
+                    Buffer.BlockCopy(dec, 17, tmp, 0, 2);
+                    scaleU      = (float)tmp[0] / 100.0f;
+                    Buffer.BlockCopy(dec, 19, tmp, 0, 2);
+                    scaleV      = (float)tmp[0] / 100.0f;
+                    Buffer.BlockCopy(dec, 21, tmp, 0, 2);
+                    rotate      = (float)tmp[0] / 2000.0f;
+                    */
+                    kind = (char)dec[23];
+                    if (cutoff > 0.9f) cutoff = 0.9f;
+                }
+                catch {
+                    UnityEngine.Debug.Log("Not Supported Material Name = " + name);
+                }
+            }
         }
     }
 }
