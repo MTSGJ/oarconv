@@ -22,9 +22,9 @@ COutFormatDLG::COutFormatDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 
 	outputDaeButton   = NULL;
 	outputObjButton   = NULL;
-	outputONOButton   = NULL;
+	//outputONOButton   = NULL;
 	outputFbxButton   = NULL;
-	outputFNOButton   = NULL;
+	//outputFNOButton   = NULL;
 	outputStlButton   = NULL;
 
 	outputUnityButton = NULL;
@@ -77,9 +77,9 @@ BOOL COutFormatDLG::OnInitDialog()
 
 	outputDaeButton   = (CButton*)GetDlgItem(IDC_RADIO_DAE);
 	outputObjButton   = (CButton*)GetDlgItem(IDC_RADIO_OBJ);
-	outputONOButton   = (CButton*)GetDlgItem(IDC_RADIO_OBJ_NO);
+	//outputONOButton   = (CButton*)GetDlgItem(IDC_RADIO_OBJ_NO);
 	outputFbxButton   = (CButton*)GetDlgItem(IDC_RADIO_FBX);
-	outputFNOButton   = (CButton*)GetDlgItem(IDC_RADIO_FBX_NO);
+	//outputFNOButton   = (CButton*)GetDlgItem(IDC_RADIO_FBX_NO);
 	outputStlButton   = (CButton*)GetDlgItem(IDC_RADIO_STL);
 	outputUnityButton = (CButton*)GetDlgItem(IDC_RADIO_UNITY);
 	outputUEButton    = (CButton*)GetDlgItem(IDC_RADIO_UE);
@@ -87,14 +87,14 @@ BOOL COutFormatDLG::OnInitDialog()
 
 	outputDaeButton->SetCheck(0);
 	outputObjButton->SetCheck(0);
-	outputONOButton->SetCheck(0);
+	//outputONOButton->SetCheck(0);
 	outputFbxButton->SetCheck(0);
-	outputFNOButton->SetCheck(0);
+	//outputFNOButton->SetCheck(0);
 	outputStlButton->SetCheck(0);
 
 	// Not Implement yet
 	outputFbxButton->EnableWindow(FALSE);
-	outputFNOButton->EnableWindow(FALSE);
+	//outputFNOButton->EnableWindow(FALSE);
 
 	if (outputFormat == JBXL_3D_FORMAT_DAE) {
 		outputDaeButton->SetCheck(1);
@@ -106,7 +106,7 @@ BOOL COutFormatDLG::OnInitDialog()
 			OnBnClickedRadioObj();
 		}
 		else {
-			outputONOButton->SetCheck(1);
+			//outputONOButton->SetCheck(1);
 			degeneracy = TRUE;
 			OnBnClickedRadioObjNo();
 		}
@@ -117,7 +117,7 @@ BOOL COutFormatDLG::OnInitDialog()
 			OnBnClickedRadioFbx();
 		}
 		else {
-			outputFNOButton->SetCheck(1);
+			//outputFNOButton->SetCheck(1);
 			degeneracy = TRUE;
 			OnBnClickedRadioFbxNo();
 		}
@@ -152,14 +152,7 @@ void COutFormatDLG::OnOK()
 	else if (outputObjButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_OBJ;
 	else if (outputFbxButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_FBX;
 	else if (outputStlButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_STL_A;
-	else if (outputONOButton->GetCheck()) {
-		outputFormat = JBXL_3D_FORMAT_OBJ;
-		degeneracy = TRUE;
-	}
-	else if (outputFNOButton->GetCheck()) {
-		outputFormat = JBXL_3D_FORMAT_FBX;
-		degeneracy = TRUE;
-	}
+
 
 	outputEngine = JBXL_3D_ENGINE_NONE;
 	if (outputUnityButton->GetCheck())   outputEngine = JBXL_3D_ENGINE_UNITY;
@@ -174,9 +167,9 @@ void COutFormatDLG::OnOK()
 BEGIN_MESSAGE_MAP(COutFormatDLG, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO_DAE, &COutFormatDLG::OnBnClickedRadioDae)
 	ON_BN_CLICKED(IDC_RADIO_OBJ, &COutFormatDLG::OnBnClickedRadioObj)
-	ON_BN_CLICKED(IDC_RADIO_OBJ_NO, &COutFormatDLG::OnBnClickedRadioObjNo)
+	//ON_BN_CLICKED(IDC_RADIO_OBJ_NO, &COutFormatDLG::OnBnClickedRadioObjNo)
 	ON_BN_CLICKED(IDC_RADIO_FBX, &COutFormatDLG::OnBnClickedRadioFbx)
-	ON_BN_CLICKED(IDC_RADIO_FBX_NO, &COutFormatDLG::OnBnClickedRadioFbxNo)
+	//ON_BN_CLICKED(IDC_RADIO_FBX_NO, &COutFormatDLG::OnBnClickedRadioFbxNo)
 	ON_BN_CLICKED(IDC_RADIO_STL, &COutFormatDLG::OnBnClickedRadioStl)
 	//ON_BN_CLICKED(IDC_CHECK_JOINTS, &COutFormatDLG::OnBnClickedCheckJoints)
 END_MESSAGE_MAP()
