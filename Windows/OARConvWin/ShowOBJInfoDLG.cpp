@@ -11,7 +11,7 @@
 IMPLEMENT_DYNAMIC(CShowOBJInfoDLG, CDialogEx)
 
 
-CShowOBJInfoDLG::CShowOBJInfoDLG(OARTool oar, CWnd* pParent)
+CShowOBJInfoDLG::CShowOBJInfoDLG(char* objname, OARTool oar, CWnd* pParent)
 	: CDialogEx(CShowOBJInfoDLG::IDD, pParent)
 {
 	/*

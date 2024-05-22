@@ -22,7 +22,7 @@ public:
 	CStatic* otherSBox;
 
 public:
-	CShowOBJInfoDLG(OARTool oar, CWnd* pParent=NULL);   // 標準コンストラクター
+	CShowOBJInfoDLG(char* objname, OARTool oar, CWnd* pParent=NULL);   // 標準コンストラクター
 	virtual ~CShowOBJInfoDLG();
 
 	virtual BOOL  OnInitDialog();
