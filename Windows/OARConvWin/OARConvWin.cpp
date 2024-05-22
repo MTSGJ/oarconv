@@ -220,7 +220,7 @@ BOOL  COARConvWinApp::InitInstance()
     oarTool.SetProcJoints(appParam.procJoints);
     //
     updateMenuBar();
-    updateStatusBar(_T(""));
+    updateStatusBar(_T(""), _T(""));
 
     // この後，メッセージループに入る．
     return TRUE;
@@ -386,8 +386,8 @@ void  COARConvWinApp::OnOutFormatDialog()
     ::free(outdir);
 
     appParam.saveConfigFile();
-    if (hasData) updateStatusBar(getOARFolder());
-    else         updateStatusBar(_T(""));
+    if (hasData) updateStatusBar(getOARFolder(), getOutFolder());
+    else         updateStatusBar(_T(""), _T(""));
 
     return;
 }
@@ -433,7 +433,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 {
     hasData = false;
     updateMenuBar();
-    updateStatusBar(_T(""));
+    updateStatusBar(_T(""), _T(""));
 
     // Check
     char* fp = ts2mbs((LPCTSTR)fname);        // 要 free
@@ -490,7 +490,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 
     hasData = true;
     updateMenuBar();
-    updateStatusBar(getOARFolder());
+    updateStatusBar(getOARFolder(), getOutFolder());
     //
     char* fn = ts2mbs(fname);
     PRINT_MESG("fileOpenOAR: File is opened %s\n", fn);
@@ -507,7 +507,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 {
     hasData = false;
     updateMenuBar();
-    updateStatusBar(_T(""));
+    updateStatusBar(_T(""), _T(""));
 
     CString oarf = folder;
     if (oarf.Right(1) == _T("\\")) oarf = oarf.Left(oarf.GetLength() - 1);
@@ -549,7 +549,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
 
     hasData = true;
     updateMenuBar();
-    updateStatusBar(getOARFolder());
+    updateStatusBar(getOARFolder(), getOutFolder());
     //
     char* fn = ts2mbs(folder);
     PRINT_MESG("folderOpenOAR: Folder is opened %s\n", fn);
@@ -836,23 +836,23 @@ void  COARConvWinApp::updateMenuBar(CMenu* menu)
 }
 
 
-void  COARConvWinApp::updateStatusBar(CString path)
+void  COARConvWinApp::updateStatusBar(CString oar_path, CString out_path)
 {
     if (pMainFrame == NULL) return;
 
     CString prefix;
     if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
-        prefix = _T(" DAE  |  ");
+        prefix = _T("  DAE  |  ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
-        prefix = _T(" OBJ  |  ");
+        prefix = _T("  OBJ  |  ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
-        prefix = _T(" FBX | ");
+        prefix = _T("  FBX | ");
     }
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T(" STL  |  ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T(" STL  |  ");
-    else                                                    prefix = _T(" NONE  |  ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("  STL  |  ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("  STL  |  ");
+    else                                                    prefix = _T("  NONE  |  ");
 
     if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
     else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  |  ");
@@ -860,8 +860,18 @@ void  COARConvWinApp::updateStatusBar(CString path)
     if (appParam.procJoints) prefix += _T("JOINTS  |  ");
     if (appParam.noOffset)   prefix += _T("NO_OFFSET  |  ");
     //
-    CString mesg = prefix + _T("OAR-Path: ") + path;
+    if (!out_path.IsEmpty() && oarTool.GetNoOffset()) {
+        out_path += OART_DEFAULT_NOS_DIR;
+    }
+    //CString mesg = prefix + _T("OAR-Path: ") + oar_path + "  |  " + _T("OUT-Path: ") + out_path;
+    CString mesg = prefix + _T("OUT-Path: ") + out_path;
     pMainFrame->SetStausBarText(mesg);
+
+    if (!out_path.IsEmpty()) {
+        char* path = ts2mbs(out_path);
+        oarTool.set_outpath(path);
+        ::free(path);
+    }
 
     return;
 }

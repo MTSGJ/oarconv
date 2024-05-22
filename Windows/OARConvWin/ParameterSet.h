@@ -40,7 +40,7 @@ public:
 //
 // Parameters
 public:
-    CString  oarName;    // OAR名．拡張なし．
+    CString  oarName;       // OAR名．拡張なし．
     CString  baseFolder;    // oarFolder, outFolder の親フォルダ
     CString  oarFolder;
     CString  outFolder;

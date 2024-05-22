@@ -86,7 +86,7 @@ public:
     void    showOARInfoDLG(void);
     void    showOBJInfoDLG(char* objname);
     void    updateMenuBar(CMenu* menu = NULL);
-    void    updateStatusBar(CString path);
+    void    updateStatusBar(CString oar_path, CString out_path);
 
     //
     // オーバーライド
