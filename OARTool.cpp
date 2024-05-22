@@ -91,6 +91,12 @@ char*  OARTool::get_outpath(void)
 }
 
 
+void   OARTool::set_outpath(char* path)
+{
+    copy_s2Buffer(path, &pathOUT);
+}
+
+
 //
 void  OARTool::clear_path(void)
 {

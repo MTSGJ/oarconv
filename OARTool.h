@@ -95,7 +95,9 @@ public:
     void   clear_terrain(void);
     void   clear_path(void);
     void   clear_list(void);
+
     char*  get_outpath(void);
+    void   set_outpath(char* path);
 
     void   setUnity4(bool); 
     void   setUnity5(bool);
