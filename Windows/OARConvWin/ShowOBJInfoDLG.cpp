@@ -14,8 +14,9 @@ IMPLEMENT_DYNAMIC(CShowOBJInfoDLG, CDialogEx)
 CShowOBJInfoDLG::CShowOBJInfoDLG(char* objname, OARTool oar, CWnd* pParent)
 	: CDialogEx(CShowOBJInfoDLG::IDD, pParent)
 {
+	
+	objectName = objname;
 	/*
-	objectName;
 	coordinate;
 	other;
 	coordVec;
@@ -55,7 +56,7 @@ END_MESSAGE_MAP()
 
 BOOL   CShowOBJInfoDLG::OnInitDialog()
 {
-	//TCHAR buf[LNAME];
+	TCHAR buf[LNAME];
 
 	nameSBox   = (CStatic*)GetDlgItem(IDC_STATIC_OBJNAME);
 	coordSBox  = (CStatic*)GetDlgItem(IDC_STATIC_CNTCRD);
@@ -63,9 +64,9 @@ BOOL   CShowOBJInfoDLG::OnInitDialog()
 	jointSBox  = (CStatic*)GetDlgItem(IDC_STATIC_JNTNUM);
 	otherSBox  = (CStatic*)GetDlgItem(IDC_STATIC_OTHER);
 
-	/*
-	sntprintf(buf, LNAME, _T("%s"), regionName.GetString());
+	sntprintf(buf, LNAME, _T("%s"), objectName.GetString());
 	nameSBox->SetWindowText(buf);
+	/*
 	sntprintf(buf, LNAME, _T("%d.%d"), majorVersion, minorVersion);
 	verSBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%dx%d"), rgSize, rgSize);
