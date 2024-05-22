@@ -1,5 +1,5 @@
 //
-// SetLocationByPatameter for oarconv by Fumi.Iseki 2024 (C) v1.0.0
+// SetLocationByPatameter for oarconv by Fumi.Iseki 2024 (C) v1.0.1
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -52,21 +52,19 @@ public sealed class SetLocationByPatameter : EditorWindow
         int pos = name.LastIndexOf("_");
         if (pos>=0) {
             string sub = name.Substring(pos + 1);
-            if (sub.Length >= pos_len) {
+            if (sub.Length==pos_len) {
                 sub = sub.Substring(0, pos_len);
-               // UnityEngine.Debug.Log("Base64 String = " + sub);
                 string enc = sub.Replace('-', '/');
-                if (enc.Length == pos_len) {
-                    try {
-                        byte[] dec = Convert.FromBase64String(enc);    // 12 Byte
-                        Buffer.BlockCopy(dec, 0, shift, 0, 4);
-                        Buffer.BlockCopy(dec, 4, shift, 4, 4);
-                        Buffer.BlockCopy(dec, 8, shift, 8, 4);
-                        //UnityEngine.Debug.Log(name + " ===> " + shift[0] + ", " + shift[1] + ", " + shift[2]);
-                    }
-                    catch {
-                        UnityEngine.Debug.Log("SetLocationByPatameter: Base64 Decode Error = " + enc);
-                    }
+                // UnityEngine.Debug.Log("Base64 String = " + enc);
+                try {
+                    byte[] dec = Convert.FromBase64String(enc);    // 12 Byte
+                    Buffer.BlockCopy(dec, 0, shift, 0, 4);
+                    Buffer.BlockCopy(dec, 4, shift, 4, 4);
+                    Buffer.BlockCopy(dec, 8, shift, 8, 4);
+                    //UnityEngine.Debug.Log(name + " ===> " + shift[0] + ", " + shift[1] + ", " + shift[2]);
+                }
+                catch {
+                    UnityEngine.Debug.Log("SetLocationByPatameter: Base64 Decode Error = " + enc);
                 }
             }
         }
@@ -74,3 +72,4 @@ public sealed class SetLocationByPatameter : EditorWindow
         return position;
     }
 }
+

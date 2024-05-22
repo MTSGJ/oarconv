@@ -19,6 +19,7 @@
   #define  OART_DEFAULT_TEX_DIR     "Textures\\"
   #define  OART_DEFAULT_PTM_DIR     "Phantoms\\"
   #define  OART_DEFAULT_MTL_DIR     "MTL\\"
+  #define  OART_DEFAULT_NOS_DIR     "_nooffset"
 #else
   #define  OART_DEFAULT_INP_DIR     "./"
   #define  OART_DEFAULT_DAE_DIR     "./DAE/"
@@ -29,6 +30,7 @@
   #define  OART_DEFAULT_TEX_DIR     "Textures/"
   #define  OART_DEFAULT_PTM_DIR     "Phantoms/"
   #define  OART_DEFAULT_MTL_DIR     "MTL/"
+  #define  OART_DEFAULT_NOS_DIR     "_nooffset"
 #endif
 
 
