@@ -93,6 +93,8 @@ char*  OARTool::get_outpath(void)
 
 void   OARTool::set_outpath(char* path)
 {
+    if (path==NULL) return;
+
     copy_s2Buffer(path, &pathOUT);
 
 #ifdef WIN32
