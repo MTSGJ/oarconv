@@ -8,17 +8,18 @@ class CShowOBJInfoDLG : public CDialogEx
 	DECLARE_DYNAMIC(CShowOBJInfoDLG)
 
 public:
-	CString objectName;
-	CString coordinate;
-	CString other;
-	Vector<double> coordVec;
-	int    vertexNnum;
-	int	   jointNum;
+	PrimBaseShape shape;
+	Vector<double> shift;
 
+	CString fileName;
+	CString objectName;
+	CString objectKind;
+	CString other;
+
+	CStatic* fileSBox;
 	CStatic* nameSBox;
+	CStatic* kindSBox;
 	CStatic* coordSBox;
-	CStatic* vertexSBox;
-	CStatic* jointSBox;
 	CStatic* otherSBox;
 
 public:
@@ -34,4 +35,6 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV サポート
 
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnStnClickedStaticObjkind();
 };

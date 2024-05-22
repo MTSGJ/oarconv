@@ -775,9 +775,9 @@ void  COARConvWinApp::showOARInfoDLG()
 }
 
 
-void  COARConvWinApp::showOBJInfoDLG(char* objname)
+void  COARConvWinApp::showOBJInfoDLG(char* obj)
 {
-    CShowOBJInfoDLG* shwdlg = new CShowOBJInfoDLG(objname, oarTool, m_pMainWnd);
+    CShowOBJInfoDLG* shwdlg = new CShowOBJInfoDLG(obj, oarTool, m_pMainWnd);
     if (shwdlg == NULL) return;
     shwdlg->DoModal();
     delete (shwdlg);

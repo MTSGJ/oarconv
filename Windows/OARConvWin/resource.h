@@ -9,16 +9,16 @@
 #define IDC_STATIC_VRTXNUM              1025
 #define IDC_STATIC_CNTCRD               1026
 #define IDC_STATIC_OTHER                1027
-#define IDC_STATIC_JNTNUM2              1027
+#define IDC_STATIC_FLNAME               1028
+#define IDC_STATIC_OBJKIND              1030
+#define IDC_STATIC_OARVER               1041
+#define IDC_STATIC_RGNAME               1042
+#define IDC_STATIC_RGSIZE               1043
 #define ID_DUMMY                        9999
+#define IDC_STATIC_OBJNUM               10445
 #define IDD_ABOUTBOX                    30100
 #define IDR_MAINFRAME                   30128
 #define IDR_BREPFRAME                   30129
-#define IDC_STATIC_OAR_VER              31001
-#define IDC_STATIC_OARVER               31002
-#define IDC_STATIC_RGNAME               31003
-#define IDC_STATIC_RGSIZE               31004
-#define IDC_STATIC_OBJNUM               31005
 #define IDC_CHECK_TERRAIN               31010
 #define IDC_CHECK_DEBUGMODE             31015
 #define IDC_EDIT_PREFIX_OAR             31016
@@ -75,7 +75,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        142
 #define _APS_NEXT_COMMAND_VALUE         32806
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_CONTROL_VALUE         1031
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

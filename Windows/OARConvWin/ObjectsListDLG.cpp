@@ -184,13 +184,13 @@ void CObjectsListDLG::OnBnClickedObjlistPreview()
 void  CObjectsListDLG::OnLbnDblclkListObjects()
 {
     listLBox = (CListBox*)GetDlgItem(IDC_LIST_OBJECTS);
-    convBBox = (CButton*)GetDlgItem(IDC_OBJLIST_CONV);
+    //convBBox = (CButton*)GetDlgItem(IDC_OBJLIST_CONV);
 
     int index = listLBox->GetAnchorIndex();
     //
     OpenOBJInfoDLG(index);
 
-    convBBox->GetFocus();
+    //convBBox->GetFocus();
 }
 
 
@@ -377,24 +377,6 @@ void  CObjectsListDLG::OpenOBJInfoDLG(int idx)
 	if (obj != NULL) PRINT_MESG("Objects List: selected [%d]: %s\n", num + 1, fname);
 	//
 	winApp->showOBJInfoDLG(obj);
-
-	/*
-	BrepSolidList* slist = (BrepSolidList*)winApp->oarTool.generateSolidData(JBXL_3D_FORMAT_STL, obj);
-	if (slist == NULL) {
-		return;
-	}
-
-	CProgressBarDLG* counter = new CProgressBarDLG(_T("Create Preview Window"), FALSE);
-	BREP_SOLID* solid = slist->getMerge(counter);
-
-	freeBrepSolidList(slist);
-	if (counter != NULL) {
-		counter->PutFill();
-		delete counter;
-	}
-	if (solid != NULL) {
-		winApp->solidOpenBrep(solid, mbs2ts(fname), num + 1);	// solid は呼び出された関数が解放する
-	}*/
 
 	return;
 }
