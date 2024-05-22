@@ -14,6 +14,7 @@ public:
 	CString fileName;
 	CString objectName;
 	CString objectKind;
+	CString coordinate;
 	CString other;
 
 	CStatic* fileSBox;

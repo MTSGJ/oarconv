@@ -42,8 +42,12 @@ CShowOBJInfoDLG::CShowOBJInfoDLG(char* obj, OARTool oar, CWnd* pParent)
 	else if (shape.PCode == PRIM_PCODE_NEWTREE) objectKind = "Tree";
 	else if (shape.PCode == PRIM_PCODE_PARTICLE) objectKind = "Particle";
  
+	TCHAR buf[LNAME];
 	shift = shape.affineTrans.shift;
-	other = "";
+	sntprintf(buf, LNAME, _T("%g, %g, %g"), shift.x, shift.y, shift.z);
+	coordinate = buf;
+
+	other = _T("");
 
 	fileSBox  = NULL;
 	nameSBox  = NULL;
@@ -81,7 +85,7 @@ END_MESSAGE_MAP()
 
 BOOL   CShowOBJInfoDLG::OnInitDialog()
 {
-	TCHAR buf[LBUF];
+	TCHAR buf[LNAME];
 
 	fileSBox  = (CStatic*)GetDlgItem(IDC_STATIC_FLNAME);
 	nameSBox  = (CStatic*)GetDlgItem(IDC_STATIC_OBJNAME);
@@ -105,7 +109,7 @@ BOOL   CShowOBJInfoDLG::OnInitDialog()
 
 void CShowOBJInfoDLG::OnBnClickedCrdcopy()
 {
-	PRINT_MESG("KKKKKKKKKKKK\n");
+	SaveToClipboard_byStr(coordinate);
 }
 
 
