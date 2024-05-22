@@ -153,14 +153,14 @@ void CObjectsListDLG::OnBnClickedObjlistPreview()
     convBBox = (CButton*) GetDlgItem(IDC_OBJLIST_CONV);
 
     int* tmp = (int*)malloc(sizeof(int)*objNum);
-    if (tmp!=NULL) return;
+    if (tmp==NULL) return;
 
     memset(tmp, 0, sizeof(int)*objNum);
     slctNum = listLBox->GetSelItems(objNum, tmp);
     if (slctNum>0) {
         size_t len = sizeof(int)*slctNum;
         slctItems = (int*)malloc(len);
-		if (selItems == NULL) {
+		if (slctItems == NULL) {
 			::free(tmp);
 			return;
         }
@@ -188,7 +188,7 @@ void  CObjectsListDLG::OnLbnDblclkListObjects()
 
     int index = listLBox->GetAnchorIndex();
     //
-    OpenPreviewWindow(index);
+    OpenOBJInfoDLG(index);
 
     convBBox->GetFocus();
 }
@@ -376,7 +376,7 @@ void  CObjectsListDLG::OpenOBJInfoDLG(int idx)
 	char* fname = get_file_name(obj);
 	if (obj != NULL) PRINT_MESG("Objects List: selected [%d]: %s\n", num + 1, fname);
 	//
-	winApp->showOBJInfoDLG();
+	winApp->showOBJInfoDLG(obj);
 
 	/*
 	BrepSolidList* slist = (BrepSolidList*)winApp->oarTool.generateSolidData(JBXL_3D_FORMAT_STL, obj);

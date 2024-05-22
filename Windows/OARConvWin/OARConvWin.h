@@ -3,7 +3,7 @@
 #pragma once
 
 #ifndef __AFXWIN_H__
-   #error このファイルを PCH に含める前に、'stdafx.h' を含めてください
+#error このファイルを PCH に含める前に、'stdafx.h' を含めてください
 #endif
 
 #include  "resource.h"       // メイン シンボル
@@ -30,84 +30,84 @@ using namespace jbxwl;
 class COARConvWinApp : public CWinApp, public CAppCallBack
 {
 public:
-   COARConvWinApp();
-   virtual ~COARConvWinApp();
+    COARConvWinApp();
+    virtual ~COARConvWinApp();
 
-    CMainFrame*  pMainFrame;
-   CLogWndFrame* pLogFrame;
-   CLogWndDoc*   pLogDoc;
+    CMainFrame* pMainFrame;
+    CLogWndFrame* pLogFrame;
+    CLogWndDoc* pLogDoc;
 
-   CMultiDocTemplate* pDocTemplLOG;
-   CMultiDocTemplate* pDocTemplBREP;
+    CMultiDocTemplate* pDocTemplLOG;
+    CMultiDocTemplate* pDocTemplBREP;
 
-   CMessageBoxDLG*  aboutBox;
-   CObjectsListDLG* objListBox;
-   
-   CParameterSet appParam;
-   RECT          windowSize;
+    CMessageBoxDLG* aboutBox;
+    CObjectsListDLG* objListBox;
 
-public:
-   OARTool  oarTool;
-
-   Buffer   homeFolder;
-   Buffer   assetsFolder;
-   Buffer   comDecomp;
-
-   bool     hasData;
-   bool     isConverting;
+    CParameterSet appParam;
+    RECT          windowSize;
 
 public:
-   void     setOARName(LPCTSTR name)    { appParam.oarName = name; }
-   void     setBaseFolder(LPCTSTR fldr) { appParam.baseFolder = fldr; }
-   void     setOARFolder (LPCTSTR fldr) { appParam.oarFolder = fldr; }
-   void     setOutFolder (LPCTSTR fldr) { appParam.outFolder = fldr; }
+    OARTool  oarTool;
 
-   LPCTSTR  getOARName(void)    { return (LPCTSTR)appParam.oarName; }
-   LPCTSTR  getBaseFolder(void) { return (LPCTSTR)appParam.baseFolder; }
-   LPCTSTR  getOARFolder (void) { return (LPCTSTR)appParam.oarFolder; }
-   LPCTSTR  getOutFolder (void) { return (LPCTSTR)appParam.outFolder; }
+    Buffer   homeFolder;
+    Buffer   assetsFolder;
+    Buffer   comDecomp;
 
-   bool     fileOpen(CString);
-   bool     fileOpenOAR  (CString);
-   bool     folderOpenOAR(CString);
-
-   //
-   void     convertAllData (void);
-   void     convertSelectedData(int* selectedObjs, int selectedNums);
-   void     convertOneData(int index);
-
-   int      _convertSelectedData(int* selectedObjs, int selectedNums);
-   int      _convertAllData(void);
-   int      _convertOneData(int index);
+    bool     hasData;
+    bool     isConverting;
 
 public:
-	void    solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num);
-	//
-	void	showOARInfoDLG(void);
-	void	showOBJInfoDLG(void);
-	void    updateMenuBar(CMenu* menu=NULL);
-	void    updateStatusBar(CString path);
+    void     setOARName(LPCTSTR name) { appParam.oarName = name; }
+    void     setBaseFolder(LPCTSTR fldr) { appParam.baseFolder = fldr; }
+    void     setOARFolder(LPCTSTR fldr) { appParam.oarFolder = fldr; }
+    void     setOutFolder(LPCTSTR fldr) { appParam.outFolder = fldr; }
 
-//
-// オーバーライド
+    LPCTSTR  getOARName(void) { return (LPCTSTR)appParam.oarName; }
+    LPCTSTR  getBaseFolder(void) { return (LPCTSTR)appParam.baseFolder; }
+    LPCTSTR  getOARFolder(void) { return (LPCTSTR)appParam.oarFolder; }
+    LPCTSTR  getOutFolder(void) { return (LPCTSTR)appParam.outFolder; }
+
+    bool     fileOpen(CString);
+    bool     fileOpenOAR(CString);
+    bool     folderOpenOAR(CString);
+
+    //
+    void     convertAllData(void);
+    void     convertSelectedData(int* selectedObjs, int selectedNums);
+    void     convertOneData(int index);
+
+    int      _convertSelectedData(int* selectedObjs, int selectedNums);
+    int      _convertAllData(void);
+    int      _convertOneData(int index);
+
 public:
-   virtual BOOL InitInstance();
-   virtual void FrameDestructor(CExTextFrame* frm);
-   virtual void ViewDestructor(CExTextView* view);
+    void    solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num);
+    //
+    void    showOARInfoDLG(void);
+    void    showOBJInfoDLG(char* objname);
+    void    updateMenuBar(CMenu* menu = NULL);
+    void    updateStatusBar(CString path);
 
-// 実装
-   afx_msg void OnAppAbout();
+    //
+    // オーバーライド
+public:
+    virtual BOOL InitInstance();
+    virtual void FrameDestructor(CExTextFrame* frm);
+    virtual void ViewDestructor(CExTextView* view);
 
-   DECLARE_MESSAGE_MAP()
-   afx_msg void OnFileOpen();
-   afx_msg void OnFolderOpen();
-   afx_msg void OnFileOpenQuick();
-   afx_msg void OnFolderOpenQuick();
-   afx_msg void OnSettingDialog();
-   afx_msg void OnOutFormatDialog();
-   afx_msg void OnLogWindow();
-   afx_msg void OnConvertData();
-   afx_msg void OnObjectsList();
+    // 実装
+    afx_msg void OnAppAbout();
+
+    DECLARE_MESSAGE_MAP()
+    afx_msg void OnFileOpen();
+    afx_msg void OnFolderOpen();
+    afx_msg void OnFileOpenQuick();
+    afx_msg void OnFolderOpenQuick();
+    afx_msg void OnSettingDialog();
+    afx_msg void OnOutFormatDialog();
+    afx_msg void OnLogWindow();
+    afx_msg void OnConvertData();
+    afx_msg void OnObjectsList();
 };
 
 

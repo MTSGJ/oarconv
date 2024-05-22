@@ -61,14 +61,14 @@ END_MESSAGE_MAP()
 // COARConvWinApp コンストラクション
 COARConvWinApp::COARConvWinApp()
 {
-    pDocTemplLOG  = NULL;
+    pDocTemplLOG = NULL;
     pDocTemplBREP = NULL;
 
-    pMainFrame    = NULL;
-    pLogFrame     = NULL;
-    pLogDoc       = NULL;
-    aboutBox      = NULL;
-    objListBox    = NULL;
+    pMainFrame = NULL;
+    pLogFrame = NULL;
+    pLogDoc = NULL;
+    aboutBox = NULL;
+    objListBox = NULL;
 
     memset(&windowSize, -1, sizeof(RECT));
     appParam.init();
@@ -92,7 +92,7 @@ COARConvWinApp::COARConvWinApp()
 COARConvWinApp::~COARConvWinApp()
 {
     DEBUG_INFO("DESTRUCTOR: COARConvWinApp START\n");
-    
+
     free_Buffer(&homeFolder);
     free_Buffer(&assetsFolder);
     free_Buffer(&comDecomp);
@@ -121,7 +121,7 @@ BOOL  COARConvWinApp::InitInstance()
     AfxEnableControlContainer();
     Enable3dControlsStatic();    // MFC と静的にリンクしている場合にはここを呼び出してください．
 
-    SetRegistryKey(_T("OARConvWin by NSL"));    
+    SetRegistryKey(_T("OARConvWin by NSL"));
     LoadStdProfileSettings(4);  // 標準の INI ファイルのオプションをロードします (MRU を含む)
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -138,17 +138,17 @@ BOOL  COARConvWinApp::InitInstance()
     AddDocTemplate(pDocTemplate);
     pDocTemplLOG = pDocTemplate;
 
-    // BREP ウィンドウ 
+    // BREP ウィンドウ
     pDocTemplate = new CMultiDocTemplate(
         IDR_MAINFRAME,
         RUNTIME_CLASS(CBREPDoc),
-        RUNTIME_CLASS(CBREPFrame), 
+        RUNTIME_CLASS(CBREPFrame),
         RUNTIME_CLASS(CBREPView));
 
     if (!pDocTemplate) return FALSE;
     AddDocTemplate(pDocTemplate);
     pDocTemplBREP = pDocTemplate;
-    
+
     ///////////////////////////////////////////////////////////////////////////////
     // メイン MDI フレーム ウィンドウ
     pMainFrame = new CMainFrame;
@@ -169,30 +169,30 @@ BOOL  COARConvWinApp::InitInstance()
     int ry = GetSystemMetrics(SM_CYSCREEN) - 14;    // Y方向の解像度（-ツールバー）
 
     // Default Size
-    windowSize.left   = rx/2 - wx/2;
-    windowSize.right  = wx;
-    windowSize.top    = ry/2 - wy/2;
+    windowSize.left = rx / 2 - wx / 2;
+    windowSize.right = wx;
+    windowSize.top = ry / 2 - wy / 2;
     windowSize.bottom = wy;
 
     // read  windowSize
     appParam.readWindowSize(&windowSize);
 
     int sx, sy;
-    if (windowSize.left<=rx) {
+    if (windowSize.left <= rx) {
         sx = windowSize.left;
         wx = windowSize.right;
-        if (wx<=0 || wx>=rx) wx = OARCONV_WND_XSIZE; 
+        if (wx <= 0 || wx >= rx) wx = OARCONV_WND_XSIZE;
     }
     else {
-        sx = rx/2 - OARCONV_WND_XSIZE/2;
+        sx = rx / 2 - OARCONV_WND_XSIZE / 2;
     }
-    if (windowSize.top<=ry) {
+    if (windowSize.top <= ry) {
         sy = windowSize.top;
         wy = windowSize.bottom;
-        if (wy<=0 || wy>=ry) wy = OARCONV_WND_YSIZE;
+        if (wy <= 0 || wy >= ry) wy = OARCONV_WND_YSIZE;
     }
     else {
-        sy = ry/2 - OARCONV_WND_YSIZE/2;
+        sy = ry / 2 - OARCONV_WND_YSIZE / 2;
     }
     pMainFrame->SetWindowPos(NULL, sx, sy, wx, wy, 0);
 
@@ -231,11 +231,11 @@ BOOL  COARConvWinApp::InitInstance()
 void  COARConvWinApp::FrameDestructor(CExTextFrame* frm)
 {
     // ログ ウィンドウ
-    if (frm==pLogFrame) {
+    if (frm == pLogFrame) {
         DEBUG_INFO("COARConvWinApp::FrameDestructor(): STOP LOG FRAME");
         pLogFrame = NULL;
     }
-    
+
     updateMenuBar();
     return;
 }
@@ -245,7 +245,7 @@ void  COARConvWinApp::FrameDestructor(CExTextFrame* frm)
 void  COARConvWinApp::ViewDestructor(CExTextView* view)
 {
     // ログ ウィンドウ
-    if (view==pLogFrame->pView) {
+    if (view == pLogFrame->pView) {
         DEBUG_INFO("COARConvWinApp::ViewDestructor(): STOP LOG VIEW");
         ClearGlobalTextDocument();
         pLogDoc = NULL;
@@ -263,8 +263,8 @@ void  COARConvWinApp::ViewDestructor(CExTextView* view)
 // DoModal() が表示されない現象が発生するので，その対応処理.
 void  COARConvWinApp::OnAppAbout()
 {
-    if (aboutBox==NULL) aboutBox = new CMessageBoxDLG(IDD_ABOUTBOX, NULL, m_pMainWnd);
-    if (aboutBox!=NULL) aboutBox->Display();
+    if (aboutBox == NULL) aboutBox = new CMessageBoxDLG(IDD_ABOUTBOX, NULL, m_pMainWnd);
+    if (aboutBox != NULL) aboutBox->Display();
 }
 
 
@@ -340,15 +340,15 @@ void  COARConvWinApp::OnFolderOpenQuick()
 //
 void  COARConvWinApp::OnObjectsList()
 {
-    if (objListBox==NULL) {
+    if (objListBox == NULL) {
         tList* objlist = oarTool.GetObjectsList();
-        if (objlist!=NULL) {
+        if (objlist != NULL) {
             objListBox = new CObjectsListDLG(objlist, this, m_pMainWnd);
-            if (objListBox==NULL) return;
+            if (objListBox == NULL) return;
             objListBox->Display();
         }
     }
-    
+
     updateMenuBar();
     return;
 }
@@ -357,7 +357,7 @@ void  COARConvWinApp::OnObjectsList()
 //
 void  COARConvWinApp::OnLogWindow()
 {
-    if (pLogFrame==NULL) {
+    if (pLogFrame == NULL) {
         pLogFrame = ExecLogWnd(pDocTemplLOG, _T("Log Window"), this);
         pLogDoc = pLogFrame->pDoc;
         SetGlobalTextDocument(pLogDoc);
@@ -396,7 +396,7 @@ void  COARConvWinApp::OnOutFormatDialog()
 void  COARConvWinApp::OnSettingDialog()
 {
     CSetParamDLG* setdlg = new CSetParamDLG(&appParam, m_pMainWnd);
-    if (setdlg==NULL) return;
+    if (setdlg == NULL) return;
     setdlg->DoModal();
     setdlg->getParameters(&appParam);
     delete (setdlg);
@@ -437,7 +437,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 
     // Check
     char* fp = ts2mbs((LPCTSTR)fname);        // 要 free
-    int ret  = TarCheckArchive(fp, 0);
+    int ret = TarCheckArchive(fp, 0);
     ::free(fp);
     if (!ret) {
         MessageBoxDLG(IDS_STR_ERROR, IDS_STR_ERR_OPEN_FILE, MB_OK, pMainFrame);
@@ -510,7 +510,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
     updateStatusBar(_T(""));
 
     CString oarf = folder;
-    if (oarf.Right(1)==_T("\\")) oarf = oarf.Left(oarf.GetLength()-1);
+    if (oarf.Right(1) == _T("\\")) oarf = oarf.Left(oarf.GetLength() - 1);
 
     int len = appParam.prefixOAR.GetLength();
     CString outf;
@@ -568,7 +568,7 @@ void  COARConvWinApp::convertAllData()
     oarTool.MakeOutputFolder();
 
     int num = _convertAllData();
-    if (num>=0) {
+    if (num >= 0) {
         CString format;
         CString mesg;
         format.LoadString(IDS_STR_CONVERT_NUM);
@@ -599,8 +599,8 @@ int   COARConvWinApp::_convertAllData()
 
     // 処理データ数の推測（Terrainは除く）
     int prognum = oarTool.objectsNum;
-    if (stopnum>0) prognum = Min(prognum, stopnum);
-    if (strtnum<1) strtnum = 1;
+    if (stopnum > 0) prognum = Min(prognum, stopnum);
+    if (strtnum < 1) strtnum = 1;
     prognum -= strtnum + 1;
     //
     oarTool.SetTerrainShift(appParam.xShift, appParam.yShift, appParam.zShift);
@@ -610,20 +610,20 @@ int   COARConvWinApp::_convertAllData()
     int num = 0;
     if (appParam.outputTerrain) {
         CMessageBoxDLG* mbox = MessageBoxDLG(IDS_STR_INFO, IDS_STR_CONV_TERRAIN, m_pMainWnd);
-        if (mbox!=NULL) mbox->Display();
+        if (mbox != NULL) mbox->Display();
         //
         oarTool.ReadTerrainData();
         oarTool.SetTerrainTextureScale(appParam.terrainScale);
         num = oarTool.GenerateTerrainDataFile();
         //
-        if (mbox!=NULL) delete mbox;
+        if (mbox != NULL) delete mbox;
     }
     //
-    if (stopnum!=0) {
+    if (stopnum != 0) {
         CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
-        if (progress!=NULL) {
-            if      (appParam.outputFormat==JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
-            else if (appParam.outputFormat==JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
+        if (progress != NULL) {
+            if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
+            else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
             else                                                progress->SetTitle("Convert to STL Files");
             progress->Start(prognum);
             SetGlobalCounter(progress);
@@ -631,7 +631,7 @@ int   COARConvWinApp::_convertAllData()
         //
         num = oarTool.GenerateObjectFromDataIndex(strtnum, stopnum, true, (char*)comDecomp.buf);
         //
-        if (progress!=NULL) {
+        if (progress != NULL) {
             progress->PutFill();
             delete progress;
             ClearGlobalCounter();
@@ -650,7 +650,7 @@ void  COARConvWinApp::convertSelectedData(int* selectedObjs, int selectedNums)
 
     //
     int num = _convertSelectedData(selectedObjs, selectedNums);
-    if (num>=0) {
+    if (num >= 0) {
         CString format;
         CString mesg;
         format.LoadString(IDS_STR_CONVERT_NUM);
@@ -669,11 +669,11 @@ void  COARConvWinApp::convertSelectedData(int* selectedObjs, int selectedNums)
 
 
 //
-int   COARConvWinApp::_convertSelectedData(int* selectedObjs, int objNum)
+int   COARConvWinApp::_convertSelectedData(int* selectedObjs, int objNums)
 {
-    if (selectedObjs==NULL) return 0;
+    if (selectedObjs == NULL) return 0;
 
-    DebugMode   = appParam.debugMode;
+    DebugMode = appParam.debugMode;
     int prognum = objNums;
     oarTool.SetTerrainShift(appParam.xShift, appParam.yShift, appParam.zShift);
 
@@ -681,8 +681,8 @@ int   COARConvWinApp::_convertSelectedData(int* selectedObjs, int objNum)
     // Convert
     int num = 0;
     CProgressBarDLG* progress = new CProgressBarDLG(_T(""), TRUE);
-    if (progress!=NULL) {
-        if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
+    if (progress != NULL) {
+        if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
         else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
         else                                                  progress->SetTitle("Convert to STL Files");
         progress->Start(prognum);
@@ -691,12 +691,12 @@ int   COARConvWinApp::_convertSelectedData(int* selectedObjs, int objNum)
     //
     num = oarTool.GenerateObjectFromDataList(selectedObjs, objNums, true, (char*)comDecomp.buf);
     //
-    if (progress!=NULL) {
+    if (progress != NULL) {
         progress->PutFill();
         delete progress;
         ClearGlobalCounter();
     }
-    
+
     return num;
 }
 
@@ -708,7 +708,7 @@ void  COARConvWinApp::convertOneData(int index)
     oarTool.MakeOutputFolder();
     //
     int num = _convertOneData(index);
-    if (num>=0) {
+    if (num >= 0) {
         CString strformat;
         CString mesg;
         strformat.LoadString(IDS_STR_CONVERT_NUM);
@@ -746,17 +746,17 @@ int   COARConvWinApp::_convertOneData(int index)
 
 void  COARConvWinApp::solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num)
 {
-    if (solid==NULL) return;
+    if (solid == NULL) return;
 
     CExFrame* pfrm = CreateDocFrmView(pDocTemplBREP, this);
-    if (pfrm!=NULL) {
-        ((CBREPDoc*)(pfrm->pDoc))->Solid   = solid;
-        ((CBREPDoc*)(pfrm->pDoc))->DataNum = num; 
-        ((CBREPDoc*)(pfrm->pDoc))->WinApp  = this;
+    if (pfrm != NULL) {
+        ((CBREPDoc*)(pfrm->pDoc))->Solid = solid;
+        ((CBREPDoc*)(pfrm->pDoc))->DataNum = num;
+        ((CBREPDoc*)(pfrm->pDoc))->WinApp = this;
         int ret = ExecDocFrmView(pfrm);
-        if (pfrm->pDoc->pView!=NULL) pfrm->pDoc->pView->SetTitle(title);
+        if (pfrm->pDoc->pView != NULL) pfrm->pDoc->pView->SetTitle(title);
         //
-        if (ret==0) pfrm->pView->TimerStart();
+        if (ret == 0) pfrm->pView->TimerStart();
         else ExecDocFrmViewError(m_pMainWnd->m_hWnd, ret);
     }
 
@@ -767,7 +767,7 @@ void  COARConvWinApp::solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num)
 void  COARConvWinApp::showOARInfoDLG()
 {
     CShowOARInfoDLG* shwdlg = new CShowOARInfoDLG(oarTool, m_pMainWnd);
-    if (shwdlg==NULL) return;
+    if (shwdlg == NULL) return;
     shwdlg->DoModal();
     delete (shwdlg);
 
@@ -775,9 +775,9 @@ void  COARConvWinApp::showOARInfoDLG()
 }
 
 
-void  COARConvWinApp::showOBJInfoDLG()
+void  COARConvWinApp::showOBJInfoDLG(char* objname)
 {
-    CShowOBJInfoDLG* shwdlg = new CShowOBJInfoDLG(oarTool, m_pMainWnd);
+    CShowOBJInfoDLG* shwdlg = new CShowOBJInfoDLG(objname, oarTool, m_pMainWnd);
     if (shwdlg == NULL) return;
     shwdlg->DoModal();
     delete (shwdlg);
@@ -793,43 +793,43 @@ void  COARConvWinApp::showOBJInfoDLG()
 
 void  COARConvWinApp::updateMenuBar(CMenu* menu)
 {
-    if (menu==NULL) {
-        if (pMainFrame==NULL) return;
+    if (menu == NULL) {
+        if (pMainFrame == NULL) return;
         menu = pMainFrame->GetMenu();
-        if (menu==NULL) return;
+        if (menu == NULL) return;
     }
 
     // default
-    menu->EnableMenuItem(ID_FILE_OPEN,    MF_BYCOMMAND | MF_ENABLED);
-    menu->EnableMenuItem(ID_FOLDER_OPEN,  MF_BYCOMMAND | MF_ENABLED);
-    menu->EnableMenuItem(ID_FILE_QUICK,   MF_BYCOMMAND | MF_ENABLED);
+    menu->EnableMenuItem(ID_FILE_OPEN, MF_BYCOMMAND | MF_ENABLED);
+    menu->EnableMenuItem(ID_FOLDER_OPEN, MF_BYCOMMAND | MF_ENABLED);
+    menu->EnableMenuItem(ID_FILE_QUICK, MF_BYCOMMAND | MF_ENABLED);
     menu->EnableMenuItem(ID_FOLDER_QUICK, MF_BYCOMMAND | MF_ENABLED);
     menu->EnableMenuItem(ID_CONVERT_DATA, MF_BYCOMMAND | MF_ENABLED);
-    menu->EnableMenuItem(ID_OBJ_LIST,     MF_BYCOMMAND | MF_ENABLED);
+    menu->EnableMenuItem(ID_OBJ_LIST, MF_BYCOMMAND | MF_ENABLED);
 
     //
     if (isConverting) {
-        menu->EnableMenuItem(ID_FILE_OPEN,    MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
-        menu->EnableMenuItem(ID_FOLDER_OPEN,  MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
-        menu->EnableMenuItem(ID_FILE_QUICK,   MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
+        menu->EnableMenuItem(ID_FILE_OPEN, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
+        menu->EnableMenuItem(ID_FOLDER_OPEN, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
+        menu->EnableMenuItem(ID_FILE_QUICK, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
         menu->EnableMenuItem(ID_FOLDER_QUICK, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
         menu->EnableMenuItem(ID_CONVERT_DATA, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
-        menu->EnableMenuItem(ID_OBJ_LIST,     MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);    
+        menu->EnableMenuItem(ID_OBJ_LIST, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
     }
     else {
         if (!hasData) {
             menu->EnableMenuItem(ID_CONVERT_DATA, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
-            menu->EnableMenuItem(ID_OBJ_LIST,    MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
+            menu->EnableMenuItem(ID_OBJ_LIST, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
         }
     }
 
-    if (objListBox!=NULL) {
-        menu->EnableMenuItem(ID_FILE_OPEN,    MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
-        menu->EnableMenuItem(ID_FOLDER_OPEN,  MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
-        menu->EnableMenuItem(ID_FILE_QUICK,   MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
+    if (objListBox != NULL) {
+        menu->EnableMenuItem(ID_FILE_OPEN, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
+        menu->EnableMenuItem(ID_FOLDER_OPEN, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
+        menu->EnableMenuItem(ID_FILE_QUICK, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
         menu->EnableMenuItem(ID_FOLDER_QUICK, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
         menu->EnableMenuItem(ID_CONVERT_DATA, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
-        menu->EnableMenuItem(ID_OBJ_LIST,     MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
+        menu->EnableMenuItem(ID_OBJ_LIST, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
     }
 
     return;
@@ -838,7 +838,7 @@ void  COARConvWinApp::updateMenuBar(CMenu* menu)
 
 void  COARConvWinApp::updateStatusBar(CString path)
 {
-    if (pMainFrame==NULL) return;
+    if (pMainFrame == NULL) return;
 
     CString prefix;
     if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
@@ -854,7 +854,7 @@ void  COARConvWinApp::updateStatusBar(CString path)
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T(" STL  |  ");
     else                                                    prefix = _T(" NONE  |  ");
 
-    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
+    if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
     else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  |  ");
 
     if (appParam.procJoints) prefix += _T("JOINTS  |  ");
