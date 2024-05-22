@@ -49,7 +49,7 @@ void  OARTool::init(void)
 
     engine          = JBXL_3D_ENGINE_UNITY;
     dataformat      = JBXL_3D_FORMAT_DAE;
-    noShiftOffset   = false;
+    noOffset        = false;
     procJoints      = false;
     terrainNum      = 0;
     terrain         = NULL;     // pointer to TerrainSetteings
@@ -532,7 +532,7 @@ void  OARTool::ReadTerrainData(void)
             terrain[count] = TerrainTool((char*)lps->ldat.key.buf, xsize, ysize);
             terrain[count].SetEngine(engine);
             terrain[count].SetFormat(dataformat);
-            terrain[count].SetNoShiftOffset(noShiftOffset);
+            terrain[count].SetNoOffset(noOffset);
             terrain[count].ReadSettings((char*)lps->ldat.val.buf);
             terrain[count].ReadHeightData((char*)lpt->ldat.val.buf);
             lps = lps->next;
@@ -545,7 +545,7 @@ void  OARTool::ReadTerrainData(void)
             terrain[count] = TerrainTool((char*)lpt->ldat.key.buf, xsize, ysize);
             terrain[count].SetEngine(engine);
             terrain[count].SetFormat(dataformat);
-            terrain[count].SetNoShiftOffset(noShiftOffset);
+            terrain[count].SetNoOffset(noOffset);
             terrain[count].ReadHeightData((char*)lpt->ldat.val.buf);
             lpt = lpt->next;
             count++;
@@ -577,9 +577,15 @@ int  OARTool::GenerateTerrainDataFile(void)
 }
 
 
-int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, char* command)
+/**
+int  OARTool::GenerateObjectFromDataIndex(int startnum, int stopnum, bool useBrep, char* command)
+
+オブジェクトファイルリスト this->objectFiles から指定された Objectデータを生成する．
+
+*/
+int  OARTool::GenerateObjectFromDataIndex(int startnum, int stopnum, bool useBrep, char* command)
 {
-    tList* lp = objectsFiles;
+    tList* lp = this->objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
 
     if (stopnum<0) stopnum = objectsNum;
@@ -588,14 +594,17 @@ int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, c
     while (lp!=NULL) {
         num++;
         if (num>=startnum && num<=stopnum) {
+            //
             char* file_path = (char*)lp->ldat.val.buf;
             void* solid = generateSolidData(dataformat, file_path, num, useBrep, command);
             outputSolidData(dataformat, get_file_name(file_path), solid);
             freeSolidData(dataformat, solid);
+            //
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
             }
+            //
             del_tList(&AlphaChannelList);
             cnt++;
         }
@@ -607,36 +616,36 @@ int  OARTool::GenerateObjectsDataFile(int startnum, int stopnum, bool useBrep, c
 }
 
 
-void  OARTool::GenerateSelectedDataFile(char* file_path, bool useBrep, char* command)
+/**
+int  OARTool::GenerateObjectFromDataList(int* objlist, int objnum, bool useBrep, char* command)
+
+オブジェクトファイルリスト this->objectFiles から，objlist（要素数 objnum）で指定されたオブジェクトを生成する．
+
+$retval 生成したオブジェクト数
+*/
+int  OARTool::GenerateObjectFromDataList(int* objlist, int objnum, bool useBrep, char* command)
 {
-    if (file_path==NULL) return;
+    if (objnum<=0 || objlist==NULL) return 0;
 
-    void* solid = generateSolidData(dataformat, file_path, 1, useBrep, command);
-    outputSolidData(dataformat, get_file_name(file_path), solid);
-    freeSolidData(dataformat, solid);
-    del_tList(&AlphaChannelList);
-
-    return;
-}
-
-
-int  OARTool::GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep, char* command)
-{
-    tList* lp = objectsFiles;
+    tList* lp = this->objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
 
     int num = 0;
     int cnt = 0;
     while (lp!=NULL) {
         if (num==objlist[cnt]) {
+            //
             char* file_path = (char*)lp->ldat.val.buf;
             void* solid = generateSolidData(dataformat, file_path, num + 1, useBrep, command);
             outputSolidData(dataformat, file_path, solid);
             freeSolidData(dataformat, solid);
+            //
             if (counter!=NULL) {
                 if (counter->cancel) break;
                 counter->StepIt();
             }
+            //
+            del_tList(&AlphaChannelList);
             cnt++;
             if (cnt==objnum) break;
         }
@@ -650,13 +659,32 @@ int  OARTool::GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep, c
 
 
 /**
+void  OARTool::GenerateObjectFromDataFile(char* file_path, bool useBrep, char* command)
+
+指定されたファイルから Objectデータ１個を生成する．
+
+*/
+void  OARTool::GenerateObjectFromDataFile(char* file_path, bool useBrep, char* command)
+{
+    if (file_path==NULL) return;
+
+    void* solid = generateSolidData(dataformat, file_path, 1, useBrep, command);
+    outputSolidData(dataformat, get_file_name(file_path), solid);
+    freeSolidData(dataformat, solid);
+    del_tList(&AlphaChannelList);
+
+    return;
+}
+
+
+/**
 void*  OARTool::generateSolidData(int format, const char* fname, int num, bool useBrep, char* command)
 
 Tree, Grass, Prim(Sculpt, Meshを含む) の XMLデータ(オブジェクト１個分) から指定された形式で SOLIDデータを生成する．
 
 @param format     生成データフォーマット
 @param fname      オブジェクト名（xmlファイル名）
-@param num        表示用の処理番号．
+@param num        表示用の処理番号．何個目のオブジェクトか指定する．1 から数える．
 @param useBrep    頂点の配置にBREPを使用するか？ 使用すると処理時間はかかるが，データサイズが小さくなる．
 @param command    JPEG2000（テクスチャ）の内部処理が失敗した場合の外部コマンド．
 @retval 生成されたデータへのポインタ．それぞれのデータ型でキャストして使用する．
@@ -697,7 +725,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     // DAE
     if (format==JBXL_3D_FORMAT_DAE) {
         dae = new ColladaXML();
-        dae->no_offset = noShiftOffset;
+        dae->no_offset = noOffset;
         dae->forUnity5 = forUnity5;
         dae->forUnity  = forUnity;
         dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
@@ -705,13 +733,13 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     // OBJ
     else if (format==JBXL_3D_FORMAT_OBJ) {
         obj = new OBJData(); 
-        obj->no_offset = noShiftOffset;
+        obj->no_offset = noOffset;
         obj->setEngine(engine);
     }
     // FBX
     else if (format==JBXL_3D_FORMAT_FBX) {
         obj = NULL;
-        obj->no_offset = noShiftOffset;
+        obj->no_offset = noOffset;
         //obj->setEngine(engine);
     }
     // STL
@@ -950,7 +978,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     if (format==JBXL_3D_FORMAT_DAE) {
         ColladaXML* dae = (ColladaXML*)solid;
         // 縮退状態
-        if (noShiftOffset && dae->affineTrans!=NULL) {
+        if (noOffset && dae->affineTrans!=NULL) {
             float offset[3];
             int len = sizeof(float) * 3;
             memset(offset, 0, len);
@@ -976,7 +1004,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         OBJData* obj = (OBJData*)solid;
         Buffer obj_fname = make_Buffer_str(fname);
         // 縮退状態
-        if (noShiftOffset && obj->affineTrans != NULL) {
+        if (noOffset && obj->affineTrans != NULL) {
             float offset[3];
             int len = sizeof(float) * 3;
             memset(offset, 0, len);

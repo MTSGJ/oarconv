@@ -17,57 +17,57 @@ using namespace  jbxwl;
 class CParameterSet
 {
 public:
-	CParameterSet() { init();}
-	virtual	~CParameterSet() {}
+    CParameterSet() { init();}
+    virtual  ~CParameterSet() {}
 
-	void	init(void);
-	void	free(void) {}
+    void     init(void);
+    void     free(void) {}
 
-	void	readConfigFile(void);
-	void	saveConfigFile(void);
+    void     readConfigFile(void);
+    void     saveConfigFile(void);
 
-	void	readWindowSize(RECT* winsz);
-	void	saveWindowSize(RECT  winsz);
+    void     readWindowSize(RECT* winsz);
+    void     saveWindowSize(RECT  winsz);
 
-	CString	makeConfigFilePath(void);
-	CString	makeConfigSizePath(void);
+    CString  makeConfigFilePath(void);
+    CString  makeConfigSizePath(void);
 
 //
 public:
-	CString	configFilePath;
-	CString	configSizePath;
+    CString  configFilePath;
+    CString  configSizePath;
 
 //
 // Parameters
 public:
-	CString oarName;	// OAR名．拡張なし．
-	CString baseFolder;	// oarFolder, outFolder の親フォルダ
-	CString	oarFolder;
-	CString	outFolder;
-	CString	logFolder;
+    CString  oarName;    // OAR名．拡張なし．
+    CString  baseFolder;    // oarFolder, outFolder の親フォルダ
+    CString  oarFolder;
+    CString  outFolder;
+    CString  logFolder;
 
-	int     startNum;
-	int     stopNum;
-	BOOL    outputObject;
-	BOOL    outputTerrain;
-	BOOL    debugMode;
-	
-	int     outputEngine;		// Unity or UE
-	int     outputFormat;		// ファイルフォーマット DAE, OBJ, STL
-	BOOL    noShiftOffset;
-	BOOL    procJoints;
+    int      startNum;
+    int      stopNum;
+    BOOL     outputObject;
+    BOOL     outputTerrain;
+    BOOL     debugMode;
+    
+    int      outputEngine;        // Unity or UE
+    int      outputFormat;        // ファイルフォーマット DAE, OBJ, STL
+    BOOL     noOffset;
+    BOOL     procJoints;
 
-	float   terrainScale;
-	float   xShift;
-	float   yShift;
-	float   zShift;
+    float    terrainScale;
+    float    xShift;
+    float    yShift;
+    float    zShift;
 
-	CString prefixOAR;
-	CString prefixOUT;
-	CString prefixDAE;
-	CString prefixOBJ;
-	CString prefixFBX;
-	CString prefixSTL;
+    CString  prefixOAR;
+    CString  prefixOUT;
+    CString  prefixDAE;
+    CString  prefixOBJ;
+    CString  prefixFBX;
+    CString  prefixSTL;
 };
 
 

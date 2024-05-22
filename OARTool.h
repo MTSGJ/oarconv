@@ -76,13 +76,14 @@ private:
     TreeTool treeTool;
 
 public:
+    int    terrainNum;
+    int    objectsNum;
+
+public:
     bool   forUnity4;           // Unity4.x 用
     bool   forUnity5;           // Unity5.x 用
     bool   forUnity;            // Unityサポート
     bool   forUE;               // Unreal Engine
-
-    int    terrainNum;
-    int    objectsNum;
 
 public:
     OARTool(void) { init();}
@@ -104,7 +105,7 @@ public:
 private:
     int    engine;
     int    dataformat;
-    bool   noShiftOffset;          // UE用 縮退
+    bool   noOffset;        // UE用 縮退
     bool   procJoints;
 
 public:
@@ -115,25 +116,26 @@ public:
 
     void   SetEngine(int e);
     void   SetDataFormat(int f) { dataformat = f; }
-    void   SetNoShiftOffset(bool b){ noShiftOffset = b; }
+    void   SetNoOffset(bool b){ noOffset = b; }
     void   SetProcJoints(bool b){ procJoints = b; }
     void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
     void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
 
     int    GetEngine(void) { return engine;}
     int    GetDataFormat(void) { return dataformat;}
-    bool   GetNoShiftOffset(void) { return noShiftOffset;}
+    bool   GetNoOffset(void) { return noOffset;}
     bool   GetProcJoints(void) { return procJoints;}
     tList* GetObjectsList(void) { return objectsFiles;}
     void   ReadTerrainData(void);
 
     // DAE/OBJ/STL
-    int    GenerateTerrainDataFile (void);
-    int    GenerateObjectsDataFile (int startnum=1, int stopnum=-1, bool useBrep=true, char* command=NULL);
-    void   GenerateSelectedDataFile(char* fname, bool useBrep=true, char* command=NULL);
-    int    GenerateSelectedDataFile(int objnum, int* objlist, bool useBrep=true, char* command=NULL);
+    int    GenerateObjectFromDataIndex(int startnum=1, int stopnum=-1, bool useBrep=true, char* command=NULL);
+    int    GenerateObjectFromDataList(int* objlist, int objnum, bool useBrep=true, char* command=NULL);
+    void   GenerateObjectFromDataFile(char* fname, bool useBrep=true, char* command=NULL);
 
-    // 要データ形式
+    int    GenerateTerrainDataFile (void);
+
+    // オブジェクト データ
     void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, char* command=NULL);
     void   outputSolidData(int format, const char* fname, void* solid);
     void   freeSolidData(int format, void* solid);

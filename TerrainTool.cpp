@@ -438,8 +438,8 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             Vector<float>  shift = Vector<float>(ri*256.0f + (float)offset.x, rj*256.0f + (float)offset.y, (float)offset.z);
             Vector<float> center = Vector<float>(-xsize/2.0f, -ysize/2.0f, -waterHeight);
             ContourBaseData* facetdata;
-            //if (format==JBXL_3D_FORMAT_OBJ && engine==JBXL_3D_ENGINE_UE && noShiftOffset) {   // 縮退状態
-            if (noShiftOffset) {   // 縮退状態
+            //if (format==JBXL_3D_FORMAT_OBJ && engine==JBXL_3D_ENGINE_UE && noOffset) {   // 縮退状態
+            if (noOffset) {   // 縮退状態
                 facetdata = ContourBaseDataFromTerrainImage(region, center, left, right, top, bottom, false);
             }
             else {
@@ -482,7 +482,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 dae->addObject(data, true, NULL);
                 dae->closeSolid();
                 //
-                if (noShiftOffset) {   // 縮退状態
+                if (noOffset) {   // 縮退状態
                     float position[3];
                     int len = sizeof(float) * 3;
                     memset(position, 0, len);
@@ -507,7 +507,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 obj->closeSolid();
                 //
                 if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
-                if (noShiftOffset) {   // 縮退状態
+                if (noOffset) {   // 縮退状態
                     float position[3];
                     int len = sizeof(float) * 3;
                     memset(position, 0, len);

@@ -216,7 +216,7 @@ BOOL  COARConvWinApp::InitInstance()
 
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetNoShiftOffset(appParam.noShiftOffset);
+    oarTool.SetNoOffset(appParam.noOffset);
     oarTool.SetProcJoints(appParam.procJoints);
     //
     updateMenuBar();
@@ -378,7 +378,7 @@ void  COARConvWinApp::OnOutFormatDialog()
 
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetNoShiftOffset(appParam.noShiftOffset);
+    oarTool.SetNoOffset(appParam.noOffset);
     oarTool.SetProcJoints(appParam.procJoints);
 
     char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
@@ -476,7 +476,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     oarTool.init();
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetNoShiftOffset(appParam.noShiftOffset);
+    oarTool.SetNoOffset(appParam.noOffset);
     oarTool.SetProcJoints(appParam.procJoints);
     oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
     ::free(oardir);
@@ -535,7 +535,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
     oarTool.init();
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetNoShiftOffset(appParam.noShiftOffset);
+    oarTool.SetNoOffset(appParam.noOffset);
     oarTool.SetProcJoints(appParam.procJoints);
     oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
     ::free(oardir);
@@ -567,7 +567,7 @@ void  COARConvWinApp::convertAllData()
 
     oarTool.MakeOutputFolder();
 
-    int num = convertAllFiles();
+    int num = _convertAllData();
     if (num>=0) {
         CString format;
         CString mesg;
@@ -592,7 +592,7 @@ void  COARConvWinApp::convertAllData()
 //
 
 //
-int   COARConvWinApp::convertAllFiles()
+int   COARConvWinApp::_convertAllData()
 {
     int strtnum = appParam.startNum;
     int stopnum = appParam.stopNum;
@@ -629,7 +629,7 @@ int   COARConvWinApp::convertAllFiles()
             SetGlobalCounter(progress);
         }
         //
-        num = oarTool.GenerateObjectsDataFile(strtnum, stopnum, true, (char*)comDecomp.buf);
+        num = oarTool.GenerateObjectFromDataIndex(strtnum, stopnum, true, (char*)comDecomp.buf);
         //
         if (progress!=NULL) {
             progress->PutFill();
@@ -638,21 +638,18 @@ int   COARConvWinApp::convertAllFiles()
         }
     }
 
-    // Clear Data
-    //oarTool.clear_terrain();
-
     return num;
 }
 
 
-void  COARConvWinApp::convertSelectedData(int selectedNums, int* selectedObjs)
+void  COARConvWinApp::convertSelectedData(int* selectedObjs, int selectedNums)
 {
     isConverting = true;
     updateMenuBar();
     oarTool.MakeOutputFolder();
 
     //
-    int num = convertSelectedFiles(selectedNums, selectedObjs);
+    int num = _convertSelectedData(selectedObjs, selectedNums);
     if (num>=0) {
         CString format;
         CString mesg;
@@ -672,12 +669,12 @@ void  COARConvWinApp::convertSelectedData(int selectedNums, int* selectedObjs)
 
 
 //
-int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
+int   COARConvWinApp::_convertSelectedData(int* selectedObjs, int objNum)
 {
-    if (selectedNums<=0 || selectedObjs==NULL) return 0;
+    if (selectedObjs==NULL) return 0;
 
     DebugMode   = appParam.debugMode;
-    int prognum = selectedNums;
+    int prognum = objNums;
     oarTool.SetTerrainShift(appParam.xShift, appParam.yShift, appParam.zShift);
 
     //////////////////////////////////////////////////////////////////////////////
@@ -692,7 +689,7 @@ int   COARConvWinApp::convertSelectedFiles(int selectedNums, int* selectedObjs)
         SetGlobalCounter(progress);
     }
     //
-    num = oarTool.GenerateSelectedDataFile(selectedNums, selectedObjs, true, (char*)comDecomp.buf);
+    num = oarTool.GenerateObjectFromDataList(selectedObjs, objNums, true, (char*)comDecomp.buf);
     //
     if (progress!=NULL) {
         progress->PutFill();
@@ -710,7 +707,7 @@ void  COARConvWinApp::convertOneData(int index)
     updateMenuBar();
     oarTool.MakeOutputFolder();
     //
-    int num = convertOneFile(index);
+    int num = _convertOneData(index);
     if (num>=0) {
         CString strformat;
         CString mesg;
@@ -730,14 +727,14 @@ void  COARConvWinApp::convertOneData(int index)
 
 
 //
-int   COARConvWinApp::convertOneFile(int index)
+int   COARConvWinApp::_convertOneData(int index)
 {
     DebugMode = appParam.debugMode;
     oarTool.SetTerrainShift(appParam.xShift, appParam.yShift, appParam.zShift);
 
     //////////////////////////////////////////////////////////////////////////////
     // Convert
-    int num = oarTool.GenerateObjectsDataFile(index, index, true, (char*)comDecomp.buf);
+    int num = oarTool.GenerateObjectFromDataIndex(index, index, true, (char*)comDecomp.buf);
 
     return num;
 }
@@ -848,8 +845,8 @@ void  COARConvWinApp::updateStatusBar(CString path)
     if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
     else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  |  ");
 
-    if (appParam.procJoints)    prefix += _T("JOINTS  |  ");
-    if (appParam.noShiftOffset) prefix += _T("NO_OFFSET  |  ");
+    if (appParam.procJoints) prefix += _T("JOINTS  |  ");
+    if (appParam.noOffset)   prefix += _T("NO_OFFSET  |  ");
     //
     CString mesg = prefix + _T("OAR-Path: ") + path;
     pMainFrame->SetStausBarText(mesg);

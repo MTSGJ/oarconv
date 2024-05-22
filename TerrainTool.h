@@ -56,7 +56,7 @@ public:
 
     int    engine;
     int    format;
-    bool   noShiftOffset;
+    bool   noOffset;
 
     MSGraph<float> r32;     // r32 data
 
@@ -90,7 +90,7 @@ public:
 public:
     void   SetEngine(int e) { engine = e;}
     void   SetFormat(int f) { format = f;}
-    void   SetNoShiftOffset(bool b) { noShiftOffset = b;}
+    void   SetNoOffset(bool b) { noOffset = b;}
 
     void   ReadSettings(const char* path);
     void   ReadHeightData(const char* path);

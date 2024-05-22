@@ -17,7 +17,7 @@ COutFormatDLG::COutFormatDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 {
 	outputEngine  = param->outputEngine;
 	outputFormat  = param->outputFormat;
-	noShiftOffset = param->noShiftOffset;
+	noOffset      = param->noOffset;
 	procJoints    = param->procJoints;
 
 	outputDaeButton   = NULL;
@@ -42,7 +42,7 @@ void  COutFormatDLG::getParameters(CParameterSet* param)
 {
 	param->outputEngine = outputEngine;
 	param->outputFormat = outputFormat;
-	param->noShiftOffset   = noShiftOffset;
+	param->noOffset     = noOffset;
 	param->procJoints   = procJoints;
 
 	if (outputFormat == JBXL_3D_FORMAT_DAE) {
@@ -120,8 +120,8 @@ BOOL COutFormatDLG::OnInitDialog()
 	if (procJoints) procJointsButton->SetCheck(1);
 	else            procJointsButton->SetCheck(0);
 
-	if (noShiftOffset) noOffsetButton->SetCheck(1);
-	else               noOffsetButton->SetCheck(0);
+	if (noOffset) noOffsetButton->SetCheck(1);
+	else          noOffsetButton->SetCheck(0);
 
 	return TRUE;
 }
@@ -129,8 +129,8 @@ BOOL COutFormatDLG::OnInitDialog()
 
 void COutFormatDLG::OnOK()
 {
-	noShiftOffset = FALSE;
-	outputFormat  = JBXL_3D_FORMAT_NONE;
+	noOffset = FALSE;
+	outputFormat = JBXL_3D_FORMAT_NONE;
 
 	if      (outputDaeButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_DAE;
 	else if (outputObjButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_OBJ;
@@ -143,8 +143,8 @@ void COutFormatDLG::OnOK()
 
 	if (procJointsButton->GetCheck()) procJoints  = TRUE;
 	else                              procJoints  = FALSE;
-	if (noOffsetButton->GetCheck()) noShiftOffset = TRUE;
-	else                            noShiftOffset = FALSE;
+	if (noOffsetButton->GetCheck())   noOffset = TRUE;
+	else                              noOffset = FALSE;
 
 	CDialogEx::OnOK();
 }

@@ -19,8 +19,8 @@ public:
 	int         objNum;
 	tList*      objList;
 	//
-	int         selNum;
-	int*        selItems;
+	int         slctNum;
+	int*        slctItems;
 	//
 	int         findPos;
 	CString     findStr;

@@ -22,7 +22,7 @@ void  CParameterSet::init(void)
 	stopNum       = -1;
 	outputTerrain = TRUE;
 	debugMode     = FALSE;
-	noShiftOffset    = FALSE;
+	noOffset      = FALSE;
 	procJoints    = FALSE;
 
 	outputEngine  = JBXL_3D_ENGINE_UNITY;
@@ -55,7 +55,7 @@ void  CParameterSet::readConfigFile(void)
 
 	outputTerrain = get_bool_param_tList (lt, "outputTerrain", outputTerrain);
 	debugMode     = get_bool_param_tList (lt, "debugMode",  debugMode);
-	noShiftOffset = get_bool_param_tList (lt, "noShiftOffset", noShiftOffset);
+	noOffset      = get_bool_param_tList (lt, "noOffset", noOffset);
 	procJoints    = get_bool_param_tList (lt, "procJoints", procJoints);
 
 	outputEngine  = get_int_param_tList  (lt, "outputEngine", outputEngine);
@@ -129,8 +129,8 @@ void  CParameterSet::saveConfigFile(void)
 	//
 	if (outputTerrain) fprintf(fp, "outputTerrain %s\n", "TRUE");
 	else               fprintf(fp, "outputTerrain %s\n", "FALSE");
-	if (noShiftOffset) fprintf(fp, "noShiftOffset %s\n", "TRUE");
-	else               fprintf(fp, "noShiftOffset %s\n", "FALSE");
+	if (noOffset)      fprintf(fp, "noOffset %s\n", "TRUE");
+	else               fprintf(fp, "noOffset %s\n", "FALSE");
 	if (procJoints)    fprintf(fp, "procJoints %s\n", "TRUE");
 	else               fprintf(fp, "procJoints %s\n", "FALSE");
 	if (debugMode)     fprintf(fp, "debugMode %s\n", "TRUE");

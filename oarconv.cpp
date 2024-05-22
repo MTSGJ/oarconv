@@ -87,7 +87,7 @@ int main(int argc, char** argv)
     OARTool oar;
     oar.SetEngine(engine);
     oar.SetDataFormat(format);
-    oar.SetNoShiftOffset(degeneracy);
+    oar.SetNoOffset(degeneracy);
     oar.SetProcJoints(procJoints);
     oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf);
     oar.GetDataInfo();  // -f オプション（個別ファイル指定）があるので，成否は無視．
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 
     if (infile.buf!=NULL) {
         oar.objectsNum = 1;
-        oar.GenerateSelectedDataFile((char*)infile.buf, useBrep, (char*)cmmnd.buf);
+        oar.GenerateObjectFromDataFile((char*)infile.buf, useBrep, (char*)cmmnd.buf);
     }
     else {
         if (strtnum==0) {
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
             strtnum = 1;
         }
         if (stopnum!=0) {
-            oar.GenerateObjectsDataFile(strtnum, stopnum, useBrep, (char*)cmmnd.buf);
+            oar.GenerateObjectFromDataIndex(strtnum, stopnum, useBrep, (char*)cmmnd.buf);
         }
     }
     oar.free();
