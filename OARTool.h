@@ -142,6 +142,7 @@ public:
 
     bool   isRequiredTexture(int format) { return (format!=JBXL_3D_FORMAT_STL_A && format!=JBXL_3D_FORMAT_STL_B);} 
     void   ConvertTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL, const char* command=NULL);
+    PrimBaseShape  getAbstractObject(const char* fname);
 
     // ReadTerrainData と GenerateTerrainDataFile の間で呼ぶこと．
     void   SetTerrainTextureScale(float sc) { if(terrain!=NULL) for(int i=0; i<terrainNum; i++) terrain[i].set_scale((float)sc);}

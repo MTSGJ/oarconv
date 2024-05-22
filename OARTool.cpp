@@ -1091,6 +1091,33 @@ void  OARTool::freeSolidData(int format, void* solid)
 // 
 
 /**
+PrimBaseShape  OARTool::getAbstractObject(const char* fname)
+
+ルートプリムの情報を得る．
+*/
+PrimBaseShape  OARTool::getAbstractObject(const char* fname)
+{
+    PrimBaseShape rparam;
+    rparam.init();
+    if (fname==NULL) return rparam;
+
+    tXML* xml = xml_parse_file(fname);
+    if (xml==NULL) return rparam;
+
+    tList* lp = get_xml_node_list_bystr(xml, "<SceneObjectPart><Shape>");
+    if (lp!=NULL) {
+        int count = count_tList(lp);
+        if (count!=0) rparam.GetBaseParamFromXML(lp->altp, NULL);
+    }
+    del_xml(&xml);
+
+    return rparam;
+}
+
+
+/**
+void  OARTool::ConvertTexture(const char* texture, const char* add_name, const char* ext_name, const char* dist, const char* comformat)
+
 @param texture    コンバート元データのUUID．
 @param add_name   コンバート先ファイル名の追加文字列．
 @param ext_name   コンバート先ファイル名の拡張子． "." 付き
