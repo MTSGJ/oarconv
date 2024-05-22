@@ -269,7 +269,8 @@
     <ClCompile Include="OutFormatDLG.cpp" />
     <ClCompile Include="ParameterSet.cpp" />
     <ClCompile Include="SetParamDLG.cpp" />
-    <ClCompile Include="ShowInfoDLG.cpp" />
+    <ClCompile Include="ShowOARInfoDLG.cpp" />
+    <ClCompile Include="ShowOBJInfoDLG.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -286,7 +287,8 @@
     <ClInclude Include="ParameterSet.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SetParamDLG.h" />
-    <ClInclude Include="ShowInfoDLG.h" />
+    <ClInclude Include="ShowOARInfoDLG.h" />
+    <ClInclude Include="ShowOBJInfoDLG.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="OARConvWin.h" />
   </ItemGroup>

@@ -3,16 +3,16 @@
 
 #include "stdafx.h"
 #include "OARConvWin.h"
-#include "ShowInfoDLG.h"
+#include "ShowOARInfoDLG.h"
 
 
-// CShowInfoDLG ダイアログ
+// CShowOARInfoDLG ダイアログ
 
-IMPLEMENT_DYNAMIC(CShowInfoDLG, CDialogEx)
+IMPLEMENT_DYNAMIC(CShowOARInfoDLG, CDialogEx)
 
 
-CShowInfoDLG::CShowInfoDLG(OARTool oar, CWnd* pParent)
-	: CDialogEx(CShowInfoDLG::IDD, pParent)
+CShowOARInfoDLG::CShowOARInfoDLG(OARTool oar, CWnd* pParent)
+	: CDialogEx(CShowOARInfoDLG::IDD, pParent)
 {
 	regionName   = (char*)oar.regionName.buf;
 	majorVersion = oar.majorVersion;
@@ -28,28 +28,28 @@ CShowInfoDLG::CShowInfoDLG(OARTool oar, CWnd* pParent)
 
 
 
-CShowInfoDLG::~CShowInfoDLG()
+CShowOARInfoDLG::~CShowOARInfoDLG()
 {
 }
 
 
 
-void CShowInfoDLG::DoDataExchange(CDataExchange* pDX)
+void CShowOARInfoDLG::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 }
 
 
 
-BEGIN_MESSAGE_MAP(CShowInfoDLG, CDialogEx)
+BEGIN_MESSAGE_MAP(CShowOARInfoDLG, CDialogEx)
 END_MESSAGE_MAP()
 
 
 
 ////////////////////////////////////////////////////////////////////////
-// CShowInfoDLG メッセージ ハンドラー
+// CShowOARInfoDLG メッセージ ハンドラー
 
-BOOL   CShowInfoDLG::OnInitDialog()
+BOOL   CShowOARInfoDLG::OnInitDialog()
 {
 	TCHAR buf[LNAME];
 

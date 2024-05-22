@@ -3,9 +3,9 @@
 
 // CShowInfoDLG ダイアログ
 
-class CShowInfoDLG : public CDialogEx
+class CShowOARInfoDLG : public CDialogEx
 {
-	DECLARE_DYNAMIC(CShowInfoDLG)
+	DECLARE_DYNAMIC(CShowOARInfoDLG)
 
 public:
 	CString regionName;
@@ -20,8 +20,8 @@ public:
 	CStatic* numSBox;
 
 public:
-	CShowInfoDLG(OARTool oar, CWnd* pParent=NULL);   // 標準コンストラクター
-	virtual ~CShowInfoDLG();
+	CShowOARInfoDLG(OARTool oar, CWnd* pParent=NULL);   // 標準コンストラクター
+	virtual ~CShowOARInfoDLG();
 
 	virtual BOOL  OnInitDialog();
 

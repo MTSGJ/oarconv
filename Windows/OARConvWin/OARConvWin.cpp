@@ -16,7 +16,8 @@
 #include  "BREPFrame.h"
 #include  "BREP_MFCLib.h"
 
-#include  "ShowInfoDLG.h"
+#include  "ShowOARInfoDLG.h"
+#include  "ShowOBJInfoDLG.h"
 #include  "SetParamDLG.h"
 #include  "OutFormatDLG.h"
 #include  "ObjectsListDLG.h"
@@ -768,7 +769,7 @@ void  COARConvWinApp::solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num)
 
 void  COARConvWinApp::showOARInfoDLG()
 {
-    CShowInfoDLG* shwdlg = new CShowInfoDLG(oarTool, m_pMainWnd);
+    CShowOARInfoDLG* shwdlg = new CShowOARInfoDLG(oarTool, m_pMainWnd);
     if (shwdlg==NULL) return;
     shwdlg->DoModal();
     delete (shwdlg);
@@ -844,11 +845,11 @@ void  COARConvWinApp::updateStatusBar(CString path)
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T(" STL  |  ");
     else                                                    prefix = _T(" NONE  |  ");
 
-    if (appParam.noShiftOffset) prefix += _T(" NO_OFFSET  |  ");
-    if (appParam.procJoints)    prefix += _T(" JOINTS  |  ");
+    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
+    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  |  ");
 
-    if      (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T(" UNITY  |  ");
-    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T(" UE  |  ");
+    if (appParam.procJoints)    prefix += _T("JOINTS  |  ");
+    if (appParam.noShiftOffset) prefix += _T("NO_OFFSET  |  ");
     //
     CString mesg = prefix + _T("OAR-Path: ") + path;
     pMainFrame->SetStausBarText(mesg);

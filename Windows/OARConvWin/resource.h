@@ -4,6 +4,12 @@
 //
 #define IDC_EDIT1                       1021
 #define IDC_EDIT_FNDSTR                 1021
+#define IDC_STATIC_OBJNAME              1023
+#define IDC_STATIC_JNTNUM               1024
+#define IDC_STATIC_VRTXNUM              1025
+#define IDC_STATIC_CNTCRD               1026
+#define IDC_STATIC_OTHER                1027
+#define IDC_STATIC_JNTNUM2              1027
 #define ID_DUMMY                        9999
 #define IDD_ABOUTBOX                    30100
 #define IDR_MAINFRAME                   30128
@@ -45,6 +51,7 @@
 #define IDD_DIALOG_OBJLIST              31401
 #define IDD_DIALOG_OARINFO              31402
 #define IDD_DIALOG_OUTPUT               31405
+#define IDD_DIALOG_OBJINFO              31406
 #define ID_FOLDER_OPEN                  31780
 #define ID_FILE_QUICK                   31782
 #define ID_FOLDER_QUICK                 31783
@@ -66,9 +73,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_RESOURCE_VALUE        142
 #define _APS_NEXT_COMMAND_VALUE         32806
-#define _APS_NEXT_CONTROL_VALUE         1022
+#define _APS_NEXT_CONTROL_VALUE         1027
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

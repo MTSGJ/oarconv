@@ -16,13 +16,16 @@
     <ClCompile Include="ObjectsListDLG.cpp">
       <Filter>ソースコード</Filter>
     </ClCompile>
-    <ClCompile Include="ShowInfoDLG.cpp">
-      <Filter>ソースコード</Filter>
-    </ClCompile>
     <ClCompile Include="SetParamDLG.cpp">
       <Filter>ソースコード</Filter>
     </ClCompile>
     <ClCompile Include="OutFormatDLG.cpp">
+      <Filter>ソースコード</Filter>
+    </ClCompile>
+    <ClCompile Include="ShowOARInfoDLG.cpp">
+      <Filter>ソースコード</Filter>
+    </ClCompile>
+    <ClCompile Include="ShowOBJInfoDLG.cpp">
       <Filter>ソースコード</Filter>
     </ClCompile>
   </ItemGroup>
@@ -48,13 +51,16 @@
     <ClInclude Include="ObjectsListDLG.h">
       <Filter>ヘッダ</Filter>
     </ClInclude>
-    <ClInclude Include="ShowInfoDLG.h">
-      <Filter>ヘッダ</Filter>
-    </ClInclude>
     <ClInclude Include="SetParamDLG.h">
       <Filter>ヘッダ</Filter>
     </ClInclude>
     <ClInclude Include="OutFormatDLG.h">
+      <Filter>ヘッダ</Filter>
+    </ClInclude>
+    <ClInclude Include="ShowOARInfoDLG.h">
+      <Filter>ヘッダ</Filter>
+    </ClInclude>
+    <ClInclude Include="ShowOBJInfoDLG.h">
       <Filter>ヘッダ</Filter>
     </ClInclude>
   </ItemGroup>
