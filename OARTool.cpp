@@ -94,6 +94,12 @@ char*  OARTool::get_outpath(void)
 void   OARTool::set_outpath(char* path)
 {
     copy_s2Buffer(path, &pathOUT);
+
+#ifdef WIN32
+    if (pathOUT.buf[pathOUT.vldsz-1]!='\\') cat_s2Buffer("\\", &pathOUT);
+#else
+    if (pathOUT.buf[pathOUT.vldsz-1]!='/')  cat_s2Buffer("/",  &pathOUT);
+#endif
 }
 
 
