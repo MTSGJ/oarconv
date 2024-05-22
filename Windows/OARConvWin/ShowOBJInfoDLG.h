@@ -28,7 +28,7 @@ public:
 	virtual BOOL  OnInitDialog();
 
 // ダイアログ データ
-	enum { IDD = IDD_DIALOG_OARINFO };
+	enum { IDD = IDD_DIALOG_OBJINFO };
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV サポート

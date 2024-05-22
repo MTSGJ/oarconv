@@ -137,7 +137,7 @@ void  CObjectsListDLG::OnBnClickedObjlistConv()
 	winApp->convertSelectedData(selNum, selItems);
 	//
 	selNum = 0;
-	freeNull(selItems);
+	::freeNull(selItems);
 
 	convBBox->GetFocus();
 }
@@ -149,16 +149,20 @@ void CObjectsListDLG::OnBnClickedObjlistPreview()
 	convBBox = (CButton*) GetDlgItem(IDC_OBJLIST_CONV);
 
 	int* tmp = (int*)malloc(sizeof(int)*objNum);
-	if (tmp!=NULL) {
-	    memset(tmp, 0, sizeof(int)*objNum);
-		selNum = listLBox->GetSelItems(objNum, tmp);
-		if (selNum>0) {
-			size_t len = sizeof(int)*selNum;
-			selItems = (int*)malloc(len);
-			memcpy(selItems, tmp, len);
+	if (tmp == NULL) return;
+
+	memset(tmp, 0, sizeof(int) * objNum);
+	selNum = listLBox->GetSelItems(objNum, tmp);
+	if (selNum > 0) {
+		size_t len = sizeof(int) * selNum;
+		selItems = (int*)malloc(len);
+		if (selItems == NULL) {
+			::free(tmp);
+			return;
 		}
-		::free(tmp);
+		memcpy(selItems, tmp, len);
 	}
+	::free(tmp);
 
 	if (selNum>5) selNum = 5;
 	for (int i=0; i<selNum; i++) {
@@ -166,7 +170,7 @@ void CObjectsListDLG::OnBnClickedObjlistPreview()
 	}
 	//
 	selNum = 0;
-	freeNull(selItems);
+	::freeNull(selItems);
 
 	convBBox->GetFocus();
 }
@@ -180,7 +184,8 @@ void  CObjectsListDLG::OnLbnDblclkListObjects()
 
 	int index = listLBox->GetAnchorIndex();
 	//
-	OpenPreviewWindow(index);
+	//OpenPreviewWindow(index);
+	OpenOBJInfoDLG(index);
 
 	convBBox->GetFocus();
 }
@@ -349,5 +354,46 @@ void  CObjectsListDLG::OpenPreviewWindow(int idx)
 	if (solid != NULL) {
 		winApp->solidOpenBrep(solid, mbs2ts(fname), num + 1);	// solid は呼び出された関数が解放する
 	}
+	return;
+}
+
+
+void  CObjectsListDLG::OpenOBJInfoDLG(int idx)
+{
+	int   num = 0;
+	char* obj = NULL;
+
+	tList* lp = objList;
+	while (lp != NULL) {
+		if (num == idx) {
+			obj = (char*)lp->ldat.val.buf;
+			break;
+		}
+		num++;
+		lp = lp->next;
+	}
+	char* fname = get_file_name(obj);
+	if (obj != NULL) PRINT_MESG("Objects List: selected [%d]: %s\n", num + 1, fname);
+	//
+	winApp->showOBJInfoDLG();
+
+	/*
+	BrepSolidList* slist = (BrepSolidList*)winApp->oarTool.generateSolidData(JBXL_3D_FORMAT_STL, obj);
+	if (slist == NULL) {
+		return;
+	}
+
+	CProgressBarDLG* counter = new CProgressBarDLG(_T("Create Preview Window"), FALSE);
+	BREP_SOLID* solid = slist->getMerge(counter);
+
+	freeBrepSolidList(slist);
+	if (counter != NULL) {
+		counter->PutFill();
+		delete counter;
+	}
+	if (solid != NULL) {
+		winApp->solidOpenBrep(solid, mbs2ts(fname), num + 1);	// solid は呼び出された関数が解放する
+	}*/
+
 	return;
 }

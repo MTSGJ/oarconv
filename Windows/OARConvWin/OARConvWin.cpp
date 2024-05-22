@@ -778,6 +778,18 @@ void  COARConvWinApp::showOARInfoDLG()
 }
 
 
+void  COARConvWinApp::showOBJInfoDLG()
+{
+    CShowOBJInfoDLG* shwdlg = new CShowOBJInfoDLG(oarTool, m_pMainWnd);
+    if (shwdlg == NULL) return;
+    shwdlg->DoModal();
+    delete (shwdlg);
+
+    return;
+}
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Tools
 //
