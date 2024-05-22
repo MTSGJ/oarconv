@@ -85,7 +85,7 @@ void  OARTool::clear_terrain(void)
 }
 
 
-char*  OARTool::get_outpath(int format)
+char*  OARTool::get_outpath(void)
 {
     return (char*)pathOUT.buf;
 }
