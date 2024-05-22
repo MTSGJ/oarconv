@@ -125,20 +125,23 @@ void  CObjectsListDLG::OnBnClickedObjlistConv()
     if (tmp==NULL) return;
 
     memset(tmp, 0, sizeof(int)*objNum);
-        slctNum = listLBox->GetSelItems(objNum, tmp);
-        if (slctNum>0) {
-            size_t len = sizeof(int)*slctNum;
-            slctItems = (int*)malloc(len);
-            memcpy(slctItems, tmp, len);
+    slctNum = listLBox->GetSelItems(objNum, tmp);
+    if (slctNum>0) {
+        size_t len = sizeof(int)*slctNum;
+        slctItems = (int*)malloc(len);
+        if (slctItems==NULL) {
+            ::free(tmp);
+            return;
         }
-        ::free(tmp);
+        memcpy(slctItems, tmp, len);
     }
+    ::free(tmp);
 
     PrintSelectedObjects();   // Log
     winApp->convertSelectedData(slctItems, slctNum);
     //
     slctNum = 0;
-    freeNull(slctItems);
+    ::freeNull(slctItems);
 
     convBBox->GetFocus();
 }
@@ -150,16 +153,20 @@ void CObjectsListDLG::OnBnClickedObjlistPreview()
     convBBox = (CButton*) GetDlgItem(IDC_OBJLIST_CONV);
 
     int* tmp = (int*)malloc(sizeof(int)*objNum);
-    if (tmp!=NULL) {
-        memset(tmp, 0, sizeof(int)*objNum);
-        slctNum = listLBox->GetSelItems(objNum, tmp);
-        if (slctNum>0) {
-            size_t len = sizeof(int)*slctNum;
-            slctItems = (int*)malloc(len);
-            memcpy(slctItems, tmp, len);
+    if (tmp!=NULL) return;
+
+    memset(tmp, 0, sizeof(int)*objNum);
+    slctNum = listLBox->GetSelItems(objNum, tmp);
+    if (slctNum>0) {
+        size_t len = sizeof(int)*slctNum;
+        slctItems = (int*)malloc(len);
+		if (selItems == NULL) {
+			::free(tmp);
+			return;
         }
-        ::free(tmp);
+        memcpy(slctItems, tmp, len);
     }
+    ::free(tmp);
 
     if (slctNum>5) slctNum = 5;
     for (int i=0; i<slctNum; i++) {
@@ -167,7 +174,7 @@ void CObjectsListDLG::OnBnClickedObjlistPreview()
     }
     //
     slctNum = 0;
-    freeNull(slctItems);
+    ::freeNull(slctItems);
 
     convBBox->GetFocus();
 }
@@ -349,4 +356,45 @@ void  CObjectsListDLG::OpenPreviewWindow(int idx)
         winApp->solidOpenBrep(solid, mbs2ts(fname), num + 1);    // solid は呼び出された関数が解放する
     }
     return;
+}
+
+
+void  CObjectsListDLG::OpenOBJInfoDLG(int idx)
+{
+	int   num = 0;
+	char* obj = NULL;
+
+	tList* lp = objList;
+	while (lp != NULL) {
+		if (num == idx) {
+			obj = (char*)lp->ldat.val.buf;
+			break;
+		}
+		num++;
+		lp = lp->next;
+	}
+	char* fname = get_file_name(obj);
+	if (obj != NULL) PRINT_MESG("Objects List: selected [%d]: %s\n", num + 1, fname);
+	//
+	winApp->showOBJInfoDLG();
+
+	/*
+	BrepSolidList* slist = (BrepSolidList*)winApp->oarTool.generateSolidData(JBXL_3D_FORMAT_STL, obj);
+	if (slist == NULL) {
+		return;
+	}
+
+	CProgressBarDLG* counter = new CProgressBarDLG(_T("Create Preview Window"), FALSE);
+	BREP_SOLID* solid = slist->getMerge(counter);
+
+	freeBrepSolidList(slist);
+	if (counter != NULL) {
+		counter->PutFill();
+		delete counter;
+	}
+	if (solid != NULL) {
+		winApp->solidOpenBrep(solid, mbs2ts(fname), num + 1);	// solid は呼び出された関数が解放する
+	}*/
+
+	return;
 }

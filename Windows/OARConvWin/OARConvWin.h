@@ -81,11 +81,12 @@ public:
    int      _convertOneData(int index);
 
 public:
-   void     solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num);
-   //
-   void     showOARInfoDLG(void);
-   void     updateMenuBar(CMenu* menu=NULL);
-   void     updateStatusBar(CString path);
+	void    solidOpenBrep(BREP_SOLID* solid, LPCTSTR title, int num);
+	//
+	void	showOARInfoDLG(void);
+	void	showOBJInfoDLG(void);
+	void    updateMenuBar(CMenu* menu=NULL);
+	void    updateStatusBar(CString path);
 
 //
 // オーバーライド

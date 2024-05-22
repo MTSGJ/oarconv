@@ -39,6 +39,7 @@ public:
 	void   PrintSelectedObjects(void);
 	int    SearchString(int stn, LPCTSTR str);
 	void   OpenPreviewWindow(int index);
+	void   OpenOBJInfoDLG(int index);
 
 //
 // ダイアログ データ
