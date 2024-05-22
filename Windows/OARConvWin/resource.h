@@ -2,6 +2,7 @@
 // Microsoft Visual C++ で生成されたインクルード ファイル。
 // OARConvWin.rc で使用
 //
+#define IDOK_CRDCOPY                    2
 #define IDC_EDIT1                       1021
 #define IDC_EDIT_FNDSTR                 1021
 #define IDC_STATIC_OBJNAME              1023

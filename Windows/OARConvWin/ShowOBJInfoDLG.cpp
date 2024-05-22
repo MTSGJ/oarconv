@@ -69,7 +69,9 @@ void CShowOBJInfoDLG::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CShowOBJInfoDLG, CDialogEx)
-	ON_STN_CLICKED(IDC_STATIC_OBJKIND, &CShowOBJInfoDLG::OnStnClickedStaticObjkind)
+	ON_BN_CLICKED(IDOK_CRDCOPY, &CShowOBJInfoDLG::OnBnClickedCrdcopy)
+	ON_BN_CLICKED(IDOK, &CShowOBJInfoDLG::OnBnClickedOk)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -100,7 +102,21 @@ BOOL   CShowOBJInfoDLG::OnInitDialog()
 	return TRUE;
 }
 
-void CShowOBJInfoDLG::OnStnClickedStaticObjkind()
+
+void CShowOBJInfoDLG::OnBnClickedCrdcopy()
 {
-	// TODO: ここにコントロール通知ハンドラー コードを追加します。
+	PRINT_MESG("KKKKKKKKKKKK\n");
+}
+
+
+void CShowOBJInfoDLG::OnBnClickedOk()
+{
+	CDialogEx::OnOK();
+}
+
+
+void CShowOBJInfoDLG::OnClose()
+{
+	CDialogEx::OnClose();
+	CDialogEx::OnOK();
 }

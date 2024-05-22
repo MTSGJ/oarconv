@@ -184,13 +184,12 @@ void CObjectsListDLG::OnBnClickedObjlistPreview()
 void  CObjectsListDLG::OnLbnDblclkListObjects()
 {
     listLBox = (CListBox*)GetDlgItem(IDC_LIST_OBJECTS);
-    //convBBox = (CButton*)GetDlgItem(IDC_OBJLIST_CONV);
+    convBBox = (CButton*)GetDlgItem(IDC_OBJLIST_CONV);
 
     int index = listLBox->GetAnchorIndex();
-    //
     OpenOBJInfoDLG(index);
 
-    //convBBox->GetFocus();
+    convBBox->GetFocus();
 }
 
 
