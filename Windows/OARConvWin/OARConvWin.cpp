@@ -843,12 +843,17 @@ void  COARConvWinApp::updateStatusBar(CString oar_path, CString out_path)
     CString prefix;
     if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
         prefix = _T("  DAE  |  ");
+        if (appParam.procJoints) prefix += _T("JOINTS  |  ");
+        if (appParam.noOffset)   prefix += _T("NO_OFFSET  |  ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
         prefix = _T("  OBJ  |  ");
+        if (appParam.noOffset)   prefix += _T("NO_OFFSET  |  ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
         prefix = _T("  FBX | ");
+        if (appParam.procJoints) prefix += _T("JOINTS  |  ");
+        if (appParam.noOffset)   prefix += _T("NO_OFFSET  |  ");
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("  STL  |  ");
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("  STL  |  ");
@@ -857,8 +862,6 @@ void  COARConvWinApp::updateStatusBar(CString oar_path, CString out_path)
     if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
     else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  |  ");
 
-    if (appParam.procJoints) prefix += _T("JOINTS  |  ");
-    if (appParam.noOffset)   prefix += _T("NO_OFFSET  |  ");
     //
     if (!out_path.IsEmpty() && oarTool.GetNoOffset()) {
         out_path += OART_DEFAULT_NOS_DIR;
