@@ -51,13 +51,12 @@ END_MESSAGE_MAP()
 
 BOOL   CShowOARInfoDLG::OnInitDialog()
 {
-	TCHAR buf[LNAME];
-
 	nameSBox = (CStatic*)GetDlgItem(IDC_STATIC_RGNAME);
 	verSBox	 = (CStatic*)GetDlgItem(IDC_STATIC_OARVER);
 	sizeSBox = (CStatic*)GetDlgItem(IDC_STATIC_RGSIZE);
 	numSBox	 = (CStatic*)GetDlgItem(IDC_STATIC_OBJNUM);
 
+	TCHAR buf[LNAME];
 	sntprintf(buf, LNAME, _T("%s"), regionName.GetString());
 	nameSBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%d.%d"), majorVersion, minorVersion);

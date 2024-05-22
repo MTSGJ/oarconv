@@ -15,8 +15,8 @@ CShowOBJInfoDLG::CShowOBJInfoDLG(char* obj, OARTool oar, CWnd* pParent)
 	: CDialogEx(CShowOBJInfoDLG::IDD, pParent)
 {
 	shape = oar.getAbstractObject(obj);
-	fileName = get_file_name(obj);
-	objectName = shape.ObjectName.buf;
+	fileName = mbs2ts(get_file_name(obj));
+	objectName = mbs2ts((char*)shape.ObjectName.buf);
 
 	objectKind = "None";
 	if (shape.PCode == PRIM_PCODE_PRIM) {
@@ -85,21 +85,20 @@ END_MESSAGE_MAP()
 
 BOOL   CShowOBJInfoDLG::OnInitDialog()
 {
-	TCHAR buf[LNAME];
-
 	fileSBox  = (CStatic*)GetDlgItem(IDC_STATIC_FLNAME);
 	nameSBox  = (CStatic*)GetDlgItem(IDC_STATIC_OBJNAME);
 	kindSBox  = (CStatic*)GetDlgItem(IDC_STATIC_OBJKIND);
 	coordSBox = (CStatic*)GetDlgItem(IDC_STATIC_CNTCRD);
 	otherSBox = (CStatic*)GetDlgItem(IDC_STATIC_OTHER);
 
-	sntprintf(buf, LNAME, _T(" %s "), fileName.GetString());
+	TCHAR buf[LNAME];
+	sntprintf(buf, LNAME, _T(" %s"), fileName.GetString());
 	fileSBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T(" %s"), objectName.GetString());
 	nameSBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T(" %s"), objectKind.GetString());
 	kindSBox->SetWindowText(buf);
-	sntprintf(buf, LNAME, _T(" %g, %g, %g"), shift.x, shift.y, shift.z);
+	sntprintf(buf, LNAME, _T(" %g,  %g,  %g"), shift.x, shift.y, shift.z);
 	coordSBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T(" %s"), other.GetString());
 
