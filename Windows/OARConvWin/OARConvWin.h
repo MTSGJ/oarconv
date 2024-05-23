@@ -62,6 +62,8 @@ public:
     void     setOARFolder(LPCTSTR fldr) { appParam.oarFolder = fldr; }
     void     setOutFolder(LPCTSTR fldr) { appParam.outFolder = fldr; }
 
+    void     setupParameters(CString path, CString file, CString oarf);
+
     LPCTSTR  getOARName(void) { return (LPCTSTR)appParam.oarName; }
     LPCTSTR  getBaseFolder(void) { return (LPCTSTR)appParam.baseFolder; }
     LPCTSTR  getOARFolder(void) { return (LPCTSTR)appParam.oarFolder; }

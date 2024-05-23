@@ -57,6 +57,7 @@ void  COutFormatDLG::getParameters(CParameterSet* param)
 	else {
 		param->prefixOUT = param->prefixSTL;
 	}
+
 	return;
 }
 

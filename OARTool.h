@@ -122,12 +122,15 @@ public:
     void   SetProcJoints(bool b){ procJoints = b; }
     void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
     void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
+    void   SetOutPath(char* path) { set_outpath(path);}
 
     int    GetEngine(void) { return engine;}
     int    GetDataFormat(void) { return dataformat;}
     bool   GetNoOffset(void) { return noOffset;}
     bool   GetProcJoints(void) { return procJoints;}
     tList* GetObjectsList(void) { return objectsFiles;}
+    char*  GetOutPath(void) { return get_outpath(); }    // not free
+
     void   ReadTerrainData(void);
 
     // DAE/OBJ/STL

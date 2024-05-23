@@ -376,17 +376,44 @@ void  COARConvWinApp::OnOutFormatDialog()
     setdlg->getParameters(&appParam);
     delete (setdlg);
 
+    // 出力フォルダの設定
+    CString oarf = appParam.oarFolder;
+    if (oarf.Right(1) == _T("\\")) oarf = oarf.Left(oarf.GetLength() - 1);
+    int len = appParam.prefixOAR.GetLength();
+    CString dirn = get_file_name_t(oarf);
+    CString topd = dirn.Left(len);
+    if (!topd.Compare(appParam.prefixOAR)) {
+        dirn = dirn.Right(dirn.GetLength() - len);
+    }
+    CString path = get_file_path_t(oarf);
+    CString outf = path + appParam.prefixOUT + dirn;
+
+    // No Offset の設定
+    bool no_offset_flg = false;
+    if (appParam.noOffset) {
+        if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
+            no_offset_flg = true;
+        }
+    }
+    if (no_offset_flg) outf += OART_DEFAULT_NOS_DIR;
+    appParam.outFolder = outf;
+
+    char* op = ts2mbs(outf);
+    oarTool.SetOutPath(op);
+    ::free(op);
     oarTool.SetEngine(appParam.outputEngine);
     oarTool.SetDataFormat(appParam.outputFormat);
     oarTool.SetNoOffset(appParam.noOffset);
     oarTool.SetProcJoints(appParam.procJoints);
-
-    char* outdir = ts2mbs(getBaseFolder() + appParam.prefixOUT + getOARName());
-    oarTool.ChangePathInfo(NULL, outdir, NULL);
-    ::free(outdir);
-
     appParam.saveConfigFile();
-    if (hasData) updateStatusBar(getOARFolder(), getOutFolder());
+
+    if (hasData) updateStatusBar(getOARFolder(), getOutFolder());  // appParam.outFolder
     else         updateStatusBar(_T(""), _T(""));
 
     return;
@@ -455,32 +482,14 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     CString mode = _T("-zxvf ") + fname + _T(" -o ") + oarf;
     char* md = ts2mbs((LPCTSTR)mode);
     ret = Tar(pMainFrame->m_hWnd, md, NULL, 0);
-    ::free(md);
     if (ret) {
         MessageBoxDLG(IDS_STR_ERROR, IDS_STR_ERR_EXTRACT, MB_OK, pMainFrame);
+        ::free(md);
         return false;
     }
+    ::free(md);
 
-    // Output Folder
-    CString outf = path + appParam.prefixOUT + file;
-    setOARName((LPCTSTR)file);
-    setBaseFolder((LPCTSTR)path);
-    setOARFolder((LPCTSTR)oarf);
-    setOutFolder((LPCTSTR)outf);
-    appParam.saveConfigFile();
-
-    ////////////////////////////////////////////////////////////////////
-    char* oardir = ts2mbs(getOARFolder());
-    char* outdir = ts2mbs(getOutFolder());
-    oarTool.free();
-    oarTool.init();
-    oarTool.SetEngine(appParam.outputEngine);
-    oarTool.SetDataFormat(appParam.outputFormat);
-    oarTool.SetNoOffset(appParam.noOffset);
-    oarTool.SetProcJoints(appParam.procJoints);
-    oarTool.SetPathInfo(oardir, outdir, (char*)assetsFolder.buf);
-    ::free(oardir);
-    ::free(outdir);
+    setupParameters(path, file, oarf);
 
     bool chk = oarTool.GetDataInfo();
     if (!chk) {
@@ -513,17 +522,59 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
     if (oarf.Right(1) == _T("\\")) oarf = oarf.Left(oarf.GetLength() - 1);
 
     int len = appParam.prefixOAR.GetLength();
-    CString outf;
-    CString prnt = get_file_path_t(oarf);
+
+    CString path = get_file_path_t(oarf);
     CString dirn = get_file_name_t(oarf);
     CString topd = dirn.Left(len);
     if (!topd.Compare(appParam.prefixOAR)) {
         dirn = dirn.Right(dirn.GetLength() - len);
     }
-    outf = prnt + appParam.prefixOUT + dirn;
+    //
+    setupParameters(path, dirn, oarf);
 
-    setOARName((LPCTSTR)dirn);        // dirn は OARの名前になっているはず
-    setBaseFolder((LPCTSTR)prnt);
+    bool chk = oarTool.GetDataInfo();
+    if (!chk) {
+        MessageBoxDLG(IDS_STR_ERROR, IDS_STR_NOT_OAR, MB_OK, pMainFrame);
+        return false;
+    }
+
+    hasData = true;
+    updateMenuBar();
+    updateStatusBar(getOARFolder(), getOutFolder());
+    //
+    char* fn = ts2mbs(folder);
+    PRINT_MESG("folderOpenOAR: Folder is opened %s\n", fn);
+    free(fn);
+
+    return chk;
+}
+
+
+void  COARConvWinApp::setupParameters(CString path, CString file, CString oarf)
+{
+    CString outf = path + appParam.prefixOUT + file;
+
+    // No Offset の設定
+    bool no_offset_flg = false;
+    if (appParam.noOffset) {
+        if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
+            no_offset_flg = true;
+        }
+    }
+    if (no_offset_flg) outf += OART_DEFAULT_NOS_DIR;
+    appParam.outFolder = outf;
+    
+    char* op = ts2mbs(outf);
+    oarTool.SetOutPath(op);
+    ::free(op);
+    setOARName((LPCTSTR)file);
+    setBaseFolder((LPCTSTR)path);
     setOARFolder((LPCTSTR)oarf);
     setOutFolder((LPCTSTR)outf);
     appParam.saveConfigFile();
@@ -541,21 +592,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
     ::free(oardir);
     ::free(outdir);
 
-    bool chk = oarTool.GetDataInfo();
-    if (!chk) {
-        MessageBoxDLG(IDS_STR_ERROR, IDS_STR_NOT_OAR, MB_OK, pMainFrame);
-        return false;
-    }
-
-    hasData = true;
-    updateMenuBar();
-    updateStatusBar(getOARFolder(), getOutFolder());
-    //
-    char* fn = ts2mbs(folder);
-    PRINT_MESG("folderOpenOAR: Folder is opened %s\n", fn);
-    free(fn);
-
-    return chk;
+    return;
 }
 
 
@@ -840,41 +877,42 @@ void  COARConvWinApp::updateStatusBar(CString oar_path, CString out_path)
 {
     if (pMainFrame == NULL) return;
 
+    bool no_offset_flg = false;
     CString prefix;
     if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
         prefix = _T("  DAE  |  ");
         if (appParam.procJoints) prefix += _T("JOINTS  |  ");
-        if (appParam.noOffset)   prefix += _T("NO_OFFSET  |  ");
+        if (appParam.noOffset) {
+            no_offset_flg = true;
+            prefix += _T("NO_OFFSET  |  ");
+        }
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
         prefix = _T("  OBJ  |  ");
-        if (appParam.noOffset)   prefix += _T("NO_OFFSET  |  ");
+        if (appParam.noOffset) {
+            no_offset_flg = true;
+            prefix += _T("NO_OFFSET  |  ");
+        }
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
         prefix = _T("  FBX | ");
         if (appParam.procJoints) prefix += _T("JOINTS  |  ");
-        if (appParam.noOffset)   prefix += _T("NO_OFFSET  |  ");
+        if (appParam.noOffset) {
+            no_offset_flg = true;
+            prefix += _T("NO_OFFSET  |  ");
+        }
     }
+    // STL は元々 OFFSETなし．
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("  STL  |  ");
     else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("  STL  |  ");
     else                                                    prefix = _T("  NONE  |  ");
 
-    if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY) prefix += _T("UNITY  |  ");
-    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE)    prefix += _T("UE  |  ");
+    if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY)   prefix += _T("UNITY  |  ");
+    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE) prefix += _T("UE  |  ");
 
-    //
-    if (!out_path.IsEmpty() && oarTool.GetNoOffset()) {
-        out_path += OART_DEFAULT_NOS_DIR;
-    }
     //CString mesg = prefix + _T("OAR-Path: ") + oar_path + "  |  " + _T("OUT-Path: ") + out_path;
     CString mesg = prefix + _T("OUT-Path: ") + out_path;
     pMainFrame->SetStausBarText(mesg);
-
-    if (!out_path.IsEmpty()) {
-        char* path = ts2mbs(out_path);
-        oarTool.set_outpath(path);
-        ::free(path);
-    }
 
     return;
 }
