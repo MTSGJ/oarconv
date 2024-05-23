@@ -74,6 +74,15 @@ void  CSetParamDLG::getParameters(CParameterSet* param)
 	param->prefixFBX = prefixFBX;
 	param->prefixSTL = prefixSTL;
 
+	if (param->outputFormat == JBXL_3D_FORMAT_DAE) {
+		param->prefixOUT = param->prefixDAE;
+	}
+	else if (param->outputFormat == JBXL_3D_FORMAT_OBJ) {
+		param->prefixOUT = param->prefixOBJ;
+	}
+	else if (param->outputFormat == JBXL_3D_FORMAT_FBX) {
+		param->prefixOUT = param->prefixFBX;
+	}
 	return;
 }
 

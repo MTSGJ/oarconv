@@ -47,7 +47,7 @@ void  CParameterSet::readConfigFile(void)
 	if (lt==NULL) return;
 	//
 	oarFolder     = get_tstr_param_tList (lt, "oarFolder", (LPCTSTR)oarFolder);
-	outFolder     = get_tstr_param_tList (lt, "outFolder", (LPCTSTR)outFolder);
+	//outFolder     = get_tstr_param_tList (lt, "outFolder", (LPCTSTR)outFolder);
 	logFolder     = get_tstr_param_tList (lt, "logFolder", (LPCTSTR)logFolder);
 
 	startNum      = get_int_param_tList  (lt, "startNum", startNum);
@@ -99,8 +99,8 @@ void  CParameterSet::saveConfigFile(void)
 	Buffer tmp = make_Buffer(LNAME);
 	copy_ts2Buffer(oarFolder, &tmp);
 	fprintf(fp, "oarFolder %s\n", (char*)tmp.buf);
-	copy_ts2Buffer(outFolder, &tmp);
-	fprintf(fp, "outFolder %s\n", (char*)tmp.buf);
+	//copy_ts2Buffer(outFolder, &tmp);
+	//fprintf(fp, "outFolder %s\n", (char*)tmp.buf);
 	copy_ts2Buffer(logFolder, &tmp);
 	fprintf(fp, "logFolder %s\n", (char*)tmp.buf);
 	//
@@ -135,7 +135,6 @@ void  CParameterSet::saveConfigFile(void)
 	else               fprintf(fp, "procJoints %s\n", "FALSE");
 	if (debugMode)     fprintf(fp, "debugMode %s\n", "TRUE");
 	else               fprintf(fp, "debugMode %s\n", "FALSE");
-
 	//
 	fflush(fp);
 	fclose(fp);

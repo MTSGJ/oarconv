@@ -272,6 +272,7 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
 {
     // OAR
     if (oardir != NULL) {
+        free_Buffer(&pathOAR);
         pathOAR = make_Buffer_bystr(oardir);
 #ifdef WIN32
         if (pathOAR.buf[strlen((char*)pathOAR.buf) - 1] != '\\') cat_s2Buffer("\\", &pathOAR);
@@ -281,6 +282,9 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
     }
     // OUTPUT
     if (outdir != NULL) {
+        free_Buffer(&pathOUT);
+        free_Buffer(&pathTEX);
+        free_Buffer(&pathPTM);
         pathOUT = make_Buffer_bystr(outdir);
 #ifdef WIN32
         if (pathOUT.buf[strlen((char*)pathOUT.buf) - 1] != '\\') cat_s2Buffer("\\", &pathOUT);
@@ -294,6 +298,7 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
     }
     // ASSET
     if (astdir != NULL) {
+        free_Buffer(&pathAST);
         pathAST = make_Buffer_bystr(astdir);
 #ifdef WIN32
         if (pathAST.buf[strlen((char*)pathAST.buf) - 1] != '\\') cat_s2Buffer("\\", &pathAST);
@@ -301,8 +306,6 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
         if (pathAST.buf[strlen((char*)pathAST.buf) - 1] != '/') cat_s2Buffer("/", &pathAST);
 #endif
     }
-    //
-    MakeOutputFolder();
 }
 
 
