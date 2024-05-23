@@ -279,7 +279,6 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
         if (pathOAR.buf[strlen((char*)pathOAR.buf) - 1] != '/') cat_s2Buffer("/", &pathOAR);
 #endif
     }
-
     // OUTPUT
     if (outdir != NULL) {
         pathOUT = make_Buffer_bystr(outdir);
@@ -293,7 +292,6 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
         cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
         cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
     }
-
     // ASSET
     if (astdir != NULL) {
         pathAST = make_Buffer_bystr(astdir);
@@ -303,6 +301,8 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
         if (pathAST.buf[strlen((char*)pathAST.buf) - 1] != '/') cat_s2Buffer("/", &pathAST);
 #endif
     }
+    //
+    MakeOutputFolder();
 }
 
 
