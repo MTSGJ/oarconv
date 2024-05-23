@@ -428,8 +428,54 @@ void  COARConvWinApp::OnSettingDialog()
     setdlg->getParameters(&appParam);
     delete (setdlg);
 
+    appParam.prefixOUT = appParam.prefixSTL;
+    if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
+        appParam.prefixOUT = appParam.prefixDAE;
+    }
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
+        appParam.prefixOUT = appParam.prefixOBJ;
+    }
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
+        appParam.prefixOUT = appParam.prefixFBX;
+    }
+
+    // 出力フォルダの設定
+    CString oarf = appParam.oarFolder;
+    if (oarf.Right(1) == _T("\\")) oarf = oarf.Left(oarf.GetLength() - 1);
+    int len = appParam.prefixOAR.GetLength();
+    CString dirn = get_file_name_t(oarf);
+    CString topd = dirn.Left(len);
+    if (!topd.Compare(appParam.prefixOAR)) {
+        dirn = dirn.Right(dirn.GetLength() - len);
+    }
+    CString path = get_file_path_t(oarf);
+    CString outf = path + appParam.prefixOUT + dirn;
+
+    // No Offset の設定
+    bool no_offset_flg = false;
+    if (appParam.noOffset) {
+        if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
+            no_offset_flg = true;
+        }
+    }
+    if (no_offset_flg) outf += OART_DEFAULT_NOS_DIR;
+    appParam.outFolder = outf;
+
+    char* op = ts2mbs(outf);
+    oarTool.SetOutPath(op);
+    ::free(op);
     DebugMode = appParam.debugMode;
     appParam.saveConfigFile();
+
+    if (hasData) updateStatusBar(getOARFolder(), getOutFolder());  // appParam.outFolder
+    else         updateStatusBar(_T(""), _T(""));
+
     return;
 }
 
