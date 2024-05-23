@@ -13,7 +13,7 @@
 * [Demo Video](https://www.youtube.com/watch?v=LUhqNJHLCuM)
 
 ### Latest Version
-* v1.5.0
+* v1.7.x
 
 
 ## OARConv (for Linux)
