@@ -206,6 +206,13 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
     // OUTPUT
     if (outdir!=NULL) {
         pathOUT = make_Buffer_bystr(outdir);
+        if (noOffset) {
+            if (pathOUT.buf[pathOUT.vldsz-1]=='/' || pathOUT.buf[pathOUT.vldsz-1]=='\\') {
+                pathOUT.buf[pathOUT.vldsz-1]='\0';
+                pathOUT.vldsz--;
+            }
+            cat_s2Buffer(OART_DEFAULT_NOS_DIR, &pathOUT);
+        }
     }
     else {
         // DAE
@@ -226,13 +233,6 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
         }
     }
 
-    if (noOffset) {
-        if (pathOUT.buf[pathOUT.vldsz-1]=='/' || pathOUT.buf[pathOUT.vldsz-1]=='\\') {
-            pathOUT.buf[pathOUT.vldsz-1]='\0';
-            pathOUT.vldsz--;
-        }
-        cat_s2Buffer(OART_DEFAULT_NOS_DIR, &pathOUT);
-    }
     #ifdef WIN32
         if (pathOUT.buf[pathOUT.vldsz-1]!='\\') cat_s2Buffer("\\", &pathOUT);
     #else
