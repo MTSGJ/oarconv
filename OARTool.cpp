@@ -1205,21 +1205,21 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                         TGAImage tga = MSGraph2TGAImage(vp, true);
                         int err = writeTGAFile((char*)outpath.buf, tga);
                         if (!err) converted = true;
-                        else      PRINT_MESG("OARTool::ConvertTexture: ERROR: write error (%d).\n", err);
+                        else      PRINT_MESG("OARTool::ConvertTexture: ERROR: write error (%d) [%s].\n", err, (char*)outpath.buf);
                         tga.free();
                     }
                     else {
-                        PRINT_MESG("OARTool::ConvertTexture: ERROR: color num of %s is %d\n", texture, vp.zs);
+                        PRINT_MESG("OARTool::ConvertTexture: ERROR: color num of %s is %d [%s].\n", texture, vp.zs, (char*)outpath.buf);
                     }
                     vp.free();
                     jpg.free();
                 }
                 else {
                     if (jpg.state==JBXL_GRAPH_IVDDATA_ERROR) {
-                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is invalid.\n", texture);
+                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is invalid [%s].\n", texture, (char*)outpath.buf);
                     }
                     else {
-                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d).\n", texture, jpg.state);
+                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d) [%s].\n", texture, jpg.state, (char*)outpath.buf);
                     }
                 }
                 //
