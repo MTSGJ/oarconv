@@ -33,7 +33,8 @@ namespace  jbxl {
 #ifdef WIN32
   #define  OART_JP2_DECOMP_COM      "opj_decompress.exe -i %s -o %s"
 #else
-  #define  OART_JP2_DECOMP_COM      "/usr/local/bin/opj_decompress -i %s -o %s >/dev/null 2>&1"
+  #define  OART_JP2_DECOMP_COM      "/usr/local/bin/j2k_to_image -i %s -o %s >/dev/null 2>&1"
+//  #define  OART_JP2_DECOMP_COM      "/usr/local/bin/opj_decompress -i %s -o %s >/dev/null 2>&1"
 #endif
 
 #define  OART_FLAGS_PHANTOM         "Phantom"

@@ -23,7 +23,7 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   -t : specify Terrain texture scale. default is %f\n", TRNT_DEFAULT_TEX_SCALE);
     fprintf(fp, "   -c : specify external convert command from jp2 to other image. default is \"%s\"\n", OART_JP2_DECOMP_COM);
     fprintf(fp, "   -s : specify start number of xml file. default is 0.\n");
-    fprintf(fp, "   -e : specify end number of xml file. default is -1 (minus number means infinity).\n");
+    fprintf(fp, "   -e : specify end number of xml file. count from zero. default is -1 (minus number means infinity).\n");
     fprintf(fp, "   -x : specify shift of x direction of all objects. default is 0.0\n");
     fprintf(fp, "   -y : specify shift of y direction of all objects. default is 0.0\n");
     fprintf(fp, "   -z : specify shift of z direction of all objects. default is 0.0\n");
