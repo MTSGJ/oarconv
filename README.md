@@ -24,7 +24,7 @@
          [-t terrain_texture_scale] [-c external_convert_command_of_jp2]
          [-s start_no.] [-e end_no.]
          [-x shift_of_x_direction] [-y shift_of_y_direction] [-z shift_of_z_direction]
-         [--dae | --obj | --stl] [--unity | --ue] [-g]
+         [--dae | --obj | --stl] [--unity | --ue] [--dg | --nooffset] [--joint]
          [-d] [-v] [-h | --help]
 
    -i : specify OAR directory. default is ./
@@ -53,7 +53,7 @@
 
  ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --dae --unity --joint
  ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --obj --ue --dg -d
-```
+
 #### Example
 * oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets -d
 
