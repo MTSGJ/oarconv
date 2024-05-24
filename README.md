@@ -1,7 +1,7 @@
 # OARConv
 
 ## OverView
-* Convert OAR file of OpenSimulator to Collada files for Unity 2022/2023.
+* Convert OAR file of OpenSimulator to Collada/OBJ files for Unity/UE5
 * **OARConv** is for Linux/Unix
 * **OARConvWin** is for MS Windows
 
