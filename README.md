@@ -43,7 +43,7 @@
    --stl : output STL ASCII file(s).
    --unity : for Unity Engine.
    --ue : for Unreal Engine.
-   --dg : shrinkage to the origin with DAE/OBJ file for Unity/UE.
+   --dg : shrinkage to the origin with DAE/OBJ file.
    --nooffset : same for --dg
    --joint : Process Joints
    -d : debug mode. display debug information.
