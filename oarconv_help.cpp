@@ -33,7 +33,7 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   --stl : output STL ASCII file(s).\n");
     fprintf(fp, "   --unity : for Unity Engine.\n");
     fprintf(fp, "   --ue : for Unreal Engine.\n");
-    fprintf(fp, "   --dg : shrinkage to the origin with OBJ file for UE.\n");
+    fprintf(fp, "   --dg : shrinkage to the origin with DAE/OBJ file for Unity/UE.\n");
     fprintf(fp, "   --nooffset : same for --dg\n");
     fprintf(fp, "   --joint : Process Joints\n");
 
