@@ -34,7 +34,7 @@
    -t : specify Terrain texture scale. default is 7.000000
    -c : specify external convert command from jp2 to other image. default is "/usr/local/bin/opj_decompress -i %s -o %s >/dev/null 2>&1"
    -s : specify start number of xml file. default is 0.
-   -e : specify end number of xml file. default is -1 (minus number means infinity).
+   -e : specify end number of xml file. count from zero. default is -1 (minus number means infinity).
    -x : specify shift of x direction of all objects. default is 0.0
    -y : specify shift of y direction of all objects. default is 0.0
    -z : specify shift of z direction of all objects. default is 0.0
