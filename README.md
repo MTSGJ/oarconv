@@ -11,6 +11,12 @@
     * [Simple Wiki of OARConvWin](https://github.com/MTSGJ/oarconv/wiki)
 
 ### Demo
+#### WebGL
+* http://blackjack.nsl.tuis.ac.jp/unity/TUIS_NM/  with Unity Chan
+* http://blackjack.nsl.tuis.ac.jp/unity/TUIS_HW/  with Halloween Unity Chan
+* http://blackjack.nsl.tuis.ac.jp/unity/TUIS_SD/ with SD Unity Chan
+* http://blackjack.nsl.tuis.ac.jp/unity/TUIS_TWIN/ with Unity Chan and SD Unity Chan
+#### Youtube
 * [Demo Video](https://www.youtube.com/watch?v=LUhqNJHLCuM)
 
 ### Latest Version
@@ -75,8 +81,7 @@ cd ../..
 git clone https://github.com/JunkBox-Library/JunkBox_Lib.git
 cd JunkBox_Lib
 ./config.sh
-./configure --enable-jpeg --enable-openjpeg=2.5 --enable-ssl --enable-ldap             # before v1.8.x
-./configure --enable-jpeg --enable-openjpeg=/usr/local:2.5 --enable-ssl --enable-ldap  # after v1.9.x
+./configure --enable-jpeg --enable-openjpeg=/usr/local:2.5
 make
 cd C++Lib
 make
