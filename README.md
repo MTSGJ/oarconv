@@ -20,28 +20,39 @@
 ### Usage
 #### Help
 ```
- oarconv [-i OAR directory] [-o output directory] [-a adding assets directories that separated by ':'] [-f object xml file]
-         [-t terrain texture scale] [-c external convert command of jp2]
-         [-s start no.] [-e end no.]
-         [-x shift of x direction] [-y shift of y direction] [-z shift of z direction]
-         [-b] [-p] [-d] [-v] [-h]
+ oarconv [-i OAR_directory] [-o output_directory] [-a adding_assets_directories_that_separated_by_':'] [-f object_xml_file]
+         [-t terrain_texture_scale] [-c external_convert_command_of_jp2]
+         [-s start_no.] [-e end_no.]
+         [-x shift_of_x_direction] [-y shift_of_y_direction] [-z shift_of_z_direction]
+         [--dae | --obj | --stl] [--unity | --ue] [-g]
+         [-d] [-v] [-h | --help]
 
    -i : specify OAR directory. default is ./
    -o : specify output directory. default is ./DAE/
    -f : specify object xml file. only specified file is converted.
    -a : specify adding assets directories that separated by ':'. default is /usr/local/share/oarconv/assets/:./assets/
-   -t : specify terrain texture scale. default is 7.000000
+   -t : specify Terrain texture scale. default is 7.000000
    -c : specify external convert command from jp2 to other image. default is "/usr/local/bin/opj_decompress -i %s -o %s >/dev/null 2>&1"
    -s : specify start number of xml file. default is 0.
    -e : specify end number of xml file. default is -1 (minus number means infinity).
    -x : specify shift of x direction of all objects. default is 0.0
    -y : specify shift of y direction of all objects. default is 0.0
    -z : specify shift of z direction of all objects. default is 0.0
-   -b : output STL file(s) using BREP.
-   -p : when linked objects include phantom even one, saved to Phantom directory.
+   --dae : output Collada DAE file(s).
+   --obj : output Wavefront OBJ file(s).
+   --stl : output STL ASCII file(s).
+   --unity : for Unity Engine.
+   --ue : for Unreal Engine.
+   --dg : shrinkage to the origin with DAE/OBJ file for Unity/UE.
+   --nooffset : same for --dg
+   --joint : Process Joints
    -d : debug mode. display debug information.
    -v : display version information.
    -h : display this help messages.
+   --help : display this help messages.
+
+ ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --dae --unity --joint
+ ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --obj --ue --dg -d
 ```
 #### Example
 * oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets -d
@@ -80,6 +91,8 @@ make
 -----------
 ## OARConvWin (for MS Windows)
 ### Download Binary
+- [OARConvWin-1.7.2.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.7.2.zip)
+- [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.6.0.zip)
 - [OARConvWin-1.5.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.5.0.zip)
 - [OARConvWin-1.2.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.2.1.zip)
   
