@@ -8,6 +8,7 @@
 ### Wiki
 * [Wiki of OARConv](https://polaris.star-dust.jp/pukiwiki/?OAR+Converter)
 * [Wiki of OARConvWin](https://polaris.star-dust.jp/pukiwiki/?OARConvWin)
+    * [Simple Wiki of OARConvWin](https://github.com/MTSGJ/oarconv/wiki)
 
 ### Demo
 * [Demo Video](https://www.youtube.com/watch?v=LUhqNJHLCuM)
