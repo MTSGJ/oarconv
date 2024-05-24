@@ -50,12 +50,12 @@
    -v : display version information.
    -h : display this help messages.
    --help : display this help messages.
-
- ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --dae --unity --joint
- ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --obj --ue --dg -d
+```
 
 #### Example
 * oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets -d
+* oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --dae --unity --joint
+* oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --obj --ue --dg -d
 
 ### Compile
 #### needs OpenJpeg v2.5
