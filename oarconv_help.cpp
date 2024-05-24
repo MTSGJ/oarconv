@@ -12,7 +12,7 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "         [-t terrain_texture_scale] [-c external_convert_command_of_jp2]\n");
     fprintf(fp, "         [-s start_no.] [-e end_no.]\n");
     fprintf(fp, "         [-x shift_of_x_direction] [-y shift_of_y_direction] [-z shift_of_z_direction]\n");
-    fprintf(fp, "         [--dae | --obj | --stl] [--unity | --ue] [-g]\n");
+    fprintf(fp, "         [--dae | --obj | --stl] [--unity | --ue] [--dg | --nooffset] [--joint]\n");
     fprintf(fp, "         [-d] [-v] [-h | --help]\n");
     fprintf(fp, "\n");
 
