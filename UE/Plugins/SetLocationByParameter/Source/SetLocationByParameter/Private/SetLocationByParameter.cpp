@@ -1,6 +1,6 @@
 /**
 * Set Locationèàóù for OAR   by Fumi.Iseki
-*                               ver1.1.0
+*                               ver1.2.0
 */
 
 #include "SetLocationByParameter.h"
@@ -15,7 +15,9 @@
 
 static const FName SetLocationByParameterTabName("SetLocationByParameter");
 
-#define LOCTEXT_NAMESPACE "FSetLocationByParameterModule"
+
+#define LOCATION_MAGIC_KEY "metaverse_jp_net_"	// UEì‡Ç≈ . ÇÕ _ Ç…ïœâªÇ∑ÇÈ
+#define LOCTEXT_NAMESPACE  "FSetLocationByParameterModule"
 
 void FSetLocationByParameterModule::StartupModule()
 {
@@ -88,14 +90,25 @@ FVector FSetLocationByParameterModule::GetLocationFromName(FString mesh_name, bo
 {
 	FVector location(0.0, 0.0, 0.0);
 
-	int32 _name_end = mesh_name.Find(TEXT("_"), ESearchCase::CaseSensitive, ESearchDir::FromEnd, mesh_name.Len());
-	FString params_str = mesh_name.Right(mesh_name.Len() - _name_end - 1);
-	int32 param_size = sizeof(float) * 4;
-	if (params_str.Len() != param_size) return location;
-	params_str = params_str.Replace(TEXT("-"), TEXT("/"));
+	int32 _name_end = mesh_name.Find(TEXT(LOCATION_MAGIC_KEY), ESearchCase::CaseSensitive, ESearchDir::FromEnd, mesh_name.Len());
+	if (_name_end == -1) return location;
+
+	FString _magic_key = FString(TEXT(LOCATION_MAGIC_KEY));
+	int32 _magic_len = _magic_key.Len();
+	//
+	FString params_str = mesh_name.Right(mesh_name.Len() - _name_end - _magic_len);
+	int32 param_size = sizeof(float) * 4; // sizeof(float)*3*8/6
+	if (params_str.Len() != param_size) {
+		params_str = params_str.Left(param_size);
+	}
 
 	TArray<uint8> dec;
-	FBase64::Decode(params_str, dec);
+	try {
+		FBase64::Decode(params_str, dec);
+	}
+	catch (...) {
+		return location;
+	}
 	int32 dec_size = param_size / 4 * 3;
 	if (dec.Num() != dec_size) return location;
 

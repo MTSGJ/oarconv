@@ -492,6 +492,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                     char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
                     del_file_extension_Buffer(&objname);
                     cat_s2Buffer("_", &objname);
+                    cat_s2Buffer(OART_LOCATION_MAGIC_KEY, &objname);
                     cat_s2Buffer(params, &objname);
                     cat_s2Buffer(".", &objname);
                 }
@@ -517,6 +518,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                     char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
                     del_file_extension_Buffer(&objname);
                     cat_s2Buffer("_", &objname);
+                    cat_s2Buffer(OART_LOCATION_MAGIC_KEY, &objname);
                     cat_s2Buffer(params, &objname);
                     cat_s2Buffer(".", &objname);
                 }
