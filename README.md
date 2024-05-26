@@ -22,7 +22,7 @@
 
 ### Latest Version
 * v1.7.x
-  * [OARConvWin-1.7.2.zip for MS Windows](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.7.2.zip)
+  * [OARConvWin-1.7.3.zip for MS Windows](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.7.3.zip)
 
 
 ## OARConv (for Linux)
@@ -99,7 +99,7 @@ make
 -----------
 ## OARConvWin (for MS Windows)
 ### Download Binary
-- [OARConvWin-1.7.2.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.7.2.zip)
+- [OARConvWin-1.7.3.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.7.3.zip)
 - [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.6.0.zip)
 - [OARConvWin-1.5.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.5.0.zip)
 - [OARConvWin-1.2.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.2.1.zip)
