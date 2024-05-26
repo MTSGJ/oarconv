@@ -7,7 +7,9 @@
 
 
 //#define OARCONV_VERSION           "1.8.0" // for FBX File
-#define OARCONV_VERSION             "1.7.1" // 
+#define OARCONV_VERSION             "1.7.3" // 20240526 add magic string to no offset file name
+//#define OARCONV_VERSION           "1.7.2" // 20240523 support object information (center coordiname)
+//#define OARCONV_VERSION           "1.7.1" // 20240522 support no offset file
 //#define OARCONV_VERSION           "1.7.0" // 20240520 for DAE Joints File
 //#define OARCONV_VERSION           "1.6.0" // 20240421 for OBJ File
 //#define OARCONV_VERSION           "1.5.0" // 20240126 less texture
