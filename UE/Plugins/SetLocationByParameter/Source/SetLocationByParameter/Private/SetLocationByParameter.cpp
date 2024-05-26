@@ -101,12 +101,15 @@ FVector FSetLocationByParameterModule::GetLocationFromName(FString mesh_name, bo
 	if (params_str.Len() != param_size) {
 		params_str = params_str.Left(param_size);
 	}
+	params_str = params_str.Replace(TEXT("-"), TEXT("/"));
+	//UE_LOG(LogTemp, Log, TEXT("Base64 Encode Data = %s"), *params_str);
 
 	TArray<uint8> dec;
 	try {
 		FBase64::Decode(params_str, dec);
 	}
 	catch (...) {
+		UE_LOG(LogTemp, Log, TEXT("Base64 Decode Error!"));
 		return location;
 	}
 	int32 dec_size = param_size / 4 * 3;
