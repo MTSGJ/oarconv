@@ -1014,7 +1014,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
             del_file_extension_Buffer(&dae_fname);
             cat_s2Buffer("_", &dae_fname);
-            cat_s2Buffer(OART_LOCATION_MAGIC_KEY, &dae_fname);
+            cat_s2Buffer(OART_LOCATION_MAGIC_STR, &dae_fname);
             cat_s2Buffer(params, &dae_fname);
             cat_s2Buffer(".", &dae_fname);
         }
@@ -1048,7 +1048,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
             del_file_extension_Buffer(&obj_fname);
             cat_s2Buffer("_", &obj_fname);
-            cat_s2Buffer(OART_LOCATION_MAGIC_KEY, &obj_fname);
+            cat_s2Buffer(OART_LOCATION_MAGIC_STR, &obj_fname);
             cat_s2Buffer(params, &obj_fname);
             cat_s2Buffer(".", &obj_fname);
         }

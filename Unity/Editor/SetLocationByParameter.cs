@@ -1,5 +1,5 @@
 //
-// SetLocationByPatameter for oarconv by Fumi.Iseki 2024 (C) v1.1.0
+// SetLocationByPatameter for oarconv by Fumi.Iseki 2024 (C) v1.1.1
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -15,7 +15,7 @@ using Unity.VisualScripting;
 
 public sealed class SetLocationByPatameter : EditorWindow
 {
-	static string _magicKEY = "metaverse.jp.net.";
+	static string _magicSTR = "metaverse.jp.net.";
 	
     static SetLocationByPatameter()
     {
@@ -31,7 +31,7 @@ public sealed class SetLocationByPatameter : EditorWindow
         List<GameObject> gameObjectList = new List<GameObject>();
         // Scene 中の全ての Objectを探す
         foreach (GameObject gameObject in Resources.FindObjectsOfTypeAll(typeof(GameObject))) {
-            if (gameObject.name!=null && gameObject.name.Contains(_magicKEY)) gameObjectList.Add(gameObject);
+            if (gameObject.name!=null && gameObject.name.Contains(_magicSTR)) gameObjectList.Add(gameObject);
         }
 
         foreach (GameObject gameObject in gameObjectList) {
@@ -48,11 +48,11 @@ public sealed class SetLocationByPatameter : EditorWindow
     private static Vector3 getLocationFromName(string name, ref bool trans)
     {
         trans = false;
-        int magic_len = _magicKEY.Length;
+        int magic_len = _magicSTR.Length;
         int pos_len = 16;    // POSITION LENGTH (4*3/3*4 = 16)
         float[] shift = new float[3];
         //
-        int pos = name.LastIndexOf(_magicKEY);
+        int pos = name.LastIndexOf(_magicSTR);
         if (pos>=0) {
             string sub = name[(pos + magic_len)..];
             if (sub.Length>=pos_len) {

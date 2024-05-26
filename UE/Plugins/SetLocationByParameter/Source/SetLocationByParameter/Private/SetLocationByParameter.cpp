@@ -16,7 +16,7 @@
 static const FName SetLocationByParameterTabName("SetLocationByParameter");
 
 
-#define LOCATION_MAGIC_KEY "metaverse_jp_net_"	// UE“à‚Å . ‚Í _ ‚É•Ï‰»‚·‚é
+#define LOCATION_MAGIC_STR "metaverse_jp_net_"	// UE“à‚Å . ‚Í _ ‚É•Ï‰»‚·‚é
 #define LOCTEXT_NAMESPACE  "FSetLocationByParameterModule"
 
 void FSetLocationByParameterModule::StartupModule()
@@ -90,11 +90,11 @@ FVector FSetLocationByParameterModule::GetLocationFromName(FString mesh_name, bo
 {
 	FVector location(0.0, 0.0, 0.0);
 
-	int32 _name_end = mesh_name.Find(TEXT(LOCATION_MAGIC_KEY), ESearchCase::CaseSensitive, ESearchDir::FromEnd, mesh_name.Len());
+	int32 _name_end = mesh_name.Find(TEXT(LOCATION_MAGIC_STR), ESearchCase::CaseSensitive, ESearchDir::FromEnd, mesh_name.Len());
 	if (_name_end == -1) return location;
 
-	FString _magic_key = FString(TEXT(LOCATION_MAGIC_KEY));
-	int32 _magic_len = _magic_key.Len();
+	FString _magic_str = FString(TEXT(LOCATION_MAGIC_STR));
+	int32 _magic_len = _magic_str.Len();
 	//
 	FString params_str = mesh_name.Right(mesh_name.Len() - _name_end - _magic_len);
 	int32 param_size = sizeof(float) * 4; // sizeof(float)*3*8/6
