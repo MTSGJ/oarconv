@@ -486,9 +486,9 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                     float position[3];
                     int len = sizeof(float) * 3;
                     memset(position, 0, len);
-                    position[0] = (float)(shift.x);
-                    position[1] = (float)(shift.y);
-                    position[2] = (float)(shift.z);
+                    position[0] =-(float)(shift.x);
+                    position[1] = (float)(shift.z);
+                    position[2] =-(float)(shift.y);
                     char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
                     del_file_extension_Buffer(&objname);
                     cat_s2Buffer("_", &objname);
