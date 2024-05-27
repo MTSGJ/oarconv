@@ -277,8 +277,16 @@ void  COARConvWinApp::OnAppAbout()
 void  COARConvWinApp::OnFileOpen()
 {
     CString fname = EasyGetOpenFileName(_T("Open OAR File"), m_pMainWnd->m_hWnd);
-    if (fname.IsEmpty()) return;
+    /*
+    CFileDialog fileDialog(true);
+    if (fileDialog.DoModal() == IDOK) {
+        fname = fileDialog.GetPathName();
+    }
+    int err = CommDlgExtendedError();
+    PRINT_MESG("2====> %d", err);
+    */
 
+    if (fname.IsEmpty()) return;
     bool ret = fileOpen(fname);
     if (ret) showOARInfoDLG();
 

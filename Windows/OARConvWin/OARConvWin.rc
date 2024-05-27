@@ -271,12 +271,12 @@ BEGIN
             VALUE "Comments", "Subaru Projects"
             VALUE "CompanyName", "NSL"
             VALUE "FileDescription", "OAR Converter"
-            VALUE "FileVersion", "1.7.3.0"
+            VALUE "FileVersion", "1.7.4.0"
             VALUE "InternalName", "OARConvWin.exe"
             VALUE "LegalCopyright", "(C) Fumi.Iseki  All rights reserved."
             VALUE "OriginalFilename", "OARConvWin.exe"
             VALUE "ProductName", "OARConv"
-            VALUE "ProductVersion", "1.7.3.0"
+            VALUE "ProductVersion", "1.7.4.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -405,7 +405,6 @@ END
 STRINGTABLE
 BEGIN
     ID_FILE_NEW             "新規にファイルを作成\n新規ファイル"
-    ID_FILE_OPEN            "既存のファイルを開く\n開く"
     ID_FILE_CLOSE           "作業中のファイルを閉じる\n閉じる"
     ID_FILE_SAVE            "作業中のファイルを上書きして保存\n保存"
     ID_FILE_SAVE_AS         "作業中のファイルを新しい名前で保存\n名前をつけて保存"
@@ -708,12 +707,12 @@ BEGIN
             VALUE "Comments", "Subaru Projects"
             VALUE "CompanyName", "NSL"
             VALUE "FileDescription", "OAR Converter"
-            VALUE "FileVersion", "1.7.3.0"
+            VALUE "FileVersion", "1.7.4.0"
             VALUE "InternalName", "OARConvWin.exe"
             VALUE "LegalCopyright", "(C) Fumi.Iseki  All rights reserved."
             VALUE "OriginalFilename", "OARConvWin.exe"
             VALUE "ProductName", "OARConv"
-            VALUE "ProductVersion", "1.7.3.0"
+            VALUE "ProductVersion", "1.7.4.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -836,7 +835,6 @@ END
 STRINGTABLE
 BEGIN
     ID_FILE_NEW             "New File"
-    ID_FILE_OPEN            "Open File"
     ID_FILE_CLOSE           "Close File"
     ID_FILE_SAVE            "Save File"
     ID_FILE_SAVE_AS         "Save File as ..."
