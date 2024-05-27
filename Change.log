@@ -1,4 +1,7 @@
 #
+1.7.4  2024 05/27
+    fix stack size, and spell miss (Fotmat!)
+
 1.7.3  2024 05/26
     add magic string to no offset file name
 
