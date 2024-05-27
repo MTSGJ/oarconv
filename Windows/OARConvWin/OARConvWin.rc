@@ -528,7 +528,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Objects List (&O)",           ID_OBJ_LIST
         MENUITEM SEPARATOR
-        MENUITEM "Output Fotmat (&F)",          ID_OUTPUT_FORMAT
+        MENUITEM "Output Format (&F)",          ID_OUTPUT_FORMAT
         MENUITEM SEPARATOR
         MENUITEM "Settings (&S)",               ID_SETTING_DIALOG
     END
