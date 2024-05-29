@@ -492,11 +492,13 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     // Check
     char* fp = ts2mbs((LPCTSTR)fname);        // 要 free
     int ret = TarCheckArchive(fp, 0);
-    ::free(fp);
     if (!ret) {
+        PRINT_MESG("Error: Tar32/64 Check Error = 0x%04x [%s]\n", ret, fp);
         MessageBoxDLG(IDS_STR_ERROR, IDS_STR_ERR_OPEN_FILE, MB_OK, pMainFrame);
+        ::free(fp);
         return false;
     }
+    ::free(fp);
 
     CString path = get_file_path_t(fname);    // パス名
     CString file = get_file_name_t(fname);
@@ -506,10 +508,11 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     if (file_exist_t((LPCTSTR)oarf)) tunlink((LPCTSTR)oarf);
 
     // Extract
-    CString mode = _T("-zxvf ") + fname + _T(" -o ") + oarf;
+    CString mode = _T(" -zxvf \"") + fname + _T("\" -o \"") + oarf + _T("\"");
     char* md = ts2mbs((LPCTSTR)mode);
     ret = Tar(pMainFrame->m_hWnd, md, NULL, 0);
     if (ret) {
+        PRINT_MESG("Error: Tar32/64 Extract Error = 0x%04x [%s]\n", ret, md);
         MessageBoxDLG(IDS_STR_ERROR, IDS_STR_ERR_EXTRACT, MB_OK, pMainFrame);
         ::free(md);
         return false;

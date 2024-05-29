@@ -331,7 +331,7 @@ objectsFiles : Files list in objects
 bool  OARTool::GetDataInfo()
 {
     clear_list();
-    PRINT_MESG("OARTool::GetDatanInfo: read OAR files from %s\n", pathOAR.buf);
+    PRINT_MESG("OARTool::GetDataInfo: read OAR files from %s\n", pathOAR.buf);
     //
     // archive.xml
     Buffer arc_path = dup_Buffer(pathOAR);
@@ -356,7 +356,7 @@ bool  OARTool::GetDataInfo()
         del_all_xml(&arc_xml);
     }
     else {
-        PRINT_MESG("OARTool::GetDatanInfo: ERROR: not found archive file! [%sarchive.xml]\n", pathOAR.buf);
+        PRINT_MESG("OARTool::GetDataInfo: ERROR: not found archive file! [%sarchive.xml]\n", pathOAR.buf);
         return false;
     }
 
