@@ -1,5 +1,5 @@
 //
-// SetLocationByPatameter for oarconv by Fumi.Iseki 2024 (C) v1.1.1
+// SetLocationByPatameter for oarconv by Fumi.Iseki 2024 (C) v1.1.2
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -9,8 +9,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using NUnit;
-using Unity.VisualScripting;
 
 
 public sealed class SetLocationByPatameter : EditorWindow
