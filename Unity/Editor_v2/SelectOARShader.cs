@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.0
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v2.0.0
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -7,62 +7,67 @@
 
 using UnityEngine;
 using UnityEditor;
-using System.IO;
 using System;
-using PlasticPipe.PlasticProtocol.Messages;
-//using System.Diagnostics;
+using System.IO;
 
-public sealed class SelectOARShader : AssetPostprocessor
+
+public class SelectOARShader : AssetPostprocessor
 {
-    private int version;
-    private string NormalShader;
-    private string TransShader;             // Alpha Blending
-    private string TransCutShader;          // Alpha Cutoff
-    private string TransCutSoftShader;      // Alpha Blending
-    private string TransSpecShader;         // Alpha Blending + Specular
-    private string TransCutSpecShader;      // Alpha Cutoff + Specular
-    private string SpecularShader;
-    private string BrightShader;
-    private string GlowShader;
-    private string TreeShader;
+    private static int UnityVersion;
+    private static string NormalShader;
+    private static string TransShader;             // Alpha Blending
+    private static string TransCutShader;          // Alpha Cutoff
+    private static string TransCutSoftShader;      // Alpha Blending
+    private static string TransSpecShader;         // Alpha Blending + Specular
+    private static string TransCutSpecShader;      // Alpha Cutoff + Specular
+    private static string SpecularShader;
+    private static string BrightShader;
+    private static string GlowShader;
+    private static string TreeShader;
 
-    private const string MaterialFolder = "Materials";
-    private const string PhantomFolder  = "Phantoms";
+    private static float colorRed      = 0.0f;
+    private static float colorGreen    = 0.0f;
+    private static float colorBlue     = 0.0f;
+    private static float transparent   = 1.0f;
+    private static float cutoff        = 0.0f;
+    private static float shininess     = 0.0f;
+    private static float glow          = 0.0f;
+    private static float bright        = 0.0f;
+    private static float light         = 0.0f;
+//  private static float shiftU        = 0.0f;
+//  private static float shiftV        = 0.0f;
+//  private static float scaleU        = 1.0f;
+//  private static float scaleV        = 1.0f;
+//  private static float rotate        = 0.0f;
+    private static char  kind          = 'O';        // Object
 
-    private float colorRed      = 0.0f;
-    private float colorGreen    = 0.0f;
-    private float colorBlue     = 0.0f;
-    private float transparent   = 1.0f;
-    private float cutoff        = 0.0f;
-    private float shininess     = 0.0f;
-    private float glow          = 0.0f;
-    private float bright        = 0.0f;
-    private float light         = 0.0f;
-//  private float shiftU        = 0.0f;
-//  private float shiftV        = 0.0f;
-//  private float scaleU        = 1.0f;
-//  private float scaleV        = 1.0f;
-//  private float rotate        = 0.0f;
-    private char  kind          = 'O';        // Object
-
-    private bool  createdMaterialFolder = false;
+    private const string PhantomFolder = "Phantoms";
 
 
-    public SelectOARShader() : base()
+    void OnPreprocessModel()
     {
-        string unityVersion = UnityEngine.Application.unityVersion;
-        if (unityVersion.StartsWith("6000.")) version = 6000;
-        else if (unityVersion.StartsWith("2023.")) version = 2023;
-        else if (unityVersion.StartsWith("2022.")) version = 2022;
-        else version = 0;
+        string currentFolder = Path.GetDirectoryName(assetPath);
+        ModelImporter modelImporter = assetImporter as ModelImporter;
 
-        InitShader();
+        modelImporter.addCollider = true;
+        if (currentFolder.EndsWith("/" + PhantomFolder) || currentFolder.EndsWith("\\" + PhantomFolder)) {
+            modelImporter.addCollider = false;
+        }
     }
 
-
-    void InitShader()
+    static void GetUinityVersion()
     {
-        if (version == 6000) {
+        string version = UnityEngine.Application.unityVersion;
+        //
+        if (version.StartsWith("6000.")) UnityVersion = 6000;
+        else if (version.StartsWith("2023.")) UnityVersion = 2023;
+        else if (version.StartsWith("2022.")) UnityVersion = 2022;
+        else UnityVersion = 0;
+    }
+
+    static void InitialShader()
+    {
+        if (UnityVersion == 6000) {
             string standardShader = "HDRP/Lit";
             string transparentShader = "Unlit/Transparent";
             Shader shdr = Shader.Find(standardShader);
@@ -79,7 +84,7 @@ public sealed class SelectOARShader : AssetPostprocessor
             GlowShader         = standardShader;
             TreeShader         = transparentShader;
         }
-        else {
+        else { 
             NormalShader       = "Legacy Shaders/Diffuse";
             TransShader        = "Legacy Shaders/Transparent/Diffuse";                  // Alpha Blending
             TransCutShader     = "Legacy Shaders/Transparent/Cutout/Diffuse";           // Alpha Cutoff
@@ -93,42 +98,36 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
     }
 
-
-    void OnPreprocessModel()
+    static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths, bool didDomainReload)
     {
-        Debug.Log(UnityEngine.Application.unityVersion);
-        string currentFolder = Path.GetDirectoryName(assetPath);
-        if (!createdMaterialFolder && !AssetDatabase.IsValidFolder(currentFolder + "\\" + MaterialFolder)) {
-            AssetDatabase.CreateFolder(currentFolder, MaterialFolder);
-            createdMaterialFolder = true;
+        GetUinityVersion();
+        InitialShader();
+        AssetDatabase.Refresh();
+        //
+        foreach (string asset in importedAssets) {
+            //string type = Path.GetExtension(asset);
+            //if (type != "dae" && type != "obj") continue;
+            //
+            UnityEngine.Object[] objects = AssetDatabase.LoadAllAssetsAtPath(asset);
+            if (objects!=null) {
+                foreach (UnityEngine.Object obj in objects) {
+                    string objName = obj.name;
+                    if (objName.StartsWith("MATERIAL_")) {
+                        Material material = obj as Material;
+                        SetMaterialShader(material);
+                        EditorUtility.SetDirty(material);
+                    }
+                }
+            }
         }
-        ModelImporter modelImporter = assetImporter as ModelImporter;
-
-        /*
-        if (!modelImporter.importSettingsMissing) {
-        }*/
-        //modelImporter.animationType = ModelImporterAnimationType.None;
-
-        modelImporter.addCollider = true;
-        if (currentFolder.EndsWith("/" + PhantomFolder) || currentFolder.EndsWith("\\" + PhantomFolder)) {
-            modelImporter.addCollider = false;
-        }
+        AssetDatabase.Refresh();
     }
 
-
-    Material OnAssignMaterialModel(Material material, Renderer renderer)
+    static void SetMaterialShader(Material material)
     {
-        string materialName = material.name;
-        //UnityEngine.Debug.Log("Material Name = " + materialName);
-        string currentFolder = Path.GetDirectoryName(assetPath);
-        string materialPath = string.Format("{0}\\{1}\\{2}.mat", currentFolder, MaterialFolder, materialName);
+        //InitialShader();
 
-        Material mt = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
-        if (mt != null) {
-            material = mt;
-            return material;
-        }
-        //
+        string materialName = material.name;
         getParamsFromMaterialName(materialName);
 
         if (kind == 'T' || kind == 'G') {   // Tree or Grass
@@ -148,6 +147,7 @@ public sealed class SelectOARShader : AssetPostprocessor
                     }
                     else {
                         material.shader = Shader.Find(TransSpecShader);
+                        if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
                     }
                 }
                 if (material.HasProperty("_Shininess")) material.SetFloat("_Shininess", 1.0f - shininess);
@@ -163,8 +163,13 @@ public sealed class SelectOARShader : AssetPostprocessor
                         material.shader = Shader.Find(TransCutSoftShader);
                         if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", 0.9f);
                     }
-                    else {
+                    else if (transparent >= 0.70f) {
                         material.shader = Shader.Find(TransShader);
+                        if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
+                    }
+                    else {
+                        material.shader = Shader.Find(NormalShader);
+                        if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
                     }
                 }
             }
@@ -199,21 +204,18 @@ public sealed class SelectOARShader : AssetPostprocessor
         else {
             material.shader = Shader.Find(NormalShader);
         }
-
+        //
         if (material.HasProperty("_BaseColor")) {
             material.SetColor("_BaseColor", new Color(colorRed, colorGreen, colorBlue, transparent)); // for HDRP
         }
         else {
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
-
-        AssetDatabase.CreateAsset(material, materialPath);
-        //
-        return material;
+        return;
     }
 
 
-    private void getParamsFromMaterialName(string name)
+    private static void getParamsFromMaterialName(string name)
     {
         int atr_len = 32;    // MTRL_ATTR_LEN /3*4 (36/3*4 = 32)
         //
@@ -225,15 +227,15 @@ public sealed class SelectOARShader : AssetPostprocessor
             if (enc.Length == atr_len) {
                 try {
                     byte[] dec = Convert.FromBase64String(enc);    // MTRL_ATTR_LEN (32/4*3 = 24)
-                    colorRed = 1.0f - (float)dec[0] / 255.0f;
-                    colorGreen = 1.0f - (float)dec[1] / 255.0f;
-                    colorBlue = 1.0f - (float)dec[2] / 255.0f;
+                    colorRed    = 1.0f - (float)dec[0] / 255.0f;
+                    colorGreen  = 1.0f - (float)dec[1] / 255.0f;
+                    colorBlue   = 1.0f - (float)dec[2] / 255.0f;
                     transparent = 1.0f - (float)dec[3] / 255.0f;
-                    cutoff = (float)dec[4] / 255.0f;
-                    shininess = (float)dec[5] / 255.0f;
-                    glow = (float)dec[6] / 255.0f;
-                    bright = (float)dec[7] / 255.0f;
-                    light = (float)dec[8] / 255.0f;
+                    cutoff      = (float)dec[4] / 255.0f;
+                    shininess   = (float)dec[5] / 255.0f;
+                    glow        = (float)dec[6] / 255.0f;
+                    bright      = (float)dec[7] / 255.0f;
+                    light       = (float)dec[8] / 255.0f;
                     /*
                     short[] tmp = new short[1];
                     Buffer.BlockCopy(dec, 13, tmp, 0, 2);
@@ -256,4 +258,5 @@ public sealed class SelectOARShader : AssetPostprocessor
             }
         }
     }
+
 }
