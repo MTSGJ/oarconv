@@ -301,7 +301,6 @@ public class SelectOARShader : AssetPostprocessor
             material.shader = Shader.Find(TransShader);
             if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
         }
-        
         //
         else if (glow > 0.02f) {
             material.EnableKeyword("_EMISSION");

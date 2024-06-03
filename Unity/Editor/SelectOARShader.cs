@@ -72,6 +72,7 @@ public sealed class SelectOARShader : AssetPostprocessor
 
         modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
         modelImporter.materialLocation = ModelImporterMaterialLocation.External;
+        //modelImporter.materialLocation = ModelImporterMaterialLocation.External;
 
         /*
         if (!modelImporter.importSettingsMissing) {
