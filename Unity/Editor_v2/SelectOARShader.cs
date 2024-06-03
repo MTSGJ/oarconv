@@ -297,15 +297,13 @@ public class SelectOARShader : AssetPostprocessor
                 }
             }
         }
-        else {
-            if (transparent<0.9f) {
-                material.shader = Shader.Find(TransShader);
-                if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
-            }
+        else if (transparent<0.9f) {
+            material.shader = Shader.Find(TransShader);
+            if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
         }
         
         //
-        if (glow > 0.02f) {
+        else if (glow > 0.02f) {
             material.EnableKeyword("_EMISSION");
             material.shader = Shader.Find(GlowShader);
             if (material.HasProperty("_EmissionColor")) {
