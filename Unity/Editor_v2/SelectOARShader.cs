@@ -15,15 +15,15 @@ using Unity.VisualScripting;
 public class SelectOARShader : AssetPostprocessor
 {
     private static string GeneralShader;
-    private static string TransShader;             // Alpha Blending
-    private static string TransCutShader;          // Alpha Cutoff
-    private static string TransCutSoftShader;      // Alpha Blending
-    private static string TransSpecShader;         // Alpha Blending + Specular
-    private static string TransCutSpecShader;      // Alpha Cutoff + Specular
-    private static string SpecularShader;
-    private static string BrightShader;
-    private static string GlowShader;
     private static string TreeShader;
+    private static string SpecularShader;
+    private static string GlowShader;
+    private static string BrightShader;
+    private static string TransShader;          // Alpha Blending
+    private static string TransCutShader;       // Alpha Cutoff
+    private static string TransCutSoftShader;   // Alpha Blending + Cutoff
+    private static string TransSpecShader;      // Alpha Blending + Specular
+    private static string TransCutSpecShader;   // Alpha Cutoff + Specular
 
     private static float colorRed      = 0.0f;
     private static float colorGreen    = 0.0f;
@@ -88,28 +88,40 @@ public class SelectOARShader : AssetPostprocessor
 
         //
         if (GeneralShader == HDRP_Shader) {
-            TransShader         = "Unlit/Transparent";
-            TreeShader          = "Unlit/Transparent";
+            TreeShader          = "Unlit/Transparent"; 
             SpecularShader      = "HDRP/Lit";
+            //GlowShader        = "HDRP/Lit";
+            //BrightShader      = "HDRP/Lit";
+            TransShader         = "Unlit/Transparent";                                  // Alpha Blending
+            //TransCutShader    = "Unlit/Transparent";                                  // Alpha Cutoff
+            //TransCutSoftShader= "Unlit/Transparent";                                  // Alpha Blending + Cutoff
+            //TransSpecShader   = "Unlit/Transparent";                                  // Alpha Blending + Specular
+            //TransCutSpecShader= "Unlit/Transparent";                                  // Alpha Cutoff + Specular
         }
         else if (GeneralShader == URP_Shader) {
-            TransShader         = "Unlit/Transparent";
             TreeShader          = "Unlit/Transparent";
             SpecularShader      = "Universal Render Pipeline/Simple Lit";
+            //GlowShader        = "Universal Render Pipeline/Simple Lit";
+            //BrightShader      = "Universal Render Pipeline/Simple Lit";
+            TransShader         = "Unlit/Transparent";                                  // Alpha Blending
+            //TransCutShader    = "Unlit/Transparent";                                  // Alpha Cutoff
+            //TransCutSoftShader= "Unlit/Transparent";                                  // Alpha Blending + Cutoff
+            //TransSpecShader   = "Unlit/Transparent";                                  // Alpha Blending + Specular
+            //TransCutSpecShader= "Unlit/Transparent";                                  // Alpha Cutoff + Specular
         }
         else if (GeneralShader == BINP_Shader) {
-            TransShader         = "Legacy Shaders/Transparent/Diffuse";                  // Alpha Blending
-            TransCutShader      = "Legacy Shaders/Transparent/Cutout/Diffuse";           // Alpha Cutoff
-            TransCutSoftShader  = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";   // Alpha Blending
-            TransSpecShader     = "Legacy Shaders/Transparent/Specular";                 // Alpha Blending + Specular
-            TransCutSpecShader  = "Legacy Shaders/Transparent/Cutout/Specular";          // Alpha Cutoff + Specular
-            BrightShader        = "Legacy Shaders/Self-Illumin/Specular";
+            TreeShader          = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";
             SpecularShader      = "Standard";
             GlowShader          = "Standard";
-            TreeShader          = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";
+            BrightShader        = "Legacy Shaders/Self-Illumin/Specular";
+            TransShader         = "Legacy Shaders/Transparent/Diffuse";                  // Alpha Blending
+            TransCutShader      = "Legacy Shaders/Transparent/Cutout/Diffuse";           // Alpha Cutoff
+            TransCutSoftShader  = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";   // Alpha Blending + Cutoff
+            TransSpecShader     = "Legacy Shaders/Transparent/Specular";                 // Alpha Blending + Specular
+            TransCutSpecShader  = "Legacy Shaders/Transparent/Cutout/Specular";          // Alpha Cutoff + Specular
         }
 
-        Debug.Log("General Shadr = " + GeneralShader);
+        //Debug.Log("General Shadr = " + GeneralShader);
         return;
     }
 
@@ -131,7 +143,7 @@ public class SelectOARShader : AssetPostprocessor
                         if (GeneralShader == HDRP_Shader) {
                             SetMaterialShader_HDRP(material);
                         }
-                        else if (GeneralShader == HDRP_Shader) {
+                        else if (GeneralShader == URP_Shader) {
                             SetMaterialShader_URP(material);
                         }
                         else { 
@@ -217,7 +229,6 @@ public class SelectOARShader : AssetPostprocessor
         if (kind == 'T' || kind == 'G') {   // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
-
         // Alpha Channell
         else if (hasAlpha) {
             material.shader = Shader.Find(TransShader);

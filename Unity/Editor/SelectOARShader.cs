@@ -14,15 +14,16 @@ using System;
 public sealed class SelectOARShader : AssetPostprocessor
 {
     private string GeneralShader;
+    private string TreeShader;
+    private string SpecularShader;
+    private string GlowShader;
+    private string BrightShader;
     private string TransShader;             // Alpha Blending
     private string TransCutShader;          // Alpha Cutoff
-    private string TransCutSoftShader;      // Alpha Blending
+    private string TransCutSoftShader;      // Alpha Blending + Cutoff
     private string TransSpecShader;         // Alpha Blending + Specular
     private string TransCutSpecShader;      // Alpha Cutoff + Specular
-    private string SpecularShader;
-    private string BrightShader;
-    private string GlowShader;
-    private string TreeShader;
+
 
     private const string MaterialFolder = "Materials";
     private const string PhantomFolder  = "Phantoms";
@@ -30,7 +31,7 @@ public sealed class SelectOARShader : AssetPostprocessor
     private float colorRed      = 0.0f;
     private float colorGreen    = 0.0f;
     private float colorBlue     = 0.0f;
-    private float transparent   = 1.0f;
+    private float transparent   = 1.0f;  // •s“§–¾
     private float cutoff        = 0.0f;
     private float shininess     = 0.0f;
     private float glow          = 0.0f;
@@ -43,7 +44,7 @@ public sealed class SelectOARShader : AssetPostprocessor
 //  private float scaleU        = 1.0f;
 //  private float scaleV        = 1.0f;
 //  private float rotate        = 0.0f;
-    private char  kind          = 'O';        // Object
+    private char  kind          = 'O';   // O: Object, T: Tree, G: Grass, E: Earth
 
     private const string HDRP_Shader   = "HDRP/Lit";
     private const string URP_Shader    = "Universal Render Pipeline/Simple Lit";
@@ -72,7 +73,6 @@ public sealed class SelectOARShader : AssetPostprocessor
 
         modelImporter.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
         modelImporter.materialLocation = ModelImporterMaterialLocation.External;
-        //modelImporter.materialLocation = ModelImporterMaterialLocation.External;
 
         /*
         if (!modelImporter.importSettingsMissing) {
@@ -108,28 +108,40 @@ public sealed class SelectOARShader : AssetPostprocessor
 
         //
         if (GeneralShader == HDRP_Shader) {
-            TransShader         = "Unlit/Transparent";
-            TreeShader          = "Unlit/Transparent";
+            TreeShader          = "Unlit/Transparent"; 
             SpecularShader      = "HDRP/Lit";
+            //GlowShader        = "HDRP/Lit";
+            //BrightShader      = "HDRP/Lit";
+            TransShader         = "Unlit/Transparent";                                  // Alpha Blending
+            //TransCutShader    = "Unlit/Transparent";                                  // Alpha Cutoff
+            //TransCutSoftShader= "Unlit/Transparent";                                  // Alpha Blending + Cutoff
+            //TransSpecShader   = "Unlit/Transparent";                                  // Alpha Blending + Specular
+            //TransCutSpecShader= "Unlit/Transparent";                                  // Alpha Cutoff + Specular
         }
         else if (GeneralShader == URP_Shader) {
-            TransShader         = "Unlit/Transparent";
             TreeShader          = "Unlit/Transparent";
             SpecularShader      = "Universal Render Pipeline/Simple Lit";
+            //GlowShader        = "Universal Render Pipeline/Simple Lit";
+            //BrightShader      = "Universal Render Pipeline/Simple Lit";
+            TransShader         = "Unlit/Transparent";                                  // Alpha Blending
+            //TransCutShader    = "Unlit/Transparent";                                  // Alpha Cutoff
+            //TransCutSoftShader= "Unlit/Transparent";                                  // Alpha Blending + Cutoff
+            //TransSpecShader   = "Unlit/Transparent";                                  // Alpha Blending + Specular
+            //TransCutSpecShader= "Unlit/Transparent";                                  // Alpha Cutoff + Specular
         }
         else if (GeneralShader == BINP_Shader) {
-            TransShader         = "Legacy Shaders/Transparent/Diffuse";                  // Alpha Blending
-            TransCutShader      = "Legacy Shaders/Transparent/Cutout/Diffuse";           // Alpha Cutoff
-            TransCutSoftShader  = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";   // Alpha Blending
-            TransSpecShader     = "Legacy Shaders/Transparent/Specular";                 // Alpha Blending + Specular
-            TransCutSpecShader  = "Legacy Shaders/Transparent/Cutout/Specular";          // Alpha Cutoff + Specular
-            BrightShader        = "Legacy Shaders/Self-Illumin/Specular";
+            TreeShader          = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";
             SpecularShader      = "Standard";
             GlowShader          = "Standard";
-            TreeShader          = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";
+            BrightShader        = "Legacy Shaders/Self-Illumin/Specular";
+            TransShader         = "Legacy Shaders/Transparent/Diffuse";                  // Alpha Blending
+            TransCutShader      = "Legacy Shaders/Transparent/Cutout/Diffuse";           // Alpha Cutoff
+            TransCutSoftShader  = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";   // Alpha Blending + Cutoff
+            TransSpecShader     = "Legacy Shaders/Transparent/Specular";                 // Alpha Blending + Specular
+            TransCutSpecShader  = "Legacy Shaders/Transparent/Cutout/Specular";          // Alpha Cutoff + Specular
         }
 
-        Debug.Log("General Shadr = " + GeneralShader);
+        //Debug.Log("General Shadr = " + GeneralShader);
         return;
     }
 
@@ -152,7 +164,7 @@ public sealed class SelectOARShader : AssetPostprocessor
         if (GeneralShader == HDRP_Shader) {
             SetMaterialShader_HDRP(material);
         }
-        else if (GeneralShader == HDRP_Shader) {
+        else if (GeneralShader == URP_Shader) {
             SetMaterialShader_URP(material);
         }
         else { 
@@ -235,7 +247,6 @@ public sealed class SelectOARShader : AssetPostprocessor
         if (kind == 'T' || kind == 'G') {   // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
-
         // Alpha Channell
         else if (hasAlpha) {
             material.shader = Shader.Find(TransShader);
@@ -280,7 +291,6 @@ public sealed class SelectOARShader : AssetPostprocessor
             material.shader = Shader.Find(TreeShader);
         }
         //
-        //else if (transparent < 0.99f) {
         else if (hasAlpha) {
             if (shininess > 0.01f) {
                 if (cutoff > 0.01f) {   // Alpha Cutoff
@@ -288,7 +298,6 @@ public sealed class SelectOARShader : AssetPostprocessor
                     if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
                 }
                 else {   // Alpha Blending
-                    //if (transparent >= 0.90f) {
                     if (!hasAlpha) {
                         material.shader = Shader.Find(TransCutSpecShader);
                         if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", 0.2f);
@@ -306,7 +315,6 @@ public sealed class SelectOARShader : AssetPostprocessor
                     if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
                 }
                 else {   // Alpha Blending
-                    //if (transparent >= 0.90f) {
                     if (!hasAlpha) {
                         material.shader = Shader.Find(TransCutSoftShader);
                         if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", 0.9f);
