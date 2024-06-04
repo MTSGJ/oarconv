@@ -1,6 +1,7 @@
 #
-1.7.6  2024 06/02
-    SelectOARShader v2.1.0
+1.7.6  2024 06/04
+    SelectOARShader v1.7.2 and v2.1.1
+    fix same names(IDs) in DAE file.
 
 1.7.5  2024 05/29
     fix OAR file path include spaces. 

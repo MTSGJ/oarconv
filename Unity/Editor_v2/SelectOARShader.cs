@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v2.1.0
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v2.1.1
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -9,7 +9,6 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using System.IO;
-using Unity.VisualScripting;
 
 
 public class SelectOARShader : AssetPostprocessor
@@ -28,7 +27,7 @@ public class SelectOARShader : AssetPostprocessor
     private static float colorRed      = 0.0f;
     private static float colorGreen    = 0.0f;
     private static float colorBlue     = 0.0f;
-    private static float transparent   = 1.0f;  // •s“§–¾
+    private static float transparent   = 1.0f;  //
     private static float cutoff        = 0.0f;
     private static float shininess     = 0.0f;
     private static float glow          = 0.0f;
@@ -288,7 +287,7 @@ public class SelectOARShader : AssetPostprocessor
                         material.shader = Shader.Find(TransSpecShader);
                     }
                 }
-                if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", shininess / 2.0f);
+                if (material.HasProperty("_Shininess")) material.SetFloat("_Shininess", 1.0f - shininess);
             }
             //
             else {
@@ -303,12 +302,12 @@ public class SelectOARShader : AssetPostprocessor
                     }
                     else {
                         material.shader = Shader.Find(TransShader);
-                        if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
                     }
                 }
             }
         }
-        else if (transparent<0.9f) {
+        //
+        else if (transparent < 0.99f) {
             material.shader = Shader.Find(TransShader);
             if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
         }
@@ -346,7 +345,6 @@ public class SelectOARShader : AssetPostprocessor
         else {
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
-
         return;
     }
 
@@ -402,3 +400,4 @@ public class SelectOARShader : AssetPostprocessor
     }
 
 }
+

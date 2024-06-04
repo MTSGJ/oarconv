@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.1
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.2
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -7,8 +7,8 @@
 
 using UnityEngine;
 using UnityEditor;
-using System.IO;
 using System;
+using System.IO;
 
 
 public sealed class SelectOARShader : AssetPostprocessor
@@ -18,12 +18,11 @@ public sealed class SelectOARShader : AssetPostprocessor
     private string SpecularShader;
     private string GlowShader;
     private string BrightShader;
-    private string TransShader;             // Alpha Blending
-    private string TransCutShader;          // Alpha Cutoff
-    private string TransCutSoftShader;      // Alpha Blending + Cutoff
-    private string TransSpecShader;         // Alpha Blending + Specular
-    private string TransCutSpecShader;      // Alpha Cutoff + Specular
-
+    private string TransShader;          // Alpha Blending
+    private string TransCutShader;       // Alpha Cutoff
+    private string TransCutSoftShader;   // Alpha Blending + Cutoff
+    private string TransSpecShader;      // Alpha Blending + Specular
+    private string TransCutSpecShader;   // Alpha Cutoff + Specular
 
     private const string MaterialFolder = "Materials";
     private const string PhantomFolder  = "Phantoms";
@@ -31,7 +30,7 @@ public sealed class SelectOARShader : AssetPostprocessor
     private float colorRed      = 0.0f;
     private float colorGreen    = 0.0f;
     private float colorBlue     = 0.0f;
-    private float transparent   = 1.0f;  // •s“§–¾
+    private float transparent   = 1.0f;  //
     private float cutoff        = 0.0f;
     private float shininess     = 0.0f;
     private float glow          = 0.0f;
@@ -326,7 +325,7 @@ public sealed class SelectOARShader : AssetPostprocessor
             }
         }
         //
-        else if (transparent < 0.9f) {
+        else if (transparent < 0.99f) {
             material.shader = Shader.Find(TransShader);
             if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
         }
@@ -364,8 +363,7 @@ public sealed class SelectOARShader : AssetPostprocessor
         else {
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
-        
-        return ;
+        return;
     }
 
 
