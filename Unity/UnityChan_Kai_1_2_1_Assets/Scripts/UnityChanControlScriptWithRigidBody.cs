@@ -20,7 +20,7 @@ namespace UnityChan
     [RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(Rigidbody))]
 
-    public class UnityChanControlScriptWithRgidBody : MonoBehaviour
+    public class UnityChanControlScriptWithRigidBody : MonoBehaviour
     {
         public bool showInteraction = true;		    // 初期メニュー表示
         public float animSpeed = 1.5f;              // アニメーション再生速度設定

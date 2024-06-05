@@ -136,31 +136,30 @@ public class SelectOARShader : AssetPostprocessor
         if (GeneralShader == NONE_Shader) return;
         //
         foreach (string asset in importedAssets) {
-            UnityEngine.Object[] objects;
-            if (typeof(SceneAsset).Equals(AssetDatabase.GetMainAssetTypeAtPath(asset))) {
-                objects = new[] { AssetDatabase.LoadMainAssetAtPath(assetPath) };
-            }
-            else {
+            UnityEngine.Object[] objects = null;
+            if (!typeof(SceneAsset).Equals(AssetDatabase.GetMainAssetTypeAtPath(asset))) {
                 objects = AssetDatabase.LoadAllAssetsAtPath(asset);
             }
             //
             if (objects!=null) {
                 foreach (UnityEngine.Object obj in objects) {
-                    string objName = obj.name;
-                    if (objName.StartsWith("MATERIAL_")) {
-                        Material material = obj as Material;
-                        //
-                        if (GeneralShader == HDRP_Shader) {
-                            SetMaterialShader_HDRP(material);
+                    Material material = obj as Material;
+                    if (material != null) {
+                        if (material.name.StartsWith("MATERIAL_")) {
+                            //
+                            if (GeneralShader == HDRP_Shader) {
+                                SetMaterialShader_HDRP(material);
+                            }
+                            else if (GeneralShader == URP_Shader) {
+                                SetMaterialShader_URP(material);
+                            }
+                            else { 
+                                SetMaterialShader_BRP(material);
+                            }
+                            //
+                            EditorUtility.SetDirty(material);
+                            //AssetDatabase.SaveAssetIf
                         }
-                        else if (GeneralShader == URP_Shader) {
-                            SetMaterialShader_URP(material);
-                        }
-                        else { 
-                            SetMaterialShader_BRP(material);
-                        }
-                        //
-                        EditorUtility.SetDirty(material);
                     }
                 }
             }
