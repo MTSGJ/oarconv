@@ -371,7 +371,6 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
             cat_s2Buffer(filename, &texfile);
             TGAImage tga = MSGraph2TGAImage(region, true);
             canonical_filename_Buffer(&texfile);
-PRINT_MESG("====> %s\n", (char*)texfile.buf);
             writeTGAFile((char*)texfile.buf, tga);
             tga.free();
 
