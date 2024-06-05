@@ -367,15 +367,17 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
             param.setFullName(MTRL_IMAGE_TYPE);
             if (paramstr!=NULL) ::free(paramstr);
 
-            char* filename = param.getTextureName();
-            cat_s2Buffer(filename, &texfile);
+            Buffer filename = make_Buffer_str(param.getTextureName());
+            canonical_filename_Buffer(&filename);
+
+            cat_Buffer(&filename, &texfile);
             TGAImage tga = MSGraph2TGAImage(region, true);
-            canonical_filename_Buffer(&texfile);
             writeTGAFile((char*)texfile.buf, tga);
             tga.free();
 
             param.free();
             region.free();
+            free_Buffer(&filename);
             free_Buffer(&trrntex);
             free_Buffer(&texfile);
 

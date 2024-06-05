@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.2
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.1
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -7,22 +7,24 @@
 
 using UnityEngine;
 using UnityEditor;
-using System;
 using System.IO;
+using System;
 
 
 public sealed class SelectOARShader : AssetPostprocessor
 {
     private string GeneralShader;
     private string TreeShader;
+    private string EarthShader;
     private string SpecularShader;
     private string GlowShader;
     private string BrightShader;
-    private string TransShader;          // Alpha Blending
-    private string TransCutShader;       // Alpha Cutoff
-    private string TransCutSoftShader;   // Alpha Blending + Cutoff
-    private string TransSpecShader;      // Alpha Blending + Specular
-    private string TransCutSpecShader;   // Alpha Cutoff + Specular
+    private string TransShader;         // Alpha Blending
+    private string TransCutShader;      // Alpha Cutoff
+    private string TransCutSoftShader;  // Alpha Blending + Cutoff
+    private string TransSpecShader;     // Alpha Blending + Specular
+    private string TransCutSpecShader;  // Alpha Cutoff + Specular
+
 
     private const string MaterialFolder = "Materials";
     private const string PhantomFolder  = "Phantoms";
@@ -107,7 +109,8 @@ public sealed class SelectOARShader : AssetPostprocessor
 
         //
         if (GeneralShader == HDRP_Shader) {
-            TreeShader          = "Unlit/Transparent"; 
+            TreeShader          = "Unlit/Transparent";
+            EarthShader         = "HDRP/Lit";
             SpecularShader      = "HDRP/Lit";
             //GlowShader        = "HDRP/Lit";
             //BrightShader      = "HDRP/Lit";
@@ -119,6 +122,7 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
         else if (GeneralShader == URP_Shader) {
             TreeShader          = "Unlit/Transparent";
+            EarthShader         = "Universal Render Pipeline/Simple Lit";
             SpecularShader      = "Universal Render Pipeline/Simple Lit";
             //GlowShader        = "Universal Render Pipeline/Simple Lit";
             //BrightShader      = "Universal Render Pipeline/Simple Lit";
@@ -130,6 +134,7 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
         else if (GeneralShader == BINP_Shader) {
             TreeShader          = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";
+            EarthShader         = "Standard";
             SpecularShader      = "Standard";
             GlowShader          = "Standard";
             BrightShader        = "Legacy Shaders/Self-Illumin/Specular";
@@ -189,6 +194,9 @@ public sealed class SelectOARShader : AssetPostprocessor
         if (kind == 'T' || kind == 'G') {   // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
+        else if (kind == 'E') {             // Terrain
+            material.shader = Shader.Find(EarthShader);
+        }
         // Alpha Channell
         else if (hasAlpha) {
             material.shader = Shader.Find(TransShader);
@@ -246,6 +254,9 @@ public sealed class SelectOARShader : AssetPostprocessor
         if (kind == 'T' || kind == 'G') {   // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
+        else if (kind == 'E') {             // Land
+            material.shader = Shader.Find(EarthShader);
+        }
         // Alpha Channell
         else if (hasAlpha) {
             material.shader = Shader.Find(TransShader);
@@ -289,6 +300,9 @@ public sealed class SelectOARShader : AssetPostprocessor
         if (kind == 'T' || kind == 'G') {   // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
+        else if (kind == 'E') {             // Land
+            material.shader = Shader.Find(EarthShader);
+        }
         //
         else if (hasAlpha) {
             if (shininess > 0.01f) {
@@ -325,7 +339,7 @@ public sealed class SelectOARShader : AssetPostprocessor
             }
         }
         //
-        else if (transparent < 0.99f) {
+        else if (transparent < 0.9f) {
             material.shader = Shader.Find(TransShader);
             if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
         }
@@ -363,7 +377,8 @@ public sealed class SelectOARShader : AssetPostprocessor
         else {
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
-        return;
+        
+        return ;
     }
 
 

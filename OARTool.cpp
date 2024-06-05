@@ -516,33 +516,28 @@ bool  OARTool::GetDataInfo()
 void  OARTool::MakeOutputFolder(void)
 {
     if (pathOUT.buf!=NULL) {
-        canonical_filename_Buffer(&pathOUT);
         mkdir((char*)pathOUT.buf, 0700);                                // OUTPUT Folder
     }
 
     // Texture, Material and Phantom Folder
     if (dataformat==JBXL_3D_FORMAT_DAE || dataformat==JBXL_3D_FORMAT_OBJ) {
         if (pathTEX.buf!=NULL) {
-            canonical_filename_Buffer(&pathTEX);
             mkdir((char*)pathTEX.buf, 0700);                            // Texture Folder
         }
         if (dataformat==JBXL_3D_FORMAT_OBJ) {                           // Material Folder
             Buffer mtl = dup_Buffer(pathOUT);
             cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
-            canonical_filename_Buffer(&mtl);
+
             mkdir((char*)mtl.buf, 0700);
             free_Buffer(&mtl);
         }
         //  Phantom Folder
         if (engine != JBXL_3D_ENGINE_UE) {
             if (pathPTM.buf!=NULL) {
-                canonical_filename_Buffer(&pathPTM);
                 mkdir((char*)pathPTM.buf, 0700);                        // Phantom Folder
             }
             if (dataformat==JBXL_3D_FORMAT_OBJ) {                       // Phantom/Material Folder
-                //Buffer mtl = dup_Buffer(pathOUT);
                 Buffer mtl = dup_Buffer(pathPTM);
-                canonical_filename_Buffer(&mtl);
                 cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
                 mkdir((char*)mtl.buf, 0700);
                 free_Buffer(&mtl);
@@ -1184,13 +1179,10 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
         if (ext_name[0]!='.') cat_s2Buffer(".", &outpath);
         cat_s2Buffer(ext_name, &outpath);
     }
-/*
     #ifndef WIN32
         rewrite_sBuffer_str(&outpath, " ", "\\ ");
         rewrite_sBuffer_str(&outpath, ";", "\\;");
     #endif
-*/
-    canonical_filename_Buffer(&outpath);
 
     if (!file_exist((char*)outpath.buf)) {
         //
