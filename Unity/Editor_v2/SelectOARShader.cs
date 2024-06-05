@@ -15,6 +15,7 @@ public class SelectOARShader : AssetPostprocessor
 {
     private static string GeneralShader;
     private static string TreeShader;
+    private static string EarthShader;
     private static string SpecularShader;
     private static string GlowShader;
     private static string BrightShader;
@@ -87,7 +88,8 @@ public class SelectOARShader : AssetPostprocessor
 
         //
         if (GeneralShader == HDRP_Shader) {
-            TreeShader          = "Unlit/Transparent"; 
+            TreeShader          = "Unlit/Transparent";
+            EarthShader         = "HDRP/Lit";
             SpecularShader      = "HDRP/Lit";
             //GlowShader        = "HDRP/Lit";
             //BrightShader      = "HDRP/Lit";
@@ -99,6 +101,7 @@ public class SelectOARShader : AssetPostprocessor
         }
         else if (GeneralShader == URP_Shader) {
             TreeShader          = "Unlit/Transparent";
+            EarthShader         = "Universal Render Pipeline/Simple Lit";
             SpecularShader      = "Universal Render Pipeline/Simple Lit";
             //GlowShader        = "Universal Render Pipeline/Simple Lit";
             //BrightShader      = "Universal Render Pipeline/Simple Lit";
@@ -110,6 +113,7 @@ public class SelectOARShader : AssetPostprocessor
         }
         else if (GeneralShader == BINP_Shader) {
             TreeShader          = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";
+            EarthShader         = "Standard";
             SpecularShader      = "Standard";
             GlowShader          = "Standard";
             BrightShader        = "Legacy Shaders/Self-Illumin/Specular";
@@ -171,6 +175,9 @@ public class SelectOARShader : AssetPostprocessor
         if (kind == 'T' || kind == 'G') {   // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
+        else if (kind == 'E') {             // Terrain
+            material.shader = Shader.Find(EarthShader);
+        }
         // Alpha Channell
         else if (hasAlpha) {
             material.shader = Shader.Find(TransShader);
@@ -228,6 +235,9 @@ public class SelectOARShader : AssetPostprocessor
         if (kind == 'T' || kind == 'G') {   // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
+        else if (kind == 'E') {             // Terrain
+            material.shader = Shader.Find(EarthShader);
+        }
         // Alpha Channell
         else if (hasAlpha) {
             material.shader = Shader.Find(TransShader);
@@ -270,6 +280,9 @@ public class SelectOARShader : AssetPostprocessor
 
         if (kind == 'T' || kind == 'G') {   // Tree or Grass
             material.shader = Shader.Find(TreeShader);
+        }
+        else if (kind == 'E') {             // Terrain
+            material.shader = Shader.Find(EarthShader);
         }
         //
         else if (hasAlpha) {
