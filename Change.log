@@ -1,4 +1,7 @@
 #
+1.7.7
+    fix SIM name included space
+
 1.7.6  2024 06/04
     SelectOARShader v1.7.2 and v2.1.1
     fix same names(IDs) in DAE file.
