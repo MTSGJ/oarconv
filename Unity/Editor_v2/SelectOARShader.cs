@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v2.1.2
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v2.1.3
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -136,7 +136,14 @@ public class SelectOARShader : AssetPostprocessor
         if (GeneralShader == NONE_Shader) return;
         //
         foreach (string asset in importedAssets) {
-            UnityEngine.Object[] objects = AssetDatabase.LoadAllAssetsAtPath(asset);
+            UnityEngine.Object[] objects;
+            if (typeof(SceneAsset).Equals(AssetDatabase.GetMainAssetTypeAtPath(asset))) {
+                objects = new[] { AssetDatabase.LoadMainAssetAtPath(assetPath) };
+            }
+            else {
+                objects = AssetDatabase.LoadAllAssetsAtPath(asset);
+            }
+            //
             if (objects!=null) {
                 foreach (UnityEngine.Object obj in objects) {
                     string objName = obj.name;
