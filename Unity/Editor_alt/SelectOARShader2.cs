@@ -11,7 +11,7 @@ using System;
 using System.IO;
 
 
-public class SelectOARShader : AssetPostprocessor
+public class SelectOARShader2 : UnityEditor.AssetPostprocessor
 {
     private static string GeneralShader;
     private static string TreeShader;
