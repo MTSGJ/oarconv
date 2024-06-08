@@ -472,7 +472,7 @@ bool  OARTool::GetDataInfo()
 #else
             if (dirs[i].buf[strlen((char*)dirs[i].buf) - 1] != '/') cat_s2Buffer("/", &dirs[i]);
 #endif
-            assetsFiles = add_resource_list((char*)dirs[i].buf, 36, assetsFiles, extn);
+            assetsFiles = add_resource_list((char*)dirs[i].buf, 36, assetsFiles, extn, 2);  // 後優先（上書きモード）
             free_Buffer(&dirs[i]);
         }
     }
@@ -484,7 +484,7 @@ bool  OARTool::GetDataInfo()
     #else
         cat_s2Buffer("assets/",  &ast_path);
     #endif
-    assetsFiles = add_resource_list((char*)ast_path.buf, 36, assetsFiles, extn);    // 36 is length of GUID
+    assetsFiles = add_resource_list((char*)ast_path.buf, 36, assetsFiles, extn, 1);    // 前優先．36 is length of GUID
     free_Buffer(&ast_path);
     del_tList(&extn);
 
