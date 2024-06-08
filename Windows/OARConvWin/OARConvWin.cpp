@@ -77,18 +77,20 @@ COARConvWinApp::COARConvWinApp()
     homeFolder = make_Buffer_bystr(prgfld);
     ::free(prgfld);
 
-    assetsFolder = init_Buffer(64);
-    Buffer* dirs = awk_Buffer_dim(OART_DEFAULT_AST_DIR, '|');
+    assetsFolder = make_Buffer(64);
+    Buffer pathAST = make_Buffer_bystr(OART_DEFAULT_AST_DIR);
+    Buffer* dirs = awk_Buffer_dim(pathAST, '|');
     if (dirs != NULL) {
         int num = dirs->state;
         for (int i = 0; i < num; i++) {
             if (dirs[i].buf[strlen((char*)dirs[i].buf) - 1] != '\\') cat_s2Buffer("\\", &dirs[i]);
-            if (i!=0) cat_s2Budder("|", &assetsFolder);
+            if (i!=0) cat_s2Buffer("|", &assetsFolder);
             cat_Buffer(&homeFolder, &assetsFolder);
             cat_Buffer(&dirs[i],    &assetsFolder);
             free_Buffer(&dirs[i]);
         }
     }
+    free_Buffer(&pathAST);
 
     comDecomp = dup_Buffer(homeFolder);
     cat_s2Buffer(OART_JP2_DECOMP_COM, &comDecomp);
