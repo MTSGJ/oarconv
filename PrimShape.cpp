@@ -813,7 +813,7 @@ void  PrimBaseShape::PrintTextureEntry(void)
             PRINT_MESG("scale       : %f, %f\n", (float)materialParam[i].texture.getScaleU(), (float)materialParam[i].texture.getScaleV());
             PRINT_MESG("shift       : %f, %f\n", (float)materialParam[i].texture.getShiftU(), (float)materialParam[i].texture.getShiftV());
             PRINT_MESG("rotate      : %f\n", (float)materialParam[i].texture.getRotate());
-            PRINT_MESG("transparent : %f\n", (float)materialParam[i].getTransparent());
+            PRINT_MESG("transparent : %f\n", (float)materialParam[i].texture.getColor(3));
             PRINT_MESG("shininess   : %f\n", (float)materialParam[i].getShininess());
             PRINT_MESG("glow        : %f\n", (float)materialParam[i].getGlow());
             PRINT_MESG("bright      : %f\n", (float)materialParam[i].getBright());

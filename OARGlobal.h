@@ -15,7 +15,7 @@
   #define  OART_DEFAULT_OBJ_DIR     "OBJ\\"
   #define  OART_DEFAULT_FBX_DIR     "FBX\\"
   #define  OART_DEFAULT_STL_DIR     "STL\\"
-  #define  OART_DEFAULT_AST_DIR     "assets\\"
+  #define  OART_DEFAULT_AST_DIR     "assets\\|assets_alt\\"
   #define  OART_DEFAULT_TEX_DIR     "Textures\\"
   #define  OART_DEFAULT_PTM_DIR     "Phantoms\\"
   #define  OART_DEFAULT_MTL_DIR     "MTL\\"

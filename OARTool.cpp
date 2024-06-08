@@ -254,11 +254,6 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
     }
     else {
         pathAST = make_Buffer_bystr(astdir);
-        #ifdef WIN32
-            if (pathAST.buf[strlen((char*)pathAST.buf)-1]!='\\') cat_s2Buffer("\\", &pathAST);
-        #else
-            if (pathAST.buf[strlen((char*)pathAST.buf)-1]!='/') cat_s2Buffer("/", &pathAST);
-        #endif
     }
 }
 
@@ -300,11 +295,6 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
     if (astdir != NULL) {
         free_Buffer(&pathAST);
         pathAST = make_Buffer_bystr(astdir);
-#ifdef WIN32
-        if (pathAST.buf[strlen((char*)pathAST.buf) - 1] != '\\') cat_s2Buffer("\\", &pathAST);
-#else
-        if (pathAST.buf[strlen((char*)pathAST.buf) - 1] != '/') cat_s2Buffer("/", &pathAST);
-#endif
     }
 }
 
@@ -468,22 +458,24 @@ bool  OARTool::GetDataInfo()
     // Assets Files
     tList*  extn = add_tList_node_str(NULL, "txt", NULL);   // 除外拡張子
     //
-    #ifdef WIN32
-        // Windowsの場合は : で区切れない
-        if (pathAST.buf[strlen((char*)pathAST.buf)-1]!='\\') cat_s2Buffer("\\", &pathAST);
-        assetsFiles = add_resource_list((char*)pathAST.buf, 36, assetsFiles, extn);
-    #else
-        Buffer* dirs = awk_Buffer_dim(pathAST, ':');
-        if (dirs!=NULL) {
-            int num = dirs->state;
-            for (int i=0; i<num; i++) {
-                if (dirs[i].buf[strlen((char*)dirs[i].buf)-1]!='/') cat_s2Buffer("/", &dirs[i]);
-                assetsFiles = add_resource_list((char*)dirs[i].buf, 36, assetsFiles, extn);
-                free_Buffer(&dirs[i]);
-            }
-            ::free(dirs);
+#ifdef WIN32
+    // Windowsの場合は : で区切れない．'|' で区切る．
+    Buffer* dirs = awk_Buffer_dim(pathAST, '|');
+#else
+    Buffer* dirs = awk_Buffer_dim(pathAST, ':');
+#endif
+    if (dirs != NULL) {
+        int num = dirs->state;
+        for (int i = 0; i < num; i++) {
+#ifdef WIN32
+            if (dirs[i].buf[strlen((char*)dirs[i].buf) - 1] != '\\') cat_s2Buffer("\\", &dirs[i]);
+#else
+            if (dirs[i].buf[strlen((char*)dirs[i].buf) - 1] != '/') cat_s2Buffer("/", &dirs[i]);
+#endif
+            assetsFiles = add_resource_list((char*)dirs[i].buf, 36, assetsFiles, extn);
+            free_Buffer(&dirs[i]);
         }
-    #endif
+    }
 
     //
     Buffer ast_path = dup_Buffer(pathOAR);
