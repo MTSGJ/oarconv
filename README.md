@@ -22,7 +22,7 @@
 
 ### Latest Version
 * v1.7.x
-  * [OARConvWin-1.7.3.zip for MS Windows](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.7.3.zip)
+  * [OARConvWin-1.7.8.zip for MS Windows](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.8.zip)
 
 
 ## OARConv (for Linux)
@@ -99,10 +99,10 @@ make
 -----------
 ## OARConvWin (for MS Windows)
 ### Download Binary
-- [OARConvWin-1.7.3.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.7.3.zip)
-- [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.6.0.zip)
-- [OARConvWin-1.5.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.5.0.zip)
-- [OARConvWin-1.2.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConvWin-1.2.1.zip)
+- [OARConvWin-1.7.8.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.8.zip)
+- [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.6.0.zip)
+- [OARConvWin-1.5.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.5.0.zip)
+- [OARConvWin-1.2.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.2.1.zip)
   
 ### Screen Shot
 <img src="https://github.com/fumihax/oarconv/assets/95947474/b5779945-fa2c-48e6-a7eb-2db346d2b670" width="25%" >
