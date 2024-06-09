@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.2
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.4
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -11,18 +11,14 @@ using System;
 using System.IO;
 
 
+
 public sealed class SelectOARShader : AssetPostprocessor
 {
     private string GeneralShader;
     private string TreeShader;
-    private string SpecularShader;
-    private string GlowShader;
-    private string BrightShader;
+    private string EarthShader;
     private string TransShader;          // Alpha Blending
     private string TransCutShader;       // Alpha Cutoff
-    private string TransCutSoftShader;   // Alpha Blending + Cutoff
-    private string TransSpecShader;      // Alpha Blending + Specular
-    private string TransCutSpecShader;   // Alpha Cutoff + Specular
 
     private const string MaterialFolder = "Materials";
     private const string PhantomFolder  = "Phantoms";
@@ -46,8 +42,9 @@ public sealed class SelectOARShader : AssetPostprocessor
     private char  kind          = 'O';   // O: Object, T: Tree, G: Grass, E: Earth
 
     private const string HDRP_Shader   = "HDRP/Lit";
-    private const string URP_Shader    = "Universal Render Pipeline/Simple Lit";
-    private const string BINP_Shader   = "Legacy Shaders/Diffuse";
+    //private const string URP_Shader    = "Universal Render Pipeline/Simple Lit";
+    private const string URP_Shader    = "Universal Render Pipeline/Lit";
+    private const string BINP_Shader   = "Standard";
     private const string NONE_Shader   = "NONE";
 
     private bool createdMaterialFolder = false;
@@ -107,37 +104,22 @@ public sealed class SelectOARShader : AssetPostprocessor
 
         //
         if (GeneralShader == HDRP_Shader) {
-            TreeShader          = "Unlit/Transparent"; 
-            SpecularShader      = "HDRP/Lit";
-            //GlowShader        = "HDRP/Lit";
-            //BrightShader      = "HDRP/Lit";
+            TreeShader          = "Unlit/Transparent";
+            EarthShader         = "HDRP/Lit";
             TransShader         = "Unlit/Transparent";                                  // Alpha Blending
-            //TransCutShader    = "Unlit/Transparent";                                  // Alpha Cutoff
-            //TransCutSoftShader= "Unlit/Transparent";                                  // Alpha Blending + Cutoff
-            //TransSpecShader   = "Unlit/Transparent";                                  // Alpha Blending + Specular
-            //TransCutSpecShader= "Unlit/Transparent";                                  // Alpha Cutoff + Specular
+            TransCutShader      = "Unlit/Transparent";                                  // Alpha Cutoff
         }
         else if (GeneralShader == URP_Shader) {
             TreeShader          = "Unlit/Transparent";
-            SpecularShader      = "Universal Render Pipeline/Simple Lit";
-            //GlowShader        = "Universal Render Pipeline/Simple Lit";
-            //BrightShader      = "Universal Render Pipeline/Simple Lit";
+            EarthShader         = "Universal Render Pipeline/Simple Lit";
             TransShader         = "Unlit/Transparent";                                  // Alpha Blending
-            //TransCutShader    = "Unlit/Transparent";                                  // Alpha Cutoff
-            //TransCutSoftShader= "Unlit/Transparent";                                  // Alpha Blending + Cutoff
-            //TransSpecShader   = "Unlit/Transparent";                                  // Alpha Blending + Specular
-            //TransCutSpecShader= "Unlit/Transparent";                                  // Alpha Cutoff + Specular
+            TransCutShader      = "Unlit/Transparent";                                  // Alpha Cutoff
         }
         else if (GeneralShader == BINP_Shader) {
             TreeShader          = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";
-            SpecularShader      = "Standard";
-            GlowShader          = "Standard";
-            BrightShader        = "Legacy Shaders/Self-Illumin/Specular";
-            TransShader         = "Legacy Shaders/Transparent/Diffuse";                  // Alpha Blending
+            EarthShader         = "Standard";
+            TransShader         = "Unlit/Transparent";                                   // Alpha Blending
             TransCutShader      = "Legacy Shaders/Transparent/Cutout/Diffuse";           // Alpha Cutoff
-            TransCutSoftShader  = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";   // Alpha Blending + Cutoff
-            TransSpecShader     = "Legacy Shaders/Transparent/Specular";                 // Alpha Blending + Specular
-            TransCutSpecShader  = "Legacy Shaders/Transparent/Cutout/Specular";          // Alpha Cutoff + Specular
         }
 
         //Debug.Log("General Shadr = " + GeneralShader);
@@ -150,7 +132,6 @@ public sealed class SelectOARShader : AssetPostprocessor
     {
         //Debug.Log("Renderer = " + renderer.name);
         string materialName = material.name;
-        //UnityEngine.Debug.Log("Material Name = " + materialName);
         string currentFolder = Path.GetDirectoryName(assetPath);
         string materialPath = string.Format("{0}\\{1}\\{2}.mat", currentFolder, MaterialFolder, materialName);
 
@@ -176,32 +157,71 @@ public sealed class SelectOARShader : AssetPostprocessor
     }
 
 
-
+    /**
+     * High Definition Render Pipeline (HDRP)
+     */
     void SetMaterialShader_HDRP(Material material)
     {
         string materialName = material.name;
         getParamsFromMaterialName(materialName);
 
-        // Shader の選択 開始
         material.shader = Shader.Find(GeneralShader);
-        if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.0f); // 反射を止める
 
-        if (kind == 'T' || kind == 'G') {   // Tree or Grass
+        if (kind == 'T' || kind == 'G') {       // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
-        // Alpha Channell
-        else if (hasAlpha) {
-            material.shader = Shader.Find(TransShader);
-            if (cutoff>0.0f) {
-                if (material.HasProperty("_AlphaCutoffEnable")) material.SetFloat("_AlphaCutoffEnable", 1.0f);
-                if (material.HasProperty("_AlphaCutoff")) material.SetFloat("_AlphaCutoff", cutoff);
+        else if (kind == 'E') {                 // Terrain
+            material.shader = Shader.Find(EarthShader);
+            if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.0f); // Stop the reflection
+        }
+        //
+        else if (alphaMode == 0) {              // Alpha NONE
+            material.shader = Shader.Find(GeneralShader);
+        }
+        //
+        else if (alphaMode == 1) {              // Alpha BLENDING
+            if (hasAlpha) {
+                material.shader = Shader.Find(TransShader);
+            }
+            else if (transparent < 0.9f) {
+                material.shader = Shader.Find(GeneralShader);
+                material.SetFloat("_SurfaceType", 1.0f);
+                material.SetFloat("_BlendMode", 1.0f);
+                // No Specular for full transparency
+                if (transparent<0.01f) material.SetFloat("_EnableBlendModePreserveSpecularLighting", 0.0f);
             }
         }
-        // Shininess
-        else if (shininess > 0.01f) {
-            material.shader = Shader.Find(SpecularShader);
+        //
+        else if (alphaMode == 2 && hasAlpha) {  // Alpha MASKING (Cutoff)
+            material.shader = Shader.Find(TransCutShader);
+            if (material.HasProperty("_Cutoff")) {
+                if (cutoff > 0.0f) material.SetFloat("_Cutoff", cutoff);
+                else               material.SetFloat("_Cutoff", 0.9f);
+            }
         }
-        // Shader の選択終わり
+        //
+        else if (alphaMode == 3 && hasAlpha){  // Alpha EMISSIVE (not supported)
+            //
+        }
+
+        //
+        if (glow > 0.0f || bright > 0.0f) {
+            float emission = Math.Max(glow, bright);
+            //
+            material.EnableKeyword("_EMISSION");
+            if (material.HasProperty("_EmissionColor")) {
+                Color col = material.GetColor("_Color");
+                float fac = col.maxColorComponent;
+                if (fac > 0.01f) {
+                    col = col * (emission / fac);
+                }
+                material.SetColor("_EmissionColor", col);
+            }
+        }
+        //
+        if (shininess > 0.0f) {
+            if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", 0.5f + shininess / 2.0f);
+        }
 
         // Color
         if (material.HasProperty("_BaseColor")) {
@@ -210,57 +230,73 @@ public sealed class SelectOARShader : AssetPostprocessor
         else {
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
-
-        // Shininess
-        if (shininess > 0.01f) {
-            if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.5f);
-            if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", shininess * 3.0f);
-        }
-
-        /*
-        if (material.HasProperty("_EmissiveColor")) {
-            //material.EnableKeyword("_EmissiveIntensity");
-            Color col = material.GetColor("_Color");
-            float fac = col.maxColorComponent;
-            if (fac > 0.01f) {
-                if (glow > 0.99f) glow = 0.99f;
-                col = col * (glow / fac);
-            }
-            material.SetColor("_EmissiveColor", col);
-            material.SetFloat("_EmissiveIntensity", 1.0f);
-        }*/
-
         return;
     }
 
 
-
+    /**
+     * Universal Render Pipeline (URP)
+     */
     void SetMaterialShader_URP(Material material)
     {
         string materialName = material.name;
         getParamsFromMaterialName(materialName);
 
-        // Shader の選択 開始
         material.shader = Shader.Find(GeneralShader);
 
-        if (kind == 'T' || kind == 'G') {   // Tree or Grass
+        if (kind == 'T' || kind == 'G') {       // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
-        // Alpha Channell
-        else if (hasAlpha) {
-            material.shader = Shader.Find(TransShader);
-            if (cutoff > 0.0f) {
-                if (material.HasProperty("_AlphaCutoffEnable")) material.SetFloat("_AlphaCutoffEnable", 1.0f);
-                if (material.HasProperty("_AlphaCutoff")) material.SetFloat("_AlphaCutoff", cutoff);
+        else if (kind == 'E') {                 // Terrain
+            material.shader = Shader.Find(EarthShader);
+        }
+        //
+        else if (alphaMode == 0) {              // Alpha NONE
+            material.shader = Shader.Find(GeneralShader);
+        }
+        //
+        else if (alphaMode == 1) {              // Alpha BLENDING
+            if (hasAlpha) {
+                material.shader = Shader.Find(TransShader);
+            }
+            else if (transparent<0.9f) {
+                material.shader = Shader.Find(GeneralShader);
+                material.SetFloat("_Surface", 1.0f);
+                material.SetOverrideTag("RenderType", "Transparent");
             }
         }
-        // Shininess
-        else if (shininess > 0.01f) {
-            material.shader = Shader.Find(SpecularShader);
+        //
+        else if (alphaMode == 2 && hasAlpha) {  // Alpha MASKING (Cutoff)
+            material.shader = Shader.Find(TransCutShader);
+            if (material.HasProperty("_Cutoff")) {
+                if (cutoff > 0.0f) material.SetFloat("_Cutoff", cutoff);
+                else               material.SetFloat("_Cutoff", 0.9f);
+            }
         }
-        // Shader の選択終わり
+        //
+        else if (alphaMode == 3 && hasAlpha) {  // Alpha EMISSIVE (not supported)
+            //
+        }
 
         //
+        if (glow > 0.0f || bright > 0.0f) {
+            float emission = Math.Max(glow, bright);
+            //
+            material.EnableKeyword("_EMISSION");
+            if (material.HasProperty("_EmissionColor")) {
+                Color col = material.GetColor("_Color");
+                float fac = col.maxColorComponent;
+                if (fac > 0.01f) {
+                    col = col * (emission / fac);
+                }
+                material.SetColor("_EmissionColor", col);
+            }
+        }
+        //
+        if (shininess > 0.0f) {
+            if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", 0.5f + shininess / 2.0f);
+        }
+
         // Color
         if (material.HasProperty("_BaseColor")) {
             material.SetColor("_BaseColor", new Color(colorRed, colorGreen, colorBlue, transparent));
@@ -268,17 +304,13 @@ public sealed class SelectOARShader : AssetPostprocessor
         else {
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
-
-        // Shininess
-        if (shininess > 0.01f) {
-            if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", shininess * 3.0f);
-        }
-        
         return;
     }
 
 
-
+    /**
+     * Bult-in Render Pioeline  (BRP)
+     */
     void SetMaterialShader_BRP(Material material)
     {
         string materialName = material.name;
@@ -286,76 +318,54 @@ public sealed class SelectOARShader : AssetPostprocessor
 
         material.shader = Shader.Find(GeneralShader);
 
-        if (kind == 'T' || kind == 'G') {   // Tree or Grass
+        if (kind == 'T' || kind == 'G') {       // Tree or Grass
             material.shader = Shader.Find(TreeShader);
         }
-        //
-        else if (hasAlpha) {
-            if (shininess > 0.01f) {
-                if (cutoff > 0.01f) {   // Alpha Cutoff
-                    material.shader = Shader.Find(TransCutSpecShader);
-                    if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
-                }
-                else {   // Alpha Blending
-                    if (!hasAlpha) {
-                        material.shader = Shader.Find(TransCutSpecShader);
-                        if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", 0.2f);
-                    }
-                    else {
-                        material.shader = Shader.Find(TransSpecShader);
-                    }
-                }
-                if (material.HasProperty("_Shininess")) material.SetFloat("_Shininess", 1.0f - shininess);
-            }
-            //
-            else {
-                if (cutoff > 0.01f) {   // Alpha Cutoff
-                    material.shader = Shader.Find(TransCutShader);
-                    if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
-                }
-                else {   // Alpha Blending
-                    if (!hasAlpha) {
-                        material.shader = Shader.Find(TransCutSoftShader);
-                        if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", 0.9f);
-                    }
-                    else {
-                        material.shader = Shader.Find(TransShader);
-                    }
-                }
-            }
+        else if (kind == 'E') {                 // Terrain
+            material.shader = Shader.Find(EarthShader);
         }
         //
-        else if (transparent < 0.99f) {
+        else if (alphaMode == 0) {              // Alpha NONE
+            material.shader = Shader.Find(GeneralShader);
+        }
+        //
+        else if (alphaMode == 1 && hasAlpha) {  // Alpha BLENDING
             material.shader = Shader.Find(TransShader);
-            if (material.HasProperty("_Cutoff")) material.SetFloat("_Cutoff", cutoff);
         }
         //
-        else if (glow > 0.02f) {
+        else if (alphaMode == 2 && hasAlpha) {  // Alpha MASKING (Cutoff)
+            material.shader = Shader.Find(TransCutShader);
+            if (material.HasProperty("_Cutoff")) {
+                if (cutoff > 0.0f) material.SetFloat("_Cutoff", cutoff);
+                else               material.SetFloat("_Cutoff", 0.9f);
+            }
+        }
+        //
+        else if (alphaMode == 3 && hasAlpha) {  // Alpha EMISSIVE (not supported)
+            //
+        }   
+
+        //
+        if (glow > 0.0f || bright > 0.0f) {
+            float emission = Math.Max(glow, bright);
+            //
             material.EnableKeyword("_EMISSION");
-            material.shader = Shader.Find(GlowShader);
             if (material.HasProperty("_EmissionColor")) {
                 Color col = material.GetColor("_Color");
                 float fac = col.maxColorComponent;
                 if (fac > 0.01f) {
-                    if (glow > 0.99f) glow = 0.99f;
-                    col = col * (glow / fac);
+                    col = col * (emission / fac);
                 }
                 material.SetColor("_EmissionColor", col);
             }
-            if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", shininess);
         }
         //
-        else if (bright > 0.01f) {
-            material.shader = Shader.Find(BrightShader);
-            if (material.HasProperty("_Shininess")) material.SetFloat("_Shininess", 1.0f - shininess);
-        }
-        //
-        else if (shininess > 0.01f) {
-            material.shader = Shader.Find(SpecularShader);
-            if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", shininess / 2.0f);
+        if (shininess > 0.0f) {
+            //if (material.HasProperty("_Shininess")) material.SetFloat("_Shininess", shininess);
+            //if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", shininess / 2.0f);
             if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", 0.5f + shininess / 2.0f);
         }
-        
+
         // Color
         if (material.HasProperty("_BaseColor")) {
             material.SetColor("_BaseColor", new Color(colorRed, colorGreen, colorBlue, transparent));
