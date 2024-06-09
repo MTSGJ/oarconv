@@ -821,7 +821,7 @@ void  PrimBaseShape::PrintTextureEntry(void)
             //
             PRINT_MESG("mapping     : %d\n", materialParam[i].mapping);
             PRINT_MESG("flags       : %d\n", materialParam[i].mflags);
-            if (materialParam[i].texture.getAlphaChannel()) PRINT_MESG("alphaChannel: true\n");
+            if (materialParam[i].texture.hasAlphaChannel()) PRINT_MESG("alphaChannel: true\n");
             else                                            PRINT_MESG("alphaChannel: false\n");
             PRINT_MESG("alphaMode   : %d\n", materialParam[i].texture.getAlphaMode());
             PRINT_MESG("alphaCutoff : %f\n", (float)materialParam[i].texture.getAlphaCutoff());

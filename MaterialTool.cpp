@@ -18,7 +18,7 @@ tList*  jbxl::AlphaChannelList = NULL;  // テクスチャがアルファチャ�
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 
-bool  jbxl::CheckAlphaChannel(const char* texture, tList* resourceList)
+bool  jbxl::HasValidAlphaChannel(const char* texture, tList* resourceList)
 {
     bool ret = false;
     if (texture==NULL) return ret;
@@ -34,26 +34,48 @@ bool  jbxl::CheckAlphaChannel(const char* texture, tList* resourceList)
         else             return false;
     }
 
+    //
     char* path = get_resource_path((char*)inppath.buf, resourceList);
     char* extn = get_file_extension(path);
     //
-    if (path!=NULL && extn!=NULL && (extn[0]=='j' || extn[0]=='J')) {   // for Jpeg2000
-        //
-        JPEG2KImage jpg = readJPEG2KFile(path);
-        MSGraph<uByte> vp = JPEG2KImage2MSGraph<uByte>(jpg);
-        //
-        if (vp.zs>0 && (vp.zs==4 || vp.zs==2)) {
-            int   psz = vp.xs*vp.ys;
-            uByte* pp = vp.gp + psz*(vp.zs-1);
-            for (int i=0; i<psz; i++) {
-                if (pp[i]!=255) {
-                    ret = true;
-                    break;
+    if (path!=NULL && extn!=NULL) {
+        // for Jpeg2000
+        if (extn[0]=='j' || extn[0]=='J') {
+            JPEG2KImage jpg = readJPEG2KFile(path);
+            MSGraph<uByte> vp = JPEG2KImage2MSGraph<uByte>(jpg);
+
+            if (vp.zs==4 || vp.zs==2) {
+                int   psz = vp.xs*vp.ys;
+                uByte* pp = vp.gp + psz*(vp.zs-1);
+                for (int i=0; i<psz; i++) {
+                    if (pp[i]!=255) {
+                        ret = true;
+                        break;
+                    }
                 }
             }
+            vp.free();
+            jpg.free();
         }
-        vp.free();
-        jpg.free();
+        //
+        // for TGA
+        else if (extn[0]=='t' || extn[0]=='T') {
+            TGAImage tga = readTGAFile (path);
+            MSGraph<uByte> vp = TGAImage2MSGraph<uByte>(tga);
+            
+            if (vp.zs==4 || vp.zs==2) {
+                int   psz = vp.xs*vp.ys;
+                uByte* pp = vp.gp + psz*(vp.zs-1);
+                for (int i=0; i<psz; i++) {
+                    if (pp[i]!=255) {
+                        ret = true;
+                        break;
+                    }
+                }
+            }
+            vp.free();
+            tga.free();
+        }
     }
 
     // List
@@ -63,7 +85,6 @@ bool  jbxl::CheckAlphaChannel(const char* texture, tList* resourceList)
     if (AlphaChannelList==NULL) AlphaChannelList = pp;
 
     free_Buffer(&inppath);
-
     return ret;
 }
 

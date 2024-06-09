@@ -215,7 +215,7 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv)
     mparam[2].texture.setFlipU(true);
 
     for (int i=0; i<3; i++) {
-        mparam[i].setTransparent(MTRL_DEFAULT_ALPHA);
+        //mparam[i].setTransparent(MTRL_DEFAULT_ALPHA);
         mparam[i].texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         mparam[i].texture.setAlphaMode(MATERIAL_ALPHA_MASKING);
         mparam[i].texture.setAlphaCutoff(0.5);
@@ -348,7 +348,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     mparam[2].texture.setFlipU(true);
 
     for (int i=0; i<3; i++) {
-        mparam[i].setTransparent(MTRL_DEFAULT_ALPHA);
+        //mparam[i].setTransparent(MTRL_DEFAULT_ALPHA);
         mparam[i].texture.setColor(1.0, 1.0, 1.0, 1.0);
         mparam[i].texture.setAlphaMode(MATERIAL_ALPHA_MASKING);
         mparam[i].texture.setAlphaCutoff(0.5);
