@@ -7,9 +7,9 @@
 
 
 #ifdef WIN64
-#define		OARCONV_VERSION			"OARConvWin 1.7.7 (x64)"
+#define		OARCONV_VERSION			"OARConvWin 1.7.8 (x64)"
 #else
-#define		OARCONV_VERSION			"OARConvWin 1.7.7 (x86)"
+#define		OARCONV_VERSION			"OARConvWin 1.7.8 (x86)"
 #endif
 // change also OARConvWin.rc2 -> Version
 
