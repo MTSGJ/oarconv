@@ -1183,7 +1183,8 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
         rewrite_sBuffer_str(&outpath, ";", "\\;");
     #endif
 
-    if (!file_exist((char*)outpath.buf)) {
+    // コメントアウトすると上書き可
+    //if (!file_exist((char*)outpath.buf)) {
         //
         char* path = get_resource_path((char*)texture, assetsFiles);
         char* extn = get_file_extension(path);
@@ -1280,7 +1281,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
         else {
             PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is lost!\n", texture);
         }
-    }
+    //}
     free_Buffer(&outpath);
 
     return;
