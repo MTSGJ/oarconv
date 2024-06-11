@@ -147,7 +147,7 @@ namespace UnityChan
                 {
                     flying = 1;
                     rb.useGravity = false;
-                    rb.velocity = new Vector3(0, 0, 0);
+                    rb.linearVelocity = new Vector3(0, 0, 0);
                     transform.localPosition += Vector3.up * 0.2f;
                     anim.SetBool("Hovering", true);
                     homeKey = false;
@@ -158,7 +158,7 @@ namespace UnityChan
                     flying = 1;
                     forward = 0;
                     rb.useGravity = false;
-                    rb.velocity = new Vector3(0, 0, 0);
+                    rb.linearVelocity = new Vector3(0, 0, 0);
                     transform.localPosition += Vector3.up * 0.2f;
                     anim.SetBool("Walking", false);
                     anim.SetBool("Running", false);

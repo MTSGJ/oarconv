@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.4
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.5
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -42,7 +42,6 @@ public sealed class SelectOARShader : AssetPostprocessor
     private char  kind          = 'O';   // O: Object, T: Tree, G: Grass, E: Earth
 
     private const string HDRP_Shader   = "HDRP/Lit";
-    //private const string URP_Shader    = "Universal Render Pipeline/Simple Lit";
     private const string URP_Shader    = "Universal Render Pipeline/Lit";
     private const string BINP_Shader   = "Standard";
     private const string NONE_Shader   = "NONE";
@@ -188,7 +187,12 @@ public sealed class SelectOARShader : AssetPostprocessor
                 material.SetFloat("_SurfaceType", 1.0f);
                 material.SetFloat("_BlendMode", 1.0f);
                 // No Specular for full transparency
-                if (transparent<0.01f) material.SetFloat("_EnableBlendModePreserveSpecularLighting", 0.0f);
+                if (transparent < 0.01f) {
+                    if (material.HasProperty("_SpecularHighlights")) material.SetFloat("_SpecularHighlights", 0.0f);
+                    if (material.HasProperty("_EnergyConservingSpecularColor")) {
+                        material.SetFloat("_EnergyConservingSpecularColor", 0.0f);
+                    }
+                }
             }
         }
         //
@@ -204,32 +208,43 @@ public sealed class SelectOARShader : AssetPostprocessor
             //
         }
 
-        //
-        if (glow > 0.0f || bright > 0.0f) {
-            float emission = Math.Max(glow, bright);
-            //
-            material.EnableKeyword("_EMISSION");
-            if (material.HasProperty("_EmissionColor")) {
-                Color col = material.GetColor("_Color");
-                float fac = col.maxColorComponent;
-                if (fac > 0.01f) {
-                    col = col * (emission / fac);
-                }
-                material.SetColor("_EmissionColor", col);
-            }
-        }
-        //
-        if (shininess > 0.0f) {
-            if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", 0.5f + shininess / 2.0f);
-        }
-
         // Color
         if (material.HasProperty("_BaseColor")) {
             material.SetColor("_BaseColor", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
-        else {
+        if (material.HasProperty("_Color")) {
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
+
+        //
+        if (bright > 0.0f || light > 0.0f) {
+            float emission = Math.Max(bright, light);
+            material.EnableKeyword("_EMISSION");
+            if (material.HasProperty("_EmissionColor")) {
+                Color col = material.GetColor("_Color") * emission;
+                material.SetColor("_EmissionColor", col);
+            }
+        }
+        //
+        if (glow > 0.0f) {
+            if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", glow);
+        }
+        //
+        if (shininess > 0.0f) {
+            if (material.HasProperty("_Shininess")) {
+                material.SetFloat("_Shininess", shininess);
+            }
+            else if (material.HasProperty("_Metallic")) {
+                material.SetFloat("_Metallic", shininess);
+                if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.5f + shininess/2.0f);
+            }
+        }
+        else {
+            if (material.HasProperty("_EnableBlendModePreserveSpecularLighting")) {
+                material.SetFloat("_EnableBlendModePreserveSpecularLighting", 0.0f);
+            }
+        }
+        
         return;
     }
 
@@ -243,6 +258,7 @@ public sealed class SelectOARShader : AssetPostprocessor
         getParamsFromMaterialName(materialName);
 
         material.shader = Shader.Find(GeneralShader);
+        if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.0f);
 
         if (kind == 'T' || kind == 'G') {       // Tree or Grass
             material.shader = Shader.Find(TreeShader);
@@ -261,8 +277,13 @@ public sealed class SelectOARShader : AssetPostprocessor
             }
             else if (transparent<0.9f) {
                 material.shader = Shader.Find(GeneralShader);
-                material.SetFloat("_Surface", 1.0f);
-                material.SetOverrideTag("RenderType", "Transparent");
+                if (material.HasProperty("_Surface")) {
+                    material.SetFloat("_Surface", 1.0f);
+                    material.SetOverrideTag("RenderType", "Transparent");
+                }
+                if (transparent < 0.01f) {
+                    if (material.HasProperty("_SpecularHighlights")) material.SetFloat("_SpecularHighlights", 0.0f);
+                }
             }
         }
         //
@@ -278,32 +299,41 @@ public sealed class SelectOARShader : AssetPostprocessor
             //
         }
 
-        //
-        if (glow > 0.0f || bright > 0.0f) {
-            float emission = Math.Max(glow, bright);
-            //
-            material.EnableKeyword("_EMISSION");
-            if (material.HasProperty("_EmissionColor")) {
-                Color col = material.GetColor("_Color");
-                float fac = col.maxColorComponent;
-                if (fac > 0.01f) {
-                    col = col * (emission / fac);
-                }
-                material.SetColor("_EmissionColor", col);
-            }
-        }
-        //
-        if (shininess > 0.0f) {
-            if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", 0.5f + shininess / 2.0f);
-        }
-
         // Color
         if (material.HasProperty("_BaseColor")) {
             material.SetColor("_BaseColor", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
-        else {
+        if (material.HasProperty("_Color")) {
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
+
+        //
+        if (bright > 0.0f || light > 0.0f) {
+            float emission = Math.Max(bright, light);
+            material.EnableKeyword("_EMISSION");
+            if (material.HasProperty("_EmissionColor")) {
+                Color col = material.GetColor("_Color") * emission;
+                material.SetColor("_EmissionColor", col);
+            }
+        }
+        //
+        if (glow > 0.0f) {
+            if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", glow);
+        }
+        //
+        if (shininess > 0.0f) {
+            if (material.HasProperty("_Shininess")) {
+                material.SetFloat("_Shininess", shininess);
+            }
+            else if (material.HasProperty("_Metallic")) {
+                material.SetFloat("_Metallic", shininess);
+                if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.5f + shininess/2.0f);
+            }
+        }
+        else {
+            if (material.HasProperty("_SpecularHighlights")) material.SetFloat("_SpecularHighlights", 0.0f);
+        }
+        
         return;
     }
 
@@ -343,36 +373,40 @@ public sealed class SelectOARShader : AssetPostprocessor
         //
         else if (alphaMode == 3 && hasAlpha) {  // Alpha EMISSIVE (not supported)
             //
-        }   
-
-        //
-        if (glow > 0.0f || bright > 0.0f) {
-            float emission = Math.Max(glow, bright);
-            //
-            material.EnableKeyword("_EMISSION");
-            if (material.HasProperty("_EmissionColor")) {
-                Color col = material.GetColor("_Color");
-                float fac = col.maxColorComponent;
-                if (fac > 0.01f) {
-                    col = col * (emission / fac);
-                }
-                material.SetColor("_EmissionColor", col);
-            }
-        }
-        //
-        if (shininess > 0.0f) {
-            //if (material.HasProperty("_Shininess")) material.SetFloat("_Shininess", shininess);
-            //if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", shininess / 2.0f);
-            if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", 0.5f + shininess / 2.0f);
         }
 
         // Color
         if (material.HasProperty("_BaseColor")) {
             material.SetColor("_BaseColor", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
-        else {
+        if (material.HasProperty("_Color")) {
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
+
+        //
+        if (bright > 0.0f || light > 0.0f) {
+            float emission = Math.Max(bright, light);
+            material.EnableKeyword("_EMISSION");
+            if (material.HasProperty("_EmissionColor")) {
+                Color col = material.GetColor("_Color") * emission;
+                material.SetColor("_EmissionColor", col);
+            }
+        }
+        //
+        if (glow > 0.0f) {
+            if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", glow);
+        }
+        //
+        if (shininess > 0.0f) {
+            if (material.HasProperty("_Shininess")) {
+                material.SetFloat("_Shininess", shininess);
+            }
+            else if (material.HasProperty("_Metallic")) {
+                material.SetFloat("_Metallic", shininess);
+                if (material.HasProperty("_SmoothnessTextureChannel")) material.SetFloat("_SmoothnessTextureChannel", 0.5f + shininess/2.0f);
+            }
+        }
+
         return;
     }
 
