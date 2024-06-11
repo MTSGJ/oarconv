@@ -184,11 +184,10 @@ public sealed class SelectOARShader : AssetPostprocessor
             }
             else if (transparent < 0.9f) {
                 material.shader = Shader.Find(GeneralShader);
-                material.SetFloat("_SurfaceType", 1.0f);
-                material.SetFloat("_BlendMode", 1.0f);
+                if (material.HasProperty("_SurfaceType")) material.SetFloat("_SurfaceType", 1.0f);
+                if (material.HasProperty("_BlendMode")) material.SetFloat("_BlendMode", 1.0f);
                 // No Specular for full transparency
                 if (transparent < 0.01f) {
-                    if (material.HasProperty("_SpecularHighlights")) material.SetFloat("_SpecularHighlights", 0.0f);
                     if (material.HasProperty("_EnergyConservingSpecularColor")) {
                         material.SetFloat("_EnergyConservingSpecularColor", 0.0f);
                     }
@@ -205,7 +204,6 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
         //
         else if (alphaMode == 3 && hasAlpha){  // Alpha EMISSIVE (not supported)
-            //
         }
 
         // Color
@@ -217,13 +215,9 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
 
         //
-        if (bright > 0.0f || light > 0.0f) {
-            float emission = Math.Max(bright, light);
-            material.EnableKeyword("_EMISSION");
-            if (material.HasProperty("_EmissionColor")) {
-                Color col = material.GetColor("_Color") * emission;
-                material.SetColor("_EmissionColor", col);
-            }
+        if (bright > 0.5f) {
+            if (material.HasProperty("_UseEmissiveIntensity")) material.SetInt("_UseEmissiveIntensity", 1);
+            if (material.HasProperty("_EmissiveExposureWeight")) material.SetFloat("_EmissiveExposureWeight", 0.0f);
         }
         //
         if (glow > 0.0f) {
@@ -296,7 +290,6 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
         //
         else if (alphaMode == 3 && hasAlpha) {  // Alpha EMISSIVE (not supported)
-            //
         }
 
         // Color
@@ -308,12 +301,11 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
 
         //
-        if (bright > 0.0f || light > 0.0f) {
-            float emission = Math.Max(bright, light);
-            material.EnableKeyword("_EMISSION");
+        if (bright > 0.5f) {
+            material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.BakedEmissive;
+            //material.EnableKeyword("_Emission");
             if (material.HasProperty("_EmissionColor")) {
-                Color col = material.GetColor("_Color") * emission;
-                material.SetColor("_EmissionColor", col);
+                material.SetColor("_EmissionColor", new Color(colorRed, colorGreen, colorBlue, transparent));
             }
         }
         //
@@ -372,7 +364,6 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
         //
         else if (alphaMode == 3 && hasAlpha) {  // Alpha EMISSIVE (not supported)
-            //
         }
 
         // Color
@@ -384,12 +375,11 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
 
         //
-        if (bright > 0.0f || light > 0.0f) {
-            float emission = Math.Max(bright, light);
-            material.EnableKeyword("_EMISSION");
+        if (bright > 0.5f) {	// 0.0 or 1.0
+            material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.BakedEmissive;
+            //material.EnableKeyword("_EMISSION");
             if (material.HasProperty("_EmissionColor")) {
-                Color col = material.GetColor("_Color") * emission;
-                material.SetColor("_EmissionColor", col);
+                material.SetColor("_EmissionColor", new Color(colorRed, colorGreen, colorBlue, transparent));
             }
         }
         //
