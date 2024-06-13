@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.5
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.7
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -272,6 +272,9 @@ public sealed class SelectOARShader : AssetPostprocessor
                     material.SetFloat("_Surface", 1.0f);
                     material.SetOverrideTag("RenderType", "Transparent");
                 }
+                if (transparent<0.01f) {
+                    if (material.HasProperty("_BlendModePreserveSpecular")) material.SetFloat("_BlendModePreserveSpecular", 0.0f);
+                }
             }
         }
         //
@@ -294,7 +297,7 @@ public sealed class SelectOARShader : AssetPostprocessor
             material.SetColor("_Color", new Color(colorRed, colorGreen, colorBlue, transparent));
         }
 
-        //
+        /*
         if (bright > 0.5f) {
             material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.BakedEmissive;
             //material.EnableKeyword("_Emission");
@@ -302,7 +305,7 @@ public sealed class SelectOARShader : AssetPostprocessor
                 material.SetColor("_EmissionColor", new Color(colorRed, colorGreen, colorBlue, transparent));
             }
         }
-        //
+        */
         if (glow > 0.0f) {
             if (material.HasProperty("_Glossiness")) material.SetFloat("_Glossiness", glow);
         }
@@ -401,7 +404,7 @@ public sealed class SelectOARShader : AssetPostprocessor
         }
         else {
             if (material.HasProperty("_SpecularHighlights")) material.SetFloat("_SpecularHighlights", 0.0f);
-            if (material.HasProperty("_GlossyReflections"))  material.SetFloat("_GlossyReflections",  0.0f);
+            //if (material.HasProperty("_GlossyReflections"))  material.SetFloat("_GlossyReflections",  0.0f);
         }
 
         return;
