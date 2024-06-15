@@ -130,9 +130,8 @@ public sealed class SelectOARShader : AssetPostprocessor
     Material OnAssignMaterialModel(Material material, Renderer renderer)
     {
         //Debug.Log("Renderer = " + renderer.name);
-        string materialName = material.name;
         string currentFolder = Path.GetDirectoryName(assetPath);
-        string materialPath = string.Format("{0}\\{1}\\{2}.mat", currentFolder, MaterialFolder, materialName);
+        string materialPath = string.Format("{0}\\{1}\\{2}.mat", currentFolder, MaterialFolder, material.name);
 
         Material mt = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
         if (mt != null) {
@@ -140,16 +139,18 @@ public sealed class SelectOARShader : AssetPostprocessor
             return material;
         }
         
+        bool ret = false;
         if (GeneralShader == HDRP_Shader) {
-            SetMaterialShader_HDRP(material);
+            ret = SetMaterialShader_HDRP(material);
         }
         else if (GeneralShader == URP_Shader) {
-            SetMaterialShader_URP(material);
+            ret = SetMaterialShader_URP(material);
         }
         else { 
-            SetMaterialShader_BRP(material);
+            ret = SetMaterialShader_BRP(material);
         }        
         //
+        //if (ret) AssetDatabase.CreateAsset(material, materialPath);
         AssetDatabase.CreateAsset(material, materialPath);
 
         return material;
@@ -159,10 +160,10 @@ public sealed class SelectOARShader : AssetPostprocessor
     /**
      * High Definition Render Pipeline (HDRP)
      */
-    void SetMaterialShader_HDRP(Material material)
+    bool SetMaterialShader_HDRP(Material material)
     {
-        string materialName = material.name;
-        getParamsFromMaterialName(materialName);
+        bool ret = getParamsFromMaterialName(material.name);
+        if (!ret) return ret;
 
         material.shader = Shader.Find(GeneralShader);
 
@@ -236,17 +237,17 @@ public sealed class SelectOARShader : AssetPostprocessor
             }
         }
         
-        return;
+        return true;
     }
 
 
     /**
      * Universal Render Pipeline (URP)
      */
-    void SetMaterialShader_URP(Material material)
+    bool SetMaterialShader_URP(Material material)
     {
-        string materialName = material.name;
-        getParamsFromMaterialName(materialName);
+        bool ret = getParamsFromMaterialName(material.name);
+        if (!ret) return ret;
 
         material.shader = Shader.Find(GeneralShader);
         if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.0f);
@@ -323,17 +324,17 @@ public sealed class SelectOARShader : AssetPostprocessor
             if (material.HasProperty("_SpecularHighlights")) material.SetFloat("_SpecularHighlights", 0.0f);
         }
         
-        return;
+        return true;
     }
 
 
     /**
      * Bult-in Render Pioeline  (BRP)
      */
-    void SetMaterialShader_BRP(Material material)
+    bool SetMaterialShader_BRP(Material material)
     {
-        string materialName = material.name;
-        getParamsFromMaterialName(materialName);
+        bool ret = getParamsFromMaterialName(material.name);
+        if (!ret) return false;
 
         material.shader = Shader.Find(GeneralShader);
 
@@ -407,13 +408,14 @@ public sealed class SelectOARShader : AssetPostprocessor
             //if (material.HasProperty("_GlossyReflections"))  material.SetFloat("_GlossyReflections",  0.0f);
         }
 
-        return;
+        return true;
     }
 
 
 
-    private void getParamsFromMaterialName(string name)
+    private bool getParamsFromMaterialName(string name)
     {
+        bool  ret = false;
         int atr_len = 32;    // MTRL_ATTR_LEN /3*4 (36/3*4 = 32)
         //
         if (name.Length >= atr_len) {
@@ -453,12 +455,14 @@ public sealed class SelectOARShader : AssetPostprocessor
                     if (cutoff > 0.9f) cutoff = 0.9f;
                     if (has_alp == 1) hasAlpha = true;
                     else              hasAlpha = false;
+                    ret = true;
                 }
                 catch {
                     UnityEngine.Debug.Log("SelectOARShader: Base64 Decode Error = " + enc);
                 }
             }
         }
+        return ret;
     }
     
 }
