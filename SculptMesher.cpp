@@ -253,6 +253,7 @@ void  SculptMesh::GenerateMeshData(void)
             for (int j=0; j<ys; j++) sculptImage[j][0] = sculptImage[j][xs-1];
         }
     }
+
     Vector<double> topPole    = sculptImage[0][xs/2];
     Vector<double> bottomPole = sculptImage[ys-1][xs/2];
     xs = (int)sculptImage[0].size();

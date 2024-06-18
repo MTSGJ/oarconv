@@ -499,6 +499,7 @@ bool  OARTool::GetDataInfo()
         //print_tList(stderr, landdataFiles);
         //print_tList(stderr, assetsFiles);
         //print_tList(stderr, objectsFiles);
+/*
         PRINT_MESG("*** ASSETS LIST ***\n");
         tList* lst = assetsFiles;
         if (lst!=NULL && lst->ldat.id==TLIST_ANCHOR_NODE) lst = lst->next;
@@ -506,6 +507,7 @@ bool  OARTool::GetDataInfo()
             PRINT_MESG("KEY:%s  VAL:%s\n", (char*)lst->ldat.key.buf, (char*)lst->ldat.val.buf);
             lst = lst->next;
         }
+*/
     }
 
     return true;
