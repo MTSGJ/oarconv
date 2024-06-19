@@ -210,12 +210,12 @@ bool  SculptMesh::Image2Coords(MSGraph<uByte> grd)
             //
             for (int i=0; i<xsize; i++) {
                 if (i%2==0 || i==xsize-1) {
-
+                    //
                     int offset = i*xscale + offsetY;
                     double rval = sculpt.gp[offset];                // R
                     double gval = sculpt.gp[offset + psize];        // G
                     double bval = sculpt.gp[offset + psize*2];      // B
-
+                    //
                     if (mirror) row.push_back(Vector<double>(-rval, gval, bval));
                     else        row.push_back(Vector<double>( rval, gval, bval));
                 }
@@ -253,7 +253,6 @@ void  SculptMesh::GenerateMeshData(void)
             for (int j=0; j<ys; j++) sculptImage[j][0] = sculptImage[j][xs-1];
         }
     }
-
     Vector<double> topPole    = sculptImage[0][xs/2];
     Vector<double> bottomPole = sculptImage[ys-1][xs/2];
     xs = (int)sculptImage[0].size();
@@ -279,14 +278,44 @@ void  SculptMesh::GenerateMeshData(void)
     else if (type==SCULPT_TYPE_TORUS) {
         sculptImage.push_back(sculptImage[0]);
     }
-
     ys = (int)sculptImage.size();
 
     //
     double du = 1.0/(ox-1);
     double dv = 1.0/(oy-1);
+    for (int j=0; j<ys; j++) {
+        for (int i=0; i<xs; i++) {
+            coords.push_back(sculptImage[j][i]);
+            normals.push_back(Vector<double>(0.0, 0.0, 0.0));
+            uvs.push_back(UVMap<double>(du*i, 1.0-dv*j));
+        }
+    }
+
     int   p1, p2, p3, p4;
-    //
+    for (int j=0; j<ys-1; j++) {
+        int jj = j*xs;
+        for (int i=0; i<xs-1; i++) {
+            p1 = i  + jj;
+            p2 = p1 + 1;
+            p3 = p1 + xs;
+            p4 = p2 + xs;
+
+            ContourTriIndex t1, t2;
+            if (!invert) {
+                t1.mlt_set(p1, p3, p4);
+                t2.mlt_set(p1, p4, p2);
+            }
+            else {
+                t1.mlt_set(p1, p4, p3);
+                t2.mlt_set(p1, p2, p4);
+            }
+            //
+            sculptTriIndex.push_back(t1);
+            sculptTriIndex.push_back(t2);
+        }
+    }
+
+/*
     for (int j=0; j<ys; j++) {
         int jj = j*xs;
         for (int i=xs-1; i>=0; i--) {
@@ -302,7 +331,7 @@ void  SculptMesh::GenerateMeshData(void)
             if (i>0 && j>0) {
                 ContourTriIndex t1, t2;
                 //
-                if (invert) {
+                if (!invert) {
                     t1.mlt_set(p1, p3, p4);
                     t2.mlt_set(p1, p4, p2);
                 }
@@ -316,6 +345,7 @@ void  SculptMesh::GenerateMeshData(void)
             }
         }
     }
+*/
 
     if (flipUV) {
         execFlipUV();
@@ -456,7 +486,6 @@ void  SculptMesh::execScale(double x, double y, double z)
         sculptTriArray[i] = tri;
     }
 }
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
