@@ -1,9 +1,8 @@
-﻿
-/**
+﻿/**
 @brief   This is rewrite code of SculptMesh.cs of OpenSim for JunkBox_Lib.
 
 @file    SculptMesher.cpp
-@author  Fumi.Iseki  iseki@rsch.tuis.ac.jp
+@author  Fumi.Iseki  iseki@solar-system.tuis.ac.jp
 @version 1.1
 @date    2015 5/27
 
@@ -19,37 +18,37 @@
  * see also http://wiki.secondlife.com/wiki/Sculpted_Prims:_Technical_Explanation
  * see also OpenSim/Region/Physics/Meshing/SculptMesh.cs
  * see also Viewer_Source: indra\llmath\llvolume.cpp: sculptGenerateMapVertices()
- * We got advice from Janus Dugong 
+ * We got advice from Janus Dugong
  *
  * OpenSim CONTRIBUTORS.TXT is in OpenSim.License directory.
  */
 
-/*
- * Copyright (c) Contributors
- * See CONTRIBUTORS.TXT for a full list of copyright holders.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the OpenSimulator Project nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE DEVELOPERS ``AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ /*
+  * Copyright (c) Contributors
+  * See CONTRIBUTORS.TXT for a full list of copyright holders.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+  *     * Redistributions of source code must retain the above copyright
+  *       notice, this list of conditions and the following disclaimer.
+  *     * Redistributions in binary form must reproduce the above copyright
+  *       notice, this list of conditions and the following disclaimer in the
+  *       documentation and/or other materials provided with the distribution.
+  *     * Neither the name of the OpenSimulator Project nor the
+  *       names of its contributors may be used to endorse or promote products
+  *       derived from this software without specific prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPERS ``AS IS'' AND ANY
+  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL THE CONTRIBUTORS BE LIABLE FOR ANY
+  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
 
 #include "SculptMesher.h"
 
@@ -59,6 +58,7 @@ using namespace jbxl;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+//
 // ScupltMesh Class
 //
 
@@ -70,8 +70,8 @@ void  SculptMesh::init(int typ)
     yscale = 2;
 
     flipUV = false;
-    flipU  = false;
-    flipV  = false;
+    flipU = false;
+    flipV = false;
 
     sizetype = SCULPT_SIZE_OTHER;
     //
@@ -79,7 +79,6 @@ void  SculptMesh::init(int typ)
 }
 
 
-//
 void  SculptMesh::clear(void)
 {
     clear_data();
@@ -87,7 +86,6 @@ void  SculptMesh::clear(void)
 }
 
 
-//
 void  SculptMesh::clear_data(void)
 {
     coords.clear();
@@ -99,7 +97,6 @@ void  SculptMesh::clear_data(void)
 }
 
 
-//
 void  SculptMesh::clear_image(void)
 {
     int rnum = (int)sculptImage.size();
@@ -110,7 +107,6 @@ void  SculptMesh::clear_image(void)
 }
 
 
-//
 void  SculptMesh::set_type(int stype)
 {
     int chkinv, chkmir;
@@ -127,9 +123,8 @@ void  SculptMesh::set_type(int stype)
 }
 
 
-//
 MSGraph<double> SculptMesh::MakeSculptImage(MSGraph<uByte> grd)
-{ 
+{
     MSGraph<double> sculpt;
     sculpt.state = SCULPT_IMAGE_ERROR;
     if (grd.isNull() || grd.zs<3) return sculpt;
@@ -137,11 +132,11 @@ MSGraph<double> SculptMesh::MakeSculptImage(MSGraph<uByte> grd)
     int psize = grd.xs*grd.ys;
 
     double pixScale = 1.0/256.0;
-    int    offsetA = 0;         // アルファチャンネルが存在する場合のオフセット
-    bool   reverse = false;     // true: BGR
+    int    offsetA = 0;            // アルファチャンネルが存在する場合のオフセット
+    bool   reverse = false;        // true: BGR
 
     //
-    if (grd.color==GRAPH_COLOR_RGB  || grd.color==GRAPH_COLOR_RGBA) {
+    if (grd.color==GRAPH_COLOR_RGB || grd.color==GRAPH_COLOR_RGBA) {
         // nop
     }
     else if (grd.color==GRAPH_COLOR_XRGB || grd.color==GRAPH_COLOR_ARGB) {
@@ -155,21 +150,21 @@ MSGraph<double> SculptMesh::MakeSculptImage(MSGraph<uByte> grd)
         reverse = true;
     }
     else {
-        return sculpt;      // none supported color mode
+        return sculpt;        // none supported color mode
     }
 
     sculpt.getm(grd.xs, grd.ys, 3);
 
     for (int j=0; j<grd.ys; j++) {
-        int offsetYS = j*grd.xs;
+        int offsetYS = j * grd.xs;
         int offsetYY = offsetYS + offsetA;
         //
         for (int i=0; i<grd.xs; i++) {
             int offsetS = i + offsetYS;
             int offsetX = i + offsetYY;
-            double rval = grd.gp[offsetX];              // R
-            double gval = grd.gp[offsetX + psize];      // G
-            double bval = grd.gp[offsetX + psize*2];    // B
+            double rval = (double)grd.gp[offsetX];              // R
+            double gval = (double)grd.gp[offsetX + psize];      // G
+            double bval = (double)grd.gp[offsetX + psize * 2];  // B
             //
             if (reverse) {
                 double swap = rval;
@@ -177,20 +172,21 @@ MSGraph<double> SculptMesh::MakeSculptImage(MSGraph<uByte> grd)
                 bval = swap;
             }
 
-            sculpt.gp[offsetS          ] = rval*pixScale - 0.5f;
-            sculpt.gp[offsetS + psize  ] = gval*pixScale - 0.5f;
-            sculpt.gp[offsetS + psize*2] = bval*pixScale - 0.5f;
+            sculpt.gp[offsetS          ] = rval * pixScale - 0.5f;
+            sculpt.gp[offsetS + psize  ] = gval * pixScale - 0.5f;
+            sculpt.gp[offsetS + psize*2] = bval * pixScale - 0.5f;
         }
     }
     sculpt.state = SCULPT_IMAGE_NORMAL;
-    
+
     return sculpt;
 }
 
 
 //
+//
 bool  SculptMesh::Image2Coords(MSGraph<uByte> grd)
-{ 
+{
     if (grd.isNull() || grd.zs<3) return false;
 
     sizetype = GetSculptScale(grd.xs, grd.ys, &xscale, &yscale);
@@ -210,17 +206,17 @@ bool  SculptMesh::Image2Coords(MSGraph<uByte> grd)
             //
             for (int i=0; i<xsize; i++) {
                 if (i%2==0 || i==xsize-1) {
-                    //
-                    int offset = i*xscale + offsetY;
+
+                    int offset  = i*xscale + offsetY;
                     double rval = sculpt.gp[offset];                // R
                     double gval = sculpt.gp[offset + psize];        // G
-                    double bval = sculpt.gp[offset + psize*2];      // B
-                    //
+                    double bval = sculpt.gp[offset + psize * 2];    // B
+
                     if (mirror) row.push_back(Vector<double>(-rval, gval, bval));
-                    else        row.push_back(Vector<double>( rval, gval, bval));
+                    else        row.push_back(Vector<double>(rval, gval, bval));
                 }
             }
-            if (row.size()>0) sculptImage.push_back(row);
+            if (row.size() > 0) sculptImage.push_back(row);
         }
     }
 
@@ -229,7 +225,6 @@ bool  SculptMesh::Image2Coords(MSGraph<uByte> grd)
 }
 
 
-//
 void  SculptMesh::GenerateMeshData(void)
 {
     clear_data();
@@ -253,9 +248,9 @@ void  SculptMesh::GenerateMeshData(void)
             for (int j=0; j<ys; j++) sculptImage[j][0] = sculptImage[j][xs-1];
         }
     }
-    Vector<double> topPole    = sculptImage[0][xs/2];
-    Vector<double> bottomPole = sculptImage[ys-1][xs/2];
     xs = (int)sculptImage[0].size();
+    Vector<double> topPole = sculptImage[0][xs/2];
+    Vector<double> bottomPole = sculptImage[ys-1][xs/2];
 
     // Y方向境界処理
     if (type==SCULPT_TYPE_SPHERE) {
@@ -270,7 +265,7 @@ void  SculptMesh::GenerateMeshData(void)
         }
         else {
             for (int i=0; i<xs; i++) {
-                sculptImage[0][i]    = topPole;
+                sculptImage[0][i] = topPole;
                 sculptImage[ys-1][i] = bottomPole;
             }
         }
@@ -281,43 +276,12 @@ void  SculptMesh::GenerateMeshData(void)
     ys = (int)sculptImage.size();
 
     //
-    double du = 1.0/(ox-1);
-    double dv = 1.0/(oy-1);
-    for (int j=0; j<ys; j++) {
-        for (int i=0; i<xs; i++) {
-            coords.push_back(sculptImage[j][i]);
-            normals.push_back(Vector<double>(0.0, 0.0, 0.0));
-            uvs.push_back(UVMap<double>(du*i, 1.0-dv*j));
-        }
-    }
-
+    double du = 1.0f/(xs-1);
+    double dv = 1.0f/(ys-1);
     int   p1, p2, p3, p4;
-    for (int j=0; j<ys-1; j++) {
-        int jj = j*xs;
-        for (int i=0; i<xs-1; i++) {
-            p1 = i  + jj;
-            p2 = p1 + 1;
-            p3 = p1 + xs;
-            p4 = p2 + xs;
-
-            ContourTriIndex t1, t2;
-            if (!invert) {
-                t1.mlt_set(p1, p3, p4);
-                t2.mlt_set(p1, p4, p2);
-            }
-            else {
-                t1.mlt_set(p1, p4, p3);
-                t2.mlt_set(p1, p2, p4);
-            }
-            //
-            sculptTriIndex.push_back(t1);
-            sculptTriIndex.push_back(t2);
-        }
-    }
-
-/*
+    //
     for (int j=0; j<ys; j++) {
-        int jj = j*xs;
+        int jj = j * xs;
         for (int i=xs-1; i>=0; i--) {
             p4 = i + jj;
             p3 = p4 - 1;
@@ -330,8 +294,7 @@ void  SculptMesh::GenerateMeshData(void)
 
             if (i>0 && j>0) {
                 ContourTriIndex t1, t2;
-                //
-                if (!invert) {
+                if (invert) {
                     t1.mlt_set(p1, p3, p4);
                     t2.mlt_set(p1, p4, p2);
                 }
@@ -345,14 +308,13 @@ void  SculptMesh::GenerateMeshData(void)
             }
         }
     }
-*/
 
     if (flipUV) {
         execFlipUV();
     }
     else {
-        if (flipU)  execFlipU();
-        if (flipV)  execFlipV();
+        if (flipU) execFlipU();
+        if (flipV) execFlipV();
     }
 
     ComputeTriNormals(xs, ys);
@@ -360,7 +322,6 @@ void  SculptMesh::GenerateMeshData(void)
 }
 
 
-//
 void  SculptMesh::ComputeTriNormals(int xs, int ys)
 {
     int tnum = (int)sculptTriIndex.size();
@@ -376,7 +337,7 @@ void  SculptMesh::ComputeTriNormals(int xs, int ys)
     for (int i=0; i<nnum; i++) normals[i] = normals[i].normalize();
 
     // X方向境界（繋ぎ目）の処理
-    if (type!=SCULPT_TYPE_PLANE) {
+    if (type != SCULPT_TYPE_PLANE) {
         for (int j=0; j<ys; j++) {
             int jj = j*xs;
             Vector<double> normal = (normals[jj] + normals[xs-1+jj]).normalize();
@@ -384,12 +345,11 @@ void  SculptMesh::ComputeTriNormals(int xs, int ys)
             normals[xs-1+jj] = normal;
         }
     }
-    
+
     return;
 }
 
 
-//
 void  SculptMesh::SetupTriArray(void)
 {
     int tnum = (int)sculptTriIndex.size();
@@ -413,7 +373,6 @@ void  SculptMesh::SetupTriArray(void)
 }
 
 
-//
 void  SculptMesh::execShift(double x, double y, double z)
 {
     Vector<double> vert;
@@ -436,11 +395,10 @@ void  SculptMesh::execShift(double x, double y, double z)
 }
 
 
-//
 void  SculptMesh::execRotate(Quaternion<double> q)
 {
     int cnum = (int)coords.size();
-    for (int i=0; i<cnum; i++) coords[i]  = VectorRotation(coords[i], q);
+    for (int i=0; i<cnum; i++) coords[i] = VectorRotation(coords[i], q);
 
     int nnum = (int)normals.size();
     for (int i=0; i<nnum; i++) normals[i] = VectorRotation(normals[i], q);
@@ -459,7 +417,6 @@ void  SculptMesh::execRotate(Quaternion<double> q)
 }
 
 
-//
 void  SculptMesh::execScale(double x, double y, double z)
 {
     Vector<double> m(x, y, z);
@@ -488,6 +445,7 @@ void  SculptMesh::execScale(double x, double y, double z)
 }
 
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 
@@ -499,7 +457,7 @@ int  jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale)
 {
     int type = SCULPT_SIZE_OTHER;
 
-    if      (width==32 && height==32)  type = SCULPT_SIZE_32x32;
+    if (width==32 && height==32)       type = SCULPT_SIZE_32x32;
     else if (width==64 && height==64)  type = SCULPT_SIZE_64x64;
     else if (width==32 && height==128) type = SCULPT_SIZE_32x128;
     else if (width==16 && height==256) type = SCULPT_SIZE_16x256;
@@ -509,8 +467,8 @@ int  jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale)
     *yscale = 1;
 
     if (width*height>4096) {
-        *xscale = width /64;
-        *yscale = height/64;
+        *xscale = width  / 64;
+        *yscale = height / 64;
         //*xscale = width /128 + 1;
         //*yscale = height/128 + 1;
         //
@@ -518,7 +476,7 @@ int  jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale)
         if (*yscale==0) *yscale = 1;
     }
 
-    DEBUG_MODE PRINT_MESG("JBXL::GetSculptScale: type = %d, scale = (%d, %d)\n", type, *xscale, *yscale); 
+    DEBUG_MODE PRINT_MESG("JBXL::GetSculptScale: type = %d, scale = (%d, %d)\n", type, *xscale, *yscale);
     return type;
 }
 
