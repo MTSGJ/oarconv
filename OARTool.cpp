@@ -310,6 +310,7 @@ minorVersion : データファイルのマイナーバージョン．
 xsize, ysize : リージョンの xyサイズ．通常 xsize, ysize は等しい．
 isMegaRegion : メガリージョンかどうか？
 objectsNum   : オブジェクト数（Terrainを除く）
+terrainNum   : Terrain (settings ファイル) の数
 settingsFiles: Files list in settings
 terrainsFiles: Files list in terrains
 landdataFiles: Files list in landata    
@@ -494,9 +495,9 @@ bool  OARTool::GetDataInfo()
         PRINT_MESG("GetDataInfo: OAR File Version = %d.%d\n", majorVersion, minorVersion);
         if (isMegaRegion) PRINT_MESG("GetDataInfo: Region is MegaRegion\n");
         PRINT_MESG("GetDataInfo: Region Size = (%d, %d)\n", xsize, ysize);
-        //print_tList(stderr, settingsFiles);
-        //print_tList(stderr, terrainsFiles);
-        //print_tList(stderr, landdataFiles);
+        print_tList(stderr, settingsFiles);
+        print_tList(stderr, terrainsFiles);
+        print_tList(stderr, landdataFiles);
         //print_tList(stderr, assetsFiles);
         //print_tList(stderr, objectsFiles);
 /*

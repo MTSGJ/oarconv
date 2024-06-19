@@ -148,7 +148,7 @@ TerrainTexWeight  TerrainTool::GetTextureWeight(int x, int y)
 
 
 /**
-@sa http://www.nsl.tuis.ac.jp/xoops/modules/xpwiki/?OpenSim%2FDiorama2
+@sa https://polaris.star-dust.jp/pukiwiki/?OpenSim/Diorama2
 */
 int  TerrainTool::GetDioramaMode(void)
 {
@@ -252,6 +252,8 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
     if (msg.isNull()) return msg;
 
     TerrainTexWeight tweight;
+    memset(&tweight, sizeof(tweight), 0);
+
     float vscale = scale/xsize;
     for (int k=0; k<3; k++) {
         PRINT_MESG("GenerateWeightedTexture: generating region texture. %d/3\n", k+1);
@@ -570,7 +572,34 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
 TerrainTexWeight  jbxl::GetTerrainBaseTextureWeight(float h, float min, float max)
 {
     TerrainTexWeight tweight;
+    memset(&tweight, sizeof(tweight), 0);
 
+/*
+    float dh = (max - min)/7.0;
+
+    // Low
+    if      (h <= min)    tweight.w[0] = 1.0f;
+    else if (h >= min+dh) tweight.w[0] = 0.0f;
+    else                  tweight.w[0] = (min + dh - h)/dh;
+    //
+    if      (h <= min)                       tweight.w[1] = 0.0f;
+    else if (h >= min      && h <= min+  dh) tweight.w[1] = (h - min)/dh;
+    else if (h >= min+  dh && h <= min+3*dh) tweight.w[1] = 1.0f;
+    else if (h >= min+3*dh && h <= min+4*dh) tweight.w[1] = (min + 4*dh - h)/dh;
+    else if (h >= min+4*dh)                  tweight.w[1] = 0.0f;
+
+    if      (h <= min+3*dh)                  tweight.w[2] = 0.0f;
+    else if (h >= min+3*dh && h <= min+4*dh) tweight.w[2] = (h - min - 3*dh)/dh;
+    else if (h >= min+4*dh && h <= min+6*dh) tweight.w[2] = 1.0f;
+    else if (h >= min+6*dh && h <= min+7*dh) tweight.w[2] = (min + 7*dh - h)/dh;
+    else if (h >= min+7*dh)                  tweight.w[2] = 0.0f;
+    // High
+    if      (h >= min+7*dh) tweight.w[3] = 1.0f;
+    else if (h <= min+6*dh) tweight.w[3] = 0.0f;
+    else                    tweight.w[3] = (h - min - 6*dh)/dh;
+*/
+
+    // Referring to Singularity Viewer
     float hsz = (max - min)/2.0f;
     float dh  = hsz/4.0f;
 
@@ -598,6 +627,7 @@ TerrainTexWeight  jbxl::GetTerrainBaseTextureWeight(float h, float min, float ma
     else if (h>h2+dh) tweight.w[3] = 1.0f;
     else              tweight.w[3] = 0.5f/dh*(h - h2+dh);
 
+    //
     float ttl = tweight.w[0] + tweight.w[1] + tweight.w[2] + tweight.w[3];
     if (ttl<=0.0f) {
         tweight.w[1] = 1.0f;
@@ -620,7 +650,7 @@ x, yが intでなのは，スケーリングファクタとの演算があるか
 縮尺は X方向 scale/vp.xs倍, Y方向 scale/vp.ys倍となる．
 従って，スケーリングファクタが vpのサイズと同じ場合は縮尺は 1になる．@n
  
-@param vp      画像データの入ったMSGraph<uByte>変数へのポインタ．
+@param vp     画像データの入ったMSGraph<uByte>変数へのポインタ．
 @param scale  スケーリングファクタ．
 @param x      画像の X座標
 @param y      画像の Y座標
