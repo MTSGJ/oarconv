@@ -276,29 +276,21 @@ void  SculptMesh::GenerateMeshData(void)
     }
     ys = (int)sculptImage.size();
 
-    /* DEBUG_MODE */ PRINT_MESG("SculptMesh::GenerateMeshData(): Sculpt Type = %d, Size = (%d, %d)\n", type, xs, ys);
+    DEBUG_MODE PRINT_MESG("SculptMesh::GenerateMeshData(): Sculpt Type = %d, Size = (%d, %d)\n", type, xs, ys);
 
     //
-    double du = 1.0f/(xs-1);
-    double dv = 1.0f/(ys-1);
+    double du = 1.0f/(ox-1);
+    double dv = 1.0f/(oy-1);
     int   p1, p2, p3, p4;
 
-    coords.clear();
-    normals.clear();
-    uvs.clear();
-
-    int n = 0;
     for (int j=0; j<ys; j++) {
         for (int i=0; i<xs; i++) {
             coords.push_back(sculptImage[j][i]);
             normals.push_back(Vector<double>(0.0, 0.0, 0.0));
             uvs.push_back(UVMap<double>(du*i, 1.0-dv*j));
-            PRINT_MESG("%d => (%d, %d)->(%f, %f)", n, i, j, du*i, 1.0-dv*j);
-            n++;
         }
     }
 
-    n = 0;
     for (int j=1; j<ys; j++) {
         int jj = j*xs;
         for (int i=1; i<xs; i++) {
@@ -315,16 +307,12 @@ void  SculptMesh::GenerateMeshData(void)
             else {
                 t1.mlt_set(p1, p3, p4);
                 t2.mlt_set(p1, p4, p2);
-                PRINT_MESG("(%d, %d, %d)", p1, p3, p4);
-                PRINT_MESG("(%d, %d, %d)", p1, p4, p2);
             }
             //
             sculptTriIndex.push_back(t1);
             sculptTriIndex.push_back(t2);
-            n += 2;
         }
     }
-    PRINT_MESG("==================> %d", n);
     
     /*
     for (int j=0; j<ys; j++) {
