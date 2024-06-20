@@ -200,18 +200,18 @@ bool  SculptMesh::Image2Coords(MSGraph<uByte> grd)
 
     //
     for (int j=0; j<ysize; j++) {
-        if (j%2==1 || j==0) {
+        if (j%2==1 || j==0 || j==ysize-1) {
             SCULPT_VECTOR_ARRAY row;
             int offsetY = j*yscale*sculpt.xs;
             //
             for (int i=0; i<xsize; i++) {
-                if (i%2==0 || i==xsize-1) {
-
+                if (i%2==0 || i==0 || i==xsize-1) {
+                    //
                     int offset  = i*xscale + offsetY;
                     double rval = sculpt.gp[offset];                // R
                     double gval = sculpt.gp[offset + psize];        // G
                     double bval = sculpt.gp[offset + psize * 2];    // B
-
+                    //
                     if (mirror) row.push_back(Vector<double>(-rval, gval, bval));
                     else        row.push_back(Vector<double>(rval, gval, bval));
                 }
@@ -248,9 +248,10 @@ void  SculptMesh::GenerateMeshData(void)
             for (int j=0; j<ys; j++) sculptImage[j][0] = sculptImage[j][xs-1];
         }
     }
-    xs = (int)sculptImage[0].size();
+
     Vector<double> topPole = sculptImage[0][xs/2];
     Vector<double> bottomPole = sculptImage[ys-1][xs/2];
+    xs = (int)sculptImage[0].size();
 
     // Y方向境界処理
     if (type==SCULPT_TYPE_SPHERE) {
@@ -275,14 +276,60 @@ void  SculptMesh::GenerateMeshData(void)
     }
     ys = (int)sculptImage.size();
 
+    /* DEBUG_MODE */ PRINT_MESG("SculptMesh::GenerateMeshData(): Sculpt Type = %d, Size = (%d, %d)\n", type, xs, ys);
+
     //
     double du = 1.0f/(xs-1);
     double dv = 1.0f/(ys-1);
     int   p1, p2, p3, p4;
-    //
+
+    coords.clear();
+    normals.clear();
+    uvs.clear();
+
+    int n = 0;
     for (int j=0; j<ys; j++) {
-        int jj = j * xs;
-        for (int i=xs-1; i>=0; i--) {
+        for (int i=0; i<xs; i++) {
+            coords.push_back(sculptImage[j][i]);
+            normals.push_back(Vector<double>(0.0, 0.0, 0.0));
+            uvs.push_back(UVMap<double>(du*i, 1.0-dv*j));
+            PRINT_MESG("%d => (%d, %d)->(%f, %f)", n, i, j, du*i, 1.0-dv*j);
+            n++;
+        }
+    }
+
+    n = 0;
+    for (int j=1; j<ys; j++) {
+        int jj = j*xs;
+        for (int i=1; i<xs; i++) {
+            p4 = i + jj;
+            p3 = p4 - 1;
+            p2 = p4 - xs;
+            p1 = p3 - xs;
+
+            ContourTriIndex t1, t2;
+            if (invert) {
+                t1.mlt_set(p1, p4, p3);
+                t2.mlt_set(p1, p2, p4);
+            }
+            else {
+                t1.mlt_set(p1, p3, p4);
+                t2.mlt_set(p1, p4, p2);
+                PRINT_MESG("(%d, %d, %d)", p1, p3, p4);
+                PRINT_MESG("(%d, %d, %d)", p1, p4, p2);
+            }
+            //
+            sculptTriIndex.push_back(t1);
+            sculptTriIndex.push_back(t2);
+            n += 2;
+        }
+    }
+    PRINT_MESG("==================> %d", n);
+    
+    /*
+    for (int j=0; j<ys; j++) {
+        int jj = j*xs;
+        for (int i=0; i<xs; i++) {
             p4 = i + jj;
             p3 = p4 - 1;
             p2 = p4 - xs;
@@ -308,6 +355,7 @@ void  SculptMesh::GenerateMeshData(void)
             }
         }
     }
+    */
 
     if (flipUV) {
         execFlipUV();

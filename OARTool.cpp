@@ -885,6 +885,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
 
             shapes[s].affineTrans.addShift(-xsize/2.0f + terrainShift.x, -ysize/2.0f + terrainShift.y, -waterHeight + terrainShift.z);
             MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, ptr_skin_joint);
+ PRINT_MESG("MESH= %d %d", mesh->num_vcount, mesh->num_node);
             //
             if (mesh!=NULL) {
                 if (isRequiredTexture(format)) {    // STLの場合は不必要

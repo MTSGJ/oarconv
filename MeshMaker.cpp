@@ -61,6 +61,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: tridata from TriPolygonDataFromSculptJP2K()\n");
         //facetdata = ContourBaseDataFromSculptJP2K(path, param.sculptType);
         tridata = TriPolygonDataFromSculptJP2K(path, param.sculptType, &tri_num);
+PRINT_MESG("XXXX> %d", tri_num);
         if (tridata==NULL) {
             PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: No Sculpt Mesh Data [%s]\n", path);
             param.free();
@@ -91,6 +92,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     // ポリゴンデータの追加とTextureデータの設定
     if (tridata!=NULL) {            // for TriPolygonData
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: for TriPolygonData\n");
+PRINT_MESG("OOOOOOOOOO> %d", facet_num);
         for (int i=0; i<facet_num; i++) {
             int facet = i;
             if (facet>=PRIM_MATERIAL_NUM) facet = PRIM_MATERIAL_NUM - 1;
@@ -106,7 +108,8 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
                     ::free(paramstr);
                 }
                 //
-                DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: addData(%d/%d)\n", i, facet_num-1);
+                DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: addData(%d/%d)\n", i+1, facet_num);
+PRINT_MESG("XXXXXXXX> %d", tri_num);
                 data->addData(tridata, tri_num, i, &mparam, useBrep);
                 mparam.free();
             }
