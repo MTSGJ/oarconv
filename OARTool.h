@@ -139,14 +139,14 @@ public:
     void   ReadTerrainData(void);
 
     // DAE/OBJ/STL
-    int    GenerateObjectFromDataIndex(int startnum=1, int stopnum=-1, bool useBrep=true, char* command=NULL);
-    int    GenerateObjectFromDataList(int* objlist, int objnum, bool useBrep=true, char* command=NULL);
-    void   GenerateObjectFromDataFile(char* fname, bool useBrep=true, char* command=NULL);
+    int    GenerateObjectFromDataIndex(int startnum=1, int stopnum=-1, bool useBrep=false, char* command=NULL);
+    int    GenerateObjectFromDataList(int* objlist, int objnum, bool useBrep=false, char* command=NULL);
+    void   GenerateObjectFromDataFile(char* fname, bool useBrep=false, char* command=NULL);
 
     int    GenerateTerrainDataFile (void);
 
     // オブジェクト データ
-    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=true, char* command=NULL);
+    void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=false, char* command=NULL);
     void   outputSolidData(int format, const char* fname, void* solid);
     void   freeSolidData(int format, void* solid);
 

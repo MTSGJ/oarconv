@@ -778,7 +778,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     }
     // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-        useBrep = true;
+        useBrep = false;
         command = NULL;
         stl = new BrepSolidList();
     }
