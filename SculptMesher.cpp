@@ -70,8 +70,8 @@ void  SculptMesh::init(int typ)
     yscale = 2;
 
     flipUV = false;
-    flipU = false;
-    flipV = false;
+    flipU  = false;
+    flipV  = false;
 
     sizetype = SCULPT_SIZE_OTHER;
     //
@@ -194,20 +194,19 @@ bool  SculptMesh::Image2Coords(MSGraph<uByte> grd)
     MSGraph<double> sculpt = MakeSculptImage(grd);
     if (sculpt.isNull()) return false;
 
-    int xsize = grd.xs/xscale;
-    int ysize = grd.ys/yscale;
+    int xsize = sculpt.xs;
+    int ysize = sculpt.ys;
     int psize = sculpt.xs*sculpt.ys;
-
     //
     for (int j=0; j<ysize; j++) {
-        if (j%2==1 || j==0 || j==ysize-1) {
+        if ((j-1)%yscale==0 || j==0 || j==ysize-1) {
             SCULPT_VECTOR_ARRAY row;
-            int offsetY = j*yscale*sculpt.xs;
+            int offsetY = j*sculpt.xs;
             //
             for (int i=0; i<xsize; i++) {
-                if (i%2==0 || i==0 || i==xsize-1) {
+                if (i%xscale==0 || i==0 || i==xsize-1) {
                     //
-                    int offset  = i*xscale + offsetY;
+                    int offset  = i + offsetY;
                     double rval = sculpt.gp[offset];                // R
                     double gval = sculpt.gp[offset + psize];        // G
                     double bval = sculpt.gp[offset + psize * 2];    // B
@@ -219,7 +218,6 @@ bool  SculptMesh::Image2Coords(MSGraph<uByte> grd)
             if (row.size() > 0) sculptImage.push_back(row);
         }
     }
-
     sculpt.free();
     return true;
 }
@@ -284,7 +282,7 @@ void  SculptMesh::GenerateMeshData(void)
     int   p1, p2, p3, p4;
 
     for (int j=0; j<ys; j++) {
-        for (int i=0; i<xs; i++) {
+        for (int i=xs-1; i>=0; i--) {
             coords.push_back(sculptImage[j][i]);
             normals.push_back(Vector<double>(0.0, 0.0, 0.0));
             uvs.push_back(UVMap<double>(du*i, 1.0-dv*j));
@@ -293,14 +291,14 @@ void  SculptMesh::GenerateMeshData(void)
 
     for (int j=1; j<ys; j++) {
         int jj = j*xs;
-        for (int i=1; i<xs; i++) {
+        for (int i=xs-1; i>0; i--) {
             p4 = i + jj;
             p3 = p4 - 1;
             p2 = p4 - xs;
             p1 = p3 - xs;
 
             ContourTriIndex t1, t2;
-            if (invert) {
+            if (!invert) {
                 t1.mlt_set(p1, p4, p3);
                 t2.mlt_set(p1, p2, p4);
             }
@@ -313,37 +311,6 @@ void  SculptMesh::GenerateMeshData(void)
             sculptTriIndex.push_back(t2);
         }
     }
-    
-    /*
-    for (int j=0; j<ys; j++) {
-        int jj = j*xs;
-        for (int i=0; i<xs; i++) {
-            p4 = i + jj;
-            p3 = p4 - 1;
-            p2 = p4 - xs;
-            p1 = p3 - xs;
-
-            coords.push_back(sculptImage[j][i]);
-            normals.push_back(Vector<double>(0.0, 0.0, 0.0));
-            uvs.push_back(UVMap<double>(du*i, 1.0-dv*j));
-
-            if (i>0 && j>0) {
-                ContourTriIndex t1, t2;
-                if (invert) {
-                    t1.mlt_set(p1, p3, p4);
-                    t2.mlt_set(p1, p4, p2);
-                }
-                else {
-                    t1.mlt_set(p1, p4, p3);
-                    t2.mlt_set(p1, p2, p4);
-                }
-                //
-                sculptTriIndex.push_back(t1);
-                sculptTriIndex.push_back(t2);
-            }
-        }
-    }
-    */
 
     if (flipUV) {
         execFlipUV();
@@ -493,14 +460,18 @@ int  jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale)
 {
     int type = SCULPT_SIZE_OTHER;
 
-    if (width==32 && height==32)       type = SCULPT_SIZE_32x32;
+    if      (width==32 && height==32)  type = SCULPT_SIZE_32x32;
     else if (width==64 && height==64)  type = SCULPT_SIZE_64x64;
     else if (width==32 && height==128) type = SCULPT_SIZE_32x128;
     else if (width==16 && height==256) type = SCULPT_SIZE_16x256;
     else if (width==8  && height==512) type = SCULPT_SIZE_8x512;
 
-    *xscale = 1;
-    *yscale = 1;
+    *xscale = 2;
+    *yscale = 2;
+    if (type==SCULPT_SIZE_32x32) {
+        *xscale = 1;
+        *yscale = 1;
+    }
 
     if (width*height>4096) {
         *xscale = width  / 64;
