@@ -1,6 +1,7 @@
 #
 1.7.10
-    Discontinue use of BREP (useBrep = false), Abnormal at scalpted prims
+    upsfate UE Plugins
+    Discontinue use of BREP (useBrep = false) for sculpted prims, Abnormal at scalpted prims
 
 1.7.9
     change SelectOARShader.cs 
