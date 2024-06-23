@@ -66,6 +66,7 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
             param.free();
             return NULL;
         }
+        useBrep = false;    // required!
         facet_num = 1;
     }
 
