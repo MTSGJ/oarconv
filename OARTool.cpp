@@ -347,7 +347,7 @@ bool  OARTool::GetDataInfo()
         del_all_xml(&arc_xml);
     }
     else {
-        PRINT_MESG("OARTool::GetDataInfo: ERROR: not found archive file! [%sarchive.xml]\n", pathOAR.buf);
+        PRINT_MESG("OARTool::GetDataInfo: ERROR: not found archive file! [archive.xml at %s]\n", pathOAR.buf);
         return false;
     }
 
@@ -1254,6 +1254,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                     //
                     int err = 0;
                     #ifdef WIN32
+                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: convert command: %s\n", command);
                         STARTUPINFOA sinfo;             // コマンドの実行
                         PROCESS_INFORMATION pinfo;
                         memset(&sinfo, 0, sizeof(STARTUPINFO));
@@ -1265,6 +1266,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                         CloseHandle(pinfo.hProcess);
                         if (ret!=WAIT_OBJECT_0) err = 1;
                     #else
+                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: convert command: %s\n", command);
                         int ret = system(command);
                         err = WEXITSTATUS(ret);
                     #endif
@@ -1276,7 +1278,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                             DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: SUCCESS: texture %s is converted.\n", texture);
                         }
                         else {
-                            PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d).\n", texture, err);
+                            PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error.\n", texture);
                         }
                     }
                 }
