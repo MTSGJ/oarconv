@@ -1272,7 +1272,12 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                         PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d).\n", texture, err);
                     }
                     else {
-                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: SUCCESS: texture %s is converted.\n", texture);
+                        if (file_exist((char*)outpath.buf)) {
+                            DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: SUCCESS: texture %s is converted.\n", texture);
+                        }
+                        else {
+                            PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d).\n", texture, err);
+                        }
                     }
                 }
             }
