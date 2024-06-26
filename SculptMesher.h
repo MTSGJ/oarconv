@@ -115,6 +115,8 @@ public:
 
     int   xscale;
     int   yscale;
+    int   xshift;
+    int   yshift;
 
     bool  invert;
     bool  mirror;
@@ -163,7 +165,7 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 
-int  GetSculptScale(int width, int height, int* xscale, int* yscale);
+int  GetSculptResolution(int width, int height, int* xscale, int* yscale, int* xshift, int* yshift);
 
 
 }

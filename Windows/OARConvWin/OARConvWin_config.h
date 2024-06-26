@@ -7,9 +7,9 @@
 
 
 #ifdef WIN64
-#define		OARCONV_VERSION			"OARConvWin 1.7.10 (x64)"
+#define		OARCONV_VERSION			"OARConvWin 1.7.11 (x64)"
 #else
-#define		OARCONV_VERSION			"OARConvWin 1.7.10 (x86)"
+#define		OARCONV_VERSION			"OARConvWin 1.7.11 (x86)"
 #endif
 // change also OARConvWin.rc2 -> Version
 
@@ -26,6 +26,4 @@
 //
 // OpenJpeg openjpeg-1.2 の DllOpenJPEG.vcxproj を使用
 //#define     OPENJPEG_VER             12
-
-
 

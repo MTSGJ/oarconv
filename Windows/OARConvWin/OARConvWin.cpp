@@ -708,7 +708,7 @@ int   COARConvWinApp::_convertAllData()
             SetGlobalCounter(progress);
         }
         //
-        num = oarTool.GenerateObjectFromDataIndex(strtnum, stopnum, false, (char*)comDecomp.buf);
+        num = oarTool.GenerateObjectFromDataIndex(strtnum, stopnum, true, (char*)comDecomp.buf);
         //
         if (progress != NULL) {
             progress->PutFill();
@@ -768,7 +768,7 @@ int   COARConvWinApp::_convertSelectedData(int* selectedObjs, int objNums)
         SetGlobalCounter(progress);
     }
     //
-    num = oarTool.GenerateObjectFromDataList(selectedObjs, objNums, false, (char*)comDecomp.buf);
+    num = oarTool.GenerateObjectFromDataList(selectedObjs, objNums, true, (char*)comDecomp.buf);
     //
     if (progress != NULL) {
         progress->PutFill();
@@ -813,7 +813,7 @@ int   COARConvWinApp::_convertOneData(int index)
 
     //////////////////////////////////////////////////////////////////////////////
     // Convert
-    int num = oarTool.GenerateObjectFromDataIndex(index, index, false, (char*)comDecomp.buf);
+    int num = oarTool.GenerateObjectFromDataIndex(index, index, true, (char*)comDecomp.buf);
 
     return num;
 }
