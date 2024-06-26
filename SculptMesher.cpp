@@ -481,18 +481,23 @@ int  jbxl::GetSculptResolution(int width, int height, int* xscale, int* yscale, 
     // 1024x16, 512x512, 128x64(?)
     if (width*height>4096) {
         int v = 1024;
-        double r = width/height;
+        double r = (double)width/(double)height;
         int s = (int)(sqrt(v/r) + 0.5);
+        if (s==0) s = 1;
         int t = width*height/(v*s);
         //
         *xscale = (int)(sqrt((double)s*t) + 0.5);
         *yscale = *xscale;
 
-        PRINT_MESG("JBXL::GetSculptResolutio: image size = (%d, %d), scale = (%d, %d)\n", width, height, *xscale, *yscale);        
         if (*xscale==0) *xscale = 2;
         if (*yscale==0) *yscale = 2;
+        PRINT_MESG("JBXL::GetSculptResolutio: image size = (%d, %d), scale = (%d, %d)\n", width, height, *xscale, *yscale);        
+    }
+    else if (type==SCULPT_SIZE_OTHER) {
+        PRINT_MESG("JBXL::GetSculptResolutio: image size = (%d, %d), scale = (%d, %d)\n", width, height, *xscale, *yscale);        
     }
     if (width>height) *yshift = 0;
+    
 
     DEBUG_MODE PRINT_MESG("JBXL::GetSculptResolutio: size = (%d, %d), scale = (%d, %d), shift = (%d, %d)\n", width, height, *xscale, *yscale, *xshift, *yshift);
     return type;
