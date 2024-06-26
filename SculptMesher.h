@@ -70,13 +70,37 @@
 #define  SCULPT_TYPE_INVERT     64
 #define  SCULPT_TYPE_MIRROR     128
 
-#define  SCULPT_SIZE_32x32      1
-#define  SCULPT_SIZE_64x64      2
-#define  SCULPT_SIZE_32x128     3
-#define  SCULPT_SIZE_16x256     4
-#define  SCULPT_SIZE_8x512      5
-#define  SCULPT_SIZE_OTHER      99
+#define  SCULPT_SIZE_32x32      0
 
+#define  SCULPT_SIZE_64x64      10
+#define  SCULPT_SIZE_32x128     11
+#define  SCULPT_SIZE_128x32     12
+#define  SCULPT_SIZE_8x512      13
+#define  SCULPT_SIZE_512x8      14
+#define  SCULPT_SIZE_16x256     15
+#define  SCULPT_SIZE_256x16     16
+
+#define  SCULPT_SIZE_64x128     20
+#define  SCULPT_SIZE_128x64     21
+
+#define  SCULPT_SIZE_128x128    30
+#define  SCULPT_SIZE_64x256     31
+#define  SCULPT_SIZE_256x64     32  // not
+#define  SCULPT_SIZE_32x512     33
+#define  SCULPT_SIZE_512x32     34
+#define  SCULPT_SIZE_16x1024    35  // not
+#define  SCULPT_SIZE_1024x16    36
+
+#define  SCULPT_SIZE_256x256    40
+
+#define  SCULPT_SIZE_256x512    50  // not
+#define  SCULPT_SIZE_512x256    50
+
+#define  SCULPT_SIZE_512x512    60
+
+#define  SCULPT_SIZE_1024x1024  70
+
+#define  SCULPT_SIZE_OTHER      99
 
 #define  SCULPT_IMAGE_ERROR     -1
 #define  SCULPT_IMAGE_NORMAL    0
@@ -165,7 +189,8 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 
-int  GetSculptResolution(int width, int height, int* xscale, int* yscale, int* xshift, int* yshift);
+int   GetSculptScale(int width, int height, int* xscale, int* yscale, int* xshift, int* yshift);
+void  GetSculptResolution(int width, int height, int* s, int* t);
 
 
 }

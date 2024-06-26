@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.7
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.8
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -43,7 +43,7 @@ public sealed class SelectOARShader : AssetPostprocessor
 
     private const string HDRP_Shader   = "HDRP/Lit";
     private const string URP_Shader    = "Universal Render Pipeline/Lit";
-    private const string BINP_Shader   = "Standard";
+    private const string BRP_Shader    = "Standard";
     private const string NONE_Shader   = "NONE";
 
     private bool createdMaterialFolder = false;
@@ -91,7 +91,7 @@ public sealed class SelectOARShader : AssetPostprocessor
             shdr = Shader.Find(_generalShader);
         }
         if (shdr == null) {
-            _generalShader = BINP_Shader;
+            _generalShader = BRP_Shader;
             shdr = Shader.Find(_generalShader);
         }
         if (shdr == null) {
@@ -114,10 +114,11 @@ public sealed class SelectOARShader : AssetPostprocessor
             TransShader         = "Unlit/Transparent";                                  // Alpha Blending
             TransCutShader      = "Unlit/Transparent";                                  // Alpha Cutoff
         }
-        else if (GeneralShader == BINP_Shader) {
+        else if (GeneralShader == BRP_Shader) {
             TreeShader          = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";
             EarthShader         = "Standard";
-            TransShader         = "Unlit/Transparent";                                   // Alpha Blending
+            //TransShader         = "Unlit/Transparent";                                   // Alpha Blending
+            TransShader         = "Legacy Shaders/Transparent/Diffuse";                  // Alpha Blending
             TransCutShader      = "Legacy Shaders/Transparent/Cutout/Diffuse";           // Alpha Cutoff
         }
 

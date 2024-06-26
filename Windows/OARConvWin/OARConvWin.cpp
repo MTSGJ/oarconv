@@ -761,7 +761,7 @@ int   COARConvWinApp::_convertSelectedData(int* selectedObjs, int objNums)
     int num = 0;
     CProgressBarDLG* progress = new CProgressBarDLG(_T(""), TRUE);
     if (progress != NULL) {
-        if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
+        if (appParam.outputFormat == JBXL_3D_FORMAT_DAE)      progress->SetTitle("Convert to DAE Files");
         else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
         else                                                  progress->SetTitle("Convert to STL Files");
         progress->Start(prognum);

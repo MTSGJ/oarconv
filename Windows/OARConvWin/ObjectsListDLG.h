@@ -60,4 +60,6 @@ public:
 	afx_msg void OnBnClickedObjlistClear();
 	virtual void OnOK();
 	afx_msg void OnBnClickedObjlistPreview();
+	afx_msg void OnEnChangeEditFndstr();
+	afx_msg void OnLbnSelchangeListObjects();
 };

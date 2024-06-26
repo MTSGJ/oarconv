@@ -189,7 +189,7 @@ bool  SculptMesh::Image2Coords(MSGraph<uByte> grd)
 {
     if (grd.isNull() || grd.zs<3) return false;
 
-    sizetype = GetSculptResolution(grd.xs, grd.ys, &xscale, &yscale, &xshift, &yshift);
+    sizetype = GetSculptScale(grd.xs, grd.ys, &xscale, &yscale, &xshift, &yshift);
 
     MSGraph<double> sculpt = MakeSculptImage(grd);
     if (sculpt.isNull()) return false;
@@ -456,51 +456,142 @@ void  SculptMesh::execScale(double x, double y, double z)
 　Sculpted Prim のスケールを決定する．
 
 */
-int  jbxl::GetSculptResolution(int width, int height, int* xscale, int* yscale, int* xshift, int* yshift)
+int   jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale, int* xshift, int* yshift)
 {
     int type = SCULPT_SIZE_OTHER;
+    int s, t;
+
     // default
     *xscale = 2;
     *yscale = 2;
     *xshift = 0;
-    *yshift = 1;
+    *yshift = 0;
 
     if (width ==0) width  = 1;
     if (height==0) height = 1;
+
+    GetSculptResolution(width, height, &s, &t);
 
     if (width==32 && height==32) {
         type = SCULPT_SIZE_32x32;
         *xscale = 1;
         *yscale = 1;
     }
-    else if (width==64 && height== 64) type = SCULPT_SIZE_64x64;
-    else if (width==32 && height==128) type = SCULPT_SIZE_32x128;
-    else if (width==16 && height==256) type = SCULPT_SIZE_16x256;
-    else if (width== 8 && height==512) type = SCULPT_SIZE_8x512;
-
-    // 1024x16, 512x512, 128x64(?)
-    if (width*height>4096) {
-        int v = 1024;
-        double r = (double)width/(double)height;
-        int s = (int)(sqrt(v/r) + 0.5);
-        if (s==0) s = 1;
-        int t = width*height/(v*s);
-        //
-        *xscale = (int)(sqrt((double)s*t) + 0.5);
-        *yscale = *xscale;
-
-        if (*xscale==0) *xscale = 2;
-        if (*yscale==0) *yscale = 2;
-        PRINT_MESG("JBXL::GetSculptResolutio: image size = (%d, %d), scale = (%d, %d)\n", width, height, *xscale, *yscale);        
+    else if (width==64 && height== 64) {
+        type = SCULPT_SIZE_64x64;
     }
-    else if (type==SCULPT_SIZE_OTHER) {
-        PRINT_MESG("JBXL::GetSculptResolutio: image size = (%d, %d), scale = (%d, %d)\n", width, height, *xscale, *yscale);        
+    else if (width==32 && height==128) {
+        type = SCULPT_SIZE_32x128;
     }
-    if (width>height) *yshift = 0;
+    else if (width==16 && height==256) {
+        type = SCULPT_SIZE_16x256;
+    }
+    else if (width==8 && height==512) {
+        type = SCULPT_SIZE_8x512;
+    }
+    else if (width==512 && height==8) {
+        type = SCULPT_SIZE_512x8;
+    }
+    else if (width==128 && height==32) {
+        type = SCULPT_SIZE_128x32;
+    }
+
+    else if (width==256 && height==16) {
+        type = SCULPT_SIZE_256x16;
+        *xscale = 2;
+        *yscale = 1;
+    }
+
+    //
+    else if (width==128 && height==64) {
+        //????
+        type = SCULPT_SIZE_128x64;
+    }
+    //
+    else if (width==64 && height==128) {
+        //????
+        type = SCULPT_SIZE_64x128;
+        //*xscale = 1;
+        //*yscale = 1;
+    }
+
+    else if (width==1024 && height==16) {
+        type = SCULPT_SIZE_1024x16;
+        *xscale = 4;
+        *yscale = 4;
+    }
+    else if (width==128 && height==128) {
+        type = SCULPT_SIZE_128x128;
+        *xscale = 4;
+        *yscale = 4;
+    }
+    else if (width==64 && height==256) {
+        type = SCULPT_SIZE_64x256;
+        *xscale = 4;
+        *yscale = 16;
+    }
+    else if (width==512 && height==32) {
+        type = SCULPT_SIZE_512x32;
+        *xscale = 4;
+        *yscale = 4;
+    }
+    else if (width==256 && height==256) {
+        type = SCULPT_SIZE_256x256;
+        *xscale = 8;
+        *yscale = 8;
+    }
+    else if (width==512 && height==256) {
+        type = SCULPT_SIZE_512x512;
+        *xscale = 11;
+        *yscale = 11;
+    }
+    else if (width==512 && height==512) {
+        type = SCULPT_SIZE_512x512;
+        *xscale = 16;
+        *yscale = 16;
+    }
+    else if (width==1024 && height==1024) {
+        type = SCULPT_SIZE_1024x1024;
+        *xscale = 32;
+        *yscale = 32;
+    }
+    else {
+        *xscale = width/s;
+        *yscale = height/t;
+    }
+    if (width*height<=4096) *yshift = 1;
     
-
-    DEBUG_MODE PRINT_MESG("JBXL::GetSculptResolutio: size = (%d, %d), scale = (%d, %d), shift = (%d, %d)\n", width, height, *xscale, *yscale, *xshift, *yshift);
+    PRINT_MESG("JBXL::GetSculptScale: type = %d, size = (%d, %d), st = (%d, %d), scale = (%d, %d)/(%d, %d), yshift = %d\n", 
+                                                                type, width, height, s, t, *xscale, *yscale, width/s, height/t, *yshift);
     return type;
 }
 
+
+
+void  jbxl::GetSculptResolution(int width, int height, int* s, int* t)
+{
+    int v = Min(1024, width*height/4);
+    double r = (double)width/(double)height;
+    *s = (int)(sqrt(v/r) + 0.5);
+    *s = Max(*s, 4);
+    *t = v/(*s);
+    *t = Max(*t, 4);
+    *s = v/(*t);
+    if (*s==0) *s = 1;
+    if (*t==0) *t = 1;
+    
+    int xs, ys;
+    if (width > height) {
+        xs = Max(*s, *t);
+        ys = Min(*s, *t);
+    }
+    else {
+        xs = Min(*s, *t);
+        ys = Max(*s, *t);
+    }
+    *s = xs;
+    *t = ys;
+
+    return;
+}
 

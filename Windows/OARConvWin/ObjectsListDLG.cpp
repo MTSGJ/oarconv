@@ -87,6 +87,8 @@ BEGIN_MESSAGE_MAP(CObjectsListDLG, CDialogEx)
     ON_BN_CLICKED(IDC_OBJLIST_FIND,  &CObjectsListDLG::OnBnClickedObjlistFind)
     ON_BN_CLICKED(IDC_OBJLIST_CLEAR, &CObjectsListDLG::OnBnClickedObjlistClear)
     ON_BN_CLICKED(IDC_OBJLIST_PREVIEW, &CObjectsListDLG::OnBnClickedObjlistPreview)
+    ON_EN_CHANGE(IDC_EDIT_FNDSTR, &CObjectsListDLG::OnEnChangeEditFndstr)
+    ON_LBN_SELCHANGE(IDC_LIST_OBJECTS, &CObjectsListDLG::OnLbnSelchangeListObjects)
 END_MESSAGE_MAP()
 
 
@@ -378,4 +380,16 @@ void  CObjectsListDLG::OpenOBJInfoDLG(int idx)
 	winApp->showOBJInfoDLG(obj);
 
 	return;
+}
+
+
+void CObjectsListDLG::OnEnChangeEditFndstr()
+{
+    findBBox->GetFocus();
+}
+
+
+void CObjectsListDLG::OnLbnSelchangeListObjects()
+{
+    convBBox->GetFocus();
 }
