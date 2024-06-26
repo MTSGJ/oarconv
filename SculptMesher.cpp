@@ -477,14 +477,15 @@ int   jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale, int*
         *xscale = 1;
         *yscale = 1;
     }
+    //
     else if (width==64 && height== 64) {
         type = SCULPT_SIZE_64x64;
     }
     else if (width==32 && height==128) {
         type = SCULPT_SIZE_32x128;
     }
-    else if (width==16 && height==256) {
-        type = SCULPT_SIZE_16x256;
+    else if (width==128 && height==32) {
+        type = SCULPT_SIZE_128x32;
     }
     else if (width==8 && height==512) {
         type = SCULPT_SIZE_8x512;
@@ -492,34 +493,28 @@ int   jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale, int*
     else if (width==512 && height==8) {
         type = SCULPT_SIZE_512x8;
     }
-    else if (width==128 && height==32) {
-        type = SCULPT_SIZE_128x32;
+    else if (width==16 && height==256) {
+        type = SCULPT_SIZE_16x256;
     }
-
     else if (width==256 && height==16) {
         type = SCULPT_SIZE_256x16;
         *xscale = 2;
-        *yscale = 1;
+        *yscale = 2;
     }
-
     //
+     else if (width==64 && height==128) {
+        //????
+        type = SCULPT_SIZE_64x128;
+        *xscale = 2;
+        *yscale = 2;
+    }
     else if (width==128 && height==64) {
         //????
         type = SCULPT_SIZE_128x64;
+        *xscale = 2;
+        *yscale = 2;
     }
     //
-    else if (width==64 && height==128) {
-        //????
-        type = SCULPT_SIZE_64x128;
-        //*xscale = 1;
-        //*yscale = 1;
-    }
-
-    else if (width==1024 && height==16) {
-        type = SCULPT_SIZE_1024x16;
-        *xscale = 4;
-        *yscale = 4;
-    }
     else if (width==128 && height==128) {
         type = SCULPT_SIZE_128x128;
         *xscale = 4;
@@ -529,32 +524,63 @@ int   jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale, int*
         type = SCULPT_SIZE_64x256;
         *xscale = 4;
         *yscale = 16;
+    }/*
+    else if (width==256 && height==64) {
+        type = SCULPT_SIZE_256x64;
+        *xscale = 4;
+        *yscale = 16;
+    }*/
+    else if (width==32 && height==512) {
+        type = SCULPT_SIZE_32x512;
+        *xscale = 4;
+        *yscale = 4;
     }
     else if (width==512 && height==32) {
         type = SCULPT_SIZE_512x32;
         *xscale = 4;
         *yscale = 4;
+    }/*
+     else if (width==16 && height==1024) {
+        type = SCULPT_SIZE_16x1024;
+        *xscale = 4;
+        *yscale = 4;
+    }*/
+    else if (width==1024 && height==16) {
+        type = SCULPT_SIZE_1024x16;
+        *xscale = 4;
+        *yscale = 4;
     }
+    //
     else if (width==256 && height==256) {
         type = SCULPT_SIZE_256x256;
         *xscale = 8;
         *yscale = 8;
     }
+
+    /*
+    else if (width==256 && height==512) {
+        type = SCULPT_SIZE_256x512;
+        *xscale = 11;
+        *yscale = 11;
+    }*/
     else if (width==512 && height==256) {
-        type = SCULPT_SIZE_512x512;
+        type = SCULPT_SIZE_512x256;
         *xscale = 11;
         *yscale = 11;
     }
+    //
     else if (width==512 && height==512) {
         type = SCULPT_SIZE_512x512;
         *xscale = 16;
         *yscale = 16;
     }
+    //
     else if (width==1024 && height==1024) {
         type = SCULPT_SIZE_1024x1024;
         *xscale = 32;
         *yscale = 32;
     }
+    //
     else {
         *xscale = width/s;
         *yscale = height/t;
@@ -572,7 +598,7 @@ void  jbxl::GetSculptResolution(int width, int height, int* s, int* t)
 {
     int v = Min(1024, width*height/4);
     double r = (double)width/(double)height;
-    *s = (int)(sqrt(v/r) + 0.5);
+    *s = (int)(sqrt(v/r) /* + 0.5*/);
     *s = Max(*s, 4);
     *t = v/(*s);
     *t = Max(*t, 4);
