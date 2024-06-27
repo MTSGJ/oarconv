@@ -1,0 +1,4 @@
+Landmark version 2
+region_id 03c5601e-dd81-4292-9a4f-cd8de51be077
+local_pos 126.3362 128.0008 23.29657
+region_handle 1101710651287296

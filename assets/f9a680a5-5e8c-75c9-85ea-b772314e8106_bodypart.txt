@@ -1,0 +1,63 @@
+LLWearable version 22
+New Hair
+
+	permissions 0
+	{
+		base_mask	7fffffff
+		owner_mask	7fffffff
+		group_mask	00000000
+		everyone_mask	00000000
+		next_owner_mask	00082000
+		creator_id	bfba4a0e-a5ca-4ffd-b7f6-a05ef5dd98d0
+		owner_id	bfba4a0e-a5ca-4ffd-b7f6-a05ef5dd98d0
+		last_owner_id	bfba4a0e-a5ca-4ffd-b7f6-a05ef5dd98d0
+		group_id	00000000-0000-0000-0000-000000000000
+	}
+	sale_info	0
+	{
+		sale_type	not
+		sale_price	10
+	}
+type 2
+parameters 39
+16 .97
+31 .74
+112 0
+113 0
+114 0
+115 .5
+119 0
+130 0
+131 0
+132 0
+133 0
+134 0
+135 0
+136 0
+137 0
+140 0
+141 0
+142 0
+143 -4
+166 0
+167 0
+168 0
+169 0
+177 0
+181 -1
+182 -1
+183 -1
+184 0
+192 0
+674 -1
+750 .7
+752 .5
+754 -1
+755 0
+757 -.58
+762 0
+763 0
+785 0
+789 0
+textures 1
+4 7ca39b4c-bd19-4699-aff7-f93fd03d3e7b

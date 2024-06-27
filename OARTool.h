@@ -31,14 +31,15 @@ namespace  jbxl {
 
 
 #ifdef WIN32
-  #define  OART_JP2_DECOMP_COM      "opj_decompress.exe -i \"%s\" -o \"%s\""
+  #define  OART_JP2_DECOMP_COM      "opj_decompress.exe -i \"%s\" -o \"%s\" -allow_partial"
 #else
   #if OPENJPEG_VER >= JP2K_VER_20
-    #define  OART_JP2_DECOMP_COM    "/usr/local/bin/opj_decompress -i \"%s\" -o \"%s\" >/dev/null 2>&1"
+    #define  OART_JP2_DECOMP_COM    "/usr/local/bin/opj_decompress -i \"%s\" -o \"%s\" -allow_partial >/dev/null 2>&1"
   #else
     #define  OART_JP2_DECOMP_COM    "/usr/local/bin/j2k_to_image -i \"%s\" -o \"%s\" >/dev/null 2>&1"
   #endif
 #endif
+#define  OART_JP2_REPAIR_EXTN       ".repair_temp"
 
 #define  OART_FLAGS_PHANTOM         "Phantom"
 
