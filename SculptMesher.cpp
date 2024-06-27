@@ -68,6 +68,10 @@ void  SculptMesh::init(int typ)
 
     xscale = 2;
     yscale = 2;
+    xshift = 0;
+    yshift = 0;
+    xbndry = TRUE;
+    ybndry = TRUE;
 
     flipUV = false;
     flipU  = false;
@@ -184,27 +188,27 @@ MSGraph<double> SculptMesh::MakeSculptImage(MSGraph<uByte> grd)
 
 
 //
-//
 bool  SculptMesh::Image2Coords(MSGraph<uByte> grd)
 {
     if (grd.isNull() || grd.zs<3) return false;
 
-    sizetype = GetSculptScale(grd.xs, grd.ys, &xscale, &yscale, &xshift, &yshift);
+    sizetype = GetSculptScale(grd.xs, grd.ys);
 
     MSGraph<double> sculpt = MakeSculptImage(grd);
     if (sculpt.isNull()) return false;
 
-    int xsize = sculpt.xs;
-    int ysize = sculpt.ys;
-    int psize = sculpt.xs*sculpt.ys;
+    int  xsize = sculpt.xs;
+    int  ysize = sculpt.ys;
+    int  psize = sculpt.xs*sculpt.ys;
+
     //
     for (int j=0; j<ysize; j++) {
-        if ((j-yshift)%yscale==0 || j==0 || j==ysize-1) {
+        if ((j-yshift)%yscale==0 || (ybndry && (j==0 || j==ysize-1))) {
             SCULPT_VECTOR_ARRAY row;
-            int offsetY = j*sculpt.xs;
+            int offsetY = j*xsize;
             //
             for (int i=0; i<xsize; i++) {
-                if ((i-xshift)%xscale==0 || i==0 || i==xsize-1) {   // xshift is not used
+                if ((i-xshift)%xscale==0 || (xbndry && (i==0 || i==xsize-1))) {
                     //
                     int offset  = i + offsetY;
                     double rval = sculpt.gp[offset];                // R
@@ -456,28 +460,34 @@ void  SculptMesh::execScale(double x, double y, double z)
 　Sculpted Prim のスケールを決定する．
 
 */
-int   jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale, int* xshift, int* yshift)
+int  SculptMesh::GetSculptScale(int width, int height)
 {
     int type = SCULPT_SIZE_OTHER;
     int s, t;
 
     // default
-    *xscale = 2;
-    *yscale = 2;
-    *xshift = 0;
-    *yshift = 0;
+    xshift = 0;
+    yshift = 0;
+    xbndry = TRUE;
+    ybndry = TRUE;
 
     if (width ==0) width  = 1;
     if (height==0) height = 1;
 
     GetSculptResolution(width, height, &s, &t);
 
+    xscale = (int)(width /(double)s + 0.5);
+    yscale = (int)(height/(double)t + 0.5);
+    if (xscale==0) xscale = 1;
+    if (yscale==0) yscale = 1;
+    if (width*height<=8192) yshift = 1;
+    
+    // corrections
+    // 1024
     if (width==32 && height==32) {
         type = SCULPT_SIZE_32x32;
-        *xscale = 1;
-        *yscale = 1;
     }
-    //
+    // 4096
     else if (width==64 && height== 64) {
         type = SCULPT_SIZE_64x64;
     }
@@ -498,107 +508,71 @@ int   jbxl::GetSculptScale(int width, int height, int* xscale, int* yscale, int*
     }
     else if (width==256 && height==16) {
         type = SCULPT_SIZE_256x16;
-        *xscale = 2;
-        *yscale = 2;
+        ybndry = FALSE;
     }
-    //
+    //8192
      else if (width==64 && height==128) {
-        //????
         type = SCULPT_SIZE_64x128;
-        *xscale = 2;
-        *yscale = 2;
+        ybndry = FALSE;
     }
     else if (width==128 && height==64) {
-        //????
         type = SCULPT_SIZE_128x64;
-        *xscale = 2;
-        *yscale = 2;
+        ybndry = FALSE;
     }
-    //
+    // 16348
     else if (width==128 && height==128) {
         type = SCULPT_SIZE_128x128;
-        *xscale = 4;
-        *yscale = 4;
     }
     else if (width==64 && height==256) {
         type = SCULPT_SIZE_64x256;
-        *xscale = 4;
-        *yscale = 16;
-    }/*
+    }
     else if (width==256 && height==64) {
         type = SCULPT_SIZE_256x64;
-        *xscale = 4;
-        *yscale = 16;
-    }*/
+    }
     else if (width==32 && height==512) {
         type = SCULPT_SIZE_32x512;
-        *xscale = 4;
-        *yscale = 4;
     }
     else if (width==512 && height==32) {
         type = SCULPT_SIZE_512x32;
-        *xscale = 4;
-        *yscale = 4;
-    }/*
+    }
      else if (width==16 && height==1024) {
         type = SCULPT_SIZE_16x1024;
-        *xscale = 4;
-        *yscale = 4;
-    }*/
+    }
     else if (width==1024 && height==16) {
         type = SCULPT_SIZE_1024x16;
-        *xscale = 4;
-        *yscale = 4;
     }
-    //
+    // 65536
     else if (width==256 && height==256) {
         type = SCULPT_SIZE_256x256;
-        *xscale = 8;
-        *yscale = 8;
     }
-
-    /*
+    // 131972
     else if (width==256 && height==512) {
         type = SCULPT_SIZE_256x512;
-        *xscale = 11;
-        *yscale = 11;
-    }*/
+    }
     else if (width==512 && height==256) {
         type = SCULPT_SIZE_512x256;
-        *xscale = 11;
-        *yscale = 11;
     }
-    //
+    // 262144
     else if (width==512 && height==512) {
         type = SCULPT_SIZE_512x512;
-        *xscale = 16;
-        *yscale = 16;
     }
-    //
+    // 1048576
     else if (width==1024 && height==1024) {
         type = SCULPT_SIZE_1024x1024;
-        *xscale = 32;
-        *yscale = 32;
     }
-    //
-    else {
-        *xscale = width/s;
-        *yscale = height/t;
-    }
-    if (width*height<=4096) *yshift = 1;
     
-    PRINT_MESG("JBXL::GetSculptScale: type = %d, size = (%d, %d), st = (%d, %d), scale = (%d, %d)/(%d, %d), yshift = %d\n", 
-                                                                type, width, height, s, t, *xscale, *yscale, width/s, height/t, *yshift);
+    PRINT_MESG("JBXL::GetSculptScale: type = %d, size = (%d, %d), st = (%d, %d), scale = (%d, %d), shift = (%d, %d), boundary = (%d, %d)\n", 
+                                      type, width, height, s, t, xscale, yscale, xshift, yshift, xbndry, ybndry);
     return type;
 }
 
 
 
-void  jbxl::GetSculptResolution(int width, int height, int* s, int* t)
+void  SculptMesh::GetSculptResolution(int width, int height, int* s, int* t)
 {
     int v = Min(1024, width*height/4);
     double r = (double)width/(double)height;
-    *s = (int)(sqrt(v/r) /* + 0.5*/);
+    *s = (int)(sqrt(v/r));
     *s = Max(*s, 4);
     *t = v/(*s);
     *t = Max(*t, 4);
@@ -617,7 +591,7 @@ void  jbxl::GetSculptResolution(int width, int height, int* s, int* t)
     }
     *s = xs;
     *t = ys;
-
+ 
     return;
 }
 

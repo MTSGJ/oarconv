@@ -141,6 +141,8 @@ public:
     int   yscale;
     int   xshift;
     int   yshift;
+    int   xbndry;
+    int   ybndry;
 
     bool  invert;
     bool  mirror;
@@ -181,16 +183,10 @@ public:
     void  execFlipUV(void){int sz=(int)uvs.size();for(int i=0;i<sz;i++){uvs[i].u=1.0f-uvs[i].u;uvs[i].v=1.0f-uvs[i].v;}}
     void  execFlipU(void) {int sz=(int)uvs.size();for(int i=0;i<sz;i++){uvs[i].u=1.0f-uvs[i].u;}}
     void  execFlipV(void) {int sz=(int)uvs.size();for(int i=0;i<sz;i++){uvs[i].v=1.0f-uvs[i].v;}}
+
+    int   GetSculptScale(int width, int height);
+    void  GetSculptResolution(int width, int height, int* s, int* t);
 };
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-//
-
-int   GetSculptScale(int width, int height, int* xscale, int* yscale, int* xshift, int* yshift);
-void  GetSculptResolution(int width, int height, int* s, int* t);
 
 
 }
