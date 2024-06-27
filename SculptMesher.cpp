@@ -561,7 +561,7 @@ int  SculptMesh::GetSculptScale(int width, int height)
         type = SCULPT_SIZE_1024x1024;
     }
     
-    PRINT_MESG("JBXL::GetSculptScale: type = %d, size = (%d, %d), st = (%d, %d), scale = (%d, %d), shift = (%d, %d), boundary = (%d, %d)\n", 
+    DEBUG_MODE PRINT_MESG("JBXL::GetSculptScale: type = %d, size = (%d, %d), st = (%d, %d), scale = (%d, %d), shift = (%d, %d), boundary = (%d, %d)\n", 
                                       type, width, height, s, t, xscale, yscale, xshift, yshift, xbndry, ybndry);
     return type;
 }
