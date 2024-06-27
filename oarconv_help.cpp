@@ -42,7 +42,7 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   -h : display this help messages. \n");
     fprintf(fp, "   --help : display this help messages. \n");
     fprintf(fp, "\n");
-    fprintf(fp, " ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --dae --unity --joint \n");
+    fprintf(fp, " ex.) oarconv -i OAR -a /usr/local/opensim/bin:./assets --dae --unity --joint \n");
     fprintf(fp, " ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --obj --ue --dg -d\n");
     fprintf(fp, " ex.) oarconv -i OAR -s 0 -e 0 --dae --unity # output terrain data only\n");
     fprintf(fp, "\n");

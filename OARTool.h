@@ -39,6 +39,7 @@ namespace  jbxl {
     #define  OART_JP2_DECOMP_COM    "/usr/local/bin/j2k_to_image -i \"%s\" -o \"%s\" >/dev/null 2>&1"
   #endif
 #endif
+#define  OART_JP2_REPAIR_EXTN       ".repair_temp.jp2"
 
 #define  OART_FLAGS_PHANTOM         "Phantom"
 

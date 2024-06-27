@@ -956,6 +956,7 @@ llmeshファイルのヘッダ部分の keyを参照し，圧縮されたボデ�
 */
 tXML*  jbxl::GetLLsdXMLFromLLMesh(uByte* buf, int sz, const char* key)
 {
+    //print_hex(stderr, buf, sz);
     tXML* xml = llsd_bin_get_block_data(buf, sz, key);
     return xml;
 /*
