@@ -1192,7 +1192,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
         char* path = get_resource_path((char*)texture, assetsFiles);
         char* extn = get_file_extension(path);
         //
-        if (path!=NULL && extn!=NULL) {
+        if (path!=NULL && extn!=NULL && file_size(path)>0) {
             char* check_ext = (char*)ext_name;
             if (check_ext[0]=='.') check_ext = (char*)ext_name + 1;
 
