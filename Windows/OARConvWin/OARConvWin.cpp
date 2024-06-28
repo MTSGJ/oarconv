@@ -520,7 +520,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     if (file_exist_t((LPCTSTR)oarf)) tunlink((LPCTSTR)oarf);
 
     // Extract
-    CString mode = _T(" -zxvpf \"") + fname + _T("\" -o \"") + oarf + _T("\"");
+    CString mode = _T(" -zxvf \"") + fname + _T("\" -o \"") + oarf + _T("\"");
     char* md = ts2mbs((LPCTSTR)mode);
     ret = Tar(pMainFrame->m_hWnd, md, NULL, 0);
     if (ret) {
