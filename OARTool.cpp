@@ -1191,9 +1191,8 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
         //
         char* path = get_resource_path((char*)texture, assetsFiles);
         char* extn = get_file_extension(path);
-        int filesz = 0;
+        int filesz = file_size(path);
 
-        if (path!=NULL) filesz = file_size(path);
         if (filesz>0 && extn!=NULL) {
             char* check_ext = (char*)ext_name;
             if (check_ext[0]=='.') check_ext = (char*)ext_name + 1;
@@ -1310,7 +1309,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
         }
         // Lost
         else {
-            if (filesz<=0) {
+            if (filesz==0) {
                 PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s size is zero!\n", texture);
             }
             else {
@@ -1322,5 +1321,4 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
 
     return;
 }
-
 
