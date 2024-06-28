@@ -134,7 +134,7 @@ BOOL  COARConvWinApp::InitInstance()
     Enable3dControlsStatic();    // MFC と静的にリンクしている場合にはここを呼び出してください．
 
     SetRegistryKey(_T("OARConvWin by NSL"));
-    LoadStdProfileSettings(4);  // 標準の INI ファイルのオプションをロードします (MRU を含む)
+    LoadStdProfileSettings(4);   // 標準の INI ファイルのオプションをロードします (MRU を含む)
 
     ///////////////////////////////////////////////////////////////////////////////
     //
@@ -520,7 +520,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     if (file_exist_t((LPCTSTR)oarf)) tunlink((LPCTSTR)oarf);
 
     // Extract
-    CString mode = _T(" -zxvf \"") + fname + _T("\" -o \"") + oarf + _T("\"");
+    CString mode = _T(" -zxvpf \"") + fname + _T("\" -o \"") + oarf + _T("\"");
     char* md = ts2mbs((LPCTSTR)mode);
     ret = Tar(pMainFrame->m_hWnd, md, NULL, 0);
     if (ret) {
@@ -708,7 +708,7 @@ int   COARConvWinApp::_convertAllData()
             SetGlobalCounter(progress);
         }
         //
-        num = oarTool.GenerateObjectFromDataIndex(strtnum, stopnum, true, (char*)comDecomp.buf);
+        num = oarTool.GenerateObjectFromDataIndex(strtnum, stopnum, false, (char*)comDecomp.buf);
         //
         if (progress != NULL) {
             progress->PutFill();
@@ -768,7 +768,7 @@ int   COARConvWinApp::_convertSelectedData(int* selectedObjs, int objNums)
         SetGlobalCounter(progress);
     }
     //
-    num = oarTool.GenerateObjectFromDataList(selectedObjs, objNums, true, (char*)comDecomp.buf);
+    num = oarTool.GenerateObjectFromDataList(selectedObjs, objNums, false, (char*)comDecomp.buf);
     //
     if (progress != NULL) {
         progress->PutFill();
@@ -813,7 +813,7 @@ int   COARConvWinApp::_convertOneData(int index)
 
     //////////////////////////////////////////////////////////////////////////////
     // Convert
-    int num = oarTool.GenerateObjectFromDataIndex(index, index, true, (char*)comDecomp.buf);
+    int num = oarTool.GenerateObjectFromDataIndex(index, index, false, (char*)comDecomp.buf);
 
     return num;
 }

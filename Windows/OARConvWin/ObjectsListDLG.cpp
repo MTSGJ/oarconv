@@ -218,8 +218,12 @@ void CObjectsListDLG::OnBnClickedObjlistFind()
     }
     else {
         listLBox->SetSel(indxPos, FALSE);
-        listLBox->SetSel(findPos + 2);        // 少し下にスクロールして選択行を上に上げる
-        listLBox->SetSel(findPos + 2, FALSE);
+        int vscroll = 5;
+        if (findPos>=objNum - vscroll) {
+            vscroll = objNum - 1 - findPos;
+        }
+        listLBox->SetSel(findPos + vscroll);        // 少し下にスクロールして選択行を上に上げる
+        listLBox->SetSel(findPos + vscroll, FALSE);
         listLBox->SetSel(findPos);
     }
 
@@ -385,11 +389,35 @@ void  CObjectsListDLG::OpenOBJInfoDLG(int idx)
 
 void CObjectsListDLG::OnEnChangeEditFndstr()
 {
-    findBBox->GetFocus();
+    TCHAR buf[LNAME];
+
+    listLBox = (CListBox*)GetDlgItem(IDC_LIST_OBJECTS);
+    findEBox = (CEdit*)GetDlgItem(IDC_EDIT_FNDSTR);
+    findEBox->GetWindowText(buf, LNAME);
+    findStr = buf;
+
+    int indxPos = listLBox->GetAnchorIndex();
+    if (indxPos<0 || indxPos>=objNum) indxPos = 0;
+
+    findPos = SearchString(0, (LPCTSTR)findStr);
+    if (findPos<0 || findPos>=objNum) {
+        findPos = indxPos;
+        listLBox->SetAnchorIndex(indxPos);
+    }
+    else {
+        listLBox->SetSel(indxPos, FALSE);
+        int vscroll = 5;
+        if (findPos>=objNum - vscroll) {
+            vscroll = objNum - 1 - findPos;
+        }
+        listLBox->SetSel(findPos + vscroll);        // 少し下にスクロールして選択行を上に上げる
+        listLBox->SetSel(findPos + vscroll, FALSE);
+        listLBox->SetSel(findPos);
+    }
 }
 
 
 void CObjectsListDLG::OnLbnSelchangeListObjects()
 {
-    convBBox->GetFocus();
+    //convBBox->GetFocus();
 }
