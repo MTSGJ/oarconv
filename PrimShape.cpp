@@ -380,8 +380,10 @@ void  PrimBaseShape::GetTextureEntry(tXML* xml)
 {
     if (xml==NULL) return;
     
+    DEBUG_MODE PRINT_MESG("PrimBaseShape::GetTextureEntry: start.\n");
     tXML* texttag = get_xml_content_bystr(xml, "<Shape><TextureEntry>");
     if (texttag!=NULL) {
+        //PRINT_MESG("PrimBaseShape::GetTextureEntry: %s\n", (char*)texttag->ldat.key.buf);
         int size;
         uByte* textdata = decode_base64(texttag->ldat.key.buf, &size);
     
@@ -570,17 +572,17 @@ MaterialParam  PrimBaseShape::GetDefaultTextureEntry(uByte* ptr, int size)
     while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) ptr += 16;
 
     // Color
-    double red = (255 - ptr[0])/255.0;      // R
-    double grn = (255 - ptr[1])/255.0;      // G
-    double blu = (255 - ptr[2])/255.0;      // B
-    double alp = (255 - ptr[3])/255.0;      // A
+    double red = (255 - ptr[0])/255.0;          // R
+    double grn = (255 - ptr[1])/255.0;          // G
+    double blu = (255 - ptr[2])/255.0;          // B
+    double alp = (255 - ptr[3])/255.0;          // A
     if (red==0.0) red = MTRL_DEFAULT_COLOR;
     if (grn==0.0) grn = MTRL_DEFAULT_COLOR;
     if (blu==0.0) blu = MTRL_DEFAULT_COLOR;
-    param.texture.setColor(red, 0);                 // R
-    param.texture.setColor(grn, 1);                 // G
-    param.texture.setColor(blu, 2);                 // B
-    param.texture.setColor(alp, 3);                 // A
+    param.texture.setColor(red, 0);             // R
+    param.texture.setColor(grn, 1);             // G
+    param.texture.setColor(blu, 2);             // B
+    param.texture.setColor(alp, 3);             // A
     ptr += 4;
     while (ptr<end && ReadFacetBitField(&ptr, &facetBits, &fieldSize)) ptr += 4;
 
@@ -744,6 +746,7 @@ void  PrimBaseShape::GetMaterialParams(tList* resourceList)
 {
     if (resourceList==NULL) return;
 
+    DEBUG_MODE PRINT_MESG("PrimBaseShape::GetMaterialParams: start.\n");
     for (int i=0; i<PRIM_MATERIAL_NUM; i++) {
         char* matname = (char*)materialName[i].buf;
         if (matname!=NULL) {

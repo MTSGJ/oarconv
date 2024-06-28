@@ -1212,6 +1212,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
             // JPEG2000
             else if (extn[0]=='j' || extn[0]=='J') {
                 JPEG2KImage jpg = readJPEG2KFile(path);
+                /*
                 // Repair
                 if (jpg.state!=0) {
                     PRINT_MESG("OARTool::ConvertTexture: failure to read %s. attempt to repair the file.\n", path);
@@ -1227,7 +1228,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                         DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: failure to repair the file.\n", err);
                     }
                     free_Buffer(&repair_file);
-                }
+                }*/
                 //
                 if (jpg.state==0) {
                     MSGraph<uByte> vp = JPEG2KImage2MSGraph<uByte>(jpg);
