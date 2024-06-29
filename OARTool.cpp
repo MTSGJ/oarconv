@@ -1312,7 +1312,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                 PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s size is zero!\n", texture);
             }
             else {
-                PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is lost!\n", texture);
+                PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is lost! (%d)\n", texture, filesz);
             }
         }
     }
