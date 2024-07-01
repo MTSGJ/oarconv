@@ -1213,7 +1213,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
             // JPEG2000
             else if (extn[0]=='j' || extn[0]=='J') {
                 JPEG2KImage jpg = readJPEG2KFile(path);
-                // Repair
+                // Repair 効果は無いかも
                 if (jpg.state!=0) {
                     PRINT_MESG("OARTool::ConvertTexture: failure to read %s. attempt to repair the file.\n", path);
                     Buffer repair_file = make_Buffer_bystr(texture);
