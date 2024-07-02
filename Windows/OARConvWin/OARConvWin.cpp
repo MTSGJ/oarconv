@@ -408,6 +408,9 @@ void  COARConvWinApp::OnOutFormatDialog()
         else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
             no_offset_flg = true;
         }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
+            no_offset_flg = true;
+        }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
             no_offset_flg = true;
         }
@@ -450,6 +453,9 @@ void  COARConvWinApp::OnSettingDialog()
             no_offset_flg = true;
         }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
             no_offset_flg = true;
         }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
@@ -603,6 +609,9 @@ void  COARConvWinApp::setupParameters(CString path, CString file, CString oarf)
             no_offset_flg = true;
         }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
             no_offset_flg = true;
         }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
@@ -922,38 +931,46 @@ void  COARConvWinApp::updateStatusBar(CString oar_path, CString out_path)
     bool no_offset_flg = false;
     CString prefix;
     if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
-        prefix = _T("  DAE  |  ");
-        if (appParam.procJoints) prefix += _T("JOINTS  |  ");
+        prefix = _T(" DAE | ");
+        if (appParam.procJoints) prefix += _T("JOINTS | ");
         if (appParam.noOffset) {
             no_offset_flg = true;
-            prefix += _T("NO_OFFSET  |  ");
+            prefix += _T("NO_OFFSET | ");
         }
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
-        prefix = _T("  OBJ  |  ");
+        prefix = _T(" OBJ | ");
         if (appParam.noOffset) {
             no_offset_flg = true;
-            prefix += _T("NO_OFFSET  |  ");
+            prefix += _T("NO_OFFSET | ");
+        }
+    }
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
+        prefix = _T(" GLTF | ");
+        if (appParam.procJoints) prefix += _T("JOINTS | ");
+        if (appParam.noOffset) {
+            no_offset_flg = true;
+            prefix += _T("NO_OFFSET | ");
         }
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
-        prefix = _T("  FBX | ");
-        if (appParam.procJoints) prefix += _T("JOINTS  |  ");
+        prefix = _T(" FBX | ");
+        if (appParam.procJoints) prefix += _T("JOINTS | ");
         if (appParam.noOffset) {
             no_offset_flg = true;
-            prefix += _T("NO_OFFSET  |  ");
+            prefix += _T("NO_OFFSET | ");
         }
     }
     // STL は元々 OFFSETなし．
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("  STL  |  ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("  STL  |  ");
-    else                                                    prefix = _T("  NONE  |  ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T(" STL | ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T(" STL | ");
+    else                                                    prefix = _T(" NONE | ");
 
-    if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY)   prefix += _T("UNITY  |  ");
-    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE) prefix += _T("UE  |  ");
+    if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY)   prefix += _T("UNITY | ");
+    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE) prefix += _T("UE | ");
 
-    //CString mesg = prefix + _T("OAR-Path: ") + oar_path + "  |  " + _T("OUT-Path: ") + out_path;
-    CString mesg = prefix + _T("OUT-Path: ") + out_path;
+    //CString mesg = prefix + _T("OAR-Path: ") + oar_path + " | " + _T("OUT-Path: ") + out_path;
+    CString mesg = prefix + _T("OUT: ") + out_path;
     pMainFrame->SetStausBarText(mesg);
 
     return;

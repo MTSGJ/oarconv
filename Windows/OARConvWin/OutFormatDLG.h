@@ -24,6 +24,7 @@ protected:
 protected:
     CButton* outputDaeButton;
     CButton* outputObjButton;
+    CButton* outputGltfButton;
     CButton* outputFbxButton;
     CButton* outputStlButton;
 
@@ -46,6 +47,7 @@ public:
     afx_msg void OnBnClickedRadioObj();
     afx_msg void OnBnClickedRadioDae();
     afx_msg void OnBnClickedRadioStl();
+    afx_msg void OnBnClickedRadioGltf();
     afx_msg void OnBnClickedRadioFbx();
     //afx_msg void OnBnClickedCheckJoints();
 };

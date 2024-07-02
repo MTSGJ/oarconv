@@ -36,6 +36,7 @@ void  CParameterSet::init(void)
 	prefixOUT     = _T("DAE_");
 	prefixDAE     = _T("DAE_");
 	prefixOBJ     = _T("OBJ_");
+	prefixGLTF    = _T("GLTF_");
 	prefixFBX     = _T("FBX_");
 	prefixSTL     = _T("STL_");
 }
@@ -68,6 +69,7 @@ void  CParameterSet::readConfigFile(void)
 	prefixOAR     = get_tstr_param_tList(lt, "prefixOAR", (LPCTSTR)prefixOAR);
 	prefixDAE     = get_tstr_param_tList(lt, "prefixDAE", (LPCTSTR)prefixDAE);
 	prefixOBJ     = get_tstr_param_tList(lt, "prefixOBJ", (LPCTSTR)prefixOBJ);
+	prefixGLTF    = get_tstr_param_tList(lt, "prefixGLTF",(LPCTSTR)prefixGLTF);
 	prefixFBX     = get_tstr_param_tList(lt, "prefixFBX", (LPCTSTR)prefixFBX);
 	prefixSTL     = get_tstr_param_tList(lt, "prefixSTL", (LPCTSTR)prefixSTL);
 
@@ -77,6 +79,9 @@ void  CParameterSet::readConfigFile(void)
 	}
 	else if (outputFormat == JBXL_3D_FORMAT_OBJ) {
 		prefixOUT = prefixOBJ;
+	}
+	else if (outputFormat == JBXL_3D_FORMAT_GLTF) {
+		prefixOUT = prefixGLTF;
 	}
 	else if (outputFormat == JBXL_3D_FORMAT_FBX) {
 		prefixOUT = prefixFBX;
@@ -110,6 +115,8 @@ void  CParameterSet::saveConfigFile(void)
 	fprintf(fp, "prefixDAE %s\n", (char*)tmp.buf);
 	copy_ts2Buffer(prefixOBJ, &tmp);
 	fprintf(fp, "prefixOBJ %s\n", (char*)tmp.buf);
+	copy_ts2Buffer(prefixGLTF, &tmp);
+	fprintf(fp, "prefixGLTF %s\n", (char*)tmp.buf);
 	copy_ts2Buffer(prefixFBX, &tmp);
 	fprintf(fp, "prefixFBX %s\n", (char*)tmp.buf);
 	copy_ts2Buffer(prefixSTL, &tmp);

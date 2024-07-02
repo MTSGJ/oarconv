@@ -66,6 +66,7 @@ public:
     CString  prefixOUT;
     CString  prefixDAE;
     CString  prefixOBJ;
+    CString  prefixGLTF;
     CString  prefixFBX;
     CString  prefixSTL;
 };

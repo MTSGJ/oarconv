@@ -560,9 +560,17 @@ int  SculptMesh::GetSculptScale(int width, int height)
     else if (width==1024 && height==1024) {
         type = SCULPT_SIZE_1024x1024;
     }
-    
-    DEBUG_MODE PRINT_MESG("JBXL::GetSculptScale: type = %d, size = (%d, %d), st = (%d, %d), scale = (%d, %d), shift = (%d, %d), boundary = (%d, %d)\n", 
+    else {
+        PRINT_MESG("JBXL::GetSculptScale: WARNING: type = %d, size = (%d, %d), st = (%d, %d), scale = (%d, %d), shift = (%d, %d), boundary = (%d, %d)\n",
                                       type, width, height, s, t, xscale, yscale, xshift, yshift, xbndry, ybndry);
+    }
+
+    DEBUG_MODE {
+        if (type!=SCULPT_SIZE_OTHER) {
+            PRINT_MESG("JBXL::GetSculptScale: WARNING: type = %d, size = (%d, %d), st = (%d, %d), scale = (%d, %d), shift = (%d, %d), boundary = (%d, %d)\n",
+                                      type, width, height, s, t, xscale, yscale, xshift, yshift, xbndry, ybndry);
+        }
+    }
     return type;
 }
 

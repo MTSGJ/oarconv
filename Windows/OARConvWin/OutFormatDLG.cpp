@@ -22,6 +22,7 @@ COutFormatDLG::COutFormatDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 
 	outputDaeButton   = NULL;
 	outputObjButton   = NULL;
+	outputGltfButton  = NULL;
 	outputFbxButton   = NULL;
 	outputStlButton   = NULL;
 
@@ -51,6 +52,9 @@ void  COutFormatDLG::getParameters(CParameterSet* param)
 	else if (outputFormat == JBXL_3D_FORMAT_OBJ) {
 		param->prefixOUT = param->prefixOBJ;
 	}
+	else if (outputFormat == JBXL_3D_FORMAT_GLTF) {
+		param->prefixOUT = param->prefixGLTF;
+	}
 	else if (outputFormat == JBXL_3D_FORMAT_FBX) {
 		param->prefixOUT = param->prefixFBX;
 	}
@@ -77,6 +81,7 @@ BOOL COutFormatDLG::OnInitDialog()
 
 	outputDaeButton   = (CButton*)GetDlgItem(IDC_RADIO_DAE);
 	outputObjButton   = (CButton*)GetDlgItem(IDC_RADIO_OBJ);
+	outputGltfButton  = (CButton*)GetDlgItem(IDC_RADIO_GLTF);
 	outputFbxButton   = (CButton*)GetDlgItem(IDC_RADIO_FBX);
 	outputStlButton   = (CButton*)GetDlgItem(IDC_RADIO_STL);
 	outputUnityButton = (CButton*)GetDlgItem(IDC_RADIO_UNITY);
@@ -86,10 +91,12 @@ BOOL COutFormatDLG::OnInitDialog()
 
 	outputDaeButton->SetCheck(0);
 	outputObjButton->SetCheck(0);
+	outputGltfButton->SetCheck(0);
 	outputFbxButton->SetCheck(0);
 	outputStlButton->SetCheck(0);
 
 	// Not Implement yet
+	outputGltfButton->EnableWindow(FALSE);
 	outputFbxButton->EnableWindow(FALSE);
 
 	if (outputFormat == JBXL_3D_FORMAT_DAE) {
@@ -99,6 +106,10 @@ BOOL COutFormatDLG::OnInitDialog()
 	else if (outputFormat == JBXL_3D_FORMAT_OBJ) {
         outputObjButton->SetCheck(1);
         OnBnClickedRadioObj();
+	}
+	else if (outputFormat == JBXL_3D_FORMAT_GLTF) {
+		outputGltfButton->SetCheck(1);
+		OnBnClickedRadioGltf();
 	}
 	else if (outputFormat == JBXL_3D_FORMAT_FBX) {
 		outputFbxButton->SetCheck(1);
@@ -135,6 +146,7 @@ void COutFormatDLG::OnOK()
 
 	if      (outputDaeButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_DAE;
 	else if (outputObjButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_OBJ;
+	else if (outputGltfButton->GetCheck())outputFormat = JBXL_3D_FORMAT_GLTF;
 	else if (outputFbxButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_FBX;
 	else if (outputStlButton->GetCheck()) outputFormat = JBXL_3D_FORMAT_STL_A;
 
@@ -153,6 +165,7 @@ void COutFormatDLG::OnOK()
 BEGIN_MESSAGE_MAP(COutFormatDLG, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO_DAE, &COutFormatDLG::OnBnClickedRadioDae)
 	ON_BN_CLICKED(IDC_RADIO_OBJ, &COutFormatDLG::OnBnClickedRadioObj)
+    ON_BN_CLICKED(IDC_RADIO_GLTF,&COutFormatDLG::OnBnClickedRadioGltf)
 	ON_BN_CLICKED(IDC_RADIO_FBX, &COutFormatDLG::OnBnClickedRadioFbx)
 	ON_BN_CLICKED(IDC_RADIO_STL, &COutFormatDLG::OnBnClickedRadioStl)
 	//ON_BN_CLICKED(IDC_CHECK_JOINTS, &COutFormatDLG::OnBnClickedCheckJoints)
@@ -181,6 +194,19 @@ void COutFormatDLG::OnBnClickedRadioObj()
 		outputUEButton->SetCheck(0);
 	}
 	procJointsButton->EnableWindow(FALSE);
+	noOffsetButton->EnableWindow(TRUE);
+}
+
+void COutFormatDLG::OnBnClickedRadioGltf()
+{
+	outputUnityButton->EnableWindow(TRUE);
+	outputUEButton->EnableWindow(TRUE);
+	if (outputEngine == JBXL_3D_ENGINE_NONE) {
+		outputEngine = JBXL_3D_ENGINE_UNITY;
+		outputUnityButton->SetCheck(1);
+		outputUEButton->SetCheck(0);
+	}
+	procJointsButton->EnableWindow(TRUE);
 	noOffsetButton->EnableWindow(TRUE);
 }
 
