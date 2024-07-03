@@ -96,8 +96,8 @@ BOOL COutFormatDLG::OnInitDialog()
 	outputStlButton->SetCheck(0);
 
 	// Not Implement yet
-	outputGltfButton->EnableWindow(FALSE);
-	outputFbxButton->EnableWindow(FALSE);
+	//outputGltfButton->EnableWindow(FALSE);
+	//outputFbxButton->EnableWindow(FALSE);
 
 	if (outputFormat == JBXL_3D_FORMAT_DAE) {
 		outputDaeButton->SetCheck(1);
