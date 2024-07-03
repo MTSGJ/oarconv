@@ -287,7 +287,6 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
 
 void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
 {
-    if (format!=JBXL_3D_FORMAT_DAE && format!=JBXL_3D_FORMAT_OBJ) return; 
     if (assets==NULL) return;
 
     MSGraph<uByte> vp[4];
@@ -476,9 +475,11 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             data->setMaterialParam(param);
 
             //
-            ColladaXML*    dae = NULL;
-            OBJData*       obj = NULL;
-            BrepSolidList* stl = NULL;
+            ColladaXML*    dae  = NULL;
+            OBJData*       obj  = NULL;
+            GLTFData*      gltf = NULL;
+            FBXData*       fbx  = NULL;
+            BrepSolidList* stl  = NULL;
 
             // DAE
             if (format==JBXL_3D_FORMAT_DAE) {
@@ -530,6 +531,10 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 //
                 obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
+            }
+            // GLTF
+            else if (format==JBXL_3D_FORMAT_GLTF) {
+                // No Implement
             }
             // FBX
             else if (format==JBXL_3D_FORMAT_FBX) {

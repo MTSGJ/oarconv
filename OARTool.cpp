@@ -216,6 +216,10 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
         else if (dataformat==JBXL_3D_FORMAT_OBJ) {
             pathOUT = make_Buffer_bystr(OART_DEFAULT_OBJ_DIR);
         }
+        // GLTF
+        else if (dataformat==JBXL_3D_FORMAT_GLTF) {
+            pathOUT = make_Buffer_bystr(OART_DEFAULT_GLTF_DIR);
+        }
         // FBX
         else if (dataformat==JBXL_3D_FORMAT_FBX) {
             pathOUT = make_Buffer_bystr(OART_DEFAULT_FBX_DIR);
@@ -522,14 +526,14 @@ void  OARTool::MakeOutputFolder(void)
     }
 
     // Texture, Material and Phantom Folder
-    if (dataformat==JBXL_3D_FORMAT_DAE || dataformat==JBXL_3D_FORMAT_OBJ) {
+    if (dataformat==JBXL_3D_FORMAT_DAE || dataformat==JBXL_3D_FORMAT_OBJ ||
+        dataformat==JBXL_3D_FORMAT_FBX || dataformat==JBXL_3D_FORMAT_GLTF) {
         if (pathTEX.buf!=NULL) {
             mkdir((char*)pathTEX.buf, 0700);                            // Texture Folder
         }
         if (dataformat==JBXL_3D_FORMAT_OBJ) {                           // Material Folder
             Buffer mtl = dup_Buffer(pathOUT);
             cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
-
             mkdir((char*)mtl.buf, 0700);
             free_Buffer(&mtl);
         }
@@ -752,9 +756,11 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     }
 
     //
-    ColladaXML*    dae = NULL;
-    OBJData*       obj = NULL;
-    BrepSolidList* stl = NULL;
+    ColladaXML*    dae  = NULL;
+    OBJData*       obj  = NULL;
+    FBXData*       fbx  = NULL;
+    GLTFData*      gltf = NULL;
+    BrepSolidList* stl  = NULL;
 
     // DAE
     if (format==JBXL_3D_FORMAT_DAE) {
@@ -770,11 +776,17 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         obj->no_offset = noOffset;
         obj->setEngine(engine);
     }
+    // GLTF
+    else if (format==JBXL_3D_FORMAT_GLTF) {
+        gltf = new GLTFData();
+        gltf->no_offset = noOffset;
+        gltf->setEngine(engine);
+    }
     // FBX
     else if (format==JBXL_3D_FORMAT_FBX) {
-        obj = NULL;
-        obj->no_offset = noOffset;
-        //obj->setEngine(engine);
+        fbx = new FBXData();
+        fbx->no_offset = noOffset;
+        fbx->setEngine(engine);
     }
     // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -816,10 +828,15 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                     obj->phantom_out = true;
                     obj->addObject(mesh, false);
                 }
+                // GLTF
+                else if (format==JBXL_3D_FORMAT_GLTF) {
+                    gltf->phantom_out = true;
+                    gltf->addObject(mesh, false);
+                }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
-                    //obj->phantom_out = true;
-                    //obj->addObject(mesh, false);
+                    fbx->phantom_out = true;
+                    fbx->addObject(mesh, false);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -860,10 +877,15 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                     obj->phantom_out = true;
                     obj->addObject(mesh, false);
                 }
+                // GLTF
+                else if (format==JBXL_3D_FORMAT_GLTF) {
+                    gltf->phantom_out = true;
+                    gltf->addObject(mesh, false);
+                }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
-                    //obj->phantom_out = true;
-                    //obj->addObject(mesh, false);
+                    fbx->phantom_out = true;
+                    fbx->addObject(mesh, false);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -935,10 +957,15 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                     if (collider) obj->phantom_out = false;
                     obj->addObject(mesh, collider);
                 }
+                // GLTF
+                else if (format==JBXL_3D_FORMAT_GLTF) {
+                    if (collider) gltf->phantom_out = false;
+                    gltf->addObject(mesh, collider, skin_joint);
+                }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
-                    //if (collider) obj->phantom_out = false;
-                    //obj->addObject(mesh, collider, skin_joint);
+                    if (collider) fbx->phantom_out = false;
+                    fbx->addObject(mesh, collider, skin_joint);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -971,12 +998,20 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             obj->closeSolid();
             return (void*)obj;
         }
+        //  GLTF
+        else if (format==JBXL_3D_FORMAT_GLTF) {
+            Vector<double> offset = gltf->execAffineTrans();        // no_offset==true の場合，原点縮退
+            if (gltf->affineTrans==NULL) gltf->affineTrans = new AffineTrans<double>();
+            gltf->affineTrans->setShift(offset);
+            gltf->closeSolid();
+            return NULL;
+        }
         //  FBX
         else if (format==JBXL_3D_FORMAT_FBX) {
-            //Vector<double> offset = obj->execAffineTrans();         // no_offset==true の場合，原点縮退
-            //if (obj->affineTrans==NULL) fbx->affineTrans = new AffineTrans<double>();
-            //fbx->affineTrans->setShift(offset);
-            //fbx->closeSolid();
+            Vector<double> offset = fbx->execAffineTrans();         // no_offset==true の場合，原点縮退
+            if (fbx->affineTrans==NULL) fbx->affineTrans = new AffineTrans<double>();
+            fbx->affineTrans->setShift(offset);
+            fbx->closeSolid();
             return NULL;
         }
         // STL
@@ -1075,6 +1110,11 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         free_Buffer(&obj_fname);
     }
 
+    // GLTF
+    else if (format==JBXL_3D_FORMAT_GLTF) {
+        //
+    }
+
     // FBX
     else if (format==JBXL_3D_FORMAT_FBX) {
         //
@@ -1108,10 +1148,15 @@ void  OARTool::freeSolidData(int format, void* solid)
         OBJData* obj = (OBJData*)solid;
         freeOBJData(obj);
     }
+    // GLTF
+    else if (format==JBXL_3D_FORMAT_GLTF) {
+        GLTFData* gltf = (GLTFData*)solid;
+        freeGLTFData(gltf);
+    }
     // FBX
     else if (format==JBXL_3D_FORMAT_FBX) {
-        //OBJData* obj = (OBJData*)solid;
-        //freeOBJData(obj);
+        FBXData* fbx = (FBXData*)solid;
+        freeFBXData(fbx);
     }
     // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {

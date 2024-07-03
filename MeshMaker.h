@@ -19,6 +19,8 @@
 #include "AffineTrans.h"
 #include "ColladaTool.h"
 #include "OBJDataTool.h"
+#include "FBXDataTool.h"
+#include "GLTFDataTool.h"
 
 #include "PrimMesher.h"
 #include "SculptMesher.h"

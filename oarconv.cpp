@@ -33,8 +33,7 @@ int main(int argc, char** argv)
     int   engine  = JBXL_3D_ENGINE_UNITY;
 
     bool  degeneracy = false;
-    bool  useBrep = false;
-    //bool  useBrep = true;
+    bool  useBrep = false;      // required
     bool  procJoints = false;
 
     for (int i=1; i<argc; i++) {
@@ -58,6 +57,7 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "--ue"))   { engine = JBXL_3D_ENGINE_UE;}     // for UE
         else if (!strcmp(argv[i], "--dae"))  { format = JBXL_3D_FORMAT_DAE;}    // DAEデータを出力
         else if (!strcmp(argv[i], "--obj"))  { format = JBXL_3D_FORMAT_OBJ;}    // OBJデータを出力
+        else if (!strcmp(argv[i], "--gltf")) { format = JBXL_3D_FORMAT_GLTF;}   // glTFデータを出力
         else if (!strcmp(argv[i], "--fbx"))  { format = JBXL_3D_FORMAT_FBX;}    // FBXデータを出力
         else if (!strcmp(argv[i], "--stl"))  { format = JBXL_3D_FORMAT_STL_A;}  // STLデータを出力
         else if (!strcmp(argv[i], "--dg"))   { degeneracy = true;}
