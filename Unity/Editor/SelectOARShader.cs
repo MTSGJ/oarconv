@@ -1,5 +1,5 @@
 //
-// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.8
+// SelectOARShader for oarconv by Fumi.Iseki 2015-2024 (C) v1.7.9
 //
 // see also https://github.com/MTSGJ/oarconv
 //
@@ -118,7 +118,8 @@ public sealed class SelectOARShader : AssetPostprocessor
             TreeShader          = "Legacy Shaders/Transparent/Cutout/Soft Edge Unlit";
             EarthShader         = "Standard";
             //TransShader         = "Unlit/Transparent";                                   // Alpha Blending
-            TransShader         = "Legacy Shaders/Transparent/Diffuse";                  // Alpha Blending
+            //TransShader         = "Legacy Shaders/Transparent/Diffuse";                  // Alpha Blending
+            TransShader         = "Legacy Shaders/Transparent/Cutout/Diffuse";           // Alpha Blending
             TransCutShader      = "Legacy Shaders/Transparent/Cutout/Diffuse";           // Alpha Cutoff
         }
 
