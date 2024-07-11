@@ -596,7 +596,7 @@ void  OARTool::ReadTerrainData(void)
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// for DAE/OBJ/STL
+// for DAE/OBJ/glTF/FBX/STL
 
 int  OARTool::GenerateTerrainDataFile(void)
 {
@@ -623,6 +623,8 @@ int  OARTool::GenerateObjectFromDataIndex(int startnum, int stopnum, bool useBre
 */
 int  OARTool::GenerateObjectFromDataIndex(int startnum, int stopnum, bool useBrep, char* command)
 {
+    DEBUG_MODE PRINT_MESG("OARTool::GenerateObjectFromDataIndex: start.\n");
+
     tList* lp = this->objectsFiles;
     CVCounter* counter = GetUsableGlobalCounter();
 
@@ -663,6 +665,8 @@ $retval 生成したオブジェクト数
 */
 int  OARTool::GenerateObjectFromDataList(int* objlist, int objnum, bool useBrep, char* command)
 {
+    DEBUG_MODE PRINT_MESG("OARTool::GenerateObjectFromDataList: start.\n");
+
     if (objnum<=0 || objlist==NULL) return 0;
 
     tList* lp = this->objectsFiles;
@@ -704,6 +708,7 @@ void  OARTool::GenerateObjectFromDataFile(char* file_path, bool useBrep, char* c
 */
 void  OARTool::GenerateObjectFromDataFile(char* file_path, bool useBrep, char* command)
 {
+    DEBUG_MODE PRINT_MESG("OARTool::GenerateObjectFromDataFile: start.\n");
     if (file_path==NULL) return;
 
     void* solid = generateSolidData(dataformat, file_path, 1, useBrep, command);
@@ -1036,11 +1041,15 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 */
 void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 {
+    DEBUG_MODE {
+        PRINT_MESG("OARTool::outputSolidData: start.\n");
+        if (solid==NULL) PRINT_MESG("OARTool::outputSolidData: solid data is NULL. return.\n");
+    }
     if (solid==NULL || fname==NULL) return;
     //
     fname = get_file_name(fname);
-    Buffer dae_fname = make_Buffer_str(fname);
-    Buffer out_path = init_Buffer();
+    Buffer out_fname = make_Buffer_str(fname);
+    Buffer out_path  = init_Buffer();
 
     // fnameの拡張子は自動的に変換される
     // DAE
@@ -1055,24 +1064,22 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             offset[1] =  (float)(dae->affineTrans->shift.z);
             offset[2] = -(float)(dae->affineTrans->shift.y);
             char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
-            del_file_extension_Buffer(&dae_fname);
-            cat_s2Buffer("_", &dae_fname);
-            cat_s2Buffer(OART_LOCATION_MAGIC_STR, &dae_fname);
-            cat_s2Buffer(params, &dae_fname);
-            cat_s2Buffer(".", &dae_fname);
+            del_file_extension_Buffer(&out_fname);
+            cat_s2Buffer("_", &out_fname);
+            cat_s2Buffer(OART_LOCATION_MAGIC_STR, &out_fname);
+            cat_s2Buffer(params, &out_fname);
+            cat_s2Buffer(".", &out_fname);
         }
         //
         if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
         else                  out_path = dup_Buffer(pathOUT);
         //
-        dae->outputFile((char*)dae_fname.buf, (char*)out_path.buf, XML_SPACE_FORMAT);
-        free_Buffer(&dae_fname);
+        dae->outputFile((char*)out_fname.buf, (char*)out_path.buf, XML_SPACE_FORMAT);
     }
 
     // OBJ
     else if (format==JBXL_3D_FORMAT_OBJ) {
         OBJData* obj = (OBJData*)solid;
-        Buffer obj_fname = make_Buffer_str(fname);
         // 縮退状態
         if (noOffset && obj->affineTrans != NULL) {
             float offset[3];
@@ -1089,16 +1096,16 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
                 offset[2] = -(float)(obj->affineTrans->shift.y);
             }
             char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
-            del_file_extension_Buffer(&obj_fname);
-            cat_s2Buffer("_", &obj_fname);
-            cat_s2Buffer(OART_LOCATION_MAGIC_STR, &obj_fname);
-            cat_s2Buffer(params, &obj_fname);
-            cat_s2Buffer(".", &obj_fname);
+            del_file_extension_Buffer(&out_fname);
+            cat_s2Buffer("_", &out_fname);
+            cat_s2Buffer(OART_LOCATION_MAGIC_STR, &out_fname);
+            cat_s2Buffer(params, &out_fname);
+            cat_s2Buffer(".", &out_fname);
         }
         //
         if (obj->engine==JBXL_3D_ENGINE_UE) {
-            if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &obj_fname);
-            else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &obj_fname);
+            if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
+            else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
             out_path = dup_Buffer(pathOUT);
         }
         else {
@@ -1106,29 +1113,35 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             else                  out_path = dup_Buffer(pathOUT);
         }
         //
-        obj->outputFile((char*)obj_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
-        free_Buffer(&obj_fname);
+        obj->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
     }
 
     // GLTF
     else if (format==JBXL_3D_FORMAT_GLTF) {
+        GLTFData* gltf = (GLTFData*)solid;
         //
+        out_path = dup_Buffer(pathOUT);
+        gltf->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR);
     }
 
     // FBX
     else if (format==JBXL_3D_FORMAT_FBX) {
+        FBXData* fbx = (FBXData*)solid;
         //
+        out_path = dup_Buffer(pathOUT);
+        fbx->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR);
     }
 
     // STL
     else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+        BrepSolidList* stl = (BrepSolidList*)solid;
         bool ascii = true;
         if (format==JBXL_3D_FORMAT_STL_B) ascii = false;
         out_path = dup_Buffer(pathOUT);
-        BrepSolidList* stl = (BrepSolidList*)solid;
-        stl->outputFile(fname, (char*)out_path.buf, ascii);
+        stl->outputFile((char*)out_fname.buf, (char*)out_path.buf, ascii);
     }
     free_Buffer(&out_path);
+    free_Buffer(&out_fname);
 
     return;
 }
