@@ -1009,7 +1009,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             if (gltf->affineTrans==NULL) gltf->affineTrans = new AffineTrans<double>();
             gltf->affineTrans->setShift(offset);
             gltf->closeSolid();
-            return NULL;
+            return (void*)gltf;
         }
         //  FBX
         else if (format==JBXL_3D_FORMAT_FBX) {
@@ -1017,7 +1017,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             if (fbx->affineTrans==NULL) fbx->affineTrans = new AffineTrans<double>();
             fbx->affineTrans->setShift(offset);
             fbx->closeSolid();
-            return NULL;
+            return (void*)fbx;
         }
         // STL
         else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -1121,7 +1121,8 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         GLTFData* gltf = (GLTFData*)solid;
         //
         out_path = dup_Buffer(pathOUT);
-        gltf->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR);
+        //gltf->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR);
+        gltf->outputFile((char*)out_fname.buf, (char*)out_path.buf);
     }
 
     // FBX
