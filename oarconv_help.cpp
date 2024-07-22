@@ -36,6 +36,8 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   --unity : for Unity Engine.\n");
     fprintf(fp, "   --ue : for Unreal Engine.\n");
     fprintf(fp, "   --dg : shrinkage to the origin with DAE/OBJ file.\n");
+    fprintf(fp, "   --tga : use TGA file as texture.\n");
+    fprintf(fp, "   --png : use PNG file as texture. (default)\n");
     fprintf(fp, "   --nooffset : same for --dg\n");
     fprintf(fp, "   --joint : Process Joints\n");
 
@@ -44,7 +46,7 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   -h : display this help messages. \n");
     fprintf(fp, "   --help : display this help messages. \n");
     fprintf(fp, "\n");
-    fprintf(fp, " ex.) oarconv -i OAR -a /usr/local/opensim/bin:./assets --dae --unity --joint \n");
+    fprintf(fp, " ex.) oarconv -i OAR -a /usr/local/opensim/bin:./assets --dae --unity --joint --tga \n");
     fprintf(fp, " ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --obj --ue --dg -d\n");
     fprintf(fp, " ex.) oarconv -i OAR -s 0 -e 0 --dae --unity # output terrain data only\n");
     fprintf(fp, "\n");

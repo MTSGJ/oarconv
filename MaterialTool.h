@@ -16,6 +16,7 @@
 
 #include "Jpeg2KTool.h"
 #include "TgaTool.h"
+#include "PngTool.h"
 
 #include "MaterialParam.h"
 
@@ -23,7 +24,8 @@
 //#define  MTRL_DEFAULT_ALPHA         0.90    // 0.99 is not Transparent
 #define  MTRL_DEFAULT_COLOR         0.0001
 
-#define  MTRL_IMAGE_TYPE            ".tga"
+//#define  MTRL_IMAGE_TYPE            ".tga"
+//#define  MTRL_IMAGE_TYPE            ".png"
 
 
 namespace  jbxl {

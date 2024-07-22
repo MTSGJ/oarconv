@@ -68,16 +68,17 @@ int main(int argc, char** argv)
 
     MeshObjectData* data  = tree->GenerateTree(shape, pnum);
     MeshFacetNode*  facet = data->facet;
+    char* image_type = oar.GetTextureExtension();
     while (facet!=NULL) {
         if (facet->material_param.enable) {
             // convert texture
-            //oar.ConvertTexture(facet->material_param.getTextureName(), facet->material_param.getAdditionalName(), MTRL_IMAGE_TYPE);
-            oar.ConvertTexture(facet->material_param.getTextureName(), NULL, MTRL_IMAGE_TYPE);
-            facet->material_param.setFullName(MTRL_IMAGE_TYPE);
+            //oar.ConvertTexture(facet->material_param.getTextureName(), facet->material_param.getAdditionalName(), image_type);
+            oar.ConvertTexture(facet->material_param.getTextureName(), NULL, image_type);
+            facet->material_param.setFullName(image_type);
         }
         facet = facet->next;
     }
-    dae->addObject(data, false, NULL);
+    dae->addShell(data, false, NULL);
     dae->outputFile("test_tree.dae", oar.get_outpath());
 
     /////////////////////////////////////////////////////////////

@@ -289,29 +289,48 @@ ContourBaseData*  jbxl::ContourBaseDataFromSculptJP2K(const char* jpegfile, int 
     DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
     MSGraph<uByte> grd;
 
-    JPEG2KImage jpg = readJPEG2KFile(jpegfile);
-    if (!jpg.isNull() && jpg.col>0) {
-        DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
-        grd = JPEG2KImage2MSGraph<uByte>(jpg);
-        jpg.free();
+    char* extn = get_file_extension(jpegfile);
+
+    // PNG
+    if (!strcasecmp(extn, "png")) {
+        PNGImage png = readPNGFile(jpegfile);
+        if (png.state>=0) {
+            DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: PNG size = (%d, %d, %d)\n", png.xs, png.ys, png.col);
+            grd = PNGImage2MSGraph<uByte>(png);
+        }
+        else {
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid PNG image file! [%s], (%d)\n", jpegfile, png.state);
+        }
+        png.free();
     }
-    else {
-        // TGA
+    // TGA
+    else if (!strcasecmp(extn, "tga")) {
         TGAImage tga = readTGAFile(jpegfile);
         if (tga.state>=0) {
             DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
             grd = TGAImage2MSGraph<uByte>(tga);
-            tga.free();
         }
         else {
-            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid JPEG2K/TGA image file! [%s], (%d)\n", jpegfile, tga.state);
-            jpg.free();
-            tga.free();
-            return NULL;
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid TGA image file! [%s], (%d)\n", jpegfile, tga.state);
         }
+        tga.free();
     }
-    ContourBaseData* facetdata = NULL;
-    facetdata = ContourBaseDataFromSculptImage(grd, type);
+    // Other JPEG2K
+    else {
+        JPEG2KImage jpg = readJPEG2KFile(jpegfile);
+        if (!jpg.isNull() && jpg.col>0) {
+            DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
+            grd = JPEG2KImage2MSGraph<uByte>(jpg);
+        }
+        else {
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid JPEG2K image file! [%s], (%d)\n", jpegfile, jpg.state);
+        }
+        jpg.free();
+    }
+    if (grd.isNull()) return NULL;
+
+    //
+    ContourBaseData* facetdata = ContourBaseDataFromSculptImage(grd, type);
     grd.free();
 
     return facetdata;
@@ -386,7 +405,7 @@ ContourBaseData*  jbxl::ContourBaseDataFromSculptImage(MSGraph<uByte> grd, int t
 /**
 TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int type, int* pnum)
 
-Sculpted Primのファイル(JPEG2K/TGA) からデータを読み込み，三角ポリゴンデータ TriPloyDataを生成する．@n
+Sculpted Primのファイル(JPEG2K/TGA/PNG) からデータを読み込み，三角ポリゴンデータ TriPloyDataを生成する．@n
 
 @param jpegfile   Sculpted Primのデータの入った JPEG 2000ファイル名．
 @param type       Sculpted Primのタイプ
@@ -402,29 +421,46 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
     DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
     MSGraph<uByte> grd;
 
-    JPEG2KImage jpg = readJPEG2KFile(jpegfile);
-    if (!jpg.isNull() && jpg.col>0) {
-        DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: JPEG2K size = (%d, %d, %d), color_mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
-        grd = JPEG2KImage2MSGraph<uByte>(jpg);
-        jpg.free();
-    }
-    else {
-        jpg.free();
-        // TGA
-        TGAImage tga = readTGAFile(jpegfile);
-        if (tga.state>=0) {
-            DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
-            grd = TGAImage2MSGraph<uByte>(tga);
-            tga.free();
+    char* extn = get_file_extension(jpegfile);
+
+    // PNG
+    if (!strcasecmp(extn, "png")) {
+        PNGImage png = readPNGFile(jpegfile);
+        if (png.state>=0) {
+            DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: PNG size = (%d, %d, %d)\n", png.xs, png.ys, png.col);
+            grd = PNGImage2MSGraph<uByte>(png);
         }
         else {
-            PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: ERROR: Invalid JPEG2K/TGA image file! [%s], (%d)\n", jpegfile, tga.state);
-            tga.free();
-            return NULL;
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid PNG image file! [%s], (%d)\n", jpegfile, png.state);
         }
+        png.free();
     }
-    TriPolygonData* tridata = NULL;
+    // TGA
+    else if (!strcasecmp(extn, "tga")) {
+        TGAImage tga = readTGAFile(jpegfile);
+        if (tga.state>=0) {
+            DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
+            grd = TGAImage2MSGraph<uByte>(tga);
+        }
+        else {
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid TGA image file! [%s], (%d)\n", jpegfile, tga.state);
+        }
+        tga.free();
+    }
+    else {
+        JPEG2KImage jpg = readJPEG2KFile(jpegfile);
+        if (!jpg.isNull() && jpg.col>0) {
+            DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: JPEG2K size = (%d, %d, %d), color_mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
+            grd = JPEG2KImage2MSGraph<uByte>(jpg);
+        }
+        else {
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid JPEG2K image file! [%s], (%d)\n", jpegfile, jpg.state);
+        }
+        jpg.free();
+    }
+    if (grd.gp==NULL) return NULL;
 
+    TriPolygonData* tridata = NULL;
     if (grd.zs>1) {
         tridata = TriPolygonDataFromSculptImage(grd, type, pnum);
     }

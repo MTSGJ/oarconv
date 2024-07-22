@@ -49,16 +49,17 @@ class TerrainTool
 public:
     Buffer terrainName;     // Terrain name
 
-    int    xsize;            // Region X size
-    int    ysize;            // Region Y size
-    int    region_num;       // Region Number
-    float  scale;            // Texture Scale
+    int    xsize;           // Region X size
+    int    ysize;           // Region Y size
+    int    region_num;      // Region Number
+    float  scale;           // Texture Scale
 
     int    engine;
-    int    format;
+    int    dataFormat;      //
+    int    textureFormat;
     bool   noOffset;
 
-    MSGraph<float> r32;     // r32 data
+    MSGraph<float> r32;      // r32 data
 
     Buffer texture[4];
     Buffer defaultTexture[4];
@@ -89,8 +90,11 @@ public:
 
 public:
     void   SetEngine(int e) { engine = e;}
-    void   SetFormat(int f) { format = f;}
+    void   SetDataFormat(int f) { dataFormat = f;}
+    void   SetTextureFormat(int f) { textureFormat = f;}
     void   SetNoOffset(bool b) { noOffset = b;}
+
+    char*  GetTextureExtension(void) { return get_graphic_extension(textureFormat);}
 
     void   ReadSettings(const char* path);
     void   ReadHeightData(const char* path);

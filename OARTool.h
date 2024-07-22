@@ -31,10 +31,10 @@ namespace  jbxl {
 
 
 #ifdef WIN32
-  #define  OART_JP2_DECOMP_COM      "opj_decompress.exe -i \"%s\" -o \"%s\""
+  #define  OART_JP2_DECOMP_COM      "opj_decompress.exe -i \"%s\" -o \"%s\" -allow-partial"
 #else
   #if OPENJPEG_VER >= JP2K_VER_20
-    #define  OART_JP2_DECOMP_COM    "/usr/local/bin/opj_decompress -i \"%s\" -o \"%s\" >/dev/null 2>&1"
+    #define  OART_JP2_DECOMP_COM    "/usr/local/bin/opj_decompress -i \"%s\" -o \"%s\"  -allow-partial >/dev/null 2>&1"
   #else
     #define  OART_JP2_DECOMP_COM    "/usr/local/bin/j2k_to_image -i \"%s\" -o \"%s\" >/dev/null 2>&1"
   #endif
@@ -112,7 +112,8 @@ public:
 
 private:
     int    engine;
-    int    dataformat;
+    int    dataFormat;
+    int    textureFormat;
     bool   noOffset;        // UE用 縮退
     bool   procJoints;
 
@@ -123,7 +124,8 @@ public:
     void   MakeOutputFolder(void);
 
     void   SetEngine(int e);
-    void   SetDataFormat(int f) { dataformat = f; }
+    void   SetDataFormat(int f) { dataFormat = f; }
+    void   SetTextureFormat(int f) { textureFormat = f; }
     void   SetNoOffset(bool b){ noOffset = b; }
     void   SetProcJoints(bool b){ procJoints = b; }
     void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
@@ -131,11 +133,13 @@ public:
     void   SetOutPath(char* path) { set_outpath(path);}
 
     int    GetEngine(void) { return engine;}
-    int    GetDataFormat(void) { return dataformat;}
+    int    GetDataFormat(void) { return dataFormat;}
+    int    GetTextureFormat(void) { return textureFormat;}
+    char*  GetTextureExtension(void) { return get_graphic_extension(textureFormat);}  // not free
     bool   GetNoOffset(void) { return noOffset;}
     bool   GetProcJoints(void) { return procJoints;}
     tList* GetObjectsList(void) { return objectsFiles;}
-    char*  GetOutPath(void) { return get_outpath(); }    // not free
+    char*  GetOutPath(void) { return get_outpath(); }   // not free
 
     void   ReadTerrainData(void);
 

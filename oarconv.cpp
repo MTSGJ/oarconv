@@ -30,6 +30,7 @@ int main(int argc, char** argv)
     int   strtnum = 0;
     int   stopnum = -1;
     int   format  = JBXL_3D_FORMAT_DAE;
+    int   texture = JBXL_TEXTURE_PNG;
     int   engine  = JBXL_3D_ENGINE_UNITY;
 
     bool  degeneracy = false;
@@ -53,13 +54,15 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "-h")) { oarconv_help(stdout); exit(0);}
         else if (!strcmp(argv[i], "-v")) { fprintf(stdout, " Version is %s\n", OARCONV_VERSION); exit(0);}
         //
-        else if (!strcmp(argv[i], "--unity")){ engine = JBXL_3D_ENGINE_UNITY;}  // for UNITY
-        else if (!strcmp(argv[i], "--ue"))   { engine = JBXL_3D_ENGINE_UE;}     // for UE
-        else if (!strcmp(argv[i], "--dae"))  { format = JBXL_3D_FORMAT_DAE;}    // DAEデータを出力
-        else if (!strcmp(argv[i], "--obj"))  { format = JBXL_3D_FORMAT_OBJ;}    // OBJデータを出力
-        else if (!strcmp(argv[i], "--gltf")) { format = JBXL_3D_FORMAT_GLTF;}   // glTFデータを出力
-        else if (!strcmp(argv[i], "--fbx"))  { format = JBXL_3D_FORMAT_FBX;}    // FBXデータを出力
-        else if (!strcmp(argv[i], "--stl"))  { format = JBXL_3D_FORMAT_STL_A;}  // STLデータを出力
+        else if (!strcmp(argv[i], "--unity")){ engine  = JBXL_3D_ENGINE_UNITY;}  // for UNITY
+        else if (!strcmp(argv[i], "--ue"))   { engine  = JBXL_3D_ENGINE_UE;}     // for UE
+        else if (!strcmp(argv[i], "--dae"))  { format  = JBXL_3D_FORMAT_DAE;}    // DAEデータを出力
+        else if (!strcmp(argv[i], "--obj"))  { format  = JBXL_3D_FORMAT_OBJ;}    // OBJデータを出力
+        else if (!strcmp(argv[i], "--gltf")) { format  = JBXL_3D_FORMAT_GLTF;}   // glTFデータを出力
+        else if (!strcmp(argv[i], "--fbx"))  { format  = JBXL_3D_FORMAT_FBX;}    // FBXデータを出力
+        else if (!strcmp(argv[i], "--stl"))  { format  = JBXL_3D_FORMAT_STL_A;}  // STLデータを出力
+        else if (!strcmp(argv[i], "--tga"))  { texture = JBXL_TEXTURE_TGA;}      // テクスチャとして TGA ファイルを使う
+        else if (!strcmp(argv[i], "--png"))  { texture = JBXL_TEXTURE_PNG;}      // テクスチャとして PNG ファイルを使う
         else if (!strcmp(argv[i], "--dg"))   { degeneracy = true;}
         else if (!strcmp(argv[i], "--nooffset")) { degeneracy = true;}
         else if (!strcmp(argv[i], "--joint")){ procJoints = true;}
@@ -87,6 +90,7 @@ int main(int argc, char** argv)
     OARTool oar;
     oar.SetEngine(engine);
     oar.SetDataFormat(format);
+    oar.SetTextureFormat(texture);
     oar.SetNoOffset(degeneracy);
     oar.SetProcJoints(procJoints);
     oar.SetPathInfo((char*)inpdir.buf, (char*)outdir.buf, (char*)astdir.buf);

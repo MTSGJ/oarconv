@@ -30,6 +30,7 @@
 
 #include "Jpeg2KTool.h"
 #include "TgaTool.h"
+#include "PngTool.h"
 
 #include "gz_tool.h"
 #include "llsd_tool.h"

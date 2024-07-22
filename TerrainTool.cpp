@@ -24,6 +24,10 @@ void  TerrainTool::init(char* name, int xs, int ys)
     region_num = xs/256;
     scale = (float)TRNT_DEFAULT_TEX_SCALE;
 
+    engine        = JBXL_3D_ENGINE_UNITY;
+    dataFormat    = JBXL_3D_FORMAT_DAE;
+    textureFormat = JBXL_TEXTURE_PNG;
+
     r32.init();
     for (int i=0; i<4; i++) texture[i] = init_Buffer();
 
@@ -323,6 +327,7 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
 
     //
     // Textureファイルの生成（256x256以上のTerrainは分割される）
+    char* image_type = GetTextureExtension();
     for (int rj=0; rj<region_num; rj++) {
         int yy = (region_num-rj-1)*TRNT_TEXTURE_SIZE*msg.xs;
         for (int ri=0; ri<region_num; ri++) {
@@ -365,16 +370,24 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
             //
             char* paramstr = param.getBase64Params('E');    // E: Earth
             param.setParamString(paramstr);
-            param.setFullName(MTRL_IMAGE_TYPE);
+            param.setFullName(image_type);
             if (paramstr!=NULL) ::free(paramstr);
 
             Buffer filename = make_Buffer_str(param.getTextureName());
             canonical_filename_Buffer(&filename);
 
             cat_Buffer(&filename, &texfile);
-            TGAImage tga = MSGraph2TGAImage(region, true);
-            writeTGAFile((char*)texfile.buf, tga);
-            tga.free();
+
+            if (textureFormat==JBXL_TEXTURE_TGA) {
+                TGAImage tga = MSGraph2TGAImage(region, true);
+                writeTGAFile((char*)texfile.buf, &tga);
+                tga.free();
+            }
+            else {  // default
+                PNGImage png = MSGraph2PNGImage(region);
+                writePNGFile((char*)texfile.buf, &png);
+                png.free();
+            }
 
             param.free();
             region.free();
@@ -407,6 +420,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
 
     //
     DEBUG_MODE PRINT_MESG("TerrainTool::GenerateTerrain: generating sub region mesh.\n");
+    char* image_type = GetTextureExtension();
     for (int rj=0; rj<region_num; rj++) {
         top = bottom = false;
         int jsize = 257;                // 境界用
@@ -442,7 +456,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             Vector<float>  shift = Vector<float>(ri*256.0f + (float)offset.x, rj*256.0f + (float)offset.y, (float)offset.z);
             Vector<float> center = Vector<float>(-xsize/2.0f, -ysize/2.0f, -waterHeight);
             ContourBaseData* facetdata;
-            //if (format==JBXL_3D_FORMAT_OBJ && engine==JBXL_3D_ENGINE_UE && noOffset) {   // 縮退状態
+            //if (dataFormat==JBXL_3D_FORMAT_OBJ && engine==JBXL_3D_ENGINE_UE && noOffset) {   // 縮退状態
             if (noOffset) {   // 縮退状態
                 facetdata = ContourBaseDataFromTerrainImage(region, center, left, right, top, bottom, false);
             }
@@ -467,7 +481,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             //
             char* paramstr = param.getBase64Params('E');    // E: Earth
             param.setParamString(paramstr);
-            param.setFullName(MTRL_IMAGE_TYPE);             // + .tga
+            param.setFullName(image_type);             // + .png/.tga
             if (paramstr!=NULL) ::free(paramstr);
 
             MeshObjectData* data = new MeshObjectData();
@@ -482,10 +496,10 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             BrepSolidList* stl  = NULL;
 
             // DAE
-            if (format==JBXL_3D_FORMAT_DAE) {
+            if (dataFormat==JBXL_3D_FORMAT_DAE) {
                 dae = new ColladaXML();
                 dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
-                dae->addObject(data, true, NULL);
+                dae->addShell(data, true, NULL);
                 dae->closeSolid();
                 //
                 if (noOffset) {   // 縮退状態
@@ -507,10 +521,10 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 freeColladaXML(dae);
             }
             // OBJ
-            else if (format==JBXL_3D_FORMAT_OBJ) {
+            else if (dataFormat==JBXL_3D_FORMAT_OBJ) {
                 obj = new OBJData();
                 obj->setEngine(engine);
-                obj->addObject(data, true);
+                obj->addShell(data, true);
                 obj->closeSolid();
                 //
                 if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
@@ -533,19 +547,41 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 freeOBJData(obj);
             }
             // GLTF
-            else if (format==JBXL_3D_FORMAT_GLTF) {
-                // No Implement
+            else if (dataFormat==JBXL_3D_FORMAT_GLTF) {
+                gltf = new GLTFData();
+                gltf->setEngine(engine);
+                gltf->addShell(data, true);
+                gltf->closeSolid();
+                //
+                if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
+                if (noOffset) {   // 縮退状態
+                    float position[3];
+                    int len = sizeof(float) * 3;
+                    memset(position, 0, len);
+                    position[0] =  (float)(shift.x*100.0);    // 100 is Unreal Unit
+                    position[1] = -(float)(shift.y*100.0);
+                    position[2] =  (float)(shift.z*100.0);
+                    char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
+                    del_file_extension_Buffer(&objname);
+                    cat_s2Buffer("_", &objname);
+                    cat_s2Buffer(OART_LOCATION_MAGIC_STR, &objname);
+                    cat_s2Buffer(params, &objname);
+                    cat_s2Buffer(".", &objname);
+                }
+                //
+                gltf->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
+                freeGLTFData(gltf);
             }
             // FBX
-            else if (format==JBXL_3D_FORMAT_FBX) {
+            else if (dataFormat==JBXL_3D_FORMAT_FBX) {
                 // No Implement
             }
             // STL
-            else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
+            else if (dataFormat==JBXL_3D_FORMAT_STL_A || dataFormat==JBXL_3D_FORMAT_STL_B) {
                 bool ascii = true;
-                if (format==JBXL_3D_FORMAT_STL_B) ascii = false;
+                if (dataFormat==JBXL_3D_FORMAT_STL_B) ascii = false;
                 stl = new BrepSolidList();
-                stl->addObject(data);
+                stl->addShell(data);
                 stl->closeSolid();
                 stl->outputFile(get_file_name((char*)objname.buf), (char*)path.buf, ascii);
                 freeBrepSolidList(stl);

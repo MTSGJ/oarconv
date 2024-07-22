@@ -39,8 +39,51 @@ bool  jbxl::HasValidAlphaChannel(const char* texture, tList* resourceList)
     char* extn = get_file_extension(path);
     //
     if (path!=NULL && extn!=NULL) {
+        // for Jpeg
+        if (!strcasecmp(extn, "jpeg") || !strcasecmp(extn, "jpg")) {
+            ret = false;
+        }
+
+        // for PNG
+        if (!strcasecmp(extn, "png")) {
+            PNGImage png = readPNGFile(path);
+            MSGraph<uByte> vp = PNGImage2MSGraph<uByte>(png);
+
+            if (vp.zs==4 || vp.zs==2) {
+                int   psz = vp.xs*vp.ys;
+                uByte* pp = vp.gp + psz*(vp.zs-1);
+                for (int i=0; i<psz; i++) {
+                    if (pp[i]!=255) {
+                        ret = true;
+                        break;
+                    }
+                }
+            }
+            vp.free();
+            png.free();
+        }
+
+        // for TGA
+        else if (!strcasecmp(extn, "tga")) {
+            TGAImage tga = readTGAFile(path);
+            MSGraph<uByte> vp = TGAImage2MSGraph<uByte>(tga);
+
+            if (vp.zs==4 || vp.zs==2) {
+                int   psz = vp.xs*vp.ys;
+                uByte* pp = vp.gp + psz*(vp.zs-1);
+                for (int i=0; i<psz; i++) {
+                    if (pp[i]!=255) {
+                        ret = true;
+                        break;
+                    }
+                }
+            }
+            vp.free();
+            tga.free();
+        }
+
         // for Jpeg2000
-        if (extn[0]=='j' || extn[0]=='J') {
+        else if (extn[0]=='j' || extn[0]=='J') {
             JPEG2KImage jpg = readJPEG2KFile(path);
             MSGraph<uByte> vp = JPEG2KImage2MSGraph<uByte>(jpg);
 
@@ -56,25 +99,6 @@ bool  jbxl::HasValidAlphaChannel(const char* texture, tList* resourceList)
             }
             vp.free();
             jpg.free();
-        }
-        //
-        // for TGA
-        else if (extn[0]=='t' || extn[0]=='T') {
-            TGAImage tga = readTGAFile (path);
-            MSGraph<uByte> vp = TGAImage2MSGraph<uByte>(tga);
-            
-            if (vp.zs==4 || vp.zs==2) {
-                int   psz = vp.xs*vp.ys;
-                uByte* pp = vp.gp + psz*(vp.zs-1);
-                for (int i=0; i<psz; i++) {
-                    if (pp[i]!=255) {
-                        ret = true;
-                        break;
-                    }
-                }
-            }
-            vp.free();
-            tga.free();
         }
     }
 
