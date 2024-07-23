@@ -59,7 +59,8 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "--dae"))  { format  = JBXL_3D_FORMAT_DAE;}    // DAEデータを出力
         else if (!strcmp(argv[i], "--obj"))  { format  = JBXL_3D_FORMAT_OBJ;}    // OBJデータを出力
         else if (!strcmp(argv[i], "--gltf")) { format  = JBXL_3D_FORMAT_GLTF;}   // glTFデータを出力
-        else if (!strcmp(argv[i], "--fbx"))  { format  = JBXL_3D_FORMAT_FBX;}    // FBXデータを出力
+        else if (!strcmp(argv[i], "--glb"))  { format  = JBXL_3D_FORMAT_GLB;}    // glbデータを出力 // 未サポート
+        else if (!strcmp(argv[i], "--fbx"))  { format  = JBXL_3D_FORMAT_FBX;}    // FBXデータを出力 // 未サポート
         else if (!strcmp(argv[i], "--stl"))  { format  = JBXL_3D_FORMAT_STL_A;}  // STLデータを出力
         else if (!strcmp(argv[i], "--tga"))  { texture = JBXL_TEXTURE_TGA;}      // テクスチャとして TGA ファイルを使う
         else if (!strcmp(argv[i], "--png"))  { texture = JBXL_TEXTURE_PNG;}      // テクスチャとして PNG ファイルを使う

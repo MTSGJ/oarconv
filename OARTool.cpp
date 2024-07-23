@@ -98,11 +98,11 @@ void   OARTool::set_outpath(char* path)
 
     copy_s2Buffer(path, &pathOUT);
 
-#ifdef WIN32
-    if (pathOUT.buf[pathOUT.vldsz-1]!='\\') cat_s2Buffer("\\", &pathOUT);
-#else
+//#ifdef WIN32
+//    if (pathOUT.buf[pathOUT.vldsz-1]!='\\') cat_s2Buffer("\\", &pathOUT);
+//#else
     if (pathOUT.buf[pathOUT.vldsz-1]!='/')  cat_s2Buffer("/",  &pathOUT);
-#endif
+//#endif
 }
 
 
@@ -197,11 +197,11 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
     }
     else {
         pathOAR = make_Buffer_bystr(oardir);
-        #ifdef WIN32
-            if (pathOAR.buf[strlen((char*)pathOAR.buf)-1]!='\\') cat_s2Buffer("\\", &pathOAR);
-        #else
+        //#ifdef WIN32
+        //    if (pathOAR.buf[strlen((char*)pathOAR.buf)-1]!='\\') cat_s2Buffer("\\", &pathOAR);
+        //#else
             if (pathOAR.buf[strlen((char*)pathOAR.buf)-1]!='/') cat_s2Buffer("/", &pathOAR);
-        #endif
+        //#endif
     }
 
     // OUTPUT
@@ -239,11 +239,11 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
         }
     }
 
-    #ifdef WIN32
-        if (pathOUT.buf[pathOUT.vldsz-1]!='\\') cat_s2Buffer("\\", &pathOUT);
-    #else
+    //#ifdef WIN32
+    //     if (pathOUT.buf[pathOUT.vldsz-1]!='\\') cat_s2Buffer("\\", &pathOUT);
+    //#else
         if (pathOUT.buf[pathOUT.vldsz-1]!='/')  cat_s2Buffer("/",  &pathOUT);
-    #endif
+    //#endif
 
     // Set Phantom Path (pathPTM)
     pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
@@ -274,11 +274,11 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
     if (oardir != NULL) {
         free_Buffer(&pathOAR);
         pathOAR = make_Buffer_bystr(oardir);
-#ifdef WIN32
-        if (pathOAR.buf[strlen((char*)pathOAR.buf) - 1] != '\\') cat_s2Buffer("\\", &pathOAR);
-#else
+//#ifdef WIN32
+//        if (pathOAR.buf[strlen((char*)pathOAR.buf) - 1] != '\\') cat_s2Buffer("\\", &pathOAR);
+//#else
         if (pathOAR.buf[strlen((char*)pathOAR.buf) - 1] != '/') cat_s2Buffer("/", &pathOAR);
-#endif
+//#endif
     }
     // OUTPUT
     if (outdir != NULL) {
@@ -286,11 +286,11 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
         free_Buffer(&pathTEX);
         free_Buffer(&pathPTM);
         pathOUT = make_Buffer_bystr(outdir);
-#ifdef WIN32
-        if (pathOUT.buf[strlen((char*)pathOUT.buf) - 1] != '\\') cat_s2Buffer("\\", &pathOUT);
-#else
+//#ifdef WIN32
+//        if (pathOUT.buf[strlen((char*)pathOUT.buf) - 1] != '\\') cat_s2Buffer("\\", &pathOUT);
+//#else
         if (pathOUT.buf[strlen((char*)pathOUT.buf) - 1] != '/') cat_s2Buffer("/", &pathOUT);
-#endif
+//#endif
         pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
         pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
         cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
@@ -560,10 +560,6 @@ void  OARTool::MakeOutputFolder(void)
                 cat_s2Buffer(OART_DEFAULT_BIN_DIR, &bin);
                 mkdir((char*)bin.buf, 0700);
                 free_Buffer(&bin);
-                Buffer tex = dup_Buffer(pathPTM);                       // Phantom/Texture Folder
-                cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex);
-                mkdir((char*)tex.buf, 0700);
-                free_Buffer(&tex);
             }
         }
     }
@@ -1142,7 +1138,16 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     else if (format==JBXL_3D_FORMAT_GLTF) {
         GLTFData* gltf = (GLTFData*)solid;
         //
-        out_path = dup_Buffer(pathOUT);
+        if (gltf->engine==JBXL_3D_ENGINE_UE) {
+            if (gltf->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
+            else                   ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
+            out_path = dup_Buffer(pathOUT);
+        }
+        else {
+            if (gltf->phantom_out) out_path = dup_Buffer(pathPTM);
+            else                   out_path = dup_Buffer(pathOUT);
+        }
+        //
         gltf->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
     }
 
@@ -1150,7 +1155,16 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     else if (format==JBXL_3D_FORMAT_FBX) {
         FBXData* fbx = (FBXData*)solid;
         //
-        out_path = dup_Buffer(pathOUT);
+        if (fbx->engine==JBXL_3D_ENGINE_UE) {
+            if (fbx->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
+            else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
+            out_path = dup_Buffer(pathOUT);
+        }
+        else {
+            if (fbx->phantom_out) out_path = dup_Buffer(pathPTM);
+            else                  out_path = dup_Buffer(pathOUT);
+        }
+        //
         fbx->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR);
     }
 

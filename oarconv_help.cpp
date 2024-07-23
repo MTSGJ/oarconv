@@ -12,7 +12,7 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "         [-t terrain_texture_scale] [-c external_convert_command_of_jp2]\n");
     fprintf(fp, "         [-s start_no.] [-e end_no.]\n");
     fprintf(fp, "         [-x shift_of_x_direction] [-y shift_of_y_direction] [-z shift_of_z_direction]\n");
-    fprintf(fp, "         [--dae | --obj | --gltf | --fbx |  --stl] [--unity | --ue] [--dg | --nooffset] [--joint]\n");
+    fprintf(fp, "         [--dae | --obj | --gltf | --stl (| --glb | --fbx)] [--unity | --ue] [--dg | --nooffset] [--joint]\n");
     fprintf(fp, "         [-d] [-v] [-h | --help]\n");
     fprintf(fp, "\n");
 
@@ -30,12 +30,13 @@ void  oarconv_help(FILE* fp)
 
     fprintf(fp, "   --dae : output Collada DAE file(s).\n");
     fprintf(fp, "   --obj : output Wavefront OBJ file(s).\n");
-    fprintf(fp, "   --gltf: output glTF file(s). (not imlpement yet)\n");
+    fprintf(fp, "   --gltf: output glTF file(s).\n");
+    fprintf(fp, "   --glb : output glb file(s). (not imlpement yet)\n");
     fprintf(fp, "   --fbx : output FBX file(s). (not implement yet)\n");
     fprintf(fp, "   --stl : output STL ASCII file(s).\n");
     fprintf(fp, "   --unity : for Unity Engine.\n");
-    fprintf(fp, "   --ue : for Unreal Engine.\n");
-    fprintf(fp, "   --dg : shrinkage to the origin with DAE/OBJ file.\n");
+    fprintf(fp, "   --ue  : for Unreal Engine.\n");
+    fprintf(fp, "   --dg  : degenerate shift data to the origin.\n");
     fprintf(fp, "   --tga : use TGA file as texture.\n");
     fprintf(fp, "   --png : use PNG file as texture. (default)\n");
     fprintf(fp, "   --nooffset : same for --dg\n");
