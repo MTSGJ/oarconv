@@ -809,21 +809,21 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
-                    dae->addObject(mesh, false);
+                    dae->addShell(mesh, false);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     obj->phantom_out = true;
-                    obj->addObject(mesh, false);
+                    obj->addShell(mesh, false);
                 }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     //obj->phantom_out = true;
-                    //obj->addObject(mesh, false);
+                    //obj->addShell(mesh, false);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-                    stl->addObject(mesh);
+                    stl->addShell(mesh);
                 }
                 freeMeshObjectData(mesh);
                 //
@@ -853,21 +853,21 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
-                    dae->addObject(mesh, false);
+                    dae->addShell(mesh, false);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     obj->phantom_out = true;
-                    obj->addObject(mesh, false);
+                    obj->addShell(mesh, false);
                 }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     //obj->phantom_out = true;
-                    //obj->addObject(mesh, false);
+                    //obj->addShell(mesh, false);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-                    stl->addObject(mesh);
+                    stl->addShell(mesh);
                 }
                 freeMeshObjectData(mesh);
                 //
@@ -928,21 +928,21 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                             PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
                         }
                     }
-                    dae->addObject(mesh, collider, skin_joint, joints_template);
+                    dae->addShell(mesh, collider, skin_joint, joints_template);
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     if (collider) obj->phantom_out = false;
-                    obj->addObject(mesh, collider);
+                    obj->addShell(mesh, collider);
                 }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     //if (collider) obj->phantom_out = false;
-                    //obj->addObject(mesh, collider, skin_joint);
+                    //obj->addShell(mesh, collider, skin_joint);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
-                    stl->addObject(mesh);
+                    stl->addShell(mesh);
                 }
                 freeMeshObjectData(mesh);
                 //
@@ -965,7 +965,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         //  OBJ
         else if (format==JBXL_3D_FORMAT_OBJ) {
-            Vector<double> offset = obj->execAffineTrans();         // no_offset==true の場合，原点縮退
+            Vector<double> offset = obj->execDegeneracy();         // no_offset==true の場合，原点縮退
             if (obj->affineTrans==NULL) obj->affineTrans = new AffineTrans<double>();
             obj->affineTrans->setShift(offset);
             obj->closeSolid();
@@ -973,7 +973,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         //  FBX
         else if (format==JBXL_3D_FORMAT_FBX) {
-            //Vector<double> offset = obj->execAffineTrans();         // no_offset==true の場合，原点縮退
+            //Vector<double> offset = obj->execDegeneracy();         // no_offset==true の場合，原点縮退
             //if (obj->affineTrans==NULL) fbx->affineTrans = new AffineTrans<double>();
             //fbx->affineTrans->setShift(offset);
             //fbx->closeSolid();
@@ -1237,7 +1237,7 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                     if (vp.zs>0) {
                         //TGAImage tga = MSGraph2TGAImage(vp, true);
                         TGAImage tga = MSGraph2TGAImage(vp, false);
-                        int err = writeTGAFile((char*)outpath.buf, tga);
+                        int err = writeTGAFile((char*)outpath.buf, &tga);
                         if (!err) converted = true;
                         else      PRINT_MESG("OARTool::ConvertTexture: ERROR: write error (%d) [%s].\n", err, (char*)outpath.buf);
                         tga.free();

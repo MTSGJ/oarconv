@@ -374,7 +374,7 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
 
             cat_Buffer(&filename, &texfile);
             TGAImage tga = MSGraph2TGAImage(region, true);
-            writeTGAFile((char*)texfile.buf, tga);
+            writeTGAFile((char*)texfile.buf, &tga);
             tga.free();
 
             param.free();
@@ -484,7 +484,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             if (format==JBXL_3D_FORMAT_DAE) {
                 dae = new ColladaXML();
                 dae->setBlankTexture(PRIM_OS_BLANK_TEXTURE);
-                dae->addObject(data, true, NULL);
+                dae->addShell(data, true, NULL);
                 dae->closeSolid();
                 //
                 if (noOffset) {   // 縮退状態
@@ -509,7 +509,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             else if (format==JBXL_3D_FORMAT_OBJ) {
                 obj = new OBJData();
                 obj->setEngine(engine);
-                obj->addObject(data, true);
+                obj->addShell(data, true);
                 obj->closeSolid();
                 //
                 if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
@@ -540,7 +540,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 bool ascii = true;
                 if (format==JBXL_3D_FORMAT_STL_B) ascii = false;
                 stl = new BrepSolidList();
-                stl->addObject(data);
+                stl->addShell(data);
                 stl->closeSolid();
                 stl->outputFile(get_file_name((char*)objname.buf), (char*)path.buf, ascii);
                 freeBrepSolidList(stl);
