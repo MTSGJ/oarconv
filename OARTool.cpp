@@ -611,7 +611,7 @@ void  OARTool::ReadTerrainData(void)
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// for DAE/OBJ/glTF/FBX/STL
+// for DAE/OBJ/glTF/STL
 
 int  OARTool::GenerateTerrainDataFile(void)
 {
@@ -833,7 +833,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                     char* image_type = GetTextureExtension();
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
-                            ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, NULL, command);
+                            int ret = ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, NULL, command);
                             facet->material_param.setFullName(image_type);
                         }
                         facet = facet->next;
@@ -851,6 +851,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
                 // GLTF
                 else if (format==JBXL_3D_FORMAT_GLTF) {
+                    mesh->affineTrans->addShift(xsize/2.0f, ysize/2.0f, waterHeight);
+                    mesh->affineTrans->computeMatrix();
                     gltf->phantom_out = true;
                     gltf->addShell(mesh, false);
                 }
@@ -901,6 +903,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
                 // GLTF
                 else if (format==JBXL_3D_FORMAT_GLTF) {
+                    mesh->affineTrans->addShift(xsize/2.0f, ysize/2.0f, waterHeight);
+                    mesh->affineTrans->computeMatrix();
                     gltf->phantom_out = true;
                     gltf->addShell(mesh, false);
                 }
@@ -946,7 +950,15 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                             //      ::free(paramstr);
                             //  }
                             //}
-                            ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, NULL, command);
+                            int ret = ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, NULL, command);
+                            if (ret<=0 && ret!=OART_TEXCNVT_WRITE_ERR) {
+                                // 代替テクスチャ
+                                facet->material_param.setTextureName(OART_TEXCNVT_ALT_TEXTURE);
+                                ret = ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, NULL, command);
+                                if (ret==OART_TEXCNVT_NORMAL) {
+                                    PRINT_MESG("OARTool::generateSolidData: tetxure was changed to %s\n", facet->material_param.getTextureName());
+                                }
+                            }
                             ConvertTexture(facet->material_param.getBumpMapName(), NULL, image_type, NULL, command);
                             ConvertTexture(facet->material_param.getSpecMapName(), NULL, image_type, NULL, command);
                             facet->material_param.setFullName(image_type);
@@ -1246,7 +1258,7 @@ PrimBaseShape  OARTool::getAbstractObject(const char* fname)
 
 
 /**
-void  OARTool::ConvertTexture(const char* texture, const char* add_name, const char* ext_name, const char* dist, const char* comformat)
+int  OARTool::ConvertTexture(const char* texture, const char* add_name, const char* ext_name, const char* dist, const char* comformat)
 
 @param texture    コンバート元データのUUID．
 @param add_name   コンバート先ファイル名の追加文字列．
@@ -1254,14 +1266,15 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
 @param dist       コンバート先のパス．
 @param comformat  内部処理が失敗した場合の外部処理コマンド．NULL の場合はデフォルトを使用する．
 */
-void  OARTool::ConvertTexture(const char* texture, const char* add_name, const char* ext_name, const char* dist, const char* comformat)
+int  OARTool::ConvertTexture(const char* texture, const char* add_name, const char* ext_name, const char* dist, const char* comformat)
 {
-    if (texture==NULL) return;
+    if (texture==NULL) return OART_TEXCNVT_UNKNOWN;
 
     Buffer outpath;
     if (dist==NULL) outpath = make_Buffer_bystr((char*)pathTEX.buf);
     else            outpath = make_Buffer_bystr(dist);
 
+    int ret = OART_TEXCNVT_UNKNOWN;
     bool converted = false;
 
     cat_s2Buffer(texture, &outpath);
@@ -1281,7 +1294,10 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
     #endif
 
     // 下記 if文をコメントアウトすると上書き可（ただし凄く遅い）
-    if (!file_exist((char*)outpath.buf)) {
+    if (file_exist((char*)outpath.buf)) {
+        ret = OART_TEXCNVT_NORMAL;
+    }
+    else {
         //
         char* path = get_resource_path((char*)texture, assetsFiles);
         char* extn = get_file_extension(path);
@@ -1295,13 +1311,13 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
             if (!strcasecmp(extn, check_ext)) {
                 int flsz = file_size(path);
                 int cpsz = copy_file(path, (char*)outpath.buf);
-                DEBUG_MODE {
-                    if (flsz==cpsz) {
-                        PRINT_MESG("OARTool::ConvertTexture: copy from %s to %s\n", path, (char*)outpath.buf);
-                    }
-                    else {
-                        PRINT_MESG("OARTool::ConvertTexture: ERROR: copy from %s to %s failed!\n", path, (char*)outpath.buf);
-                    }
+                if (flsz==cpsz) {
+                    DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: copy from %s to %s\n", path, (char*)outpath.buf);
+                    ret = OART_TEXCNVT_NORMAL;
+                }
+                else {
+                    DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: copy from %s to %s failed!\n", path, (char*)outpath.buf);
+                    ret = OART_TEXCNVT_COPY_ERR;
                 }
             }
             // JPEG2000
@@ -1317,9 +1333,11 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                     if (err==JBXL_NORMAL) {
                         jpg = readJPEG2KFile((char*)repair_file.buf);
                         unlink((char*)repair_file.buf);
+                        ret = OART_TEXCNVT_NORMAL;
                     }
                     else {
                         DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: failure to repair the file.\n", err);
+                        ret = OART_TEXCNVT_DSTRY_ERR;
                     }
                     free_Buffer(&repair_file);
                 }
@@ -1333,20 +1351,33 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                             //TGAImage tga = MSGraph2TGAImage(vp, true);
                             TGAImage tga = MSGraph2TGAImage(vp, false);
                             int err = writeTGAFile((char*)outpath.buf, &tga);
-                            if (!err) converted = true;
-                            else      PRINT_MESG("OARTool::ConvertTexture: ERROR: writeTGAFile error (%d) [%s].\n", err, (char*)outpath.buf);
+                            if (!err) {
+                                converted = true;
+                                ret = OART_TEXCNVT_NORMAL;
+                            }
+                            else  {
+                                PRINT_MESG("OARTool::ConvertTexture: ERROR: writeTGAFile error (%d) [%s].\n", err, (char*)outpath.buf);
+                                ret = OART_TEXCNVT_WRITE_ERR;
+                            }
                             tga.free();
                         }
                         else {
                             PNGImage png = MSGraph2PNGImage(vp);
                             int err = writePNGFile((char*)outpath.buf, &png);
-                            if (!err) converted = true;
-                            else      PRINT_MESG("OARTool::ConvertTexture: ERROR: writePNGFile error (%d) [%s].\n", err, (char*)outpath.buf);
+                            if (!err) {
+                                converted = true;
+                                ret = OART_TEXCNVT_NORMAL;
+                            }
+                            else {
+                                PRINT_MESG("OARTool::ConvertTexture: ERROR: writePNGFile error (%d) [%s].\n", err, (char*)outpath.buf);
+                                ret = OART_TEXCNVT_WRITE_ERR;
+                            }
                             png.free();
                         }
                     }
                     else {
                         PRINT_MESG("OARTool::ConvertTexture: ERROR: color num of %s is %d [%s].\n", texture, vp.zs, (char*)outpath.buf);
+                        ret = OART_TEXCNVT_INVD_ERR;
                     }
                     vp.free();
                     jpg.free();
@@ -1354,9 +1385,11 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                 else {
                     if (jpg.state==JBXL_GRAPH_IVDDATA_ERROR) {
                         DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is invalid [%s].\n", texture, (char*)outpath.buf);
+                        ret = OART_TEXCNVT_INVD_ERR;
                     }
                     else {
                         DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d) [%s].\n", texture, jpg.state, (char*)outpath.buf);
+                        ret = OART_TEXCNVT_CNVT_ERR;
                     }
                 }
                 //
@@ -1388,18 +1421,21 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
                         if (ret!=WAIT_OBJECT_0) err = 1;
                     #else
                         DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: convert command: %s\n", command);
-                        int ret = system(command);
-                        err = WEXITSTATUS(ret);
+                        int rslt = system(command);
+                        err = WEXITSTATUS(rslt);
                     #endif
                     if (err!=0) {
                         PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error (%d).\n", texture, err);
+                        ret = OART_TEXCNVT_CNVT_ERR;
                     }
                     else {
                         if (file_exist((char*)outpath.buf)) {
                             DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: SUCCESS: texture %s is converted.\n", texture);
+                            ret = OART_TEXCNVT_NORMAL;
                         }
                         else {
                             PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s convert error.\n", texture);
+                            ret = OART_TEXCNVT_CNVT_ERR;
                         }
                     }
                 }
@@ -1407,20 +1443,23 @@ void  OARTool::ConvertTexture(const char* texture, const char* add_name, const c
             // unknown file extension
             else {
                 PRINT_MESG("OARTool::ConvertTexture: ERROR: unsupported file %s\n found!", path);
+                ret = OART_TEXCNVT_INVD_ERR;
             }
         }
         // Lost
         else {
             if (filesz==0) {
                 PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s size is zero!\n", texture);
+                ret = OART_TEXCNVT_ZERO_ERR;
             }
             else {
-                PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is lost! (%d)\n", texture, filesz);
+                PRINT_MESG("OARTool::ConvertTexture: ERROR: texture %s is lost!\n", texture);
+                ret = OART_TEXCNVT_LOST_ERR;
             }
         }
     }
     free_Buffer(&outpath);
 
-    return;
+    return ret;
 }
 

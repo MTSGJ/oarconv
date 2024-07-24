@@ -47,6 +47,19 @@ namespace  jbxl {
 #define  OART_JOINT_TEMPLATE_FILE   "f5df7c06-6636-44c1-8406-68da93408cde"
 
 
+// Texture Convert ERROR for ConvertTexture()
+#define  OART_TEXCNVT_NORMAL        1
+#define  OART_TEXCNVT_UNKNOWN       0
+#define  OART_TEXCNVT_NULL_ERR      -1      // データがNULL
+#define  OART_TEXCNVT_COPY_ERR      -100    // コピーモードで失敗
+#define  OART_TEXCNVT_INVD_ERR      -101    // 無効なファイル
+#define  OART_TEXCNVT_CNVT_ERR      -102    // 変換エラー
+#define  OART_TEXCNVT_DSTRY_ERR     -103    // ファイルが壊れている
+#define  OART_TEXCNVT_LOST_ERR      -200    // Texture が無い
+#define  OART_TEXCNVT_ZERO_ERR      -201    // Texture のサイズが 0
+#define  OART_TEXCNVT_WRITE_ERR     -300    // 書き込みエラー
+
+#define  OART_TEXCNVT_ALT_TEXTURE   "89556747-24cb-43ed-920b-47caed15465f"      // 木目画像
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // OARTool
@@ -156,7 +169,7 @@ public:
     void   freeSolidData(int format, void* solid);
 
     bool   isRequiredTexture(int format) { return (format!=JBXL_3D_FORMAT_STL_A && format!=JBXL_3D_FORMAT_STL_B);} 
-    void   ConvertTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL, const char* command=NULL);
+    int    ConvertTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL, const char* command=NULL);
     PrimBaseShape  getAbstractObject(const char* fname);
 
     // ReadTerrainData と GenerateTerrainDataFile の間で呼ぶこと．

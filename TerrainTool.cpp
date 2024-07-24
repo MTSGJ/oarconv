@@ -404,7 +404,7 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
 
 
 //
-// for DAE/OBJ/STL
+// for DAE/OBJ/STL/glTF
 //
 void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
 {
@@ -481,13 +481,17 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             //
             char* paramstr = param.getBase64Params('E');    // E: Earth
             param.setParamString(paramstr);
-            param.setFullName(image_type);             // + .png/.tga
+            param.setFullName(image_type);                  // + .png/.tga
             if (paramstr!=NULL) ::free(paramstr);
 
+            // create Geometory Data
             MeshObjectData* data = new MeshObjectData();
             data->addData(facetdata, &param);
             data->setMaterialParam(param);
-
+            data->affineTrans = new AffineTrans<double>();
+            data->data_name = dup_Buffer(objname);
+            data->alt_name  = dup_Buffer(objname);
+            cat_s2Buffer("_Node", &data->alt_name);
             //
             ColladaXML*    dae  = NULL;
             OBJData*       obj  = NULL;
@@ -506,9 +510,9 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                     float position[3];
                     int len = sizeof(float) * 3;
                     memset(position, 0, len);
-                    position[0] =-(float)(shift.x);
-                    position[1] = (float)(shift.z);
-                    position[2] =-(float)(shift.y);
+                    position[0] = -(float)(shift.x);
+                    position[1] =  (float)(shift.z);
+                    position[2] = -(float)(shift.y);
                     char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
                     del_file_extension_Buffer(&objname);
                     cat_s2Buffer("_", &objname);
@@ -532,9 +536,17 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                     float position[3];
                     int len = sizeof(float) * 3;
                     memset(position, 0, len);
-                    position[0] =  (float)(shift.x*100.0);    // 100 is Unreal Unit
-                    position[1] = -(float)(shift.y*100.0);
-                    position[2] =  (float)(shift.z*100.0);
+                    //
+                    if (engine==JBXL_3D_ENGINE_UE) {
+                        position[0] =  (float)(shift.x*100.0);    // 100 is Unreal Unit
+                        position[1] = -(float)(shift.y*100.0);
+                        position[2] =  (float)(shift.z*100.0);
+                    }
+                    else {
+                        position[0] = -(float)(shift.x);
+                        position[1] =  (float)(shift.z);
+                        position[2] = -(float)(shift.y);
+                    }
                     char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
                     del_file_extension_Buffer(&objname);
                     cat_s2Buffer("_", &objname);
@@ -548,6 +560,9 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             }
             // GLTF
             else if (dataFormat==JBXL_3D_FORMAT_GLTF) {
+                data->affineTrans->setShift(-(double)center.x, -(double)center.y, -(double)center.z);
+                data->affineTrans->computeMatrix();
+                //
                 gltf = new GLTFData();
                 gltf->setEngine(engine);
                 gltf->addShell(data, true);
@@ -558,9 +573,17 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                     float position[3];
                     int len = sizeof(float) * 3;
                     memset(position, 0, len);
-                    position[0] =  (float)(shift.x*100.0);    // 100 is Unreal Unit
-                    position[1] = -(float)(shift.y*100.0);
-                    position[2] =  (float)(shift.z*100.0);
+                    //
+                    if (engine==JBXL_3D_ENGINE_UE) {
+                        position[0] =  (float)(shift.x*100.0);    // 100 is Unreal Unit
+                        position[1] = -(float)(shift.y*100.0);
+                        position[2] =  (float)(shift.z*100.0);
+                    }
+                    else {
+                        position[0] = -(float)(shift.x);
+                        position[1] =  (float)(shift.z);
+                        position[2] = -(float)(shift.y);
+                    }
                     char* params = (char*)encode_base64_filename((unsigned char*)position, len, '-');
                     del_file_extension_Buffer(&objname);
                     cat_s2Buffer("_", &objname);
