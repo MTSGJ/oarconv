@@ -76,16 +76,16 @@ public:
     float  waterHeight;      // Water Height
 
 public:
-    TerrainTool(char* name, int xs=256, int ys=256) { init(name, xs, ys);}
+    TerrainTool(char* name, int xs = 256, int ys = 256) { init(name, xs, ys);}
     virtual ~TerrainTool(void) {}
 
-    void   init(char* name, int xs=256, int ys=256);
+    void   init(char* name, int xs = 256, int ys = 256);
     void   free(void);
 
     void   set_size (int xs, int ys) { xsize = xs; ysize = ys;}
     void   set_scale(float sc) { scale = sc;}
 
-    float  height(int x, int y) { return r32.gp[(r32.ys-1-y)*r32.xs+x];}
+    float  height(int x, int y) { return r32.gp[(r32.ys - 1 - y)*r32.xs + x];}
     float  water_height(void)   { return waterHeight;}
 
 public:

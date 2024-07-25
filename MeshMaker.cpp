@@ -1186,7 +1186,7 @@ float  jbxl::LLMeshUint16toFloat(uByte* ptr, float max, float min)
 Terrain用の標高データの入った画像データからインデックス化された三角ポリゴンデータ ContourBaseDataを生成する．@n
 
 @param grd      標高データの入った画像データ．
-@param shift    平行移動量．Unity3Dの仕様対策
+@param shift    平行移動量．
 @param left     左の境界を処理するか？
 @param right    右の境界を処理するか？
 @param top      上方の境界を処理するか？
@@ -1216,9 +1216,9 @@ ContourBaseData*  jbxl::ContourBaseDataFromTerrainImage(MSGraph<float> grd, Vect
     }
 
     for (int i=0; i<inum/3; i++) {
-        facetdata->index[i*3+0] = terrainMesh.terrainTriIndex[i].v1;
-        facetdata->index[i*3+1] = terrainMesh.terrainTriIndex[i].v2;
-        facetdata->index[i*3+2] = terrainMesh.terrainTriIndex[i].v3;
+        facetdata->index[i*3 + 0] = terrainMesh.terrainTriIndex[i].v1;
+        facetdata->index[i*3 + 1] = terrainMesh.terrainTriIndex[i].v2;
+        facetdata->index[i*3 + 2] = terrainMesh.terrainTriIndex[i].v3;
     }
 
     for (int i=0; i<cnum; i++) {

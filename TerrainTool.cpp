@@ -449,16 +449,15 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 int jj = j*isize;
                 int ww = j*xsize + xx;
                 for (int i=0; i<isize; i++) {
-                    region.gp[jj+i] = r32.gp[ww+i];
+                    region.gp[jj + i] = r32.gp[ww + i];
                 }
             }
 
             Vector<float>  shift = Vector<float>(ri*256.0f + (float)offset.x, rj*256.0f + (float)offset.y, (float)offset.z);
-            Vector<float> center = Vector<float>(-xsize/2.0f, -ysize/2.0f, -waterHeight);
+            Vector<float> center = Vector<float>(0.0f, 0.0f, 0.0f);
             ContourBaseData* facetdata;
-            //if (dataFormat==JBXL_3D_FORMAT_OBJ && engine==JBXL_3D_ENGINE_UE && noOffset) {   // 縮退状態
             if (noOffset) {   // 縮退状態
-                facetdata = ContourBaseDataFromTerrainImage(region, center, left, right, top, bottom, false);
+                facetdata = ContourBaseDataFromTerrainImage(region, center,         left, right, top, bottom, false);
             }
             else {
                 facetdata = ContourBaseDataFromTerrainImage(region, center + shift, left, right, top, bottom, false);
