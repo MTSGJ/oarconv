@@ -1036,7 +1036,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         //  OBJ
         else if (format==JBXL_3D_FORMAT_OBJ) {
-            Vector<double> offset = obj->execDegeneracy();         // no_offset==true の場合，原点縮退
+            Vector<double> offset = obj->execAffineTrans();         // no_offset==true の場合，原点縮退
             if (obj->affineTrans==NULL) obj->affineTrans = new AffineTrans<double>();
             obj->affineTrans->setShift(offset);
             obj->closeSolid();
@@ -1044,7 +1044,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         //  GLTF
         else if (format==JBXL_3D_FORMAT_GLTF) {
-            Vector<double> offset = gltf->execDegeneracy();        // no_offset==true の場合，原点縮退
+            Vector<double> offset = gltf->execAffineTrans();        // Affine 変換自体は別の機能で行う．no_offset==true の場合，原点縮退
             if (gltf->affineTrans==NULL) gltf->affineTrans = new AffineTrans<double>();
             gltf->affineTrans->setShift(offset);
             gltf->closeSolid();
@@ -1052,7 +1052,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         //  FBX
         else if (format==JBXL_3D_FORMAT_FBX) {
-            Vector<double> offset = fbx->execDegeneracy();         // no_offset==true の場合，原点縮退
+            Vector<double> offset = fbx->execAffineTrans();         // no_offset==true の場合，原点縮退
             if (fbx->affineTrans==NULL) fbx->affineTrans = new AffineTrans<double>();
             fbx->affineTrans->setShift(offset);
             fbx->closeSolid();

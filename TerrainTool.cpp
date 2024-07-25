@@ -350,7 +350,7 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
                     int jj = j*region.xs + kk;
                     int ww = j*msg.xs + xx + vv;
                     for (int i=0; i<region.xs; i++) {
-                        region.gp[jj+i] = msg.gp[ww+i];
+                        region.gp[jj + i] = msg.gp[ww + i];
                     }
                 }
             }
@@ -531,6 +531,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 obj = new OBJData();
                 obj->setEngine(engine);
                 obj->addShell(data, true);
+                obj->execAffineTrans();
                 obj->closeSolid();
                 //
                 if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
