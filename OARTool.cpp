@@ -824,7 +824,9 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         // Tree
         if (shapes[s].PCode==PRIM_PCODE_NEWTREE || shapes[s].PCode==PRIM_PCODE_TREE) {
             //
-            shapes[s].affineTrans.addShift(-xsize/2.0f + terrainShift.x, -ysize/2.0f + terrainShift.y, -waterHeight + terrainShift.z);
+            //shapes[s].affineTrans.addShift(-xsize/2.0f + terrainShift.x, -ysize/2.0f + terrainShift.y, -waterHeight + terrainShift.z);
+            shapes[s].affineTrans.addShift(terrainShift);
+            shapes[s].affineTrans.computeMatrix();
             MeshObjectData* mesh = treeTool.GenerateTree(shapes[s], 0);
             //
             if (mesh!=NULL) {
@@ -851,8 +853,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
                 // GLTF
                 else if (format==JBXL_3D_FORMAT_GLTF) {
-                    mesh->affineTrans->addShift(xsize/2.0f, ysize/2.0f, waterHeight);
-                    mesh->affineTrans->computeMatrix();
+                    //mesh->affineTrans->addShift(xsize/2.0f, ysize/2.0f, waterHeight);
+                    //mesh->affineTrans->computeMatrix();
                     gltf->phantom_out = true;
                     gltf->addShell(mesh, false);
                 }
@@ -875,9 +877,14 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         // Grass
         else if (shapes[s].PCode==PRIM_PCODE_GRASS){ 
             //
-            shapes[s].affineTrans.addShift(-xsize/2.0f, -ysize/2.0f, -waterHeight);
+            //shapes[s].affineTrans.addShift(-xsize/2.0f, -ysize/2.0f, -waterHeight);
+            //shapes[s].affineTrans.addShift(terrainShift.x, terrainShift.y, terrainShift.z);
+            shapes[s].affineTrans.computeMatrix();
             MeshObjectData* mesh = treeTool.GenerateGrass(shapes[s], terrain);  // 1個の Terrainのみサポート．範囲チェックあり
-            if (mesh!=NULL && mesh->affineTrans!=NULL) mesh->affineTrans->addShift(terrainShift);
+            if (mesh!=NULL && mesh->affineTrans!=NULL) {
+                mesh->affineTrans->addShift(terrainShift);
+                mesh->affineTrans->computeMatrix();
+            }
             //
             if (mesh!=NULL) {
                 if (isRequiredTexture(format)) {    // STLの場合は不必要
@@ -903,8 +910,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
                 // GLTF
                 else if (format==JBXL_3D_FORMAT_GLTF) {
-                    mesh->affineTrans->addShift(xsize/2.0f, ysize/2.0f, waterHeight);
-                    mesh->affineTrans->computeMatrix();
+                    //mesh->affineTrans->addShift(xsize/2.0f, ysize/2.0f, waterHeight);
+                    //mesh->affineTrans->computeMatrix();
                     gltf->phantom_out = true;
                     gltf->addShell(mesh, false);
                 }
@@ -931,7 +938,9 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             SkinJointData**  ptr_skin_joint = &skin_joint;
             if (!procJoints) ptr_skin_joint = NULL;
 
-            shapes[s].affineTrans.addShift(-xsize/2.0f + terrainShift.x, -ysize/2.0f + terrainShift.y, -waterHeight + terrainShift.z);
+            //shapes[s].affineTrans.addShift(-xsize/2.0f + terrainShift.x, -ysize/2.0f + terrainShift.y, -waterHeight + terrainShift.z);
+            shapes[s].affineTrans.addShift(terrainShift);
+            shapes[s].affineTrans.computeMatrix();
             MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, ptr_skin_joint);
             //
             if (mesh!=NULL) {

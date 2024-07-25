@@ -303,8 +303,8 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
         bool  valid_pos = true;
         //
         if (terrain!=NULL) {
-            float aa = xx + (float)shape.affineTrans.shift.x + terrain->xsize/2.0f;
-            float bb = yy + (float)shape.affineTrans.shift.y + terrain->ysize/2.0f;
+            float aa = xx + (float)shape.affineTrans.shift.x;// + terrain->xsize/2.0f;
+            float bb = yy + (float)shape.affineTrans.shift.y;// + terrain->ysize/2.0f;
             if (aa<0.0 || bb<0.0 || aa>(float)terrain->xsize-1.0f || bb>(float)terrain->ysize-1.0f) {   // ex. 0.0 - 255.0
                 valid_pos = false;
             }
@@ -321,7 +321,8 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
                 float h1 = (float)terrain->height(i1, terrain->ysize-1-j0);
                 float h2 = (float)terrain->height(i0, terrain->ysize-1-j1);
                 float h3 = (float)terrain->height(i1, terrain->ysize-1-j1);
-                height += h0*(1.0f-alph)*(1.0f-beta) + h1*alph*(1.0f-beta) + h2*(1.0f-alph)*beta + h3*alph*beta - terrain->waterHeight;
+                //height += h0*(1.0f-alph)*(1.0f-beta) + h1*alph*(1.0f-beta) + h2*(1.0f-alph)*beta + h3*alph*beta - terrain->waterHeight;
+                height += h0*(1.0f-alph)*(1.0f-beta) + h1*alph*(1.0f-beta) + h2*(1.0f-alph)*beta + h3*alph*beta;
             }
         }
         //

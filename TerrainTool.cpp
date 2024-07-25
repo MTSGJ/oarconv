@@ -488,10 +488,12 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             MeshObjectData* data = new MeshObjectData();
             data->addData(facetdata, &param);
             data->setMaterialParam(param);
-            data->affineTrans = new AffineTrans<double>();
             data->data_name = dup_Buffer(objname);
             data->alt_name  = dup_Buffer(objname);
             cat_s2Buffer("_Node", &data->alt_name);
+            data->affineTrans = new AffineTrans<double>();
+            data->affineTrans->setShift(-(double)center.x, -(double)center.y, -(double)center.z);
+            data->affineTrans->computeMatrix();
             //
             ColladaXML*    dae  = NULL;
             OBJData*       obj  = NULL;
@@ -560,9 +562,6 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             }
             // GLTF
             else if (dataFormat==JBXL_3D_FORMAT_GLTF) {
-                data->affineTrans->setShift(-(double)center.x, -(double)center.y, -(double)center.z);
-                data->affineTrans->computeMatrix();
-                //
                 gltf = new GLTFData();
                 gltf->setEngine(engine);
                 gltf->addShell(data, true);
