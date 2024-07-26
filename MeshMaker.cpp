@@ -1141,8 +1141,14 @@ UVMap<float>*  jbxl::GetLLMeshTexCoordDomainMaxMin(tXML* xml, int facet, bool ma
     while (count<facet && lp!=NULL) {
         if (lp->altp!=NULL) {
             tList* lpreal = lp->altp;
-            uvmp[count].u = (float)atof((char*)lpreal->next->ldat.key.buf);
-            uvmp[count].v = (float)atof((char*)lpreal->ysis->next->ldat.key.buf);
+            float u = (float)atof((char*)lpreal->next->ldat.key.buf);
+            float v = (float)atof((char*)lpreal->ysis->next->ldat.key.buf);
+            if      (u> 1.0e10) u =  1.0;
+            else if (u<-1.0e10) u = -1.0;
+            if      (v> 1.0e10) v =  1.0;
+            else if (v<-1.0e10) v = -1.0;
+            uvmp[count].u = u;
+            uvmp[count].v = v;
             count++;
         }
         lp = lp->next;
