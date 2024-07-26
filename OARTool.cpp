@@ -1039,6 +1039,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             Vector<double> offset = obj->execAffineTrans();         // no_offset==true の場合，原点縮退
             if (obj->affineTrans==NULL) obj->affineTrans = new AffineTrans<double>();
             obj->affineTrans->setShift(offset);
+            obj->affineTrans->computeMatrix();
             obj->closeSolid();
             return (void*)obj;
         }
@@ -1090,6 +1091,32 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     Buffer out_fname = make_Buffer_str(fname);
     Buffer out_path  = init_Buffer();
 
+/*
+    // 縮退状態
+    if (noOffset && obj->affineTrans != NULL) {
+        float offset[3];
+        int len = sizeof(float) * 3;
+        memset(offset, 0, len);
+        if (obj->engine==JBXL_3D_ENGINE_UE) {   // UE
+            offset[0] =  (float)(obj->affineTrans->shift.x * 100.);    // 100 is Unreal Unit
+            offset[1] = -(float)(obj->affineTrans->shift.y * 100.);
+            offset[2] =  (float)(obj->affineTrans->shift.z * 100.);
+        }
+        else {                                  // Unity
+            offset[0] = -(float)(obj->affineTrans->shift.x);
+            offset[1] =  (float)(obj->affineTrans->shift.z);
+            offset[2] = -(float)(obj->affineTrans->shift.y);
+        }
+        char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
+        del_file_extension_Buffer(&out_fname);
+        cat_s2Buffer("_", &out_fname);
+        cat_s2Buffer(OART_LOCATION_MAGIC_STR, &out_fname);
+        cat_s2Buffer(params, &out_fname);
+        cat_s2Buffer(".", &out_fname);
+        DEBUG_MODE PRINT_MESG("OARTool::outputSolidData: offset (%f, %f, %f) to filename (%s).\n", offset[0], offset[1], offset[2], params);
+    }
+*/
+    //
     // fnameの拡張子は自動的に変換される
     // DAE
     if (format==JBXL_3D_FORMAT_DAE) {
@@ -1108,6 +1135,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             cat_s2Buffer(OART_LOCATION_MAGIC_STR, &out_fname);
             cat_s2Buffer(params, &out_fname);
             cat_s2Buffer(".", &out_fname);
+            DEBUG_MODE PRINT_MESG("OARTool::outputSolidData: offset (%f, %f, %f) to filename (%s).\n", offset[0], offset[1], offset[2], params);
         }
         //
         if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
@@ -1140,6 +1168,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
             cat_s2Buffer(OART_LOCATION_MAGIC_STR, &out_fname);
             cat_s2Buffer(params, &out_fname);
             cat_s2Buffer(".", &out_fname);
+            DEBUG_MODE PRINT_MESG("OARTool::outputSolidData: offset (%f, %f, %f) to filename (%s).\n", offset[0], offset[1], offset[2], params);
         }
         //
         if (obj->engine==JBXL_3D_ENGINE_UE) {

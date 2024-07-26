@@ -51,7 +51,9 @@ public:
 
     int    xsize;           // Region X size
     int    ysize;           // Region Y size
-    int    region_num;      // Region Number
+    int    x_region_num;    // X Region Number
+    int    y_region_num;    // Y Region Number
+    //int    region_num;      // Region Number
     float  scale;           // Texture Scale
 
     int    engine;
