@@ -1,12 +1,12 @@
-﻿#ifndef  __JBXL_OS_MATERIAL_TOOL_H_
-#define  __JBXL_OS_MATERIAL_TOOL_H_
+﻿#ifndef  __JBXL_OAR_GENERAL_TOOL_H_
+#define  __JBXL_OAR_GENERAL_TOOL_H_
 
 /**
-@brief OARマテリアル用のツール
-@file  MaterialTool.h
+@brief   OARConverter用の汎用ツール
+@file    GeneralTool.h
 
 @author  Fumi.Iseki 
-@date    2015 6/27
+@date    2024 7/27
 */
 
 #include "tools++.h"
@@ -24,8 +24,6 @@
 //#define  MTRL_DEFAULT_ALPHA         0.90    // 0.99 is not Transparent
 #define  MTRL_DEFAULT_COLOR         0.0001
 
-//#define  MTRL_IMAGE_TYPE            ".tga"
-//#define  MTRL_IMAGE_TYPE            ".png"
 
 
 namespace  jbxl {
@@ -37,7 +35,10 @@ extern tList* AlphaChannelList;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 
-bool  HasValidAlphaChannel(const char* texture, tList* resourceList);
+bool  hasValidAlphaChannel(const char* texture, tList* resourceList);
+
+
+void  setDegenerateFname(Buffer* out_fname, int engine, Vector<double> shift, const char* magic_str);
 
 }       // namespace
 

@@ -19,7 +19,7 @@
 #include "BrepLib.h"
 
 #include "MeshMaker.h"
-#include "MaterialTool.h"
+#include "GeneralTool.h"
 #include "TreeTool.h"
 #include "TerrainTool.h"
 #include "LogDocTool.h"
@@ -141,8 +141,6 @@ public:
     void   SetTextureFormat(int f) { textureFormat = f; }
     void   SetNoOffset(bool b){ noOffset = b; }
     void   SetProcJoints(bool b){ procJoints = b; }
-    void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
-    void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
     void   SetOutPath(char* path) { set_outpath(path);}
 
     int    GetEngine(void) { return engine;}
@@ -154,14 +152,10 @@ public:
     tList* GetObjectsList(void) { return objectsFiles;}
     char*  GetOutPath(void) { return get_outpath(); }   // not free
 
-    void   ReadTerrainData(void);
-
-    // DAE/OBJ/STL
+    // DAE/OBJ/STL/glTF
     int    GenerateObjectFromDataIndex(int startnum=1, int stopnum=-1, bool useBrep=false, char* command=NULL);
     int    GenerateObjectFromDataList(int* objlist, int objnum, bool useBrep=false, char* command=NULL);
     void   GenerateObjectFromDataFile(char* fname, bool useBrep=false, char* command=NULL);
-
-    int    GenerateTerrainDataFile (void);
 
     // オブジェクト データ
     void*  generateSolidData(int format, const char* fname, int num=1, bool useBrep=false, char* command=NULL);
@@ -172,9 +166,17 @@ public:
     int    ConvertTexture(const char* texture, const char* addname, const char* exename, const char* path=NULL, const char* command=NULL);
     PrimBaseShape  getAbstractObject(const char* fname);
 
-    // ReadTerrainData と GenerateTerrainDataFile の間で呼ぶこと．
-    void   SetTerrainTextureScale(float sc) { if(terrain!=NULL) for(int i=0; i<terrainNum; i++) terrain[i].set_scale((float)sc);}
+    // Terrain
+    void   SetTerrainShift(Vector<float> vt) { terrainShift = vt;}
+    void   SetTerrainShift(float x, float y, float z) { terrainShift.set(x, y, z);}
 
+    void   ReadTerrainData(void);
+    int    GenerateTerrainDataFile(void);
+
+    void   SetTerrainTextureScale(float sc) { if(terrain!=NULL) for(int i=0; i<terrainNum; i++) terrain[i].set_scale((float)sc);}
+        // SetTerrainTextureScale() は ReadTerrainData() と GenerateTerrainDataFile() の間で呼ぶこと．
+
+    // Tree
     TreeTool* GetTreeTool(void) { return &treeTool;}
 
 //  CVCounter* counter;

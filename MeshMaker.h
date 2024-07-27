@@ -25,7 +25,7 @@
 #include "PrimMesher.h"
 #include "SculptMesher.h"
 #include "TerrainMesher.h"
-#include "MaterialTool.h"
+#include "GeneralTool.h"
 #include "LogDocTool.h"
 
 #include "Jpeg2KTool.h"

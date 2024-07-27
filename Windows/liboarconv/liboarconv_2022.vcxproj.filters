@@ -9,7 +9,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\MaterialTool.cpp">
+    <ClCompile Include="..\..\GeneralTool.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MeshMaker.cpp">
@@ -38,7 +38,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\MaterialTool.h">
+    <ClInclude Include="..\..\GeneralTool.h">
       <Filter>ヘッダファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MeshMaker.h">

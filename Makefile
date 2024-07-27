@@ -53,7 +53,7 @@ endif
 
 SUBJ = oarconv mktree
 
-OBJS = oarconv_help.o OARTool.o TerrainTool.o TreeTool.o MeshMaker.o MaterialTool.o PrimMesher.o PrimShape.o SculptMesher.o TerrainMesher.o
+OBJS = oarconv_help.o OARTool.o TerrainTool.o TreeTool.o MeshMaker.o GeneralTool.o PrimMesher.o PrimShape.o SculptMesher.o TerrainMesher.o
 
 all: $(SUBJ)
 

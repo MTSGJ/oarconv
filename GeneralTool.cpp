@@ -1,12 +1,12 @@
 ﻿/**
-@brief OAR マテリアル用のツール
-@file  MaterialTool.cpp
+@brief  OAR用の 汎用ツール
+@file   GeneralTool.cpp
 
-@author  Fumi.Iseki 
-@date    2015 6/27
+@author Fumi.Iseki 
+@date   2024 7/27
 */
 
-#include "MaterialTool.h"
+#include "GeneralTool.h"
 
 
 using namespace jbxl;
@@ -18,7 +18,7 @@ tList*  jbxl::AlphaChannelList = NULL;  // テクスチャがアルファチャ�
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //
 
-bool  jbxl::HasValidAlphaChannel(const char* texture, tList* resourceList)
+bool  jbxl::hasValidAlphaChannel(const char* texture, tList* resourceList)
 {
     bool ret = false;
     if (texture==NULL) return ret;
@@ -110,5 +110,34 @@ bool  jbxl::HasValidAlphaChannel(const char* texture, tList* resourceList)
 
     free_Buffer(&inppath);
     return ret;
+}
+
+
+void  jbxl::setDegenerateFname(Buffer* out_fname, int engine, Vector<double> shift, const char* magic_str)
+{
+    float offset[3];
+    int len = sizeof(float) * 3;
+    memset(offset, 0, len);
+    if (engine==JBXL_3D_ENGINE_UE) {  // UE
+        offset[0] =  (float)(shift.x * 100.);    // 100 is Unreal Unit
+        offset[1] = -(float)(shift.y * 100.);
+        offset[2] =  (float)(shift.z * 100.);
+    }
+    else {                                  // Unity or others
+        offset[0] = -(float)(shift.x);
+        offset[1] =  (float)(shift.z);
+        offset[2] = -(float)(shift.y);
+    }
+    //
+    char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
+    del_file_extension_Buffer(out_fname);
+    cat_s2Buffer("_", out_fname);
+    if (magic_str!=NULL) cat_s2Buffer(magic_str, out_fname);
+    cat_s2Buffer(params, out_fname);
+    cat_s2Buffer(".", out_fname);
+    DEBUG_MODE PRINT_MESG("jbxl::setDegenerateFname: offset (%f, %f, %f) to filename (%s).\n", offset[0], offset[1], offset[2], params);
+    ::free(params);
+
+    return;
 }
 

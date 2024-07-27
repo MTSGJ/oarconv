@@ -1045,9 +1045,9 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         //  GLTF
         else if (format==JBXL_3D_FORMAT_GLTF) {
-            Vector<double> offset = gltf->execAffineTrans();        // Affine 変換自体は別の機能で行う．no_offset==true の場合，原点縮退
-            if (gltf->affineTrans==NULL) gltf->affineTrans = new AffineTrans<double>();
-            gltf->affineTrans->setShift(offset);
+            //Vector<double> offset = gltf->execAffineTrans();        // Affine 変換自体は別の機能で行う．no_offset==true の場合，原点縮退
+            //if (gltf->affineTrans==NULL) gltf->affineTrans = new AffineTrans<double>();
+            //gltf->affineTrans->setShift(offset);
             gltf->closeSolid();
             return (void*)gltf;
         }
@@ -1078,6 +1078,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 @param format   出力用データフォーマット
 @param fname    出力ファイル名
 @param solid    出力データ
+@param affine   アフィン変換 (solid->affineTrans)
 */
 void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 {
@@ -1091,53 +1092,13 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     Buffer out_fname = make_Buffer_str(fname);
     Buffer out_path  = init_Buffer();
 
-/*
-    // 縮退状態
-    if (noOffset && obj->affineTrans != NULL) {
-        float offset[3];
-        int len = sizeof(float) * 3;
-        memset(offset, 0, len);
-        if (obj->engine==JBXL_3D_ENGINE_UE) {   // UE
-            offset[0] =  (float)(obj->affineTrans->shift.x * 100.);    // 100 is Unreal Unit
-            offset[1] = -(float)(obj->affineTrans->shift.y * 100.);
-            offset[2] =  (float)(obj->affineTrans->shift.z * 100.);
-        }
-        else {                                  // Unity
-            offset[0] = -(float)(obj->affineTrans->shift.x);
-            offset[1] =  (float)(obj->affineTrans->shift.z);
-            offset[2] = -(float)(obj->affineTrans->shift.y);
-        }
-        char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
-        del_file_extension_Buffer(&out_fname);
-        cat_s2Buffer("_", &out_fname);
-        cat_s2Buffer(OART_LOCATION_MAGIC_STR, &out_fname);
-        cat_s2Buffer(params, &out_fname);
-        cat_s2Buffer(".", &out_fname);
-        DEBUG_MODE PRINT_MESG("OARTool::outputSolidData: offset (%f, %f, %f) to filename (%s).\n", offset[0], offset[1], offset[2], params);
-    }
-*/
     //
     // fnameの拡張子は自動的に変換される
     // DAE
     if (format==JBXL_3D_FORMAT_DAE) {
         ColladaXML* dae = (ColladaXML*)solid;
-        // 縮退状態
-        if (noOffset && dae->affineTrans!=NULL) {
-            float offset[3];
-            int len = sizeof(float) * 3;
-            memset(offset, 0, len);
-            offset[0] = -(float)(dae->affineTrans->shift.x);
-            offset[1] =  (float)(dae->affineTrans->shift.z);
-            offset[2] = -(float)(dae->affineTrans->shift.y);
-            char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
-            del_file_extension_Buffer(&out_fname);
-            cat_s2Buffer("_", &out_fname);
-            cat_s2Buffer(OART_LOCATION_MAGIC_STR, &out_fname);
-            cat_s2Buffer(params, &out_fname);
-            cat_s2Buffer(".", &out_fname);
-            DEBUG_MODE PRINT_MESG("OARTool::outputSolidData: offset (%f, %f, %f) to filename (%s).\n", offset[0], offset[1], offset[2], params);
-        }
         //
+        if (noOffset && dae->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, dae->affineTrans->shift, OART_LOCATION_MAGIC_STR);
         if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
         else                  out_path = dup_Buffer(pathOUT);
         //
@@ -1147,30 +1108,8 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     // OBJ
     else if (format==JBXL_3D_FORMAT_OBJ) {
         OBJData* obj = (OBJData*)solid;
-        // 縮退状態
-        if (noOffset && obj->affineTrans != NULL) {
-            float offset[3];
-            int len = sizeof(float) * 3;
-            memset(offset, 0, len);
-            if (obj->engine==JBXL_3D_ENGINE_UE) {   // UE
-                offset[0] =  (float)(obj->affineTrans->shift.x * 100.);    // 100 is Unreal Unit
-                offset[1] = -(float)(obj->affineTrans->shift.y * 100.);
-                offset[2] =  (float)(obj->affineTrans->shift.z * 100.);
-            }
-            else {                                  // Unity
-                offset[0] = -(float)(obj->affineTrans->shift.x);
-                offset[1] =  (float)(obj->affineTrans->shift.z);
-                offset[2] = -(float)(obj->affineTrans->shift.y);
-            }
-            char* params = (char*)encode_base64_filename((unsigned char*)offset, len, '-');
-            del_file_extension_Buffer(&out_fname);
-            cat_s2Buffer("_", &out_fname);
-            cat_s2Buffer(OART_LOCATION_MAGIC_STR, &out_fname);
-            cat_s2Buffer(params, &out_fname);
-            cat_s2Buffer(".", &out_fname);
-            DEBUG_MODE PRINT_MESG("OARTool::outputSolidData: offset (%f, %f, %f) to filename (%s).\n", offset[0], offset[1], offset[2], params);
-        }
-        //
+
+        if (noOffset && obj->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, obj->affineTrans->shift, OART_LOCATION_MAGIC_STR);
         if (obj->engine==JBXL_3D_ENGINE_UE) {
             if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
@@ -1188,6 +1127,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     else if (format==JBXL_3D_FORMAT_GLTF) {
         GLTFData* gltf = (GLTFData*)solid;
         //
+        if (noOffset) setDegenerateFname(&out_fname, engine, gltf->center, OART_LOCATION_MAGIC_STR);
         if (gltf->engine==JBXL_3D_ENGINE_UE) {
             if (gltf->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                   ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
@@ -1205,6 +1145,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     else if (format==JBXL_3D_FORMAT_FBX) {
         FBXData* fbx = (FBXData*)solid;
         //
+        if (noOffset && fbx->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, fbx->affineTrans->shift, OART_LOCATION_MAGIC_STR);
         if (fbx->engine==JBXL_3D_ENGINE_UE) {
             if (fbx->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);

@@ -504,6 +504,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             data->affineTrans->setShift((double)shift.x, (double)shift.y, (double)shift.z);
             data->affineTrans->computeMatrix();
 
+            //if (noOffset) setDegenerateFname(&objname, data->affineTrans->shift, OART_LOCATION_MAGIC_STR);
             // 縮退状態
             if (noOffset) {
                 float position[3];
@@ -567,6 +568,8 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             // GLTF
             else if (dataFormat==JBXL_3D_FORMAT_GLTF) {
                 gltf = new GLTFData();
+                gltf->no_offset   = noOffset;
+                gltf->phantom_out = false;
                 gltf->setEngine(engine);
                 gltf->addShell(data, true);
                 gltf->closeSolid();
@@ -577,6 +580,15 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             // FBX
             else if (dataFormat==JBXL_3D_FORMAT_FBX) {
                 // Not Implemented yet
+                fbx = new FBXData();
+                fbx->no_offset   = noOffset;
+                fbx->phantom_out = false;
+                fbx->setEngine(engine);
+                fbx->addShell(data, true);
+                fbx->closeSolid();
+                //
+                fbx->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR);
+                freeFBXData(fbx);
             }
             // STL
             else if (dataFormat==JBXL_3D_FORMAT_STL_A || dataFormat==JBXL_3D_FORMAT_STL_B) {
@@ -588,11 +600,9 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 stl->outputFile(get_file_name((char*)objname.buf), (char*)path.buf, ascii);
                 freeBrepSolidList(stl);
             }
-
             //
             free_Buffer(&objname);
             free_Buffer(&path);
-
             param.free();
             region.free();
             free_Buffer(&texfile);
