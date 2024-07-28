@@ -697,7 +697,6 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
         skin_joint->alt_inverse_bind[jnt].computeComponents();
     }
 
-
 /*
     PRINT_MESG("joint number = %d\n", skin_joint->joint_names.get_size());
     PRINT_MESG("previus offset = %lf\n", skin_joint->pelvis_offset);

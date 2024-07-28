@@ -504,8 +504,11 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             data->affineTrans->setShift((double)shift.x, (double)shift.y, (double)shift.z);
             data->affineTrans->computeMatrix();
 
-            //if (noOffset) setDegenerateFname(&objname, data->affineTrans->shift, OART_LOCATION_MAGIC_STR);
             // 縮退状態
+            if (noOffset) {
+                setDegenerateFname(&objname, engine, data->affineTrans->shift, OART_LOCATION_MAGIC_STR);
+            }
+/*
             if (noOffset) {
                 float position[3];
                 int len = sizeof(float) * 3;
@@ -530,6 +533,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 DEBUG_MODE PRINT_MESG("TerrainTool::GenerateTerrain: offset (%f, %f, %f) to filename (%s).\n", position[0], position[1], position[2], params);
                 ::free(params);
             }
+*/
             //
             ColladaXML*    dae  = NULL;
             OBJData*       obj  = NULL;
@@ -571,6 +575,8 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 gltf->no_offset   = noOffset;
                 gltf->phantom_out = false;
                 gltf->setEngine(engine);
+                gltf->glb_out = false;
+                if (dataFormat==JBXL_3D_FORMAT_GLB) gltf->glb_out = true;
                 gltf->addShell(data, true);
                 gltf->closeSolid();
                 //
