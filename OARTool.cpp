@@ -218,7 +218,7 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
             pathOUT = make_Buffer_bystr(OART_DEFAULT_OBJ_DIR);
         }
         // GLTF
-        else if (dataFormat==JBXL_3D_FORMAT_GLTF) {
+        else if (dataFormat==JBXL_3D_FORMAT_GLTF || dataFormat==JBXL_3D_FORMAT_GLB) {
             pathOUT = make_Buffer_bystr(OART_DEFAULT_GLTF_DIR);
         }
         // FBX
@@ -527,8 +527,8 @@ void  OARTool::MakeOutputFolder(void)
     }
 
     // Texture, Material and Phantom Folder
-    if (dataFormat==JBXL_3D_FORMAT_DAE || dataFormat==JBXL_3D_FORMAT_OBJ ||
-        dataFormat==JBXL_3D_FORMAT_FBX || dataFormat==JBXL_3D_FORMAT_GLTF) {
+    if (dataFormat==JBXL_3D_FORMAT_DAE  || dataFormat==JBXL_3D_FORMAT_OBJ || dataFormat==JBXL_3D_FORMAT_FBX || 
+        dataFormat==JBXL_3D_FORMAT_GLTF || dataFormat==JBXL_3D_FORMAT_GLB) {
         if (pathTEX.buf!=NULL) {
             mkdir((char*)pathTEX.buf, 0700);                            // Texture Folder
         }
@@ -545,7 +545,7 @@ void  OARTool::MakeOutputFolder(void)
             free_Buffer(&mtl);
         }
         //  Phantom Folder
-        if (engine != JBXL_3D_ENGINE_UE) {
+        if (engine == JBXL_3D_ENGINE_UNITY) {
             if (pathPTM.buf!=NULL) {
                 mkdir((char*)pathPTM.buf, 0700);                        // Phantom Folder
             }
@@ -563,6 +563,7 @@ void  OARTool::MakeOutputFolder(void)
             }
         }
     }
+
     return;
 }
 
@@ -616,7 +617,7 @@ void  OARTool::ReadTerrainData(void)
 int  OARTool::GenerateTerrainDataFile(void)
 {
     if (terrainNum==0) return 0;
-    PRINT_MESG("GenerateTerrainSolid: generating terrain datafile file (%d)\n", dataFormat);
+    PRINT_MESG("GenerateTerrainSolid: converting terrain datafile file (%d)\n", dataFormat);
     int num = 0;
     while (num<terrainNum) {
         terrain[num].GenerateTexture(assetsFiles, (char*)pathTEX.buf);
@@ -752,9 +753,9 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
     if (fname==NULL) return NULL;
 
 #ifdef WIN32
-    PRINT_MESG("[%d/%d] GenerateSolid: generating %s\n", num, objectsNum, fname);
+    PRINT_MESG("[%d/%d] GenerateSolid: converting %s\n", num, objectsNum, fname);
 #else
-    PRINT_MESG("[%d/%d] GenerateSolid: generating %s (%'ldkB)\n", num, objectsNum, fname, memory_check());
+    PRINT_MESG("[%d/%d] GenerateSolid: converting %s (%'ldkB)\n", num, objectsNum, fname, memory_check());
 #endif
     
     // read XML
@@ -797,10 +798,12 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         obj->setEngine(engine);
     }
     // GLTF
-    else if (format==JBXL_3D_FORMAT_GLTF) {
+    else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
         gltf = new GLTFData();
         gltf->no_offset = noOffset;
         gltf->setEngine(engine);
+        gltf->glb_out = false;
+        if (format==JBXL_3D_FORMAT_GLB) gltf->glb_out = true;
     }
     // FBX
     else if (format==JBXL_3D_FORMAT_FBX) {
@@ -852,9 +855,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                     obj->addShell(mesh, false);
                 }
                 // GLTF
-                else if (format==JBXL_3D_FORMAT_GLTF) {
-                    //mesh->affineTrans->addShift(xsize/2.0f, ysize/2.0f, waterHeight);
-                    //mesh->affineTrans->computeMatrix();
+                else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
                     gltf->phantom_out = true;
                     gltf->addShell(mesh, false);
                 }
@@ -909,9 +910,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                     obj->addShell(mesh, false);
                 }
                 // GLTF
-                else if (format==JBXL_3D_FORMAT_GLTF) {
-                    //mesh->affineTrans->addShift(xsize/2.0f, ysize/2.0f, waterHeight);
-                    //mesh->affineTrans->computeMatrix();
+                else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
                     gltf->phantom_out = true;
                     gltf->addShell(mesh, false);
                 }
@@ -1002,7 +1001,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                     obj->addShell(mesh, collider);
                 }
                 // GLTF
-                else if (format==JBXL_3D_FORMAT_GLTF) {
+                else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
                     if (collider) gltf->phantom_out = false;
                     gltf->addShell(mesh, collider, skin_joint);
                 }
@@ -1044,10 +1043,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             return (void*)obj;
         }
         //  GLTF
-        else if (format==JBXL_3D_FORMAT_GLTF) {
-            //Vector<double> offset = gltf->execAffineTrans();        // Affine 変換自体は別の機能で行う．no_offset==true の場合，原点縮退
-            //if (gltf->affineTrans==NULL) gltf->affineTrans = new AffineTrans<double>();
-            //gltf->affineTrans->setShift(offset);
+        else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
             gltf->closeSolid();
             return (void*)gltf;
         }
@@ -1113,32 +1109,22 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         if (obj->engine==JBXL_3D_ENGINE_UE) {
             if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
-            out_path = dup_Buffer(pathOUT);
-        }
-        else {
-            if (obj->phantom_out) out_path = dup_Buffer(pathPTM);
-            else                  out_path = dup_Buffer(pathOUT);
         }
         //
-        obj->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
+        obj->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
     }
 
     // GLTF
-    else if (format==JBXL_3D_FORMAT_GLTF) {
+    else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
         GLTFData* gltf = (GLTFData*)solid;
         //
         if (noOffset) setDegenerateFname(&out_fname, engine, gltf->center, OART_LOCATION_MAGIC_STR);
         if (gltf->engine==JBXL_3D_ENGINE_UE) {
             if (gltf->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                   ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
-            out_path = dup_Buffer(pathOUT);
-        }
-        else {
-            if (gltf->phantom_out) out_path = dup_Buffer(pathPTM);
-            else                   out_path = dup_Buffer(pathOUT);
         }
         //
-        gltf->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
+        gltf->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
     }
 
     // FBX
@@ -1149,14 +1135,9 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         if (fbx->engine==JBXL_3D_ENGINE_UE) {
             if (fbx->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
-            out_path = dup_Buffer(pathOUT);
-        }
-        else {
-            if (fbx->phantom_out) out_path = dup_Buffer(pathPTM);
-            else                  out_path = dup_Buffer(pathOUT);
         }
         //
-        fbx->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR);
+        fbx->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
     }
 
     // STL
@@ -1167,9 +1148,9 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         out_path = dup_Buffer(pathOUT);
         stl->outputFile((char*)out_fname.buf, (char*)out_path.buf, ascii);
     }
+
     free_Buffer(&out_path);
     free_Buffer(&out_fname);
-
     return;
 }
 
@@ -1189,7 +1170,7 @@ void  OARTool::freeSolidData(int format, void* solid)
         freeOBJData(obj);
     }
     // GLTF
-    else if (format==JBXL_3D_FORMAT_GLTF) {
+    else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
         GLTFData* gltf = (GLTFData*)solid;
         freeGLTFData(gltf);
     }

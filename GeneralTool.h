@@ -35,10 +35,13 @@ extern tList* AlphaChannelList;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 
+// 有効なαチャンネルを持っているかどうか調べる．
 bool  hasValidAlphaChannel(const char* texture, tList* resourceList);
 
 
+// Degenerate（縮退）状態時に，ファイル名の座標情報を載せる．
 void  setDegenerateFname(Buffer* out_fname, int engine, Vector<double> shift, const char* magic_str);
+
 
 }       // namespace
 

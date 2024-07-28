@@ -562,11 +562,11 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 obj->affineTrans->setShift(offset);
                 obj->affineTrans->computeMatrix();
                 obj->closeSolid();
-                obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
+                obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
             }
             // GLTF
-            else if (dataFormat==JBXL_3D_FORMAT_GLTF) {
+            else if (dataFormat==JBXL_3D_FORMAT_GLTF || dataFormat==JBXL_3D_FORMAT_GLB) {
                 gltf = new GLTFData();
                 gltf->no_offset   = noOffset;
                 gltf->phantom_out = false;
@@ -574,7 +574,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 gltf->addShell(data, true);
                 gltf->closeSolid();
                 //
-                gltf->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
+                gltf->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
                 freeGLTFData(gltf);
             }
             // FBX
@@ -587,7 +587,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 fbx->addShell(data, true);
                 fbx->closeSolid();
                 //
-                fbx->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR);
+                fbx->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
                 freeFBXData(fbx);
             }
             // STL
