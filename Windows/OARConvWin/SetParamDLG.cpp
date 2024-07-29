@@ -30,6 +30,7 @@ CSetParamDLG::CSetParamDLG(CParameterSet* param, CWnd* pParent /*=NULL*/)
 	prefixOBJ = param->prefixOBJ;
 	prefixDAE = param->prefixDAE;
 	prefixGLTF= param->prefixGLTF;
+	prefixGLB = param->prefixGLB;
 	prefixFBX = param->prefixFBX;
 	prefixSTL = param->prefixSTL;
 
@@ -73,6 +74,7 @@ void  CSetParamDLG::getParameters(CParameterSet* param)
 	param->prefixDAE = prefixDAE;
 	param->prefixOBJ = prefixOBJ;
 	param->prefixGLTF= prefixGLTF;
+	param->prefixGLB = prefixGLB;
 	param->prefixFBX = prefixFBX;
 	param->prefixSTL = prefixSTL;
 
@@ -84,6 +86,9 @@ void  CSetParamDLG::getParameters(CParameterSet* param)
 	}
 	else if (param->outputFormat == JBXL_3D_FORMAT_GLTF) {
 		param->prefixOUT = param->prefixGLTF;
+	}
+	else if (param->outputFormat == JBXL_3D_FORMAT_GLB) {
+		param->prefixOUT = param->prefixGLB;
 	}
 	else if (param->outputFormat == JBXL_3D_FORMAT_FBX) {
 		param->prefixOUT = param->prefixFBX;
@@ -124,6 +129,7 @@ BOOL CSetParamDLG::OnInitDialog()
 	prefixDaeEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_DAE);
 	prefixObjEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_OBJ);
     prefixGltfEBox= (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_GLTF);
+	prefixGlbEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_GLB);
 	prefixFbxEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_FBX);
 	prefixStlEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_STL);
 
@@ -155,6 +161,8 @@ BOOL CSetParamDLG::OnInitDialog()
 	prefixObjEBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%s"), prefixGLTF.GetString());
 	prefixGltfEBox->SetWindowText(buf);
+	sntprintf(buf, LNAME, _T("%s"), prefixGLB.GetString());
+	prefixGlbEBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%s"), prefixFBX.GetString());
 	prefixFbxEBox->SetWindowText(buf);
 	sntprintf(buf, LNAME, _T("%s"), prefixSTL.GetString());
@@ -197,6 +205,8 @@ void CSetParamDLG::OnOK()
 	prefixOBJ = buf;
 	prefixGltfEBox->GetWindowText(buf, LNAME);
 	prefixGLTF = buf;
+	prefixGlbEBox->GetWindowText(buf, LNAME);
+	prefixGLB = buf;
 	prefixFbxEBox->GetWindowText(buf, LNAME);
 	prefixFBX = buf;
 	prefixStlEBox->GetWindowText(buf, LNAME);

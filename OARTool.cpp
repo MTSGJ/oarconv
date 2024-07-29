@@ -1358,7 +1358,7 @@ int  OARTool::ConvertTexture(const char* texture, const char* add_name, const ch
                 //
                 // Retry convert using external command
                 if (!converted) {
-                    DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: RETRY: convert %s to %s\n", path, (char*)outpath.buf); 
+                    PRINT_MESG("OARTool::ConvertTexture: RETRY: convert %s to %s\n", path, (char*)outpath.buf); 
                     //
                     char command[LMESG];
                     memset(command, 0, LMESG);
@@ -1393,7 +1393,7 @@ int  OARTool::ConvertTexture(const char* texture, const char* add_name, const ch
                     }
                     else {
                         if (file_exist((char*)outpath.buf)) {
-                            DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: SUCCESS: texture %s is converted.\n", texture);
+                            PRINT_MESG("OARTool::ConvertTexture: SUCCESS: texture %s is converted.\n", texture);
                             ret = OART_TEXCNVT_NORMAL;
                         }
                         else {

@@ -411,6 +411,9 @@ void  COARConvWinApp::OnOutFormatDialog()
         else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
             no_offset_flg = true;
         }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) {
+            no_offset_flg = true;
+        }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
             no_offset_flg = true;
         }
@@ -456,6 +459,9 @@ void  COARConvWinApp::OnSettingDialog()
             no_offset_flg = true;
         }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) {
             no_offset_flg = true;
         }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
@@ -614,6 +620,9 @@ void  COARConvWinApp::setupParameters(CString path, CString file, CString oarf)
         else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
             no_offset_flg = true;
         }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) {
+            no_offset_flg = true;
+        }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
             no_offset_flg = true;
         }
@@ -710,9 +719,12 @@ int   COARConvWinApp::_convertAllData()
     if (stopnum != 0) {
         CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
         if (progress != NULL) {
-            if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
+            if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
             else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
-            else                                                progress->SetTitle("Convert to STL Files");
+            else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF)progress->SetTitle("Convert to GLTF Files");
+            else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) progress->SetTitle("Convert to GLB Files");
+            else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) progress->SetTitle("Convert to FBX Files");
+            else                                                  progress->SetTitle("Convert to STL Files");
             progress->Start(prognum);
             SetGlobalCounter(progress);
         }
@@ -947,6 +959,14 @@ void  COARConvWinApp::updateStatusBar(CString oar_path, CString out_path)
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
         prefix = _T(" GLTF | ");
+        if (appParam.procJoints) prefix += _T("JOINTS | ");
+        if (appParam.noOffset) {
+            no_offset_flg = true;
+            prefix += _T("NO_OFFSET | ");
+        }
+    }
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) {
+        prefix = _T(" GLB | ");
         if (appParam.procJoints) prefix += _T("JOINTS | ");
         if (appParam.noOffset) {
             no_offset_flg = true;
