@@ -1332,7 +1332,7 @@ int  OARTool::ConvertTexture(const char* texture, const char* add_name, const ch
                                 ret = OART_TEXCNVT_NORMAL;
                             }
                             else {
-                                DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: writePNGFile error (%d) [%s].\n", err, (char*)outpath.buf);
+                                PRINT_MESG("OARTool::ConvertTexture: ERROR: writePNGFile error (%d) [%s].\n", err, (char*)outpath.buf);
                                 ret = OART_TEXCNVT_WRITE_ERR;
                             }
                             png.free();
