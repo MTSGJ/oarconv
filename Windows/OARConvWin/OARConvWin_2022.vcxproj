@@ -121,7 +121,7 @@
       <AdditionalIncludeDirectories>$(IntDir);..\..\..\JunkBox_Win_Lib;..\BREP_MFCLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;BREP_MFCLib.lib;tar32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;BREP_MFCLib.lib;tar32.lib;libpng16_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\JunkBox_Lib++\Debug;..\..\..\JunkBox_Win_Lib\Debug;..\BREP_MFCLib\Debug;..\liboarconv\Debug;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;..\..\..\tar32_2;..\..\..\zlib-1.3\x86\Debug;..\..\..\openjpeg-v2.5.0-windows-x86\lib;..\..\..\lpng16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmt;uafxcwd </IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -163,7 +163,7 @@
       <AdditionalIncludeDirectories>$(IntDir);..\..\..\JunkBox_Win_Lib;..\BREP_MFCLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;liboarconv.lib;BREP_MFCLib.lib;tar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;liboarconv.lib;BREP_MFCLib.lib;tar64.lib;libpng16_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\JunkBox_Lib++\Debug64;..\..\..\JunkBox_Win_Lib\Debug64;..\BREP_MFCLib\Debug64;..\liboarconv\Debug64;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;..\..\..\tar32_2\x64;..\..\..\zlib-1.3\x64\Debug;..\..\..\openjpeg-v2.5.0-windows-x64\lib;..\..\..\lpng16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -199,7 +199,7 @@
       <AdditionalIncludeDirectories>$(IntDir);..\..\..\JunkBox_Win_Lib;..\BREP_MFCLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;BREP_MFCLib.lib;tar32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;BREP_MFCLib.lib;tar32.lib;libpng16_statuc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\JunkBox_Lib++\Release;..\..\..\JunkBox_Win_Lib\Release;..\BREP_MFCLib\Release;..\liboarconv\Release;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;..\..\..\tar32_2;..\..\..\zlib-1.3\x86\Release;..\..\..\openjpeg-v2.5.0-windows-x86\lib;..\..\..\lpng16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -244,7 +244,7 @@
       <AdditionalIncludeDirectories>$(IntDir);..\..\..\JunkBox_Win_Lib;..\BREP_MFCLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;liboarconv.lib;BREP_MFCLib.lib;tar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;liboarconv.lib;BREP_MFCLib.lib;tar64.lib;libpng16_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\JunkBox_Lib++\Release64;..\..\..\JunkBox_Win_Lib\Release64;..\BREP_MFCLib\Release64;..\liboarconv\Release64;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;..\..\..\tar32_2\x64;..\..\..\zlib-1.3\x64\Release;..\..\..\openjpeg-v2.5.0-windows-x64\lib;..\..\..\lpng16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>

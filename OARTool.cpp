@@ -621,7 +621,7 @@ int  OARTool::GenerateTerrainDataFile(void)
     int num = 0;
     while (num<terrainNum) {
         int ret = terrain[num].GenerateTexture(assetsFiles, (char*)pathTEX.buf);
-        if (ret==4) {
+        if (ret>0) {
             terrain[num].GenerateTerrain((char*)pathOUT.buf, terrainShift);
             num++;
 #ifdef WIN32

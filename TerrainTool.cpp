@@ -259,7 +259,7 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
     if (msg.isNull()) return msg;
 
     TerrainTexWeight tweight;
-    memset(&tweight, sizeof(tweight), 0);
+    memset(&tweight, 0, sizeof(tweight));
 
     float vscale = scale/xsize;
     for (int k=0; k<3; k++) {
@@ -317,7 +317,7 @@ int  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
         if (asset_path==NULL) { // texture genaration is failed
             PRINT_MESG("TerrainTool::GenerateTexture: ERROR: texture %s is lost!\n", defaultTexture[i].buf);
             for (int j=0; j<=i; j++) vp[j].free();
-            return -1;
+            return JBXL_ERROR;
         }
         DEBUG_MODE PRINT_MESG("Terrain Texture %d is %s\n", i, asset_path);
         //
@@ -344,7 +344,7 @@ int  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
             int xx = ri*TRNT_TEXTURE_SIZE + yy;
 
             DEBUG_MODE {
-                if (x_region_num>1 || y_region_num) {
+                if (x_region_num>1 || y_region_num>1) {
                     PRINT_MESG("TerrainTool::GenerateTexture: generating sub region texture. %02d/%d\n", count, x_region_num*y_region_num);
                 }
                 else {
