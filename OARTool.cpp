@@ -1319,7 +1319,7 @@ int  OARTool::ConvertTexture(const char* texture, const char* add_name, const ch
                                 ret = OART_TEXCNVT_NORMAL;
                             }
                             else  {
-                                PRINT_MESG("OARTool::ConvertTexture: ERROR: writeTGAFile error (%d) [%s].\n", err, (char*)outpath.buf);
+                                DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: writeTGAFile error (%d) [%s].\n", err, (char*)outpath.buf);
                                 ret = OART_TEXCNVT_WRITE_ERR;
                             }
                             tga.free();
@@ -1332,14 +1332,14 @@ int  OARTool::ConvertTexture(const char* texture, const char* add_name, const ch
                                 ret = OART_TEXCNVT_NORMAL;
                             }
                             else {
-                                PRINT_MESG("OARTool::ConvertTexture: ERROR: writePNGFile error (%d) [%s].\n", err, (char*)outpath.buf);
+                                DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: writePNGFile error (%d) [%s].\n", err, (char*)outpath.buf);
                                 ret = OART_TEXCNVT_WRITE_ERR;
                             }
                             png.free();
                         }
                     }
                     else {
-                        PRINT_MESG("OARTool::ConvertTexture: ERROR: color num of %s is %d [%s].\n", texture, vp.zs, (char*)outpath.buf);
+                        DEBUG_MODE PRINT_MESG("OARTool::ConvertTexture: ERROR: color num of %s is %d [%s].\n", texture, vp.zs, (char*)outpath.buf);
                         ret = OART_TEXCNVT_INVD_ERR;
                     }
                     vp.free();

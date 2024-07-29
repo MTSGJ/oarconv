@@ -147,7 +147,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\JunkBox_Win_Lib\DLGBoxLib;..\..\..\JunkBox_Win_Lib\MFCBaseLib;..\..\..\JunkBox_Win_Lib\MFCLib;..\..\..\JunkBox_Win_Lib\WinBaseLib;..\BREP_MFCLib;..\..;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;..\..\..\tar32_2\src;..\..\..\zlib-1.3\x64;..\..\..\openjpeg-v2.5.0-windows-x64\include\openjpeg-2.5;..\..\..\lpng16\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\JunkBox_Win_Lib\DLGBoxLib;..\..\..\JunkBox_Win_Lib\MFCBaseLib;..\..\..\JunkBox_Win_Lib\MFCLib;..\..\..\JunkBox_Win_Lib\WinBaseLib;..\BREP_MFCLib;..\..;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;..\..\..\tar32_2\src;..\..\..\zlib-1.3\include;..\..\..\openjpeg-v2.5.0-windows-x64\include\openjpeg-2.5;..\..\..\lpng16\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;WIN32;_WINDOWS;_UNICODE;_DEBUG;ENABLE_OPENJPEG;OPENJPEG_VER=25;ENABLE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -163,8 +163,8 @@
       <AdditionalIncludeDirectories>$(IntDir);..\..\..\JunkBox_Win_Lib;..\BREP_MFCLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;liboarconv.lib;BREP_MFCLib.lib;tar64.lib;libpng16_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\JunkBox_Lib++\Debug64;..\..\..\JunkBox_Win_Lib\Debug64;..\BREP_MFCLib\Debug64;..\liboarconv\Debug64;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;..\..\..\tar32_2\x64;..\..\..\zlib-1.3\x64\Debug;..\..\..\openjpeg-v2.5.0-windows-x64\lib;..\..\..\lpng16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;liboarconv.lib;BREP_MFCLib.lib;tar64.lib;libpng16.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\JunkBox_Lib++\Debug64;..\..\..\JunkBox_Win_Lib\Debug64;..\BREP_MFCLib\Debug64;..\liboarconv\Debug64;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;..\..\..\tar32_2\x64;..\..\..\zlib-1.3\lib;..\..\..\openjpeg-v2.5.0-windows-x64\lib;..\..\..\lpng16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libcmt</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -186,7 +186,7 @@
       <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\JunkBox_Win_Lib\DLGBoxLib;..\..\..\JunkBox_Win_Lib\MFCBaseLib;..\..\..\JunkBox_Win_Lib\MFCLib;..\..\..\JunkBox_Win_Lib\WinBaseLib;..\..\;..\BREP_MFCLib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;..\..\..\tar32_2\src;..\..\..\zlib-1.3\x86;..\..\..\openjpeg-v2.5.0-windows-x86\include\openjpeg-2.5;..\..\..\lpng16\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_UNICODE;NDEBUG;ENABLE_OPENJPEG;OPENJPEG_VER=25;ENABLE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
@@ -227,7 +227,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\JunkBox_Win_Lib\DLGBoxLib;..\..\..\JunkBox_Win_Lib\WinBaseLib;..\..\..\JunkBox_Win_Lib\MFCBaseLib;..\..\..\JunkBox_Win_Lib\MFCLib;..\BREP_MFCLib;..\liboarconv;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;..\..;..\..\..\zlib-1.3\x64;..\..\..\tar32_2\src;..\..\..\openjpeg-v2.5.0-windows-x64\include\openjpeg-2.5;..\..\..\lpng16\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\JunkBox_Win_Lib\DLGBoxLib;..\..\..\JunkBox_Win_Lib\WinBaseLib;..\..\..\JunkBox_Win_Lib\MFCBaseLib;..\..\..\JunkBox_Win_Lib\MFCLib;..\BREP_MFCLib;..\liboarconv;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;..\..;..\..\..\zlib-1.3\include;..\..\..\tar32_2\src;..\..\..\openjpeg-v2.5.0-windows-x64\include\openjpeg-2.5;..\..\..\lpng16\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;WIN32;_UNICODE;_WINDOWS;NDEBUG;ENABLE_OPENJPEG;OPENJPEG_VER=25;ENABLE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -244,8 +244,8 @@
       <AdditionalIncludeDirectories>$(IntDir);..\..\..\JunkBox_Win_Lib;..\BREP_MFCLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;liboarconv.lib;BREP_MFCLib.lib;tar64.lib;libpng16_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\JunkBox_Lib++\Release64;..\..\..\JunkBox_Win_Lib\Release64;..\BREP_MFCLib\Release64;..\liboarconv\Release64;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;..\..\..\tar32_2\x64;..\..\..\zlib-1.3\x64\Release;..\..\..\openjpeg-v2.5.0-windows-x64\lib;..\..\..\lpng16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>winmm.lib;d3d9.lib;d3dx9.lib;dxerr.lib;dinput8.lib;dxguid.lib;JunkBox_Lib++.lib;JunkBox_Win_Lib.lib;liboarconv.lib;BREP_MFCLib.lib;tar64.lib;zlib.lib;libpng16.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\JunkBox_Lib++\Release64;..\..\..\JunkBox_Win_Lib\Release64;..\BREP_MFCLib\Release64;..\liboarconv\Release64;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;..\..\..\tar32_2\x64;..\..\..\zlib-1.3\lib;..\..\..\openjpeg-v2.5.0-windows-x64\lib;..\..\..\lpng16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
