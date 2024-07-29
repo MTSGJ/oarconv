@@ -9,7 +9,7 @@
 @date    2024 02/05
 */
 
-/*
+
 #ifdef WIN32
   #define  OART_DEFAULT_INP_DIR     ".\\"
   #define  OART_DEFAULT_DAE_DIR     "DAE\\"
@@ -24,20 +24,19 @@
   #define  OART_DEFAULT_BIN_DIR     "BIN\\"
   #define  OART_DEFAULT_NOS_DIR     "_nooffset"
 #else
-*/
   #define  OART_DEFAULT_INP_DIR     "./"
-  #define  OART_DEFAULT_DAE_DIR     "./DAE/"
-  #define  OART_DEFAULT_OBJ_DIR     "./OBJ/"
-  #define  OART_DEFAULT_GLTF_DIR    "./GLTF/"
-  #define  OART_DEFAULT_FBX_DIR     "./FBX/"
-  #define  OART_DEFAULT_STL_DIR     "./STL/"
+  #define  OART_DEFAULT_DAE_DIR     "DAE/"
+  #define  OART_DEFAULT_OBJ_DIR     "OBJ/"
+  #define  OART_DEFAULT_GLTF_DIR    "GLTF/"
+  #define  OART_DEFAULT_FBX_DIR     "FBX/"
+  #define  OART_DEFAULT_STL_DIR     "STL/"
   #define  OART_DEFAULT_AST_DIR     "/usr/local/share/oarconv/assets/:./assets/"
   #define  OART_DEFAULT_TEX_DIR     "Textures/"
   #define  OART_DEFAULT_PTM_DIR     "Phantoms/"
   #define  OART_DEFAULT_MTL_DIR     "MTL/"
   #define  OART_DEFAULT_BIN_DIR     "BIN/"
   #define  OART_DEFAULT_NOS_DIR     "_nooffset"
-//#endif
+#endif
 
 
 #define  OART_UE_PHANTOM_PREFIX      "UNC_"
