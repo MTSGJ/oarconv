@@ -298,9 +298,10 @@ MSGraph<uByte>  TerrainTool::GenerateWeightedTexture(MSGraph<uByte>* vp)
 }
 
 
-void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
+int  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
 {
-    if (assets==NULL) return;
+    if (assets==NULL)  return JBXL_ARGS_ERROR;
+    if (outpath==NULL) return JBXL_ARGS_ERROR;
 
     MSGraph<uByte> vp[4];
     MSGraph<uByte> msg;
@@ -316,7 +317,7 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
         if (asset_path==NULL) { // texture genaration is failed
             PRINT_MESG("TerrainTool::GenerateTexture: ERROR: texture %s is lost!\n", defaultTexture[i].buf);
             for (int j=0; j<=i; j++) vp[j].free();
-            return;
+            return -1;
         }
         DEBUG_MODE PRINT_MESG("Terrain Texture %d is %s\n", i, asset_path);
         //
@@ -332,7 +333,7 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
     else         msg = GenerateDioramaTexture (vp, mode);
     //
     for (int i=0; i<4; i++) vp[i].free();
-    if (msg.isNull()) return;
+    if (msg.isNull()) return JBXL_ERROR;
 
     //
     // Textureファイルの生成（256x256以上のTerrainは分割される）
@@ -411,7 +412,7 @@ void  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
         }
     }
     msg.free();
-    return;
+    return JBXL_NORMAL;
 }
 
 

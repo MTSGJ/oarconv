@@ -620,12 +620,15 @@ int  OARTool::GenerateTerrainDataFile(void)
     PRINT_MESG("GenerateTerrainSolid: converting terrain datafile file (%d)\n", dataFormat);
     int num = 0;
     while (num<terrainNum) {
-        terrain[num].GenerateTexture(assetsFiles, (char*)pathTEX.buf);
-        terrain[num].GenerateTerrain((char*)pathOUT.buf, terrainShift);
-        num++;
+        int ret = terrain[num].GenerateTexture(assetsFiles, (char*)pathTEX.buf);
+        if (ret==4) {
+            terrain[num].GenerateTerrain((char*)pathOUT.buf, terrainShift);
+            num++;
 #ifdef WIN32
-        DisPatcher(); 
+            DisPatcher(); 
 #endif
+        }
+        else break;
     }
     return num;
 }
