@@ -418,7 +418,7 @@ void  COARConvWinApp::OnOutFormatDialog()
             no_offset_flg = true;
         }
     }
-    if (no_offset_flg) outf += OART_DEFAULT_NOS_DIR;
+    if (no_offset_flg) outf += OART_DEFAULT_NOFST_DIR;
     appParam.outFolder = outf;
 
     char* op = ts2mbs(outf);
@@ -468,7 +468,7 @@ void  COARConvWinApp::OnSettingDialog()
             no_offset_flg = true;
         }
     }
-    if (no_offset_flg) outf += OART_DEFAULT_NOS_DIR;
+    if (no_offset_flg) outf += OART_DEFAULT_NOFST_DIR;
     appParam.outFolder = outf;
 
     char* op = ts2mbs(outf);
@@ -627,7 +627,7 @@ void  COARConvWinApp::setupParameters(CString path, CString file, CString oarf)
             no_offset_flg = true;
         }
     }
-    if (no_offset_flg) outf += OART_DEFAULT_NOS_DIR;
+    if (no_offset_flg) outf += OART_DEFAULT_NOFST_DIR;
     appParam.outFolder = outf;
     
     char* op = ts2mbs(outf);
