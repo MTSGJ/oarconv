@@ -235,7 +235,7 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
                 pathOUT.buf[pathOUT.vldsz-1]='\0';
                 pathOUT.vldsz--;
             }
-            cat_s2Buffer(OART_DEFAULT_NOS_DIR, &pathOUT);
+            cat_s2Buffer(OART_DEFAULT_NOFST_DIR, &pathOUT);
         }
     }
 
