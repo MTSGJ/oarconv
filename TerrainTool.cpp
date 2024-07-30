@@ -388,7 +388,7 @@ int  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
             if (paramstr!=NULL) ::free(paramstr);
 
             Buffer filename = make_Buffer_str(param.getTextureName());
-            canonical_filename_Buffer(&filename);
+            canonical_filename_Buffer(&filename, TRUE);
             cat_Buffer(&filename, &texfile);
 
             if (textureFormat==JBXL_TEXTURE_TGA) {

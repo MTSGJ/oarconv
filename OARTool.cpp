@@ -218,8 +218,12 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
             pathOUT = make_Buffer_bystr(OART_DEFAULT_OBJ_DIR);
         }
         // GLTF
-        else if (dataFormat==JBXL_3D_FORMAT_GLTF || dataFormat==JBXL_3D_FORMAT_GLB) {
+        else if (dataFormat==JBXL_3D_FORMAT_GLTF) {
             pathOUT = make_Buffer_bystr(OART_DEFAULT_GLTF_DIR);
+        }
+        // GLB
+        else if (dataFormat==JBXL_3D_FORMAT_GLB) {
+            pathOUT = make_Buffer_bystr(OART_DEFAULT_GLB_DIR);
         }
         // FBX
         else if (dataFormat==JBXL_3D_FORMAT_FBX) {
