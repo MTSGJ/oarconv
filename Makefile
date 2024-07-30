@@ -134,7 +134,7 @@ CFLAGS += -DENABLE_OPENJPEG -DOPENJPEG_VERSION=$(OPENJPEG_VERSION) -DHAVE_OPENJP
 
 
 clean:
-	rm -f *.o *~ $(SUBJ) *.dae *.obj *.mtl *.stl
+	rm -f *.o *~ $(SUBJ) *.dae *.obj *.mtl *.stl *.gltf *.glb
 
 
 #
