@@ -758,7 +758,7 @@ void  PrimBaseShape::GetMaterialParams(tList* resourceList)
                 if (xml!=NULL) {
                     materialParam[i].texture.setAlphaMode  (get_xml_int_content_bystr(xml, "<key>DiffuseAlphaMode</key><integer>"));
                     materialParam[i].texture.setAlphaCutoff(get_xml_int_content_bystr(xml, "<key>AlphaMaskCutoff</key><integer>")/255.0);
-                    materialParam[i].setGlossiness (get_xml_int_content_bystr(xml, "<key>SpecExp</key><integer>")/255.0);
+                    materialParam[i].setSpecExp(get_xml_int_content_bystr(xml, "<key>SpecExp</key><integer>")/255.0);
                     materialParam[i].setEnvironment(get_xml_int_content_bystr(xml, "<key>EnvIntensity</key><integer>")/255.0);
                     //
                     double colorR = get_xml_int_content_bystr(xml, SPEC_COLOR_TAG_R)/255.0;
