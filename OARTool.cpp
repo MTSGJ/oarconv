@@ -986,43 +986,45 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
                     collider = false;
                 }
+                tXML* joints_template = NULL;
+                if (count==0 && this->procJoints) {
+                    char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
+                    if (path != NULL) {
+                        joints_template = xml_parse_file(path);     // at use DAE, not free
+                    }
+                    else {
+                        PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
+                    }
+                }
+
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
-                    tXML*  joints_template = NULL;
-                    //
-                    if (count==0 && this->procJoints) {
-                        char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
-                        if (path != NULL) {
-                            joints_template = xml_parse_file(path);     // not free
-                        }
-                        else {
-                            PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
-                        }
-                    }
                     dae->addShell(mesh, collider, skin_joint, joints_template);
+                    joints_template = NULL;     // joints_template は出力データの一部として使用するので，ここで切り離す．
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
                     if (collider) obj->phantom_out = false;
                     obj->addShell(mesh, collider);
                 }
-                // GLTF
+                // GLTF or GLB
                 else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
                     if (collider) gltf->phantom_out = false;
-                    gltf->addShell(mesh, collider, skin_joint);
+                    gltf->addShell(mesh, collider, skin_joint, joints_template);
                 }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     if (collider) fbx->phantom_out = false;
-                    fbx->addShell(mesh, collider, skin_joint);
+                    fbx->addShell(mesh, collider, skin_joint, joints_template);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
                     stl->addShell(mesh);
                 }
-                freeMeshObjectData(mesh);
                 //
+                freeMeshObjectData(mesh);
+                if (joints_template!=NULL) del_all_xml(&joints_template);
                 count++;
             }
             if (skin_joint!=NULL) skin_joint->free();

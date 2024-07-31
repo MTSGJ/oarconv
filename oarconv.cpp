@@ -82,7 +82,8 @@ int main(int argc, char** argv)
         scale = (float)atof((char*)tscale.buf);
         if (scale<=0.0f) scale = (float)TRNT_DEFAULT_TEX_SCALE;
     }
-    if (format!=JBXL_3D_FORMAT_DAE && format!=JBXL_3D_FORMAT_FBX) procJoints = false;
+    if (format==JBXL_3D_FORMAT_OBJ   ||
+        format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) procJoints = false;
 
     init_rand();
 
