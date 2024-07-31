@@ -97,7 +97,8 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
                 //
                 mparam.texture.setAlphaChannel(hasValidAlphaChannel(mparam.getTextureName(), resourceList));
                 //if (mparam.texture.hasAlphaChannel()) mparam.setTransparent(MTRL_DEFAULT_ALPHA);
-                char* paramstr = mparam.getBase64Params('O');
+                mparam.setKind('O');
+                char* paramstr = mparam.getBase64Params();
                 if (paramstr!=NULL) {
                     mparam.setParamString(paramstr);
                     ::free(paramstr);
@@ -123,7 +124,8 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
             //
             mparam.texture.setAlphaChannel(hasValidAlphaChannel(mparam.getTextureName(), resourceList));
             //if (mparam.texture.isSetAlpha()) mparam.setTransparent(MTRL_DEFAULT_ALPHA);
-            char* paramstr = mparam.getBase64Params('O');
+            mparam.setKind('O');
+            char* paramstr = mparam.getBase64Params();
             if (paramstr!=NULL) {
                 mparam.setParamString(paramstr);
                 ::free(paramstr);

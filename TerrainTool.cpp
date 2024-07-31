@@ -382,7 +382,8 @@ int  TerrainTool::GenerateTexture(tList* assets, const char* outpath)
             //param.setTransparent(1.0f);
             param.texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             //
-            char* paramstr = param.getBase64Params('E');    // E: Earth
+            param.setKind('E');                         // E: Earth
+            char* paramstr = param.getBase64Params();
             param.setParamString(paramstr);
             param.setFullName(image_type);
             if (paramstr!=NULL) ::free(paramstr);
@@ -487,7 +488,8 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             //param.setTransparent(1.0f);
             param.texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             //
-            char* paramstr = param.getBase64Params('E');    // E: Earth
+            param.setKind('E');                             // E: Earth
+            char* paramstr = param.getBase64Params();
             param.setParamString(paramstr);
             param.setFullName(image_type);                  // + .png/.tga
             if (paramstr!=NULL) ::free(paramstr);
