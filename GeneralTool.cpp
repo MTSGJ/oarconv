@@ -141,3 +141,52 @@ void  jbxl::setDegenerateFname(Buffer* out_fname, int engine, Vector<double> shi
     return;
 }
 
+
+//
+tTree*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)
+{
+    if (joints==NULL || joints_template==NULL) return NULL;
+
+    Buffer name = make_Buffer(L_32);
+
+    int id = 0;
+    for (int i=0; i<joints->joint_num; i++) {
+        copy_s2Buffer("\"", &name);
+        cat_s2Buffer(joints->joint_names.get_value(i), &name);
+        cat_s2Buffer("\"", &name);
+        tXML* xml = get_xml_attr_node(joints_template, "name", (char*)name.buf);
+        if (xml!=NULL) {
+            xml->ctrl = TREE_KEEP_NODE;
+            xml->ldat.id = id;
+            copy_s2Buffer("name", &xml->ldat.key);
+            copy_Buffer(&name, &xml->ldat.val);
+            del_xml(&(xml->ldat.lst));
+            xml->ldat.lst = NULL;
+            id++;
+        }
+    }
+    free_Buffer(&name);
+
+    del_non_keep_node_tTree(&joints_template);
+
+     _set_parent_joins(joints_template);
+
+    return (tTree*)joints_template;
+}
+
+
+
+
+void   jbxl::_set_parent_joins(tTree* joints)
+{
+    tTree* tt = joints;
+    while (tt->esis!=NULL) tt = tt->esis;
+    while (tt!=NULL) {
+        if (tt->next!=NULL) _set_parent_joins(tt->next);
+        if (tt->prev!=NULL) tt->ldat.lv = tt->prev->ldat.id;
+        tt = tt->ysis;
+    }
+    return;
+}
+
+

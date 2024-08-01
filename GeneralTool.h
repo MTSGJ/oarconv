@@ -12,6 +12,8 @@
 #include "tools++.h"
 #include "xtools.h"
 #include "tlist.h"
+#include "tjson.h"
+#include "txml.h"
 #include "Gdata.h"
 
 #include "Jpeg2KTool.h"
@@ -19,6 +21,7 @@
 #include "PngTool.h"
 
 #include "MaterialParam.h"
+#include "MeshObjectData.h"
 
 
 //#define  MTRL_DEFAULT_ALPHA         0.90    // 0.99 is not Transparent
@@ -38,9 +41,13 @@ extern tList* AlphaChannelList;
 // 有効なαチャンネルを持っているかどうか調べる．
 bool  hasValidAlphaChannel(const char* texture, tList* resourceList);
 
-
 // Degenerate（縮退）状態時に，ファイル名の座標情報を載せる．
 void  setDegenerateFname(Buffer* out_fname, int engine, Vector<double> shift, const char* magic_str);
+
+// XMLのJointのテンプレートから，必要な jount の情報だけ抜き出して返す
+tTree*  selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template);
+void    _set_parent_joins(tTree* joints);
+
 
 
 }       // namespace

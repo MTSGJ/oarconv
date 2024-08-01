@@ -990,7 +990,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (count==0 && this->procJoints) {
                     char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
                     if (path != NULL) {
-                        joints_template = xml_parse_file(path);     // at use DAE, not free
+                        joints_template = xml_parse_file(path);     // not free
                     }
                     else {
                         PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
@@ -1000,8 +1000,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
-                    dae->addShell(mesh, collider, skin_joint, joints_template);
-                    joints_template = NULL;     // joints_template は出力データの一部として使用するので，ここで切り離す．
+                    dae->addShell(mesh, collider, skin_joint, joints_template);             // joints_tempalte は dae 内で freeされる
+                    joints_template = NULL;
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
@@ -1011,12 +1011,16 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // GLTF or GLB
                 else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
                     if (collider) gltf->phantom_out = false;
-                    gltf->addShell(mesh, collider, skin_joint, joints_template);
+                    tTree* jt = selctJointsFromXMLTemplate(skin_joint, joints_template);    // jt と joints_tempalte は同じもの
+                    gltf->addShell(mesh, collider, skin_joint, jt);
+                    joints_template = NULL;
                 }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     if (collider) fbx->phantom_out = false;
-                    fbx->addShell(mesh, collider, skin_joint, joints_template);
+                    tTree* jt = selctJointsFromXMLTemplate(skin_joint, joints_template);    // jt と joints_tempalte は同じもの
+                    fbx->addShell(mesh, collider, skin_joint, jt);
+                    joints_template = NULL;
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
