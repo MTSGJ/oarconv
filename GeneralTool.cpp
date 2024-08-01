@@ -142,11 +142,22 @@ void  jbxl::setDegenerateFname(Buffer* out_fname, int engine, Vector<double> shi
 }
 
 
-//
-tTree*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)
+/**
+tList*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)
+
+XMLのJointのテンプレート joints_template から，必要な jount の情報だけ抜き出して tListにして返す．
+
+@param  joints  ジョイントの名前の配列パラメータ．
+@param  joints_template  ジョイントのテンプレートデータ．XML形式．
+
+@retval list->ldat.id   ジョイントの ID
+@retval list->ldat.lv   ジョイントの親の ID
+@retval list->ldat.key  "name" 固定．
+@retval list->ldat.val  ジョイントの名前．文字の最初と最後に " が付く．例："\"mPelvis\""
+*/
+tList*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)
 {
     if (joints==NULL || joints_template==NULL) return NULL;
-
     Buffer name = make_Buffer(L_32);
 
     int id = 0;
@@ -169,24 +180,28 @@ tTree*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_tem
 
     del_non_keep_node_tTree(&joints_template);
 
-     _set_parent_joins(joints_template);
-
-    return (tTree*)joints_template;
+    tList* list = new_tList_anchor_node();
+    _set_parent_joins((tTree*)joints_template, list);
+    return list;
 }
 
 
-
-
-void   jbxl::_set_parent_joins(tTree* joints)
+tList*  jbxl::_set_parent_joins(tTree* pp, tList* list)
 {
-    tTree* tt = joints;
-    while (tt->esis!=NULL) tt = tt->esis;
-    while (tt!=NULL) {
-        if (tt->next!=NULL) _set_parent_joins(tt->next);
-        if (tt->prev!=NULL) tt->ldat.lv = tt->prev->ldat.id;
-        tt = tt->ysis;
+    if (pp!=NULL) {
+        while(pp->esis!=NULL) pp = pp->esis;
+        do {
+            if (pp->ldat.id!=TREE_ANCHOR_NODE) {
+                pp->ldat.lv = pp->prev->ldat.id;
+                tList* lt = find_tList_end(list);
+                add_tList_node_byBuffer(lt, pp->ldat.id, pp->ldat.lv, pp->ldat.key, pp->ldat.val, NULL, 0);
+            }
+            //
+            if (pp->next!=NULL) _set_parent_joins(pp->next, list);
+            pp = pp->ysis;
+        } while(pp!=NULL);
     }
-    return;
-}
 
+    return list;
+}
 

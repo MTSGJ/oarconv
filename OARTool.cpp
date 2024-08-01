@@ -1000,8 +1000,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
-                    dae->addShell(mesh, collider, skin_joint, joints_template);             // joints_tempalte は dae 内で freeされる
-                    joints_template = NULL;
+                    dae->addShell(mesh, collider, skin_joint, joints_template);
+                    joints_template = NULL;         // joints_tempalte は dae 内で freeされる
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
@@ -1011,16 +1011,14 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // GLTF or GLB
                 else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
                     if (collider) gltf->phantom_out = false;
-                    tTree* jt = selctJointsFromXMLTemplate(skin_joint, joints_template);    // jt と joints_tempalte は同じもの
-                    gltf->addShell(mesh, collider, skin_joint, jt);
-                    joints_template = NULL;
+                    tList* jl = selctJointsFromXMLTemplate(skin_joint, joints_template);
+                    gltf->addShell(mesh, collider, skin_joint, jl);
                 }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     if (collider) fbx->phantom_out = false;
-                    tTree* jt = selctJointsFromXMLTemplate(skin_joint, joints_template);    // jt と joints_tempalte は同じもの
-                    fbx->addShell(mesh, collider, skin_joint, jt);
-                    joints_template = NULL;
+                    tTree* jl = selctJointsFromXMLTemplate(skin_joint, joints_template);
+                    fbx->addShell(mesh, collider, skin_joint, jl);
                 }
                 // STL
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
@@ -1055,7 +1053,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             obj->closeSolid();
             return (void*)obj;
         }
-        //  GLTF
+        //  GLTF or GLB
         else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
             gltf->closeSolid();
             return (void*)gltf;

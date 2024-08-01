@@ -45,8 +45,8 @@ bool  hasValidAlphaChannel(const char* texture, tList* resourceList);
 void  setDegenerateFname(Buffer* out_fname, int engine, Vector<double> shift, const char* magic_str);
 
 // XMLのJointのテンプレートから，必要な jount の情報だけ抜き出して返す
-tTree*  selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template);
-void    _set_parent_joins(tTree* joints);
+tList*  selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template);
+tList*  _set_parent_joins(tXML* joints_template, tList* list);
 
 
 
