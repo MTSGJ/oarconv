@@ -167,18 +167,29 @@ tList*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_tem
         cat_s2Buffer("\"", &name);
         tXML* xml = get_xml_attr_node(joints_template, "name", (char*)name.buf);
         if (xml!=NULL) {
-            xml->ctrl = TREE_KEEP_NODE;
+            //
             xml->ldat.id = id;
             copy_s2Buffer("name", &xml->ldat.key);
             copy_Buffer(&name, &xml->ldat.val);
             del_xml(&(xml->ldat.lst));
             xml->ldat.lst = NULL;
+
+            Vector<float>* vec = new Vector<float>();
+            if (vec!=NULL) {
+                vec->x = get_xml_float_content_bystr(xml, "<extra><technique><tip_x>");
+                vec->y = get_xml_float_content_bystr(xml, "<extra><technique><tip_y>");
+                vec->z = get_xml_float_content_bystr(xml, "<extra><technique><tip_z>");
+                xml->ldat.ptr = (void*)vec;
+                xml->ldat.sz  = sizeof(Vector<float>);
+            }
+            //
+            xml->ctrl_alt = TREE_KEEP_NODE;
             id++;
         }
     }
     free_Buffer(&name);
 
-    del_non_keep_node_tTree(&joints_template);
+    del_non_keep_node_tTree(&joints_template);          // see ttree.h
 
     tList* list = new_tList_anchor_node();
     _set_parent_joins((tTree*)joints_template, list);
@@ -192,9 +203,11 @@ tList*  jbxl::_set_parent_joins(tTree* pp, tList* list)
         while(pp->esis!=NULL) pp = pp->esis;
         do {
             if (pp->ldat.id!=TREE_ANCHOR_NODE) {
-                pp->ldat.lv = pp->prev->ldat.id;
                 tList* lt = find_tList_end(list);
-                add_tList_node_byBuffer(lt, pp->ldat.id, pp->ldat.lv, pp->ldat.key, pp->ldat.val, NULL, 0);
+                //
+                tList_data ldat = dup_tList_data(pp->ldat);
+                ldat.lv = pp->prev->ldat.id;
+                add_tList_node_bydata(lt, ldat);
             }
             //
             if (pp->next!=NULL) _set_parent_joins(pp->next, list);
