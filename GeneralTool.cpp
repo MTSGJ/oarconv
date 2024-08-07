@@ -154,6 +154,8 @@ XMLのJointのテンプレート joints_template から，必要な jount の情
 @retval list->ldat.lv   ジョイントの親の ID
 @retval list->ldat.key  "name" 固定．
 @retval list->ldat.val  ジョイントの名前．文字の最初と最後に " が付く．例："\"mPelvis\""
+@retval list->ldat.ptr  ジョイントの位置．Vector<float>* として使用．
+@retval list->ldat.sz   *ldat.ptr のサイズ．
 */
 tList*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)
 {
@@ -183,13 +185,13 @@ tList*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_tem
                 xml->ldat.sz  = sizeof(Vector<float>);
             }
             //
-            xml->ctrl_alt = TREE_KEEP_NODE;
+            xml->ctrl_alt = TREE_KEEP_NODE;         // ctrl は get_xml_float_content_bystr() で使用しているので，使用不可
             id++;
         }
     }
     free_Buffer(&name);
 
-    del_non_keep_node_tTree(&joints_template);          // see ttree.h
+    del_non_keep_node_tTree(&joints_template);      // using ctrl_alt  see ttree.h
 
     tList* list = new_tList_anchor_node();
     _set_parent_joins((tTree*)joints_template, list);
