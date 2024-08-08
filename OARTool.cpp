@@ -1011,13 +1011,13 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // GLTF or GLB
                 else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
                     if (collider) gltf->phantom_out = false;
-                    tList* jl = selctJointsFromXMLTemplate(skin_joint, joints_template);
+                    tList* jl = selectJointsFromXMLTemplate(skin_joint, joints_template);
                     gltf->addShell(mesh, collider, skin_joint, jl);
                 }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     if (collider) fbx->phantom_out = false;
-                    tTree* jl = selctJointsFromXMLTemplate(skin_joint, joints_template);
+                    tTree* jl = selectJointsFromXMLTemplate(skin_joint, joints_template);
                     fbx->addShell(mesh, collider, skin_joint, jl);
                 }
                 // STL

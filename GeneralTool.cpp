@@ -143,7 +143,7 @@ void  jbxl::setDegenerateFname(Buffer* out_fname, int engine, Vector<double> shi
 
 
 /**
-tList*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)
+tList*  jbxl::selectJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)
 
 XMLのJointのテンプレート joints_template から，必要な jount の情報だけ抜き出して tListにして返す．
 
@@ -154,10 +154,10 @@ XMLのJointのテンプレート joints_template から，必要な jount の情
 @retval list->ldat.lv   ジョイントの親の ID
 @retval list->ldat.key  "name" 固定．
 @retval list->ldat.val  ジョイントの名前．文字の最初と最後に " が付く．例："\"mPelvis\""
-@retval list->ldat.ptr  ジョイントの位置．Vector<float>* として使用．
+@retval list->ldat.ptr  ジョイントの位置．Vector<float>* として格納（Blender 用）
 @retval list->ldat.sz   *ldat.ptr のサイズ．
 */
-tList*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)
+tList*  jbxl::selectJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)
 {
     if (joints==NULL || joints_template==NULL) return NULL;
     Buffer name = make_Buffer(L_32);
@@ -178,7 +178,7 @@ tList*  jbxl::selctJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_tem
 
             Vector<float>* vec = new Vector<float>();
             if (vec!=NULL) {
-                vec->x = get_xml_float_content_bystr(xml, "<extra><technique><tip_x>");
+                vec->x = get_xml_float_content_bystr(xml, "<extra><technique><tip_x>");     // <technique profile="blender"><tip_x>
                 vec->y = get_xml_float_content_bystr(xml, "<extra><technique><tip_y>");
                 vec->z = get_xml_float_content_bystr(xml, "<extra><technique><tip_z>");
                 xml->ldat.ptr = (void*)vec;
