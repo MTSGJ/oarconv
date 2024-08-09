@@ -163,7 +163,7 @@ tList*  jbxl::selectJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_te
     Buffer name = make_Buffer(L_32);
 
     int id = 0;
-    for (int i=0; i<joints->joint_num; i++) {
+    for (int i=0; i<joints->num_joints; i++) {
         copy_s2Buffer("\"", &name);
         cat_s2Buffer(joints->joint_names.get_value(i), &name);
         cat_s2Buffer("\"", &name);
