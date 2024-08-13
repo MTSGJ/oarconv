@@ -1,4 +1,13 @@
 #
+1.8.0
+    support glTF/glb
+
+1.7.12
+    Collect a few settings
+
+1.7.11
+    Bug fix
+
 1.7.10
     upsfate UE Plugins
     Discontinue use of BREP (useBrep = false) for sculpted prims, Abnormal at scalpted prims
