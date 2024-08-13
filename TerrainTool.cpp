@@ -509,7 +509,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
 
             // 縮退状態
             if (noOffset) {
-                setDegenerateFname(&objname, engine, data->affineTrans->shift, OART_LOCATION_MAGIC_STR);
+                setDegenerateFname(&objname, engine, data->affineTrans->getShift(), OART_LOCATION_MAGIC_STR);
             }
 /*
             if (noOffset) {

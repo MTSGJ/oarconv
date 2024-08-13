@@ -623,7 +623,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
             if (pp->next!=NULL) {
                 int i = idx%4 + 1;
                 int j = idx/4 + 1;
-                skin_joint->bind_shape.matrix.element(i, j) = atof((char*)pp->next->ldat.key.buf);
+                skin_joint->bind_shape.element(i, j, atof((char*)pp->next->ldat.key.buf));
                 idx++;
             }
             pp = pp->ysis;
@@ -645,7 +645,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
                     if (pp->next!=NULL) {
                         int i = idx%4 + 1;
                         int j = idx/4 + 1;
-                        skin_joint->inverse_bind[joint_idx].matrix.element(i, j) = atof((char*)pp->next->ldat.key.buf);
+                        skin_joint->inverse_bind[joint_idx].element(i, j, atof((char*)pp->next->ldat.key.buf));
                         idx++;
                     }
                     pp = pp->ysis;
@@ -675,7 +675,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
                         //****************************************
                         if (element>256.0) element = 0.0;
                         //****************************************
-                        skin_joint->alt_inverse_bind[joint_idx].matrix.element(i, j) = element;
+                        skin_joint->alt_inverse_bind[joint_idx].element(i, j, element);
                         idx++;
                     }
                     pp = pp->ysis;
@@ -692,8 +692,8 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
     for (int jnt=0; jnt<joint_idx; jnt++) {
         for (int i=1; i<=4; i++) {
             for (int j=1; j<=4; j++) {
-                if (i==j)      skin_joint->alt_inverse_bind[jnt].matrix.element(i, j) = 1.0;
-                else if (j!=4) skin_joint->alt_inverse_bind[jnt].matrix.element(i, j) = 0.0;
+                if (i==j)      skin_joint->alt_inverse_bind[jnt].element(i, j, 1.0);
+                else if (j!=4) skin_joint->alt_inverse_bind[jnt].element(i, j, 0.0);
             }
         }
         skin_joint->alt_inverse_bind[jnt].computeComponents();

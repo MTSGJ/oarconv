@@ -1105,7 +1105,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     if (format==JBXL_3D_FORMAT_DAE) {
         ColladaXML* dae = (ColladaXML*)solid;
         //
-        if (noOffset && dae->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, dae->affineTrans->shift, OART_LOCATION_MAGIC_STR);
+        if (noOffset && dae->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, dae->affineTrans->getShift(), OART_LOCATION_MAGIC_STR);
         if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
         else                  out_path = dup_Buffer(pathOUT);
         //
@@ -1116,7 +1116,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     else if (format==JBXL_3D_FORMAT_OBJ) {
         OBJData* obj = (OBJData*)solid;
 
-        if (noOffset && obj->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, obj->affineTrans->shift, OART_LOCATION_MAGIC_STR);
+        if (noOffset && obj->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, obj->affineTrans->getShift(), OART_LOCATION_MAGIC_STR);
         if (obj->engine==JBXL_3D_ENGINE_UE) {
             if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
@@ -1142,7 +1142,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
     else if (format==JBXL_3D_FORMAT_FBX) {
         FBXData* fbx = (FBXData*)solid;
         //
-        if (noOffset && fbx->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, fbx->affineTrans->shift, OART_LOCATION_MAGIC_STR);
+        if (noOffset && fbx->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, fbx->affineTrans->getShift(), OART_LOCATION_MAGIC_STR);
         if (fbx->engine==JBXL_3D_ENGINE_UE) {
             if (fbx->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);

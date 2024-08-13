@@ -327,27 +327,27 @@ void  PrimBaseShape::GetBaseParamFromXML(tXML* xml, AffineTrans<double>* base)
     double oposy = (double)get_xml_float_content_bystr(xml, "<OffsetPosition><Y>");
     double oposz = (double)get_xml_float_content_bystr(xml, "<OffsetPosition><Z>");
     if (base!=NULL) {
-        affineTrans.shift.set(oposx, oposy, oposz);
-        affineTrans.shift = base->execRotate(affineTrans.shift);
-        affineTrans.shift = affineTrans.shift + Vector<double>(gposx, gposy, gposz);
+        affineTrans.setShift(oposx, oposy, oposz);
+        affineTrans.setShift(base->execRotation(affineTrans.getShift()));
+        affineTrans.addShift(Vector<double>(gposx, gposy, gposz));
     }
     else {
-        affineTrans.shift.set(gposx+oposx, gposy+oposy, gposz+oposz);
+        affineTrans.setShift(gposx+oposx, gposy+oposy, gposz+oposz);
     }
         
     double rotx = (double)get_xml_float_content_bystr(xml, "<RotationOffset><X>");
     double roty = (double)get_xml_float_content_bystr(xml, "<RotationOffset><Y>");
     double rotz = (double)get_xml_float_content_bystr(xml, "<RotationOffset><Z>");
     double rots = (double)get_xml_float_content_bystr(xml, "<RotationOffset><W>");
-    affineTrans.rotate.set(rots, rotx, roty, rotz);
+    affineTrans.setRotation(rots, rotx, roty, rotz);
     if (base!=NULL) {
-        affineTrans.rotate = base->rotate*affineTrans.rotate;
+        affineTrans.setRotation(base->getRotation() * affineTrans.getRotation());
     }
     
     double sclx = (double)get_xml_float_content_bystr(xml, "<Scale><X>");
     double scly = (double)get_xml_float_content_bystr(xml, "<Scale><Y>");
     double sclz = (double)get_xml_float_content_bystr(xml, "<Scale><Z>");
-    affineTrans.scale.set(sclx, scly, sclz);
+    affineTrans.setScale(sclx, scly, sclz);
     affineTrans.computeMatrix();
 
     // Flags  "Physics Phantom TemporaryOnRez"
@@ -1061,7 +1061,6 @@ void  PrimShapeParam::GetParamFromBaseShape(PrimBaseShape shape)
 
     affineTrans.free();
     affineTrans.dup(shape.affineTrans);
-    affineTrans.shift.set(affineTrans.shift.x, affineTrans.shift.y, affineTrans.shift.z);
 
     for (int i=0; i<PRIM_MATERIAL_NUM; i++) {
         if (shape.materialParam[i].enable) {
