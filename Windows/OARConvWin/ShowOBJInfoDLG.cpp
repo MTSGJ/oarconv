@@ -43,7 +43,7 @@ CShowOBJInfoDLG::CShowOBJInfoDLG(char* obj, OARTool oar, CWnd* pParent)
 	else if (shape.PCode == PRIM_PCODE_PARTICLE) objectKind = "Particle";
  
 	TCHAR buf[LNAME];
-	shift = shape.affineTrans.shift;
+	shift = shape.affineTrans.getShift();
 	sntprintf(buf, LNAME, _T("%g, %g, %g"), shift.x, shift.y, shift.z);
 	coordinate = buf;
 

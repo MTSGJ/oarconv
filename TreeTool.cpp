@@ -219,7 +219,8 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv)
         mparam[i].texture.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         mparam[i].texture.setAlphaMode(MATERIAL_ALPHA_MASKING);
         mparam[i].texture.setAlphaCutoff(0.5);
-        char* paramstr = mparam[i].getBase64Params('T');  // T: Tree
+        mparam[i].setKind('T');                         // T: Tree
+        char* paramstr = mparam[i].getBase64Params();
         mparam[i].setParamString(paramstr);
         if (paramstr!=NULL) ::free(paramstr);
     }
@@ -242,7 +243,7 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv)
     }
     for (int i=0; i<3; i++) mparam[i].free();
 
-    double scale = (shape.affineTrans.scale.x + shape.affineTrans.scale.y + shape.affineTrans.scale.z)/3.0;
+    double scale = (shape.affineTrans.getScaleX() + shape.affineTrans.getScaleY() + shape.affineTrans.getScaleZ())/3.0;
 
 /*
     AffineTrans<double> affine;
@@ -254,6 +255,7 @@ MeshObjectData*  TreeTool::GenerateTree(PrimBaseShape pbs, int ndiv)
 
     data->setAffineTrans(shape.affineTrans);
     data->affineTrans->setScale(scale, scale, scale);
+    data->affineTrans->computeMatrix();
 
     primMesh.clear();
     return data;
@@ -272,7 +274,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
 {
     if (pbs.State<0 || pbs.State>=TREM_GRASS_NUM) pbs.State = 0;
     set_shape(pbs);
-    int num_grass = (int)(shape.affineTrans.scale.x*shape.affineTrans.scale.y*TREM_GRASS_NUM_RATE);
+    int num_grass = (int)(shape.affineTrans.getScaleX() * shape.affineTrans.getScaleY() * TREM_GRASS_NUM_RATE);
     DEBUG_MODE PRINT_MESG("TreeTool::GenerateGrass: number of grass unit is %d\n", num_grass);
 
     PrimBaseShape bases;
@@ -296,14 +298,14 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
     
     int gnum = 0;
     for (int n=0; n<num_grass; n++) {
-        float xx = (float)((Frand()-0.5f)*shape.affineTrans.scale.x); 
-        float yy = (float)((Frand()-0.5f)*shape.affineTrans.scale.y); 
-        float height = -(float)shape.affineTrans.shift.z;
+        float xx = (float)((Frand()-0.5f) * shape.affineTrans.getScaleX()); 
+        float yy = (float)((Frand()-0.5f) * shape.affineTrans.getScaleY()); 
+        float height = -(float)shape.affineTrans.getShiftZ();
         bool  valid_pos = true;
         //
         if (terrain!=NULL) {
-            float aa = xx + (float)shape.affineTrans.shift.x + terrain->xsize/2.0f;
-            float bb = yy + (float)shape.affineTrans.shift.y + terrain->ysize/2.0f;
+            float aa = xx + (float)shape.affineTrans.getShiftX();   // + terrain->xsize/2.0f;
+            float bb = yy + (float)shape.affineTrans.getShiftY();   // + terrain->ysize/2.0f;
             if (aa<0.0 || bb<0.0 || aa>(float)terrain->xsize-1.0f || bb>(float)terrain->ysize-1.0f) {   // ex. 0.0 - 255.0
                 valid_pos = false;
             }
@@ -320,7 +322,8 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
                 float h1 = (float)terrain->height(i1, terrain->ysize-1-j0);
                 float h2 = (float)terrain->height(i0, terrain->ysize-1-j1);
                 float h3 = (float)terrain->height(i1, terrain->ysize-1-j1);
-                height += h0*(1.0f-alph)*(1.0f-beta) + h1*alph*(1.0f-beta) + h2*(1.0f-alph)*beta + h3*alph*beta - terrain->waterHeight;
+                //height += h0*(1.0f-alph)*(1.0f-beta) + h1*alph*(1.0f-beta) + h2*(1.0f-alph)*beta + h3*alph*beta - terrain->waterHeight;
+                height += h0*(1.0f-alph)*(1.0f-beta) + h1*alph*(1.0f-beta) + h2*(1.0f-alph)*beta + h3*alph*beta;
             }
         }
         //
@@ -352,7 +355,8 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
         mparam[i].texture.setColor(1.0, 1.0, 1.0, 1.0);
         mparam[i].texture.setAlphaMode(MATERIAL_ALPHA_MASKING);
         mparam[i].texture.setAlphaCutoff(0.5);
-        char* paramstr = mparam[i].getBase64Params('G');  // G: Grass
+        mparam[i].setKind('G');                         // G: Grass
+        char* paramstr = mparam[i].getBase64Params();
         mparam[i].setParamString(paramstr);
         if (paramstr!=NULL) ::free(paramstr);
     }
@@ -375,6 +379,7 @@ MeshObjectData*  TreeTool::GenerateGrass(PrimBaseShape pbs, TerrainTool* terrain
 
     data->setAffineTrans(shape.affineTrans);
     data->affineTrans->setScale(1.0, 1.0, 1.0);
+    data->affineTrans->computeMatrix();
 
     primMesh.clear();
     return data;

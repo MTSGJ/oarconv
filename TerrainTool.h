@@ -19,7 +19,7 @@
 
 #include "LogDocTool.h"
 #include "MeshMaker.h"
-#include "MaterialTool.h"
+#include "GeneralTool.h"
 
 #include "OARGlobal.h"
 
@@ -49,16 +49,19 @@ class TerrainTool
 public:
     Buffer terrainName;     // Terrain name
 
-    int    xsize;            // Region X size
-    int    ysize;            // Region Y size
-    int    region_num;       // Region Number
-    float  scale;            // Texture Scale
+    int    xsize;           // Region X size
+    int    ysize;           // Region Y size
+    int    x_region_num;    // X Region Number
+    int    y_region_num;    // Y Region Number
+    //int    region_num;      // Region Number
+    float  scale;           // Texture Scale
 
     int    engine;
-    int    format;
+    int    dataFormat;      //
+    int    textureFormat;
     bool   noOffset;
 
-    MSGraph<float> r32;     // r32 data
+    MSGraph<float> r32;      // r32 data
 
     Buffer texture[4];
     Buffer defaultTexture[4];
@@ -75,27 +78,30 @@ public:
     float  waterHeight;      // Water Height
 
 public:
-    TerrainTool(char* name, int xs=256, int ys=256) { init(name, xs, ys);}
+    TerrainTool(char* name, int xs = 256, int ys = 256) { init(name, xs, ys);}
     virtual ~TerrainTool(void) {}
 
-    void   init(char* name, int xs=256, int ys=256);
+    void   init(char* name, int xs = 256, int ys = 256);
     void   free(void);
 
     void   set_size (int xs, int ys) { xsize = xs; ysize = ys;}
     void   set_scale(float sc) { scale = sc;}
 
-    float  height(int x, int y) { return r32.gp[(r32.ys-1-y)*r32.xs+x];}
+    float  height(int x, int y) { return r32.gp[(r32.ys - 1 - y)*r32.xs + x];}
     float  water_height(void)   { return waterHeight;}
 
 public:
     void   SetEngine(int e) { engine = e;}
-    void   SetFormat(int f) { format = f;}
+    void   SetDataFormat(int f) { dataFormat = f;}
+    void   SetTextureFormat(int f) { textureFormat = f;}
     void   SetNoOffset(bool b) { noOffset = b;}
+
+    char*  GetTextureExtension(void) { return get_graphic_extension(textureFormat);}
 
     void   ReadSettings(const char* path);
     void   ReadHeightData(const char* path);
 
-    void   GenerateTexture(tList* assets, const char* outpath);
+    int    GenerateTexture(tList* assets, const char* outpath);
     void   GenerateTerrain(const char* outpath, Vector<double> offset);
 
     TerrainTexWeight  GetTextureWeight(int x, int y);

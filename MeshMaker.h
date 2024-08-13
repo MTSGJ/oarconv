@@ -19,15 +19,18 @@
 #include "AffineTrans.h"
 #include "ColladaTool.h"
 #include "OBJDataTool.h"
+#include "FBXDataTool.h"
+#include "GLTFDataTool.h"
 
 #include "PrimMesher.h"
 #include "SculptMesher.h"
 #include "TerrainMesher.h"
-#include "MaterialTool.h"
+#include "GeneralTool.h"
 #include "LogDocTool.h"
 
 #include "Jpeg2KTool.h"
 #include "TgaTool.h"
+#include "PngTool.h"
 
 #include "gz_tool.h"
 #include "llsd_tool.h"

@@ -30,6 +30,8 @@ protected:
 	CString  prefixOAR;
 	CString  prefixDAE;
 	CString  prefixOBJ;
+	CString  prefixGLTF;
+	CString  prefixGLB;
 	CString  prefixFBX;
 	CString  prefixSTL;
 
@@ -52,6 +54,8 @@ protected:
 	CEdit*   prefixOarEBox;
 	CEdit*   prefixDaeEBox;
 	CEdit*   prefixObjEBox;
+	CEdit*   prefixGltfEBox;
+	CEdit*   prefixGlbEBox;
 	CEdit*   prefixFbxEBox;
 	CEdit*   prefixStlEBox;
 

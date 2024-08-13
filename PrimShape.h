@@ -63,7 +63,7 @@
 #include "ContourBaseData.h"
 #include "MaterialParam.h"
 
-#include "MaterialTool.h"
+#include "GeneralTool.h"
 #include "SculptMesher.h"
 #include "LogDocTool.h"
 

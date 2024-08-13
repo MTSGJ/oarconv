@@ -408,11 +408,17 @@ void  COARConvWinApp::OnOutFormatDialog()
         else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
             no_offset_flg = true;
         }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) {
+            no_offset_flg = true;
+        }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
             no_offset_flg = true;
         }
     }
-    if (no_offset_flg) outf += OART_DEFAULT_NOS_DIR;
+    if (no_offset_flg) outf += OART_DEFAULT_NOFST_DIR;
     appParam.outFolder = outf;
 
     char* op = ts2mbs(outf);
@@ -452,11 +458,17 @@ void  COARConvWinApp::OnSettingDialog()
         else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
             no_offset_flg = true;
         }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) {
+            no_offset_flg = true;
+        }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
             no_offset_flg = true;
         }
     }
-    if (no_offset_flg) outf += OART_DEFAULT_NOS_DIR;
+    if (no_offset_flg) outf += OART_DEFAULT_NOFST_DIR;
     appParam.outFolder = outf;
 
     char* op = ts2mbs(outf);
@@ -605,11 +617,17 @@ void  COARConvWinApp::setupParameters(CString path, CString file, CString oarf)
         else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
             no_offset_flg = true;
         }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
+            no_offset_flg = true;
+        }
+        else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) {
+            no_offset_flg = true;
+        }
         else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
             no_offset_flg = true;
         }
     }
-    if (no_offset_flg) outf += OART_DEFAULT_NOS_DIR;
+    if (no_offset_flg) outf += OART_DEFAULT_NOFST_DIR;
     appParam.outFolder = outf;
     
     char* op = ts2mbs(outf);
@@ -701,9 +719,12 @@ int   COARConvWinApp::_convertAllData()
     if (stopnum != 0) {
         CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
         if (progress != NULL) {
-            if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
+            if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
             else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
-            else                                                progress->SetTitle("Convert to STL Files");
+            else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF)progress->SetTitle("Convert to GLTF Files");
+            else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) progress->SetTitle("Convert to GLB Files");
+            else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) progress->SetTitle("Convert to FBX Files");
+            else                                                  progress->SetTitle("Convert to STL Files");
             progress->Start(prognum);
             SetGlobalCounter(progress);
         }
@@ -922,38 +943,54 @@ void  COARConvWinApp::updateStatusBar(CString oar_path, CString out_path)
     bool no_offset_flg = false;
     CString prefix;
     if (appParam.outputFormat == JBXL_3D_FORMAT_DAE) {
-        prefix = _T("  DAE  |  ");
-        if (appParam.procJoints) prefix += _T("JOINTS  |  ");
+        prefix = _T(" DAE | ");
+        if (appParam.procJoints) prefix += _T("JOINTS | ");
         if (appParam.noOffset) {
             no_offset_flg = true;
-            prefix += _T("NO_OFFSET  |  ");
+            prefix += _T("NO_OFFSET | ");
         }
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) {
-        prefix = _T("  OBJ  |  ");
+        prefix = _T(" OBJ | ");
         if (appParam.noOffset) {
             no_offset_flg = true;
-            prefix += _T("NO_OFFSET  |  ");
+            prefix += _T("NO_OFFSET | ");
+        }
+    }
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF) {
+        prefix = _T(" GLTF | ");
+        if (appParam.procJoints) prefix += _T("JOINTS | ");
+        if (appParam.noOffset) {
+            no_offset_flg = true;
+            prefix += _T("NO_OFFSET | ");
+        }
+    }
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) {
+        prefix = _T(" GLB | ");
+        if (appParam.procJoints) prefix += _T("JOINTS | ");
+        if (appParam.noOffset) {
+            no_offset_flg = true;
+            prefix += _T("NO_OFFSET | ");
         }
     }
     else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) {
-        prefix = _T("  FBX | ");
-        if (appParam.procJoints) prefix += _T("JOINTS  |  ");
+        prefix = _T(" FBX | ");
+        if (appParam.procJoints) prefix += _T("JOINTS | ");
         if (appParam.noOffset) {
             no_offset_flg = true;
-            prefix += _T("NO_OFFSET  |  ");
+            prefix += _T("NO_OFFSET | ");
         }
     }
     // STL は元々 OFFSETなし．
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T("  STL  |  ");
-    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T("  STL  |  ");
-    else                                                    prefix = _T("  NONE  |  ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_A) prefix = _T(" STL | ");
+    else if (appParam.outputFormat == JBXL_3D_FORMAT_STL_B) prefix = _T(" STL | ");
+    else                                                    prefix = _T(" NONE | ");
 
-    if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY)   prefix += _T("UNITY  |  ");
-    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE) prefix += _T("UE  |  ");
+    if (appParam.outputEngine == JBXL_3D_ENGINE_UNITY)   prefix += _T("UNITY | ");
+    else if (appParam.outputEngine == JBXL_3D_ENGINE_UE) prefix += _T("UE | ");
 
-    //CString mesg = prefix + _T("OAR-Path: ") + oar_path + "  |  " + _T("OUT-Path: ") + out_path;
-    CString mesg = prefix + _T("OUT-Path: ") + out_path;
+    //CString mesg = prefix + _T("OAR-Path: ") + oar_path + " | " + _T("OUT-Path: ") + out_path;
+    CString mesg = prefix + _T("OUT: ") + out_path;
     pMainFrame->SetStausBarText(mesg);
 
     return;

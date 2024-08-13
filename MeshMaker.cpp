@@ -34,10 +34,6 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
     DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: start.\n");
     DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Mesh Type is 0x%02x\n", param.sculptType);
 
-#ifndef WIN32
-    //PRINT_MESG("MeshObjectDataFromPrimShape: start: Used Memory = %ld\n", get_used_memory());
-#endif
-
     // Mesh
     if ((param.sculptType&0x07)==SCULPT_TYPE_MESH) {
         DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: Try to Generate LLM Mesh\n");
@@ -99,9 +95,10 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
                 MaterialParam mparam;
                 mparam.dup(param.materialParam[facet]);
                 //
-                mparam.texture.setAlphaChannel(HasValidAlphaChannel(mparam.getTextureName(), resourceList));
+                mparam.texture.setAlphaChannel(hasValidAlphaChannel(mparam.getTextureName(), resourceList));
                 //if (mparam.texture.hasAlphaChannel()) mparam.setTransparent(MTRL_DEFAULT_ALPHA);
-                char* paramstr = mparam.getBase64Params('O');
+                mparam.setKind('O');
+                char* paramstr = mparam.getBase64Params();
                 if (paramstr!=NULL) {
                     mparam.setParamString(paramstr);
                     ::free(paramstr);
@@ -125,9 +122,10 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
             MaterialParam mparam;
             mparam.dup(param.materialParam[0]);
             //
-            mparam.texture.setAlphaChannel(HasValidAlphaChannel(mparam.getTextureName(), resourceList));
+            mparam.texture.setAlphaChannel(hasValidAlphaChannel(mparam.getTextureName(), resourceList));
             //if (mparam.texture.isSetAlpha()) mparam.setTransparent(MTRL_DEFAULT_ALPHA);
-            char* paramstr = mparam.getBase64Params('O');
+            mparam.setKind('O');
+            char* paramstr = mparam.getBase64Params();
             if (paramstr!=NULL) {
                 mparam.setParamString(paramstr);
                 ::free(paramstr);
@@ -149,9 +147,6 @@ MeshObjectData*  jbxl::MeshObjectDataFromPrimShape(PrimBaseShape baseShape, tLis
 
     DEBUG_MODE PRINT_MESG("JBXL::MeshObjectDataFromPrimShape: end.\n");
 
-#ifndef WIN32
-    //PRINT_MESG("MeshObjectDataFromPrimShape:   end: Used Memory = %ld\n", get_used_memory());
-#endif
     return data;
 }
 
@@ -289,29 +284,48 @@ ContourBaseData*  jbxl::ContourBaseDataFromSculptJP2K(const char* jpegfile, int 
     DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
     MSGraph<uByte> grd;
 
-    JPEG2KImage jpg = readJPEG2KFile(jpegfile);
-    if (!jpg.isNull() && jpg.col>0) {
-        DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
-        grd = JPEG2KImage2MSGraph<uByte>(jpg);
-        jpg.free();
+    char* extn = get_file_extension(jpegfile);
+
+    // PNG
+    if (!strcasecmp(extn, "png")) {
+        PNGImage png = readPNGFile(jpegfile);
+        if (png.state>=0) {
+            DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: PNG size = (%d, %d, %d)\n", png.xs, png.ys, png.col);
+            grd = PNGImage2MSGraph<uByte>(png);
+        }
+        else {
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid PNG image file! [%s], (%d)\n", jpegfile, png.state);
+        }
+        png.free();
     }
-    else {
-        // TGA
+    // TGA
+    else if (!strcasecmp(extn, "tga")) {
         TGAImage tga = readTGAFile(jpegfile);
         if (tga.state>=0) {
             DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
             grd = TGAImage2MSGraph<uByte>(tga);
-            tga.free();
         }
         else {
-            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid JPEG2K/TGA image file! [%s], (%d)\n", jpegfile, tga.state);
-            jpg.free();
-            tga.free();
-            return NULL;
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid TGA image file! [%s], (%d)\n", jpegfile, tga.state);
         }
+        tga.free();
     }
-    ContourBaseData* facetdata = NULL;
-    facetdata = ContourBaseDataFromSculptImage(grd, type);
+    // Other JPEG2K
+    else {
+        JPEG2KImage jpg = readJPEG2KFile(jpegfile);
+        if (!jpg.isNull() && jpg.col>0) {
+            DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: size = (%d, %d, %d), mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
+            grd = JPEG2KImage2MSGraph<uByte>(jpg);
+        }
+        else {
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid JPEG2K image file! [%s], (%d)\n", jpegfile, jpg.state);
+        }
+        jpg.free();
+    }
+    if (grd.isNull()) return NULL;
+
+    //
+    ContourBaseData* facetdata = ContourBaseDataFromSculptImage(grd, type);
     grd.free();
 
     return facetdata;
@@ -386,7 +400,7 @@ ContourBaseData*  jbxl::ContourBaseDataFromSculptImage(MSGraph<uByte> grd, int t
 /**
 TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int type, int* pnum)
 
-Sculpted Primのファイル(JPEG2K/TGA) からデータを読み込み，三角ポリゴンデータ TriPloyDataを生成する．@n
+Sculpted Primのファイル(JPEG2K/TGA/PNG) からデータを読み込み，三角ポリゴンデータ TriPloyDataを生成する．@n
 
 @param jpegfile   Sculpted Primのデータの入った JPEG 2000ファイル名．
 @param type       Sculpted Primのタイプ
@@ -402,29 +416,46 @@ TriPolygonData*  jbxl::TriPolygonDataFromSculptJP2K(const char* jpegfile, int ty
     DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: reading sculpt image file %s\n", jpegfile);
     MSGraph<uByte> grd;
 
-    JPEG2KImage jpg = readJPEG2KFile(jpegfile);
-    if (!jpg.isNull() && jpg.col>0) {
-        DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: JPEG2K size = (%d, %d, %d), color_mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
-        grd = JPEG2KImage2MSGraph<uByte>(jpg);
-        jpg.free();
-    }
-    else {
-        jpg.free();
-        // TGA
-        TGAImage tga = readTGAFile(jpegfile);
-        if (tga.state>=0) {
-            DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
-            grd = TGAImage2MSGraph<uByte>(tga);
-            tga.free();
+    char* extn = get_file_extension(jpegfile);
+
+    // PNG
+    if (!strcasecmp(extn, "png")) {
+        PNGImage png = readPNGFile(jpegfile);
+        if (png.state>=0) {
+            DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: PNG size = (%d, %d, %d)\n", png.xs, png.ys, png.col);
+            grd = PNGImage2MSGraph<uByte>(png);
         }
         else {
-            PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: ERROR: Invalid JPEG2K/TGA image file! [%s], (%d)\n", jpegfile, tga.state);
-            tga.free();
-            return NULL;
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid PNG image file! [%s], (%d)\n", jpegfile, png.state);
         }
+        png.free();
     }
-    TriPolygonData* tridata = NULL;
+    // TGA
+    else if (!strcasecmp(extn, "tga")) {
+        TGAImage tga = readTGAFile(jpegfile);
+        if (tga.state>=0) {
+            DEBUG_MODE PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: TGA size = (%d, %d, %d)\n", tga.xs, tga.ys, tga.col);
+            grd = TGAImage2MSGraph<uByte>(tga);
+        }
+        else {
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid TGA image file! [%s], (%d)\n", jpegfile, tga.state);
+        }
+        tga.free();
+    }
+    else {
+        JPEG2KImage jpg = readJPEG2KFile(jpegfile);
+        if (!jpg.isNull() && jpg.col>0) {
+            DEBUG_MODE PRINT_MESG("JBXL::TriPolygonDataFromSculptJP2K: JPEG2K size = (%d, %d, %d), color_mode = %d\n", jpg.xs, jpg.ys, jpg.col, jpg.cmode);
+            grd = JPEG2KImage2MSGraph<uByte>(jpg);
+        }
+        else {
+            PRINT_MESG("JBXL::ContourBaseDataFromSculptJP2K: ERROR: Invalid JPEG2K image file! [%s], (%d)\n", jpegfile, jpg.state);
+        }
+        jpg.free();
+    }
+    if (grd.gp==NULL) return NULL;
 
+    TriPolygonData* tridata = NULL;
     if (grd.zs>1) {
         tridata = TriPolygonDataFromSculptImage(grd, type, pnum);
     }
@@ -592,7 +623,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
             if (pp->next!=NULL) {
                 int i = idx%4 + 1;
                 int j = idx/4 + 1;
-                skin_joint->bind_shape.matrix.element(i, j) = atof((char*)pp->next->ldat.key.buf);
+                skin_joint->bind_shape.element(i, j, atof((char*)pp->next->ldat.key.buf));
                 idx++;
             }
             pp = pp->ysis;
@@ -614,7 +645,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
                     if (pp->next!=NULL) {
                         int i = idx%4 + 1;
                         int j = idx/4 + 1;
-                        skin_joint->inverse_bind[joint_idx].matrix.element(i, j) = atof((char*)pp->next->ldat.key.buf);
+                        skin_joint->inverse_bind[joint_idx].element(i, j, atof((char*)pp->next->ldat.key.buf));
                         idx++;
                     }
                     pp = pp->ysis;
@@ -644,7 +675,7 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
                         //****************************************
                         if (element>256.0) element = 0.0;
                         //****************************************
-                        skin_joint->alt_inverse_bind[joint_idx].matrix.element(i, j) = element;
+                        skin_joint->alt_inverse_bind[joint_idx].element(i, j, element);
                         idx++;
                     }
                     pp = pp->ysis;
@@ -661,13 +692,12 @@ SkinJointData*  jbxl::SkinJointDataFromLLMesh(uByte* mesh, int sz)
     for (int jnt=0; jnt<joint_idx; jnt++) {
         for (int i=1; i<=4; i++) {
             for (int j=1; j<=4; j++) {
-                if (i==j)      skin_joint->alt_inverse_bind[jnt].matrix.element(i, j) = 1.0;
-                else if (j!=4) skin_joint->alt_inverse_bind[jnt].matrix.element(i, j) = 0.0;
+                if (i==j)      skin_joint->alt_inverse_bind[jnt].element(i, j, 1.0);
+                else if (j!=4) skin_joint->alt_inverse_bind[jnt].element(i, j, 0.0);
             }
         }
         skin_joint->alt_inverse_bind[jnt].computeComponents();
     }
-
 
 /*
     PRINT_MESG("joint number = %d\n", skin_joint->joint_names.get_size());
@@ -1112,8 +1142,14 @@ UVMap<float>*  jbxl::GetLLMeshTexCoordDomainMaxMin(tXML* xml, int facet, bool ma
     while (count<facet && lp!=NULL) {
         if (lp->altp!=NULL) {
             tList* lpreal = lp->altp;
-            uvmp[count].u = (float)atof((char*)lpreal->next->ldat.key.buf);
-            uvmp[count].v = (float)atof((char*)lpreal->ysis->next->ldat.key.buf);
+            float u = (float)atof((char*)lpreal->next->ldat.key.buf);
+            float v = (float)atof((char*)lpreal->ysis->next->ldat.key.buf);
+            if      (u> 1.0e10) u =  1.0;
+            else if (u<-1.0e10) u = -1.0;
+            if      (v> 1.0e10) v =  1.0;
+            else if (v<-1.0e10) v = -1.0;
+            uvmp[count].u = u;
+            uvmp[count].v = v;
             count++;
         }
         lp = lp->next;
@@ -1157,7 +1193,7 @@ float  jbxl::LLMeshUint16toFloat(uByte* ptr, float max, float min)
 Terrain用の標高データの入った画像データからインデックス化された三角ポリゴンデータ ContourBaseDataを生成する．@n
 
 @param grd      標高データの入った画像データ．
-@param shift    平行移動量．Unity3Dの仕様対策
+@param shift    平行移動量．
 @param left     左の境界を処理するか？
 @param right    右の境界を処理するか？
 @param top      上方の境界を処理するか？
@@ -1187,9 +1223,9 @@ ContourBaseData*  jbxl::ContourBaseDataFromTerrainImage(MSGraph<float> grd, Vect
     }
 
     for (int i=0; i<inum/3; i++) {
-        facetdata->index[i*3+0] = terrainMesh.terrainTriIndex[i].v1;
-        facetdata->index[i*3+1] = terrainMesh.terrainTriIndex[i].v2;
-        facetdata->index[i*3+2] = terrainMesh.terrainTriIndex[i].v3;
+        facetdata->index[i*3 + 0] = terrainMesh.terrainTriIndex[i].v1;
+        facetdata->index[i*3 + 1] = terrainMesh.terrainTriIndex[i].v2;
+        facetdata->index[i*3 + 2] = terrainMesh.terrainTriIndex[i].v3;
     }
 
     for (int i=0; i<cnum; i++) {
