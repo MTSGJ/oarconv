@@ -1046,7 +1046,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         }
         //  OBJ
         else if (format==JBXL_3D_FORMAT_OBJ) {
-            Vector<double> offset = obj->execDegeneracy();         // no_offset==true の場合，原点縮退
+            Vector<double> offset = obj->execAffineTrans();         // no_offset==true の場合，原点縮退
             if (obj->affineTrans==NULL) obj->affineTrans = new AffineTrans<double>();
             obj->affineTrans->setShift(offset);
             obj->affineTrans->computeMatrix();
