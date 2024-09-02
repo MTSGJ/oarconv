@@ -1413,7 +1413,7 @@ int  OARTool::ConvertTexture(const char* texture, const char* add_name, const ch
             }
             // unknown file extension
             else {
-                PRINT_MESG("OARTool::ConvertTexture: ERROR: unsupported file %s\n found!", path);
+                PRINT_MESG("OARTool::ConvertTexture: ERROR: unsupported file %s found!", path);
                 ret = OART_TEXCNVT_INVD_ERR;
             }
         }
