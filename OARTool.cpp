@@ -1120,12 +1120,14 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         if (obj->engine==JBXL_3D_ENGINE_UE) {
             if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
+            obj->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, NULL, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
         }
-        //
-        obj->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
+        else {
+            obj->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
+        }
     }
 
-    // GLTF
+    // GLTF/GLB
     else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
         GLTFData* gltf = (GLTFData*)solid;
         //
@@ -1133,9 +1135,11 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         if (gltf->engine==JBXL_3D_ENGINE_UE) {
             if (gltf->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                   ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
+            gltf->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, NULL, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
         }
-        //
-        gltf->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
+        else {
+            gltf->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
+        }
     }
 
     // FBX
@@ -1146,9 +1150,11 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         if (fbx->engine==JBXL_3D_ENGINE_UE) {
             if (fbx->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
+            fbx->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, NULL, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
         }
-        //
-        fbx->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
+        else {
+            fbx->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
+        }
     }
 
     // STL
