@@ -1,0 +1,1659 @@
+<node id="Avatar" name="Avatar" type="NODE">
+  <matrix sid="transform" />
+  <node id="mPelvis" layer="16" name="mPelvis" sid="mPelvis" type="JOINT">
+    <matrix sid="transform" />
+    <extra>
+      <technique profile="blender">
+        <layer>16</layer>
+        <connect>0</connect>
+        <tip_x>-0.000000</tip_x>
+        <tip_y>0.000000</tip_y>
+        <tip_z>0.084073</tip_z>
+      </technique>
+    </extra>
+    <node id="mSpine1" layer="23 29" name="mSpine1" sid="mSpine1" type="JOINT">
+      <matrix sid="transform" />
+      <extra>
+        <technique profile="blender">
+          <layer>23 29</layer>
+          <connect>1</connect>
+          <tip_x>-0.000000</tip_x>
+          <tip_y>0.000000</tip_y>
+          <tip_z>-0.084073</tip_z>
+        </technique>
+      </extra>
+      <node id="mSpine2" layer="23 29" name="mSpine2" sid="mSpine2" type="JOINT">
+        <matrix sid="transform" />
+        <extra>
+          <technique profile="blender">
+            <layer>23 29</layer>
+            <connect>1</connect>
+            <tip_x>-0.000000</tip_x>
+            <tip_y>0.000000</tip_y>
+            <tip_z>0.084073</tip_z>
+          </technique>
+        </extra>
+        <node id="mTorso" layer="16" name="mTorso" sid="mTorso" type="JOINT">
+          <matrix sid="transform" />
+          <extra>
+            <technique profile="blender">
+              <layer>16</layer>
+              <connect>1</connect>
+              <tip_x>-0.015368</tip_x>
+              <tip_y>0.000000</tip_y>
+              <tip_z>0.204877</tip_z>
+            </technique>
+          </extra>
+          <node id="mSpine3" layer="23 29" name="mSpine3" sid="mSpine3" type="JOINT">
+            <matrix sid="transform" />
+            <extra>
+              <technique profile="blender">
+                <layer>23 29</layer>
+                <connect>1</connect>
+                <tip_x>0.015368</tip_x>
+                <tip_y>0.000000</tip_y>
+                <tip_z>-0.204877</tip_z>
+              </technique>
+            </extra>
+            <node id="mSpine4" layer="23 29" name="mSpine4" sid="mSpine4" type="JOINT">
+              <matrix sid="transform" />
+              <extra>
+                <technique profile="blender">
+                  <layer>23 29</layer>
+                  <connect>1</connect>
+                  <tip_x>-0.015368</tip_x>
+                  <tip_y>0.000000</tip_y>
+                  <tip_z>0.204877</tip_z>
+                </technique>
+              </extra>
+              <node id="mChest" layer="16" name="mChest" sid="mChest" type="JOINT">
+                <matrix sid="transform" />
+                <extra>
+                  <technique profile="blender">
+                    <layer>16</layer>
+                    <connect>1</connect>
+                    <tip_x>-0.009507</tip_x>
+                    <tip_y>0.000000</tip_y>
+                    <tip_z>0.251108</tip_z>
+                  </technique>
+                </extra>
+                <node id="mNeck" layer="16" name="mNeck" sid="mNeck" type="JOINT">
+                  <matrix sid="transform" />
+                  <extra>
+                    <technique profile="blender">
+                      <layer>16</layer>
+                      <connect>1</connect>
+                      <tip_x>-0.000000</tip_x>
+                      <tip_y>0.000000</tip_y>
+                      <tip_z>0.075630</tip_z>
+                    </technique>
+                  </extra>
+                  <node id="mHead" layer="16" name="mHead" sid="mHead" type="JOINT">
+                    <matrix sid="transform" />
+                    <extra>
+                      <technique profile="blender">
+                        <layer>16</layer>
+                        <connect>1</connect>
+                        <tip_x>-0.000000</tip_x>
+                        <tip_y>0.000000</tip_y>
+                        <tip_z>0.073075</tip_z>
+                      </technique>
+                    </extra>
+                    <node id="mSkull" layer="16" name="mSkull" sid="mSkull" type="JOINT">
+                      <matrix sid="transform" />
+                      <extra>
+                        <technique profile="blender">
+                          <layer>16</layer>
+                          <connect>0</connect>
+                          <tip_x>-0.000000</tip_x>
+                          <tip_y>0.000000</tip_y>
+                          <tip_z>0.030525</tip_z>
+                        </technique>
+                      </extra>
+                    </node>
+                    <node id="mEyeRight" layer="16" name="mEyeRight" sid="mEyeRight" type="JOINT">
+                      <matrix sid="transform" />
+                      <extra>
+                        <technique profile="blender">
+                          <layer>16</layer>
+                          <connect>0</connect>
+                          <tip_x>0.092996</tip_x>
+                          <tip_y>0.000000</tip_y>
+                          <tip_z>0.000000</tip_z>
+                        </technique>
+                      </extra>
+                    </node>
+                    <node id="mEyeLeft" layer="16" name="mEyeLeft" sid="mEyeLeft" type="JOINT">
+                      <matrix sid="transform" />
+                      <extra>
+                        <technique profile="blender">
+                          <layer>16</layer>
+                          <connect>0</connect>
+                          <tip_x>0.092996</tip_x>
+                          <tip_y>0.000000</tip_y>
+                          <tip_z>0.000000</tip_z>
+                        </technique>
+                      </extra>
+                    </node>
+                    <node id="mFaceRoot" layer="23 24" name="mFaceRoot" sid="mFaceRoot" type="JOINT">
+                      <matrix sid="transform" />
+                      <extra>
+                        <technique profile="blender">
+                          <layer>23 24</layer>
+                          <connect>0</connect>
+                          <tip_x>0.020000</tip_x>
+                          <tip_y>0.000000</tip_y>
+                          <tip_z>0.000000</tip_z>
+                        </technique>
+                      </extra>
+                      <node id="mFaceEyeAltRight" layer="23 24" name="mFaceEyeAltRight" sid="mFaceEyeAltRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.020459</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyeAltLeft" layer="23 24" name="mFaceEyeAltLeft" sid="mFaceEyeAltLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.020459</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceForeheadLeft" layer="23 24" name="mFaceForeheadLeft" sid="mFaceForeheadLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>-2.649697</roll>
+                            <tip_x>0.024000</tip_x>
+                            <tip_y>0.004000</tip_y>
+                            <tip_z>0.018000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceForeheadRight" layer="23 24" name="mFaceForeheadRight" sid="mFaceForeheadRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>2.649697</roll>
+                            <tip_x>0.024000</tip_x>
+                            <tip_y>-0.004000</tip_y>
+                            <tip_z>0.018000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyebrowOuterLeft" layer="23 24" name="mFaceEyebrowOuterLeft" sid="mFaceEyebrowOuterLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.023000</tip_x>
+                            <tip_y>0.013000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyebrowCenterLeft" layer="23 24" name="mFaceEyebrowCenterLeft" sid="mFaceEyebrowCenterLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.027000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyebrowInnerLeft" layer="23 24" name="mFaceEyebrowInnerLeft" sid="mFaceEyebrowInnerLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.026000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyebrowOuterRight" layer="23 24" name="mFaceEyebrowOuterRight" sid="mFaceEyebrowOuterRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.023000</tip_x>
+                            <tip_y>-0.013000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyebrowCenterRight" layer="23 24" name="mFaceEyebrowCenterRight" sid="mFaceEyebrowCenterRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.027000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyebrowInnerRight" layer="23 24" name="mFaceEyebrowInnerRight" sid="mFaceEyebrowInnerRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.026000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyeLidUpperLeft" layer="23 24" name="mFaceEyeLidUpperLeft" sid="mFaceEyeLidUpperLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>3.141593</roll>
+                            <tip_x>0.027000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.005000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyeLidLowerLeft" layer="23 24" name="mFaceEyeLidLowerLeft" sid="mFaceEyeLidLowerLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>-3.141593</roll>
+                            <tip_x>0.024000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>-0.007000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyeLidUpperRight" layer="23 24" name="mFaceEyeLidUpperRight" sid="mFaceEyeLidUpperRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>3.141593</roll>
+                            <tip_x>0.027000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.005000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyeLidLowerRight" layer="23 24" name="mFaceEyeLidLowerRight" sid="mFaceEyeLidLowerRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>-3.141593</roll>
+                            <tip_x>0.024000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>-0.007000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEar1Left" layer="23 24" name="mFaceEar1Left" sid="mFaceEar1Left" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>-0.316785</roll>
+                            <tip_x>-0.019000</tip_x>
+                            <tip_y>0.018000</tip_y>
+                            <tip_z>0.025000</tip_z>
+                          </technique>
+                        </extra>
+                        <node id="mFaceEar2Left" layer="23 24" name="mFaceEar2Left" sid="mFaceEar2Left" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 24</layer>
+                              <connect>1</connect>
+                              <tip_x>-0.000000</tip_x>
+                              <tip_y>0.000000</tip_y>
+                              <tip_z>0.033000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                      </node>
+                      <node id="mFaceEar1Right" layer="23 24" name="mFaceEar1Right" sid="mFaceEar1Right" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>0.316785</roll>
+                            <tip_x>-0.019000</tip_x>
+                            <tip_y>-0.018000</tip_y>
+                            <tip_z>0.025000</tip_z>
+                          </technique>
+                        </extra>
+                        <node id="mFaceEar2Right" layer="23 24" name="mFaceEar2Right" sid="mFaceEar2Right" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 24</layer>
+                              <connect>1</connect>
+                              <tip_x>-0.000000</tip_x>
+                              <tip_y>0.000000</tip_y>
+                              <tip_z>0.033000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                      </node>
+                      <node id="mFaceNoseLeft" layer="23 24" name="mFaceNoseLeft" sid="mFaceNoseLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.015000</tip_x>
+                            <tip_y>0.004000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceNoseCenter" layer="23 24" name="mFaceNoseCenter" sid="mFaceNoseCenter" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.023949</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceNoseRight" layer="23 24" name="mFaceNoseRight" sid="mFaceNoseRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.015000</tip_x>
+                            <tip_y>-0.004000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceCheekLowerLeft" layer="23 24" name="mFaceCheekLowerLeft" sid="mFaceCheekLowerLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.013000</tip_x>
+                            <tip_y>0.030000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceCheekUpperLeft" layer="23 24" name="mFaceCheekUpperLeft" sid="mFaceCheekUpperLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.022000</tip_x>
+                            <tip_y>0.015000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceCheekLowerRight" layer="23 24" name="mFaceCheekLowerRight" sid="mFaceCheekLowerRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.013000</tip_x>
+                            <tip_y>-0.030000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceCheekUpperRight" layer="23 24" name="mFaceCheekUpperRight" sid="mFaceCheekUpperRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.022000</tip_x>
+                            <tip_y>-0.015000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceJaw" layer="23 24" name="mFaceJaw" sid="mFaceJaw" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>-3.141593</roll>
+                            <tip_x>0.054575</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>-0.036075</tip_z>
+                          </technique>
+                        </extra>
+                        <node id="mFaceChin" layer="23 24" name="mFaceChin" sid="mFaceChin" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 24</layer>
+                              <connect>0</connect>
+                              <roll>3.141593</roll>
+                              <tip_x>0.021000</tip_x>
+                              <tip_y>0.000000</tip_y>
+                              <tip_z>-0.018000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                        <node id="mFaceTeethLower" layer="23 24" name="mFaceTeethLower" sid="mFaceTeethLower" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 24</layer>
+                              <connect>0</connect>
+                              <tip_x>0.035000</tip_x>
+                              <tip_y>0.000000</tip_y>
+                              <tip_z>0.000000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mFaceLipLowerLeft" layer="23 24" name="mFaceLipLowerLeft" sid="mFaceLipLowerLeft" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 24</layer>
+                                <connect>0</connect>
+                                <roll>-0.541183</roll>
+                                <tip_x>0.031450</tip_x>
+                                <tip_y>0.015725</tip_y>
+                                <tip_z>0.004625</tip_z>
+                              </technique>
+                            </extra>
+                          </node>
+                          <node id="mFaceLipLowerRight" layer="23 24" name="mFaceLipLowerRight" sid="mFaceLipLowerRight" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 24</layer>
+                                <connect>0</connect>
+                                <roll>0.541183</roll>
+                                <tip_x>0.031450</tip_x>
+                                <tip_y>-0.015725</tip_y>
+                                <tip_z>0.004625</tip_z>
+                              </technique>
+                            </extra>
+                          </node>
+                          <node id="mFaceLipLowerCenter" layer="23 24" name="mFaceLipLowerCenter" sid="mFaceLipLowerCenter" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 24</layer>
+                                <connect>0</connect>
+                                <roll>3.141589</roll>
+                                <tip_x>0.037000</tip_x>
+                                <tip_y>0.000000</tip_y>
+                                <tip_z>0.001850</tip_z>
+                              </technique>
+                            </extra>
+                          </node>
+                          <node id="mFaceTongueBase" layer="23 24" name="mFaceTongueBase" sid="mFaceTongueBase" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 24</layer>
+                                <connect>0</connect>
+                                <roll>3.141593</roll>
+                                <tip_x>0.020350</tip_x>
+                                <tip_y>0.000000</tip_y>
+                                <tip_z>0.006475</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mFaceTongueTip" layer="23 24" name="mFaceTongueTip" sid="mFaceTongueTip" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 24</layer>
+                                  <connect>1</connect>
+                                  <tip_x>0.009250</tip_x>
+                                  <tip_y>0.000000</tip_y>
+                                  <tip_z>0.000000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node id="mFaceJawShaper" layer="23 24" name="mFaceJawShaper" sid="mFaceJawShaper" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>-0.015725</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceForeheadCenter" layer="23 24" name="mFaceForeheadCenter" sid="mFaceForeheadCenter" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.036000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceNoseBase" layer="23 24" name="mFaceNoseBase" sid="mFaceNoseBase" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.014000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceTeethUpper" layer="23 24" name="mFaceTeethUpper" sid="mFaceTeethUpper" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.035000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                        <node id="mFaceLipUpperLeft" layer="23 24" name="mFaceLipUpperLeft" sid="mFaceLipUpperLeft" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 24</layer>
+                              <connect>0</connect>
+                              <tip_x>0.037925</tip_x>
+                              <tip_y>0.013875</tip_y>
+                              <tip_z>0.000000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                        <node id="mFaceLipUpperRight" layer="23 24" name="mFaceLipUpperRight" sid="mFaceLipUpperRight" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 24</layer>
+                              <connect>0</connect>
+                              <tip_x>0.037925</tip_x>
+                              <tip_y>-0.013875</tip_y>
+                              <tip_z>0.000000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                        <node id="mFaceLipCornerLeft" layer="23 24" name="mFaceLipCornerLeft" sid="mFaceLipCornerLeft" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 24</layer>
+                              <connect>0</connect>
+                              <tip_x>0.041625</tip_x>
+                              <tip_y>0.047175</tip_y>
+                              <tip_z>0.000000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                        <node id="mFaceLipCornerRight" layer="23 24" name="mFaceLipCornerRight" sid="mFaceLipCornerRight" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 24</layer>
+                              <connect>0</connect>
+                              <tip_x>0.041625</tip_x>
+                              <tip_y>-0.047175</tip_y>
+                              <tip_z>0.000000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                        <node id="mFaceLipUpperCenter" layer="23 24" name="mFaceLipUpperCenter" sid="mFaceLipUpperCenter" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 24</layer>
+                              <connect>0</connect>
+                              <roll>3.141590</roll>
+                              <tip_x>0.039775</tip_x>
+                              <tip_y>0.000000</tip_y>
+                              <tip_z>0.001921</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                      </node>
+                      <node id="mFaceEyecornerInnerLeft" layer="23 24" name="mFaceEyecornerInnerLeft" sid="mFaceEyecornerInnerLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.016000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceEyecornerInnerRight" layer="23 24" name="mFaceEyecornerInnerRight" sid="mFaceEyecornerInnerRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <tip_x>0.016000</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                      <node id="mFaceNoseBridge" layer="23 24" name="mFaceNoseBridge" sid="mFaceNoseBridge" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 24</layer>
+                            <connect>0</connect>
+                            <roll>3.141593</roll>
+                            <tip_x>0.013875</tip_x>
+                            <tip_y>0.000000</tip_y>
+                            <tip_z>0.007400</tip_z>
+                          </technique>
+                        </extra>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node id="mCollarLeft" layer="16" name="mCollarLeft" sid="mCollarLeft" type="JOINT">
+                  <matrix sid="transform" />
+                  <extra>
+                    <technique profile="blender">
+                      <layer>16</layer>
+                      <connect>0</connect>
+                      <tip_x>-0.000000</tip_x>
+                      <tip_y>0.079000</tip_y>
+                      <tip_z>0.000000</tip_z>
+                    </technique>
+                  </extra>
+                  <node id="mShoulderLeft" layer="16" name="mShoulderLeft" sid="mShoulderLeft" type="JOINT">
+                    <matrix sid="transform" />
+                    <extra>
+                      <technique profile="blender">
+                        <layer>16</layer>
+                        <connect>1</connect>
+                        <tip_x>-0.000000</tip_x>
+                        <tip_y>0.277760</tip_y>
+                        <tip_z>0.000000</tip_z>
+                      </technique>
+                    </extra>
+                    <node id="mElbowLeft" layer="16" name="mElbowLeft" sid="mElbowLeft" type="JOINT">
+                      <matrix sid="transform" />
+                      <extra>
+                        <technique profile="blender">
+                          <layer>16</layer>
+                          <connect>1</connect>
+                          <tip_x>-0.000000</tip_x>
+                          <tip_y>0.241718</tip_y>
+                          <tip_z>0.000000</tip_z>
+                        </technique>
+                      </extra>
+                      <node id="mWristLeft" layer="16" name="mWristLeft" sid="mWristLeft" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>16</layer>
+                            <connect>1</connect>
+                            <tip_x>-0.000000</tip_x>
+                            <tip_y>0.060000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                        <node id="mHandMiddle1Left" layer="23 25" name="mHandMiddle1Left" sid="mHandMiddle1Left" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>0.145182</roll>
+                              <tip_x>-0.001000</tip_x>
+                              <tip_y>0.040000</tip_y>
+                              <tip_z>-0.006000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandMiddle2Left" layer="23 25" name="mHandMiddle2Left" sid="mHandMiddle2Left" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>0.158550</roll>
+                                <tip_x>-0.001000</tip_x>
+                                <tip_y>0.049000</tip_y>
+                                <tip_z>-0.008000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandMiddle3Left" layer="23 25" name="mHandMiddle3Left" sid="mHandMiddle3Left" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>0.169034</roll>
+                                  <tip_x>-0.002000</tip_x>
+                                  <tip_y>0.033000</tip_y>
+                                  <tip_z>-0.006000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                        <node id="mHandIndex1Left" layer="23 25" name="mHandIndex1Left" sid="mHandIndex1Left" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>0.235404</roll>
+                              <tip_x>0.017000</tip_x>
+                              <tip_y>0.036000</tip_y>
+                              <tip_z>-0.006000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandIndex2Left" layer="23 25" name="mHandIndex2Left" sid="mHandIndex2Left" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>0.259285</roll>
+                                <tip_x>0.014000</tip_x>
+                                <tip_y>0.032000</tip_y>
+                                <tip_z>-0.006000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandIndex3Left" layer="23 25" name="mHandIndex3Left" sid="mHandIndex3Left" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>0.222322</roll>
+                                  <tip_x>0.011000</tip_x>
+                                  <tip_y>0.025000</tip_y>
+                                  <tip_z>-0.004000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                        <node id="mHandRing1Left" layer="23 25" name="mHandRing1Left" sid="mHandRing1Left" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>0.140764</roll>
+                              <tip_x>-0.013000</tip_x>
+                              <tip_y>0.038000</tip_y>
+                              <tip_z>-0.008000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandRing2Left" layer="23 25" name="mHandRing2Left" sid="mHandRing2Left" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>0.153414</roll>
+                                <tip_x>-0.013000</tip_x>
+                                <tip_y>0.040000</tip_y>
+                                <tip_z>-0.009000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandRing3Left" layer="23 25" name="mHandRing3Left" sid="mHandRing3Left" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>0.140562</roll>
+                                  <tip_x>-0.010000</tip_x>
+                                  <tip_y>0.028000</tip_y>
+                                  <tip_z>-0.006000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                        <node id="mHandPinky1Left" layer="23 25" name="mHandPinky1Left" sid="mHandPinky1Left" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>0.073216</roll>
+                              <tip_x>-0.024000</tip_x>
+                              <tip_y>0.025000</tip_y>
+                              <tip_z>-0.006000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandPinky2Left" layer="23 25" name="mHandPinky2Left" sid="mHandPinky2Left" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>0.079341</roll>
+                                <tip_x>-0.015000</tip_x>
+                                <tip_y>0.018000</tip_y>
+                                <tip_z>-0.004000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandPinky3Left" layer="23 25" name="mHandPinky3Left" sid="mHandPinky3Left" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>0.091435</roll>
+                                  <tip_x>-0.013000</tip_x>
+                                  <tip_y>0.016000</tip_y>
+                                  <tip_z>-0.004000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                        <node id="mHandThumb1Left" layer="23 25" name="mHandThumb1Left" sid="mHandThumb1Left" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>0.837212</roll>
+                              <tip_x>0.028000</tip_x>
+                              <tip_y>0.032000</tip_y>
+                              <tip_z>-0.001000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandThumb2Left" layer="23 25" name="mHandThumb2Left" sid="mHandThumb2Left" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>0.836862</roll>
+                                <tip_x>0.023000</tip_x>
+                                <tip_y>0.031000</tip_y>
+                                <tip_z>-0.001000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandThumb3Left" layer="23 25" name="mHandThumb3Left" sid="mHandThumb3Left" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>0.785398</roll>
+                                  <tip_x>0.015000</tip_x>
+                                  <tip_y>0.025000</tip_y>
+                                  <tip_z>0.000000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node id="mCollarRight" layer="16" name="mCollarRight" sid="mCollarRight" type="JOINT">
+                  <matrix sid="transform" />
+                  <extra>
+                    <technique profile="blender">
+                      <layer>16</layer>
+                      <connect>0</connect>
+                      <tip_x>-0.000000</tip_x>
+                      <tip_y>-0.079418</tip_y>
+                      <tip_z>0.000000</tip_z>
+                    </technique>
+                  </extra>
+                  <node id="mShoulderRight" layer="16" name="mShoulderRight" sid="mShoulderRight" type="JOINT">
+                    <matrix sid="transform" />
+                    <extra>
+                      <technique profile="blender">
+                        <layer>16</layer>
+                        <connect>1</connect>
+                        <tip_x>-0.000000</tip_x>
+                        <tip_y>-0.277760</tip_y>
+                        <tip_z>0.000000</tip_z>
+                      </technique>
+                    </extra>
+                    <node id="mElbowRight" layer="16" name="mElbowRight" sid="mElbowRight" type="JOINT">
+                      <matrix sid="transform" />
+                      <extra>
+                        <technique profile="blender">
+                          <layer>16</layer>
+                          <connect>1</connect>
+                          <tip_x>-0.000000</tip_x>
+                          <tip_y>-0.241900</tip_y>
+                          <tip_z>0.000000</tip_z>
+                        </technique>
+                      </extra>
+                      <node id="mWristRight" layer="16" name="mWristRight" sid="mWristRight" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>16</layer>
+                            <connect>1</connect>
+                            <tip_x>-0.000000</tip_x>
+                            <tip_y>-0.060000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                        <node id="mHandMiddle1Right" layer="23 25" name="mHandMiddle1Right" sid="mHandMiddle1Right" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>-0.145182</roll>
+                              <tip_x>-0.001000</tip_x>
+                              <tip_y>-0.040000</tip_y>
+                              <tip_z>-0.006000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandMiddle2Right" layer="23 25" name="mHandMiddle2Right" sid="mHandMiddle2Right" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>-0.158550</roll>
+                                <tip_x>-0.001000</tip_x>
+                                <tip_y>-0.049000</tip_y>
+                                <tip_z>-0.008000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandMiddle3Right" layer="23 25" name="mHandMiddle3Right" sid="mHandMiddle3Right" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>-0.169034</roll>
+                                  <tip_x>-0.002000</tip_x>
+                                  <tip_y>-0.033000</tip_y>
+                                  <tip_z>-0.006000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                        <node id="mHandIndex1Right" layer="23 25" name="mHandIndex1Right" sid="mHandIndex1Right" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>-0.235404</roll>
+                              <tip_x>0.017000</tip_x>
+                              <tip_y>-0.036000</tip_y>
+                              <tip_z>-0.006000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandIndex2Right" layer="23 25" name="mHandIndex2Right" sid="mHandIndex2Right" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>-0.259285</roll>
+                                <tip_x>0.014000</tip_x>
+                                <tip_y>-0.032000</tip_y>
+                                <tip_z>-0.006000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandIndex3Right" layer="23 25" name="mHandIndex3Right" sid="mHandIndex3Right" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>-0.222322</roll>
+                                  <tip_x>0.011000</tip_x>
+                                  <tip_y>-0.025000</tip_y>
+                                  <tip_z>-0.004000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                        <node id="mHandRing1Right" layer="23 25" name="mHandRing1Right" sid="mHandRing1Right" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>-0.140764</roll>
+                              <tip_x>-0.013000</tip_x>
+                              <tip_y>-0.038000</tip_y>
+                              <tip_z>-0.008000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandRing2Right" layer="23 25" name="mHandRing2Right" sid="mHandRing2Right" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>-0.153414</roll>
+                                <tip_x>-0.013000</tip_x>
+                                <tip_y>-0.040000</tip_y>
+                                <tip_z>-0.009000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandRing3Right" layer="23 25" name="mHandRing3Right" sid="mHandRing3Right" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>-0.140562</roll>
+                                  <tip_x>-0.010000</tip_x>
+                                  <tip_y>-0.028000</tip_y>
+                                  <tip_z>-0.006000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                        <node id="mHandPinky1Right" layer="23 25" name="mHandPinky1Right" sid="mHandPinky1Right" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>-0.073216</roll>
+                              <tip_x>-0.024000</tip_x>
+                              <tip_y>-0.025000</tip_y>
+                              <tip_z>-0.006000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandPinky2Right" layer="23 25" name="mHandPinky2Right" sid="mHandPinky2Right" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>-0.079341</roll>
+                                <tip_x>-0.015000</tip_x>
+                                <tip_y>-0.018000</tip_y>
+                                <tip_z>-0.004000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandPinky3Right" layer="23 25" name="mHandPinky3Right" sid="mHandPinky3Right" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>-0.091435</roll>
+                                  <tip_x>-0.013000</tip_x>
+                                  <tip_y>-0.016000</tip_y>
+                                  <tip_z>-0.004000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                        <node id="mHandThumb1Right" layer="23 25" name="mHandThumb1Right" sid="mHandThumb1Right" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 25</layer>
+                              <connect>0</connect>
+                              <roll>-0.837212</roll>
+                              <tip_x>0.028000</tip_x>
+                              <tip_y>-0.032000</tip_y>
+                              <tip_z>-0.001000</tip_z>
+                            </technique>
+                          </extra>
+                          <node id="mHandThumb2Right" layer="23 25" name="mHandThumb2Right" sid="mHandThumb2Right" type="JOINT">
+                            <matrix sid="transform" />
+                            <extra>
+                              <technique profile="blender">
+                                <layer>23 25</layer>
+                                <connect>1</connect>
+                                <roll>-0.836862</roll>
+                                <tip_x>0.023000</tip_x>
+                                <tip_y>-0.031000</tip_y>
+                                <tip_z>-0.001000</tip_z>
+                              </technique>
+                            </extra>
+                            <node id="mHandThumb3Right" layer="23 25" name="mHandThumb3Right" sid="mHandThumb3Right" type="JOINT">
+                              <matrix sid="transform" />
+                              <extra>
+                                <technique profile="blender">
+                                  <layer>23 25</layer>
+                                  <connect>1</connect>
+                                  <roll>-0.785398</roll>
+                                  <tip_x>0.015000</tip_x>
+                                  <tip_y>-0.025000</tip_y>
+                                  <tip_z>0.000000</tip_z>
+                                </technique>
+                              </extra>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node id="mWingsRoot" layer="23 26" name="mWingsRoot" sid="mWingsRoot" type="JOINT">
+                  <matrix sid="transform" />
+                  <extra>
+                    <technique profile="blender">
+                      <layer>23 26</layer>
+                      <connect>0</connect>
+                      <tip_x>-0.061000</tip_x>
+                      <tip_y>0.000000</tip_y>
+                      <tip_z>0.000000</tip_z>
+                    </technique>
+                  </extra>
+                  <node id="mWing1Left" layer="23 26" name="mWing1Left" sid="mWing1Left" type="JOINT">
+                    <matrix sid="transform" />
+                    <extra>
+                      <technique profile="blender">
+                        <layer>23 26</layer>
+                        <connect>0</connect>
+                        <roll>-0.114601</roll>
+                        <tip_x>-0.168000</tip_x>
+                        <tip_y>0.169000</tip_y>
+                        <tip_z>0.067000</tip_z>
+                      </technique>
+                    </extra>
+                    <node id="mWing2Left" layer="23 26" name="mWing2Left" sid="mWing2Left" type="JOINT">
+                      <matrix sid="transform" />
+                      <extra>
+                        <technique profile="blender">
+                          <layer>23 26</layer>
+                          <connect>1</connect>
+                          <tip_x>-0.181000</tip_x>
+                          <tip_y>0.183000</tip_y>
+                          <tip_z>0.000000</tip_z>
+                        </technique>
+                      </extra>
+                      <node id="mWing3Left" layer="23 26" name="mWing3Left" sid="mWing3Left" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 26</layer>
+                            <connect>1</connect>
+                            <tip_x>-0.171000</tip_x>
+                            <tip_y>0.173000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                        <node id="mWing4Left" layer="23 26" name="mWing4Left" sid="mWing4Left" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 26</layer>
+                              <connect>1</connect>
+                              <tip_x>-0.146000</tip_x>
+                              <tip_y>0.132000</tip_y>
+                              <tip_z>0.000000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                        <node id="mWing4FanLeft" layer="23 26" name="mWing4FanLeft" sid="mWing4FanLeft" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 26</layer>
+                              <connect>1</connect>
+                              <roll>0.439623</roll>
+                              <tip_x>-0.068000</tip_x>
+                              <tip_y>0.062000</tip_y>
+                              <tip_z>-0.159000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                  <node id="mWing1Right" layer="23 26" name="mWing1Right" sid="mWing1Right" type="JOINT">
+                    <matrix sid="transform" />
+                    <extra>
+                      <technique profile="blender">
+                        <layer>23 26</layer>
+                        <connect>0</connect>
+                        <roll>0.114601</roll>
+                        <tip_x>-0.168000</tip_x>
+                        <tip_y>-0.169000</tip_y>
+                        <tip_z>0.067000</tip_z>
+                      </technique>
+                    </extra>
+                    <node id="mWing2Right" layer="23 26" name="mWing2Right" sid="mWing2Right" type="JOINT">
+                      <matrix sid="transform" />
+                      <extra>
+                        <technique profile="blender">
+                          <layer>23 26</layer>
+                          <connect>1</connect>
+                          <tip_x>-0.181000</tip_x>
+                          <tip_y>-0.183000</tip_y>
+                          <tip_z>0.000000</tip_z>
+                        </technique>
+                      </extra>
+                      <node id="mWing3Right" layer="23 26" name="mWing3Right" sid="mWing3Right" type="JOINT">
+                        <matrix sid="transform" />
+                        <extra>
+                          <technique profile="blender">
+                            <layer>23 26</layer>
+                            <connect>1</connect>
+                            <tip_x>-0.171000</tip_x>
+                            <tip_y>-0.173000</tip_y>
+                            <tip_z>0.000000</tip_z>
+                          </technique>
+                        </extra>
+                        <node id="mWing4Right" layer="23 26" name="mWing4Right" sid="mWing4Right" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 26</layer>
+                              <connect>1</connect>
+                              <tip_x>-0.146000</tip_x>
+                              <tip_y>-0.132000</tip_y>
+                              <tip_z>0.000000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                        <node id="mWing4FanRight" layer="23 26" name="mWing4FanRight" sid="mWing4FanRight" type="JOINT">
+                          <matrix sid="transform" />
+                          <extra>
+                            <technique profile="blender">
+                              <layer>23 26</layer>
+                              <connect>1</connect>
+                              <roll>-0.439623</roll>
+                              <tip_x>-0.068000</tip_x>
+                              <tip_y>-0.062000</tip_y>
+                              <tip_z>-0.159000</tip_z>
+                            </technique>
+                          </extra>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node id="mHipRight" layer="16" name="mHipRight" sid="mHipRight" type="JOINT">
+      <matrix sid="transform" />
+      <extra>
+        <technique profile="blender">
+          <layer>16</layer>
+          <connect>0</connect>
+          <roll>-0.087266</roll>
+          <tip_x>-0.000780</tip_x>
+          <tip_y>0.048635</tip_y>
+          <tip_z>-0.490922</tip_z>
+        </technique>
+      </extra>
+      <node id="mKneeRight" layer="16" name="mKneeRight" sid="mKneeRight" type="JOINT">
+        <matrix sid="transform" />
+        <extra>
+          <technique profile="blender">
+            <layer>16</layer>
+            <connect>1</connect>
+            <tip_x>-0.028869</tip_x>
+            <tip_y>0.000000</tip_y>
+            <tip_z>-0.468494</tip_z>
+          </technique>
+        </extra>
+        <node id="mAnkleRight" layer="16" name="mAnkleRight" sid="mAnkleRight" type="JOINT">
+          <matrix sid="transform" />
+          <extra>
+            <technique profile="blender">
+              <layer>16</layer>
+              <connect>1</connect>
+              <tip_x>0.111956</tip_x>
+              <tip_y>0.000000</tip_y>
+              <tip_z>-0.060637</tip_z>
+            </technique>
+          </extra>
+          <node id="mFootRight" layer="16" name="mFootRight" sid="mFootRight" type="JOINT">
+            <matrix sid="transform" />
+            <extra>
+              <technique profile="blender">
+                <layer>16</layer>
+                <connect>1</connect>
+                <tip_x>0.105000</tip_x>
+                <tip_y>-0.010000</tip_y>
+                <tip_z>0.000000</tip_z>
+              </technique>
+            </extra>
+            <node id="mToeRight" layer="16" name="mToeRight" sid="mToeRight" type="JOINT">
+              <matrix sid="transform" />
+              <extra>
+                <technique profile="blender">
+                  <layer>16</layer>
+                  <connect>0</connect>
+                  <tip_x>0.020000</tip_x>
+                  <tip_y>0.000000</tip_y>
+                  <tip_z>0.000000</tip_z>
+                </technique>
+              </extra>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node id="mHipLeft" layer="16" name="mHipLeft" sid="mHipLeft" type="JOINT">
+      <matrix sid="transform" />
+      <extra>
+        <technique profile="blender">
+          <layer>16</layer>
+          <connect>0</connect>
+          <roll>0.087266</roll>
+          <tip_x>-0.000887</tip_x>
+          <tip_y>-0.045568</tip_y>
+          <tip_z>-0.491053</tip_z>
+        </technique>
+      </extra>
+      <node id="mKneeLeft" layer="16" name="mKneeLeft" sid="mKneeLeft" type="JOINT">
+        <matrix sid="transform" />
+        <extra>
+          <technique profile="blender">
+            <layer>16</layer>
+            <connect>1</connect>
+            <roll>0.000000</roll>
+            <tip_x>-0.028887</tip_x>
+            <tip_y>0.001378</tip_y>
+            <tip_z>-0.468449</tip_z>
+          </technique>
+        </extra>
+        <node id="mAnkleLeft" layer="16" name="mAnkleLeft" sid="mAnkleLeft" type="JOINT">
+          <matrix sid="transform" />
+          <extra>
+            <technique profile="blender">
+              <layer>16</layer>
+              <connect>1</connect>
+              <tip_x>0.111956</tip_x>
+              <tip_y>0.000000</tip_y>
+              <tip_z>-0.060620</tip_z>
+            </technique>
+          </extra>
+          <node id="mFootLeft" layer="16" name="mFootLeft" sid="mFootLeft" type="JOINT">
+            <matrix sid="transform" />
+            <extra>
+              <technique profile="blender">
+                <layer>16</layer>
+                <connect>1</connect>
+                <roll>-0.249587</roll>
+                <tip_x>0.105000</tip_x>
+                <tip_y>0.008000</tip_y>
+                <tip_z>0.001000</tip_z>
+              </technique>
+            </extra>
+            <node id="mToeLeft" layer="16" name="mToeLeft" sid="mToeLeft" type="JOINT">
+              <matrix sid="transform" />
+              <extra>
+                <technique profile="blender">
+                  <layer>16</layer>
+                  <connect>0</connect>
+                  <tip_x>0.020000</tip_x>
+                  <tip_y>0.000000</tip_y>
+                  <tip_z>0.000000</tip_z>
+                </technique>
+              </extra>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node id="mTail1" layer="23 27" name="mTail1" sid="mTail1" type="JOINT">
+      <matrix sid="transform" />
+      <extra>
+        <technique profile="blender">
+          <layer>23 27</layer>
+          <connect>0</connect>
+          <tip_x>-0.197000</tip_x>
+          <tip_y>0.000000</tip_y>
+          <tip_z>0.000000</tip_z>
+        </technique>
+      </extra>
+      <node id="mTail2" layer="23 27" name="mTail2" sid="mTail2" type="JOINT">
+        <matrix sid="transform" />
+        <extra>
+          <technique profile="blender">
+            <layer>23 27</layer>
+            <connect>1</connect>
+            <tip_x>-0.168000</tip_x>
+            <tip_y>0.000000</tip_y>
+            <tip_z>0.000000</tip_z>
+          </technique>
+        </extra>
+        <node id="mTail3" layer="23 27" name="mTail3" sid="mTail3" type="JOINT">
+          <matrix sid="transform" />
+          <extra>
+            <technique profile="blender">
+              <layer>23 27</layer>
+              <connect>1</connect>
+              <tip_x>-0.142000</tip_x>
+              <tip_y>0.000000</tip_y>
+              <tip_z>0.000000</tip_z>
+            </technique>
+          </extra>
+          <node id="mTail4" layer="23 27" name="mTail4" sid="mTail4" type="JOINT">
+            <matrix sid="transform" />
+            <extra>
+              <technique profile="blender">
+                <layer>23 27</layer>
+                <connect>1</connect>
+                <tip_x>-0.112000</tip_x>
+                <tip_y>0.000000</tip_y>
+                <tip_z>0.000000</tip_z>
+              </technique>
+            </extra>
+            <node id="mTail5" layer="23 27" name="mTail5" sid="mTail5" type="JOINT">
+              <matrix sid="transform" />
+              <extra>
+                <technique profile="blender">
+                  <layer>23 27</layer>
+                  <connect>1</connect>
+                  <tip_x>-0.094000</tip_x>
+                  <tip_y>0.000000</tip_y>
+                  <tip_z>0.000000</tip_z>
+                </technique>
+              </extra>
+              <node id="mTail6" layer="23 27" name="mTail6" sid="mTail6" type="JOINT">
+                <matrix sid="transform" />
+                <extra>
+                  <technique profile="blender">
+                    <layer>23 27</layer>
+                    <connect>1</connect>
+                    <tip_x>-0.089000</tip_x>
+                    <tip_y>0.000000</tip_y>
+                    <tip_z>0.000000</tip_z>
+                  </technique>
+                </extra>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node id="mGroin" layer="23 28" name="mGroin" sid="mGroin" type="JOINT">
+      <matrix sid="transform" />
+      <extra>
+        <technique profile="blender">
+          <layer>23 28</layer>
+          <connect>0</connect>
+          <tip_x>0.004000</tip_x>
+          <tip_y>0.000000</tip_y>
+          <tip_z>-0.066000</tip_z>
+        </technique>
+      </extra>
+    </node>
+    <node id="mHindLimbsRoot" layer="23 30" name="mHindLimbsRoot" sid="mHindLimbsRoot" type="JOINT">
+      <matrix sid="transform" />
+      <extra>
+        <technique profile="blender">
+          <layer>23 30</layer>
+          <connect>0</connect>
+          <tip_x>-0.204000</tip_x>
+          <tip_y>0.000000</tip_y>
+          <tip_z>0.000000</tip_z>
+        </technique>
+      </extra>
+      <node id="mHindLimb1Left" layer="23 30" name="mHindLimb1Left" sid="mHindLimb1Left" type="JOINT">
+        <matrix sid="transform" />
+        <extra>
+          <technique profile="blender">
+            <layer>23 30</layer>
+            <connect>0</connect>
+            <roll>0.087266</roll>
+            <tip_x>0.002000</tip_x>
+            <tip_y>-0.046000</tip_y>
+            <tip_z>-0.491000</tip_z>
+          </technique>
+        </extra>
+        <node id="mHindLimb2Left" layer="23 30" name="mHindLimb2Left" sid="mHindLimb2Left" type="JOINT">
+          <matrix sid="transform" />
+          <extra>
+            <technique profile="blender">
+              <layer>23 30</layer>
+              <connect>1</connect>
+              <roll>-0.000000</roll>
+              <tip_x>-0.030000</tip_x>
+              <tip_y>-0.003000</tip_y>
+              <tip_z>-0.468000</tip_z>
+            </technique>
+          </extra>
+          <node id="mHindLimb3Left" layer="23 30" name="mHindLimb3Left" sid="mHindLimb3Left" type="JOINT">
+            <matrix sid="transform" />
+            <extra>
+              <technique profile="blender">
+                <layer>23 30</layer>
+                <connect>1</connect>
+                <tip_x>0.112000</tip_x>
+                <tip_y>0.000000</tip_y>
+                <tip_z>-0.061000</tip_z>
+              </technique>
+            </extra>
+            <node id="mHindLimb4Left" layer="23 30" name="mHindLimb4Left" sid="mHindLimb4Left" type="JOINT">
+              <matrix sid="transform" />
+              <extra>
+                <technique profile="blender">
+                  <layer>23 30</layer>
+                  <connect>1</connect>
+                  <roll>-0.249574</roll>
+                  <tip_x>0.105000</tip_x>
+                  <tip_y>0.008000</tip_y>
+                  <tip_z>0.000000</tip_z>
+                </technique>
+              </extra>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node id="mHindLimb1Right" layer="23 30" name="mHindLimb1Right" sid="mHindLimb1Right" type="JOINT">
+        <matrix sid="transform" />
+        <extra>
+          <technique profile="blender">
+            <layer>23 30</layer>
+            <connect>0</connect>
+            <roll>-0.087266</roll>
+            <tip_x>0.002000</tip_x>
+            <tip_y>0.046000</tip_y>
+            <tip_z>-0.491000</tip_z>
+          </technique>
+        </extra>
+        <node id="mHindLimb2Right" layer="23 30" name="mHindLimb2Right" sid="mHindLimb2Right" type="JOINT">
+          <matrix sid="transform" />
+          <extra>
+            <technique profile="blender">
+              <layer>23 30</layer>
+              <connect>1</connect>
+              <roll>0.000000</roll>
+              <tip_x>-0.030000</tip_x>
+              <tip_y>0.003000</tip_y>
+              <tip_z>-0.468000</tip_z>
+            </technique>
+          </extra>
+          <node id="mHindLimb3Right" layer="23 30" name="mHindLimb3Right" sid="mHindLimb3Right" type="JOINT">
+            <matrix sid="transform" />
+            <extra>
+              <technique profile="blender">
+                <layer>23 30</layer>
+                <connect>1</connect>
+                <tip_x>0.112000</tip_x>
+                <tip_y>0.000000</tip_y>
+                <tip_z>-0.061000</tip_z>
+              </technique>
+            </extra>
+            <node id="mHindLimb4Right" layer="23 30" name="mHindLimb4Right" sid="mHindLimb4Right" type="JOINT">
+              <matrix sid="transform" />
+              <extra>
+                <technique profile="blender">
+                  <layer>23 30</layer>
+                  <connect>1</connect>
+                  <roll>0.249574</roll>
+                  <tip_x>0.105000</tip_x>
+                  <tip_y>-0.008000</tip_y>
+                  <tip_z>0.000000</tip_z>
+                </technique>
+              </extra>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+</node>
