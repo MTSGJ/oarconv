@@ -1127,7 +1127,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         }
     }
 
-    // GLTF/GLB
+    // GLTF or GLB
     else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
         GLTFData* gltf = (GLTFData*)solid;
         //
