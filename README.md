@@ -11,7 +11,7 @@
     * [Simple Wiki of OARConvWin](https://github.com/MTSGJ/oarconv/wiki)
 
 ### Demo
-#### WebGL
+#### WebGL by Unity
 - http://blackjack.nsl.tuis.ac.jp/unity/TUIS_NM/  TUIS with Unity Chan
 - http://blackjack.nsl.tuis.ac.jp/unity/TUIS_HW/  with Halloween Unity Chan
 - http://blackjack.nsl.tuis.ac.jp/unity/TUIS_SD/ with SD Unity Chan
@@ -27,8 +27,8 @@
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
-* v1.7.x
-  * [OARConvWin-1.7.10.zip for MS Windows](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.10.zip)
+* v1.8.0 (2024/09/06)
+  * [OARConvWin-1.8.0.zip for MS Windows](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.0.zip)
 
 
 ## OARConv (for Linux)
@@ -39,15 +39,15 @@
          [-t terrain_texture_scale] [-c external_convert_command_of_jp2]
          [-s start_no.] [-e end_no.]
          [-x shift_of_x_direction] [-y shift_of_y_direction] [-z shift_of_z_direction]
-         [--dae | --obj | --stl] [--unity | --ue] [--dg | --nooffset] [--joint]
+         [--dae | --obj | --gltf | --glb | --stl] [--unity | --ue] [--dg | --nooffset] [--joint]
          [-d] [-v] [-h | --help]
-
+ 
    -i : specify OAR directory. default is ./
-   -o : specify output directory. default is ./DAE/
+   -o : specify output directory. default is DAE/
    -f : specify object xml file. only specified file is converted.
    -a : specify adding assets directories that separated by ':'. default is /usr/local/share/oarconv/assets/:./assets/
    -t : specify Terrain texture scale. default is 7.000000
-   -c : specify external convert command from jp2 to other image. default is "/usr/local/bin/opj_decompress -i %s -o %s >/dev/null 2>&1"
+   -c : specify external convert command from jp2 to other image. default is "/usr/local/bin/j2k_to_image -i "%s" -o "%s" >/dev/null 2>&1"
    -s : specify start number of xml file. default is 0.
    -e : specify end number of xml file. count from zero. default is -1 (minus number means infinity).
    -x : specify shift of x direction of all objects. default is 0.0
@@ -55,22 +55,25 @@
    -z : specify shift of z direction of all objects. default is 0.0
    --dae : output Collada DAE file(s).
    --obj : output Wavefront OBJ file(s).
+   --gltf: output glTF file(s).
+   --glb : output glb file(s).
    --stl : output STL ASCII file(s).
    --unity : for Unity Engine.
-   --ue : for Unreal Engine.
-   --dg : shrinkage to the origin with DAE/OBJ file.
+   --ue  : for Unreal Engine.
+   --dg  : degenerate shift data to the origin.
+   --tga : use TGA file as texture.
+   --png : use PNG file as texture. (default)
    --nooffset : same for --dg
    --joint : Process Joints
    -d : debug mode. display debug information.
    -v : display version information.
    -h : display this help messages.
    --help : display this help messages.
+ 
+ ex.) oarconv -i OAR -a /usr/local/opensim/bin:./assets --dae --unity --joint --tga
+ ex.) oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --obj --ue --dg -d
+ ex.) oarconv -i OAR -s 0 -e 0 --dae --unity # output terrain data only
 ```
-
-#### Example
-* oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets -d
-* oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --dae --unity --joint
-* oarconv -i OAR -a /usr/local/opensim/bin/assets/TexturesAssetSet:./assets --obj --ue --dg -d
 
 ### Compile
 #### needs OpenJpeg v2.5
@@ -105,7 +108,8 @@ make
 -----------
 ## OARConvWin (for MS Windows)
 ### Download Binary
-- [OARConvWin-1.7.11.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.11.zip)
+- [OARConvWin-1.8.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.0.zip)  (glTF/glb support)
+- [OARConvWin-1.7.12.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.12.zip)
 - [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.6.0.zip)
 - [OARConvWin-1.5.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.5.0.zip)
 - [OARConvWin-1.2.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.2.1.zip)
