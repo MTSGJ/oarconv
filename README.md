@@ -33,7 +33,7 @@
 
 ### Latest Version
 * v1.8.0 (2024/09/06)
-  * support glTF/glb>glTF file output (DAE, OBJ and STL, too)
+  * support glTF/glb file output (DAE, OBJ and STL, too)
   * support PNG image file
   * support UE5 Import Bug for glTF/glb with skeleton.
   * fixed some bugs
