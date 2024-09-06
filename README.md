@@ -6,7 +6,7 @@
 * **OARConvWin** is for MS Windows
 
 ### Wiki
-* [Wiki of OARConv](https://polaris.star-dust.jp/pukiwiki/?OAR+Converter)
+* [Wiki of OARConv](https://polaris.star-dust.jp/pukiwiki/?OARConverter)
 * [Wiki of OARConvWin](https://polaris.star-dust.jp/pukiwiki/?OARConvWin)
     * [Simple Wiki of OARConvWin](https://github.com/MTSGJ/oarconv/wiki)
 
