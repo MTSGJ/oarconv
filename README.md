@@ -28,7 +28,10 @@
 
 ### Latest Version
 * v1.8.0 (2024/09/06)
-  * [OARConvWin-1.8.0.zip for MS Windows](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.0.zip)
+  * support glTF/glb>glTF file output
+  * support PNG image file
+  * support UE5 Import Bug for glTF/glb with skeleton.
+  * fixed some bugs
 
 
 ## OARConv (for Linux)
