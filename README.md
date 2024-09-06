@@ -10,6 +10,11 @@
 * [Wiki of OARConvWin](https://polaris.star-dust.jp/pukiwiki/?OARConvWin)
     * [Simple Wiki of OARConvWin](https://github.com/MTSGJ/oarconv/wiki)
 
+### Blog
+* Blog of introductions by Austin: 
+   * http://blog.inf.ed.ac.uk/atate/2015/10/24/opensim-oar-convert-to-unity-scene-with-windows-interface/
+   * https://blog.inf.ed.ac.uk/atate/2024/06/10/oar-converter/
+
 ### Demo
 #### WebGL by Unity
 - http://blackjack.nsl.tuis.ac.jp/unity/TUIS_NM/  TUIS with Unity Chan
@@ -108,7 +113,7 @@ cd oarconv
 make
 ./oarconv -h
 ```
------------
+
 ## OARConvWin (for MS Windows)
 ### Download Binary
 - [OARConvWin-1.8.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.0.zip)  (glTF/glb support)
@@ -120,3 +125,12 @@ make
 ### Screen Shot
 <img src="https://github.com/fumihax/oarconv/assets/95947474/b5779945-fa2c-48e6-a7eb-2db346d2b670" width="25%" >
 
+
+## Addresses of thanks.
+- This software uses the source code and resource of OpenSim in part. see also http://opensimulator.org/
+- This software uses the source code of OpenMetaverse in part. see also  https://github.com/openmetaversefoundation
+- This software uses OpenJpeg command and library. see also http://www.openjpeg.org/
+- This software uses zlib library. see also http://www.zlib.net/
+- This software uses tar64.dll. see also https://www.madobe.net/archiver/lib/tar32.html
+- This software uses libpng. see also https://daeudaeu.com/libpng/
+- Thank you very much for all contributors!!
