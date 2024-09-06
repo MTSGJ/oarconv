@@ -1,4 +1,4 @@
-# OARConv
+# OARConverter
 
 ## OverView
 * Convert OAR file of OpenSimulator to Collada/OBJ files for Unity/UE5
@@ -39,7 +39,7 @@
   * fixed some bugs
 
 
-## OARConv (for Linux)
+## OARConverter (for Linux)
 ### Usage
 #### Help
 ```
