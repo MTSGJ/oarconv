@@ -48,7 +48,7 @@ void  setDegenerateFname(Buffer* out_fname, int engine, Vector<double> shift, co
 tList*  selectJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template);
 tList*  _set_parent_joins(tXML* joints_template, tList* list);
 
-
+void  makeFolders(const char* base, const char* sub);
 
 }       // namespace
 

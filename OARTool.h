@@ -79,8 +79,10 @@ public:
 private:
     Buffer pathOAR;             // OAR directory
     Buffer pathOUT;             // Output directory for output
-    Buffer pathTEX;             // Texture directory
+    Buffer pathSLD;             // Solid (with Collider) directory
     Buffer pathPTM;             // Phantom directory
+    Buffer pathTRR;             // Terrain directory
+    //Buffer pathTEX;             // Texture directory
     Buffer pathAST;             // Adding assets directory
 
     Vector<double> terrainShift;// Terrain座標

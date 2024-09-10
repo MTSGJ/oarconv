@@ -501,7 +501,7 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
             data->data_name = dup_Buffer(objname);
             data->alt_name  = dup_Buffer(objname);
             cat_s2Buffer("_Node", &data->alt_name);
-            if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
+            //if (engine==JBXL_3D_ENGINE_UE) ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &objname);
             //
             data->affineTrans = new AffineTrans<double>();
             data->affineTrans->setShift((double)shift.x, (double)shift.y, (double)shift.z);

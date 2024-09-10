@@ -220,3 +220,28 @@ tList*  jbxl::_set_parent_joins(tTree* pp, tList* list)
     return list;
 }
 
+
+void  jbxl::makeFolders(const char* base, const char* sub)
+{
+    if (base==NULL) return;
+
+    if (!file_exist(base)) {
+        mkdir((char*)base, 0700);
+    }
+
+    if (sub!=NULL) {
+        Buffer path = make_Buffer_bystr(base);
+#ifdef WIN32
+        if (path.buf[path.vldsz-1]!='\\') cat_s2Buffer("\\", &path);
+#else
+        if (path.buf[path.vldsz-1]!='/')  cat_s2Buffer("/",  &path);
+#endif
+        cat_s2Buffer(sub, &path);
+        mkdir((char*)path.buf, 0700);                                // Terrain/Texture Folder
+        free_Buffer(&path);
+    }
+    return;
+}
+
+
+

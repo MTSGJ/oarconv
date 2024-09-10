@@ -20,8 +20,10 @@ void  OARTool::init(void)
 {
     pathOAR = init_Buffer();    // OAR directory
     pathOUT = init_Buffer();    // Output directory
-    pathTEX = init_Buffer();    // Texture directory
+    pathSLD = init_Buffer();    // Solid directory
     pathPTM = init_Buffer();    // Fhantom directory
+    pathTRR = init_Buffer();    // Terrain directory
+    //pathTEX = init_Buffer();    // Texture directory
     pathAST = init_Buffer();    // Adding assets directory
 
     regionName = init_Buffer();
@@ -98,11 +100,11 @@ void   OARTool::set_outpath(char* path)
 
     copy_s2Buffer(path, &pathOUT);
 
-//#ifdef WIN32
-//    if (pathOUT.buf[pathOUT.vldsz-1]!='\\') cat_s2Buffer("\\", &pathOUT);
-//#else
+#ifdef WIN32
+    if (pathOUT.buf[pathOUT.vldsz-1]!='\\') cat_s2Buffer("\\", &pathOUT);
+#else
     if (pathOUT.buf[pathOUT.vldsz-1]!='/')  cat_s2Buffer("/",  &pathOUT);
-//#endif
+#endif
 }
 
 
@@ -111,8 +113,10 @@ void  OARTool::clear_path(void)
 {
     free_Buffer(&pathOAR);
     free_Buffer(&pathOUT);
-    free_Buffer(&pathTEX);
+    free_Buffer(&pathSLD);
     free_Buffer(&pathPTM);
+    free_Buffer(&pathTRR);
+    //free_Buffer(&pathTEX);
     free_Buffer(&pathAST);
 }
 
@@ -179,8 +183,9 @@ void  OARTool::SetEngine(int e)
 
 設定されるパス情報は以下の通り．
 pathOAR : データ入力用（OAR）のパス
-pathTEX : テクスチャ出力用のパス
+pathSLD : オブジェクト（コライダー）データ出力用のパス
 pathPTM : ファントムデータ出力用のパス
+pathTRR : 地形データ出力用のパス
 pathAST : 追加のアセットデータ用のパス
 
 @param oardir  読み込むOARファイルのトップディレクトリ
@@ -243,19 +248,24 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
         }
     }
 
-    //#ifdef WIN32
-    //     if (pathOUT.buf[pathOUT.vldsz-1]!='\\') cat_s2Buffer("\\", &pathOUT);
-    //#else
-        if (pathOUT.buf[pathOUT.vldsz-1]!='/')  cat_s2Buffer("/",  &pathOUT);
-    //#endif
+    if (pathOUT.buf[pathOUT.vldsz-1]!='/')  cat_s2Buffer("/",  &pathOUT);
 
-    // Set Phantom Path (pathPTM)
-    pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
+    // Set Path
+    //pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
+    pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
+    pathSLD = make_Buffer_bystr((char*)pathOUT.buf);
+    pathTRR = make_Buffer_bystr((char*)pathOUT.buf);
+    cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
+    cat_s2Buffer(OART_DEFAULT_SLD_DIR, &pathSLD);
+    cat_s2Buffer(OART_DEFAULT_TRR_DIR, &pathTRR);
+
+/*
     cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
     if (dataFormat!=JBXL_3D_FORMAT_OBJ || engine!=JBXL_3D_ENGINE_UE) {
         pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
         cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
     }
+*/
 
     // ASSET
     if (astdir==NULL) {
@@ -287,18 +297,25 @@ void  OARTool::ChangePathInfo(const char* oardir, const char* outdir, const char
     // OUTPUT
     if (outdir != NULL) {
         free_Buffer(&pathOUT);
-        free_Buffer(&pathTEX);
+        free_Buffer(&pathSLD);
         free_Buffer(&pathPTM);
+        free_Buffer(&pathTRR);
+        //free_Buffer(&pathTEX);
+
         pathOUT = make_Buffer_bystr(outdir);
 #ifdef WIN32
         if (pathOUT.buf[strlen((char*)pathOUT.buf) - 1] != '\\') cat_s2Buffer("\\", &pathOUT);
 #else
         if (pathOUT.buf[strlen((char*)pathOUT.buf) - 1] != '/') cat_s2Buffer("/", &pathOUT);
 #endif
-        pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
+        //pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
+        pathSLD = make_Buffer_bystr((char*)pathOUT.buf);
         pathPTM = make_Buffer_bystr((char*)pathOUT.buf);
-        cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
+        pathTRR = make_Buffer_bystr((char*)pathOUT.buf);
+        //cat_s2Buffer(OART_DEFAULT_TEX_DIR, &pathTEX);
+        cat_s2Buffer(OART_DEFAULT_SLD_DIR, &pathSLD);
         cat_s2Buffer(OART_DEFAULT_PTM_DIR, &pathPTM);
+        cat_s2Buffer(OART_DEFAULT_TRR_DIR, &pathTRR);
     }
     // ASSET
     if (astdir != NULL) {
@@ -533,21 +550,66 @@ void  OARTool::MakeOutputFolder(void)
     // Texture, Material and Phantom Folder
     if (dataFormat==JBXL_3D_FORMAT_DAE  || dataFormat==JBXL_3D_FORMAT_OBJ || dataFormat==JBXL_3D_FORMAT_FBX || 
         dataFormat==JBXL_3D_FORMAT_GLTF || dataFormat==JBXL_3D_FORMAT_GLB) {
+/*
         if (pathTEX.buf!=NULL) {
             mkdir((char*)pathTEX.buf, 0700);                            // Texture Folder
         }
-        if (dataFormat==JBXL_3D_FORMAT_OBJ) {                           // Material Folder
-            Buffer mtl = dup_Buffer(pathOUT);
+
+        mkdir((char*)pathSLD.buf, 0700);                                // Solid Folder
+        mkdir((char*)pathPTM.buf, 0700);                                // Phantom Folder
+        mkdir((char*)pathTRR.buf, 0700);                                // Terrain Folder
+        
+        Buffer tex_path = dup_Buffer(pathSLD);
+        cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
+        mkdir((char*)tex_path.buf, 0700);                                // Solid/Texture Folder
+        free_Buffer(&tex_path);
+        tex_path = dup_Buffer(pathPTM);
+        cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
+        mkdir((char*)tex_path.buf, 0700);                                // Phantom/Texture Folder
+        free_Buffer(&tex_path);
+        tex_path = dup_Buffer(pathTRR);
+        cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
+        mkdir((char*)tex_path.buf, 0700);                                // Terrain/Texture Folder
+        free_Buffer(&tex_path);
+*/
+
+        makeFolders((char*)pathSLD.buf, OART_DEFAULT_TEX_DIR);
+        makeFolders((char*)pathPTM.buf, OART_DEFAULT_TEX_DIR);
+        makeFolders((char*)pathTRR.buf, OART_DEFAULT_TEX_DIR);
+
+        // OBJ
+        if (dataFormat==JBXL_3D_FORMAT_OBJ) {
+            makeFolders((char*)pathSLD.buf, OART_DEFAULT_MTL_DIR);
+            makeFolders((char*)pathPTM.buf, OART_DEFAULT_MTL_DIR);
+/*
+            Buffer mtl = dup_Buffer(pathSLD);
             cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
             mkdir((char*)mtl.buf, 0700);
             free_Buffer(&mtl);
-        }
-        if (dataFormat==JBXL_3D_FORMAT_GLTF) {                          // Binary Folder
-            Buffer mtl = dup_Buffer(pathOUT);
-            cat_s2Buffer(OART_DEFAULT_BIN_DIR, &mtl);
+            mtl = dup_Buffer(pathPTM);
+            cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
             mkdir((char*)mtl.buf, 0700);
             free_Buffer(&mtl);
+*/
         }
+
+        // GLTF
+        if (dataFormat==JBXL_3D_FORMAT_GLTF) {
+            makeFolders((char*)pathSLD.buf, OART_DEFAULT_BIN_DIR);
+            makeFolders((char*)pathPTM.buf, OART_DEFAULT_BIN_DIR);
+/*
+            Buffer bin = dup_Buffer(pathSLD);
+            cat_s2Buffer(OART_DEFAULT_BIN_DIR, &bin);
+            mkdir((char*)bin.buf, 0700);                                // Solid/Binary Folder
+            free_Buffer(&bin);
+            bin = dup_Buffer(pathPTM);
+            cat_s2Buffer(OART_DEFAULT_BIN_DIR, &bin);
+            mkdir((char*)bin.buf, 0700);                                // Phantom/Binary Folder
+            free_Buffer(&bin);
+*/
+        }
+
+        /*
         //  Phantom Folder
         if (engine == JBXL_3D_ENGINE_UNITY) {
             if (pathPTM.buf!=NULL) {
@@ -566,6 +628,7 @@ void  OARTool::MakeOutputFolder(void)
                 free_Buffer(&bin);
             }
         }
+        */
     }
 
     return;
@@ -622,11 +685,14 @@ int  OARTool::GenerateTerrainDataFile(void)
 {
     if (terrainNum==0) return 0;
     PRINT_MESG("GenerateTerrainSolid: converting terrain datafile file (%d)\n", dataFormat);
+
+    Buffer tex_path = dup_Buffer(pathTRR);
+    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
     int num = 0;
     while (num<terrainNum) {
-        int ret = terrain[num].GenerateTexture(assetsFiles, (char*)pathTEX.buf);
+        int ret = terrain[num].GenerateTexture(assetsFiles, (char*)tex_path.buf);
         if (ret>0) {
-            terrain[num].GenerateTerrain((char*)pathOUT.buf, terrainShift);
+            terrain[num].GenerateTerrain((char*)pathTRR.buf, terrainShift);
             num++;
 #ifdef WIN32
             DisPatcher(); 
@@ -634,6 +700,7 @@ int  OARTool::GenerateTerrainDataFile(void)
         }
         else break;
     }
+    free_Buffer(&tex_path);
     return num;
 }
 
@@ -843,14 +910,18 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (isRequiredTexture(format)) {    // STLの場合は不必要
                     MeshFacetNode* facet = mesh->facet;
                     char* image_type = GetTextureExtension();
+                    Buffer tex_path = dup_Buffer(pathPTM);
+                    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
-                            int ret = ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, NULL, command);
+                            ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, (char*)tex_path.buf, command);
                             facet->material_param.setFullName(image_type);
                         }
                         facet = facet->next;
                     }
+                    free_Buffer(&tex_path);
                 }
+
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
@@ -875,8 +946,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
                     stl->addShell(mesh);
                 }
-                freeMeshObjectData(mesh);
                 //
+                freeMeshObjectData(mesh);
                 count++;
             }
         }
@@ -898,14 +969,18 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (isRequiredTexture(format)) {    // STLの場合は不必要
                     MeshFacetNode* facet = mesh->facet;
                     char* image_type = GetTextureExtension();
+                    Buffer tex_path = dup_Buffer(pathPTM);
+                    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
-                            ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, NULL, command);
+                            ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, (char*)tex_path.buf, command);
                             facet->material_param.setFullName(image_type);
                         }
                         facet = facet->next;
                     }
+                    free_Buffer(&tex_path);
                 }
+
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     dae->phantom_out = true;
@@ -930,8 +1005,8 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 else if (format==JBXL_3D_FORMAT_STL_A || format==JBXL_3D_FORMAT_STL_B) {
                     stl->addShell(mesh);
                 }
-                freeMeshObjectData(mesh);
                 //
+                freeMeshObjectData(mesh);
                 count++;
             }
         }
@@ -950,9 +1025,18 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, ptr_skin_joint);
             //
             if (mesh!=NULL) {
+                bool collider = true;
+                if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
+                    collider = false;
+                }
+                //
                 if (isRequiredTexture(format)) {    // STLの場合は不必要
                     MeshFacetNode* facet = mesh->facet;
                     char* image_type = GetTextureExtension();
+                    Buffer tex_path;
+                    if (collider) tex_path = dup_Buffer(pathSLD);
+                    else          tex_path = dup_Buffer(pathPTM);
+                    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
                             // MeshObjectDataFromPrimShape へ移動
@@ -965,27 +1049,24 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                             //      ::free(paramstr);
                             //  }
                             //}
-                            int ret = ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, NULL, command);
+                            int ret = ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, (char*)tex_path.buf, command);
                             if (ret<=0 && ret!=OART_TEXCNVT_WRITE_ERR) {
                                 // 代替テクスチャ
                                 facet->material_param.setTextureName(OART_TEXCNVT_ALT_TEXTURE);
-                                ret = ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, NULL, command);
+                                ret = ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, (char*)tex_path.buf, command);
                                 if (ret==OART_TEXCNVT_NORMAL) {
                                     PRINT_MESG("OARTool::generateSolidData: tetxure was changed to %s\n", facet->material_param.getTextureName());
                                 }
                             }
-                            ConvertTexture(facet->material_param.getBumpMapName(), NULL, image_type, NULL, command);
-                            ConvertTexture(facet->material_param.getSpecMapName(), NULL, image_type, NULL, command);
+                            ConvertTexture(facet->material_param.getBumpMapName(), NULL, image_type, (char*)tex_path.buf, command);
+                            //
                             facet->material_param.setFullName(image_type);
                         }
                         facet = facet->next;
                     }
+                    free_Buffer(&tex_path);
                 }
 
-                bool collider = true;
-                if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
-                    collider = false;
-                }
                 tXML* joints_template = NULL;
                 if (count==0 && this->procJoints) {
                     char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
@@ -1118,8 +1199,8 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
 
         if (noOffset && obj->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, obj->affineTrans->getShift(), OART_LOCATION_MAGIC_STR);
         if (obj->engine==JBXL_3D_ENGINE_UE) {
-            if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
-            else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
+            //if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
+            //else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
             obj->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, NULL, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
         }
         else {
@@ -1133,8 +1214,8 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         //
         if (noOffset) setDegenerateFname(&out_fname, engine, gltf->center, OART_LOCATION_MAGIC_STR);
         if (gltf->engine==JBXL_3D_ENGINE_UE) {
-            if (gltf->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
-            else                   ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
+            //if (gltf->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
+            //else                   ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
             gltf->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, NULL, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
         }
         else {
@@ -1148,8 +1229,8 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         //
         if (noOffset && fbx->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, fbx->affineTrans->getShift(), OART_LOCATION_MAGIC_STR);
         if (fbx->engine==JBXL_3D_ENGINE_UE) {
-            if (fbx->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
-            else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
+            //if (fbx->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
+            //else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
             fbx->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, NULL, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
         }
         else {
@@ -1248,8 +1329,12 @@ int  OARTool::ConvertTexture(const char* texture, const char* add_name, const ch
     if (texture==NULL) return OART_TEXCNVT_UNKNOWN;
 
     Buffer outpath;
-    if (dist==NULL) outpath = make_Buffer_bystr((char*)pathTEX.buf);
-    else            outpath = make_Buffer_bystr(dist);
+    if (dist==NULL) {
+        outpath = make_Buffer_bystr((char*)pathSLD.buf);
+    }
+    else {
+        outpath = make_Buffer_bystr(dist);
+    }
 
     int ret = OART_TEXCNVT_UNKNOWN;
     bool converted = false;
