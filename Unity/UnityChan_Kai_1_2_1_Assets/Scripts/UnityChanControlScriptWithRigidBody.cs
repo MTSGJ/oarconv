@@ -4,10 +4,11 @@
 // 2014/03/13 N.Kobyasahi
 //
 
-// Add Flying by Fumi.Iseki for OARConWin-1.2
+// Add Flying by Fumi.Iseki for OARConWin-1.8
 // 2015/05/01 
 // 2015/07/11
 // 2023/12/17
+// 2024/09/11
 //
 
 using UnityEngine;
@@ -290,7 +291,8 @@ namespace UnityChan
                         // 以下JUMP00アニメーションについているカーブJumpHeightとGravityControl
                         // JumpHeight:JUMP00でのジャンプの高さ（0〜1）
                         // GravityControl:1⇒ジャンプ中（重力無効）、0⇒重力有効
-                        float jumpHeight = anim.GetFloat("JumpHeight");
+                        //float jumpHeight = anim.GetFloat("JumpHeight");
+                        float jumpHeight = 1;
                         float gravityControl = anim.GetFloat("GravityControl");
                         if (gravityControl > 0)
                             rb.useGravity = false;  //ジャンプ中の重力の影響を切る
@@ -305,7 +307,7 @@ namespace UnityChan
                             {
                                 col.height = orgColHight - jumpHeight;          // 調整されたコライダーの高さ
                                 float adjCenterY = orgVectColCenter.y + jumpHeight;
-                                col.center = new Vector3(0, adjCenterY, 0); // 調整されたコライダーのセンター
+                                col.center = new Vector3(0, adjCenterY, 0);     // 調整されたコライダーのセンター
                             }
                             else
                             {
