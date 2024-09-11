@@ -202,11 +202,11 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
     }
     else {
         pathOAR = make_Buffer_bystr(oardir);
-        //#ifdef WIN32
-        //    if (pathOAR.buf[strlen((char*)pathOAR.buf)-1]!='\\') cat_s2Buffer("\\", &pathOAR);
-        //#else
-            if (pathOAR.buf[strlen((char*)pathOAR.buf)-1]!='/') cat_s2Buffer("/", &pathOAR);
-        //#endif
+    #ifdef WIN32
+        if (pathOAR.buf[strlen((char*)pathOAR.buf)-1]!='\\') cat_s2Buffer("\\", &pathOAR);
+    #else
+        if (pathOAR.buf[strlen((char*)pathOAR.buf)-1]!='/') cat_s2Buffer("/", &pathOAR);
+    #endif
     }
 
     // OUTPUT
@@ -249,8 +249,11 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
         }
     }
 
+#ifdef WIN32
+    if (pathOUT.buf[pathOUT.vldsz-1]!='\\')  cat_s2Buffer("\\",  &pathOUT);
+#else
     if (pathOUT.buf[pathOUT.vldsz-1]!='/')  cat_s2Buffer("/",  &pathOUT);
-
+#endif
     // Set Path
     //pathTEX = make_Buffer_bystr((char*)pathOUT.buf);
     pathPTM = make_Buffer_bystr((char*)pathOUT.buf);

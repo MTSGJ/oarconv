@@ -719,12 +719,12 @@ int   COARConvWinApp::_convertAllData()
     if (stopnum != 0) {
         CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
         if (progress != NULL) {
-            if      (appParam.outputFormat == JBXL_3D_FORMAT_DAE) progress->SetTitle("Convert to DAE Files");
-            else if (appParam.outputFormat == JBXL_3D_FORMAT_OBJ) progress->SetTitle("Convert to OBJ Files");
-            else if (appParam.outputFormat == JBXL_3D_FORMAT_GLTF)progress->SetTitle("Convert to GLTF Files");
-            else if (appParam.outputFormat == JBXL_3D_FORMAT_GLB) progress->SetTitle("Convert to GLB Files");
-            else if (appParam.outputFormat == JBXL_3D_FORMAT_FBX) progress->SetTitle("Convert to FBX Files");
-            else                                                  progress->SetTitle("Convert to STL Files");
+            if      (appParam.outputFormat==JBXL_3D_FORMAT_DAE)  progress->SetTitle("Convert to DAE Files");
+            else if (appParam.outputFormat==JBXL_3D_FORMAT_OBJ)  progress->SetTitle("Convert to OBJ Files");
+            else if (appParam.outputFormat==JBXL_3D_FORMAT_GLTF) progress->SetTitle("Convert to GLTF Files");
+            else if (appParam.outputFormat==JBXL_3D_FORMAT_GLB)  progress->SetTitle("Convert to GLB Files");
+            else if (appParam.outputFormat==JBXL_3D_FORMAT_FBX)  progress->SetTitle("Convert to FBX Files");
+            else                                                 progress->SetTitle("Convert to STL Files");
             progress->Start(prognum);
             SetGlobalCounter(progress);
         }

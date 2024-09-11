@@ -224,7 +224,6 @@ tList*  jbxl::_set_parent_joins(tTree* pp, tList* list)
 void  jbxl::makeFolders(const char* base, const char* sub)
 {
     if (base==NULL) return;
-
     if (!file_exist(base)) {
         mkdir((char*)base, 0700);
     }
@@ -247,8 +246,8 @@ void  jbxl::makeFolders(const char* base, const char* sub)
 void  jbxl::rmFolders(const char* base, const char* tex)
 {
     if (base==NULL) return;
-    if (!file_exist(base)) return;
-
+    //if (!file_exist(base)) return;
+ 
     Buffer path = make_Buffer_bystr(base);
     if (tex!=NULL) {
 #ifdef WIN32
