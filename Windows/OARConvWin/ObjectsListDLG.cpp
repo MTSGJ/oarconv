@@ -162,9 +162,9 @@ void CObjectsListDLG::OnBnClickedObjlistPreview()
     if (slctNum>0) {
         size_t len = sizeof(int)*slctNum;
         slctItems = (int*)malloc(len);
-		if (slctItems == NULL) {
-			::free(tmp);
-			return;
+        if (slctItems == NULL) {
+            ::free(tmp);
+            return;
         }
         memcpy(slctItems, tmp, len);
     }
@@ -366,24 +366,24 @@ void  CObjectsListDLG::OpenPreviewWindow(int idx)
 
 void  CObjectsListDLG::OpenOBJInfoDLG(int idx)
 {
-	int   num = 0;
-	char* obj = NULL;
+    int   num = 0;
+    char* obj = NULL;
 
-	tList* lp = objList;
-	while (lp != NULL) {
-		if (num == idx) {
-			obj = (char*)lp->ldat.val.buf;
-			break;
-		}
-		num++;
-		lp = lp->next;
-	}
-	char* fname = get_file_name(obj);
-	if (obj != NULL) PRINT_MESG("CObjectsListDLG::OpenOBJInfoDLG: Objects List: selected [%d]: %s\n", num + 1, fname);
-	//
-	winApp->showOBJInfoDLG(obj);
+    tList* lp = objList;
+    while (lp != NULL) {
+        if (num == idx) {
+            obj = (char*)lp->ldat.val.buf;
+            break;
+        }
+        num++;
+        lp = lp->next;
+    }
+    char* fname = get_file_name(obj);
+    if (obj!=NULL) PRINT_MESG("CObjectsListDLG::OpenOBJInfoDLG: Objects List: selected [%d]: %s\n", num + 1, fname);
+    //
+    winApp->showOBJInfoDLG(obj);
 
-	return;
+    return;
 }
 
 
