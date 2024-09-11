@@ -730,6 +730,7 @@ int   COARConvWinApp::_convertAllData()
         }
         //
         num = oarTool.GenerateObjectFromDataIndex(strtnum, stopnum, false, (char*)comDecomp.buf);
+        if (appParam.outputFormat==JBXL_3D_FORMAT_GLB) oarTool.RmTextureFolder();
         //
         if (progress != NULL) {
             progress->PutFill();
@@ -790,6 +791,7 @@ int   COARConvWinApp::_convertSelectedData(int* selectedObjs, int objNums)
     }
     //
     num = oarTool.GenerateObjectFromDataList(selectedObjs, objNums, false, (char*)comDecomp.buf);
+    if (appParam.outputFormat==JBXL_3D_FORMAT_GLB) oarTool.RmTextureFolder();
     //
     if (progress != NULL) {
         progress->PutFill();
@@ -835,6 +837,7 @@ int   COARConvWinApp::_convertOneData(int index)
     //////////////////////////////////////////////////////////////////////////////
     // Convert
     int num = oarTool.GenerateObjectFromDataIndex(index, index, false, (char*)comDecomp.buf);
+    if (appParam.outputFormat==JBXL_3D_FORMAT_GLB) oarTool.RmTextureFolder();
 
     return num;
 }

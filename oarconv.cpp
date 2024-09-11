@@ -119,6 +119,7 @@ int main(int argc, char** argv)
             oar.GenerateObjectFromDataIndex(strtnum, stopnum, useBrep, (char*)cmmnd.buf);
         }
     }
+    if (format==JBXL_3D_FORMAT_GLB) oar.RmTextureFolder();
     oar.free();
     
     //

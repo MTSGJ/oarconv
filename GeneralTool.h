@@ -49,6 +49,7 @@ tList*  selectJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template
 tList*  _set_parent_joins(tXML* joints_template, tList* list);
 
 void  makeFolders(const char* base, const char* sub);
+void  rmFolders(const char* base, const char* tex);
 
 }       // namespace
 

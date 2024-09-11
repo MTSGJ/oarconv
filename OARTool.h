@@ -137,6 +137,7 @@ public:
     void   ChangePathInfo(const char* oardir, const char* outdir, const char* astdir);
     bool   GetDataInfo(void);
     void   MakeOutputFolder(void);
+    void   RmTextureFolder(void);
 
     void   SetEngine(int e);
     void   SetDataFormat(int f) { dataFormat = f; }

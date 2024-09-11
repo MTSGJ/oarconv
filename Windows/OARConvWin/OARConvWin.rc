@@ -277,12 +277,12 @@ BEGIN
             VALUE "Comments", "Subaru Projects"
             VALUE "CompanyName", "NSL"
             VALUE "FileDescription", "OAR Converter"
-            VALUE "FileVersion", "1.8.0.0"
+            VALUE "FileVersion", "1.8.1.0"
             VALUE "InternalName", "OARConvWin.exe"
             VALUE "LegalCopyright", "(C) Fumi.Iseki  All rights reserved."
             VALUE "OriginalFilename", "OARConvWin.exe"
             VALUE "ProductName", "OARConv"
-            VALUE "ProductVersion", "1.8.0.0"
+            VALUE "ProductVersion", "1.8.1.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -719,12 +719,12 @@ BEGIN
             VALUE "Comments", "Subaru Projects"
             VALUE "CompanyName", "NSL"
             VALUE "FileDescription", "OAR Converter"
-            VALUE "FileVersion", "1.8.0.0"
+            VALUE "FileVersion", "1.8.1.0"
             VALUE "InternalName", "OARConvWin.exe"
             VALUE "LegalCopyright", "(C) Fumi.Iseki  All rights reserved."
             VALUE "OriginalFilename", "OARConvWin.exe"
             VALUE "ProductName", "OARConv"
-            VALUE "ProductVersion", "1.8.0.0"
+            VALUE "ProductVersion", "1.8.1.0"
         END
     END
     BLOCK "VarFileInfo"

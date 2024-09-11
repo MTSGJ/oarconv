@@ -244,4 +244,23 @@ void  jbxl::makeFolders(const char* base, const char* sub)
 }
 
 
+void  jbxl::rmFolders(const char* base, const char* tex)
+{
+    if (base==NULL) return;
+    if (!file_exist(base)) return;
 
+    Buffer path = make_Buffer_bystr(base);
+    if (tex!=NULL) {
+#ifdef WIN32
+        if (path.buf[path.vldsz-1]!='\\') cat_s2Buffer("\\", &path);
+#else
+        if (path.buf[path.vldsz-1]!='/')  cat_s2Buffer("/",  &path);
+#endif
+        cat_s2Buffer(tex, &path);
+    }
+    
+    rm_dir_rcsv((char*)path.buf);
+
+    free_Buffer(&path);
+    return;
+}

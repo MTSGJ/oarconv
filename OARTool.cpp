@@ -636,6 +636,16 @@ void  OARTool::MakeOutputFolder(void)
 }
 
 
+void  OARTool::RmTextureFolder(void)
+{
+    if (dataFormat==JBXL_3D_FORMAT_GLB) {
+        rmFolders((char*)pathSLD.buf, OART_DEFAULT_TEX_DIR);
+        rmFolders((char*)pathPTM.buf, OART_DEFAULT_TEX_DIR);
+        rmFolders((char*)pathTRR.buf, OART_DEFAULT_TEX_DIR);
+    }
+}
+
+
 void  OARTool::ReadTerrainData(void)
 {
     if (terrainNum==0) return;
