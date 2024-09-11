@@ -290,7 +290,7 @@ void  CObjectsListDLG::PrintSelectedObjects()
     while (lp!=NULL) {
         if (num==slctItems[cnt]) {
             char* fname = get_file_name((char*)lp->ldat.val.buf);
-            PRINT_MESG("Objects List: selected [%d]: %s\n", num+1, fname);
+            PRINT_MESG("CObjectsListDLG::PrintSelectedObjects: Objects List: selected [%d]: %s\n", num+1, fname);
             cnt++;
             if (cnt==slctNum) break;
         }
@@ -314,7 +314,7 @@ int  CObjectsListDLG::SearchString(int stn, LPCTSTR str)
         listLBox->GetText(num, buf);
         char* name = ts2mbs(buf);
         if (strstrcase(name, fnd)!=NULL) {
-            PRINT_MESG("SearchString: found [%d]: %s\n", num+1, name);
+            PRINT_MESG("CObjectsListDLG::SearchString: Search String: found [%d]: %s\n", num+1, name);
             index = num;
             ::free(name);
             break;
@@ -342,7 +342,7 @@ void  CObjectsListDLG::OpenPreviewWindow(int idx)
         lp = lp->next;
     }
     char* fname = get_file_name(obj);
-    if (obj!=NULL) PRINT_MESG("Objects List: selected [%d]: %s\n", num + 1, fname);
+    if (obj!=NULL) PRINT_MESG("CObjectsListDLG::OpenPreviewWindow: Objects List: selected [%d]: %s\n", num + 1, fname);
     //
     BrepSolidList* slist = (BrepSolidList*)winApp->oarTool.generateSolidData(JBXL_3D_FORMAT_STL, obj);
     if (slist == NULL) {
@@ -379,7 +379,7 @@ void  CObjectsListDLG::OpenOBJInfoDLG(int idx)
 		lp = lp->next;
 	}
 	char* fname = get_file_name(obj);
-	if (obj != NULL) PRINT_MESG("Objects List: selected [%d]: %s\n", num + 1, fname);
+	if (obj != NULL) PRINT_MESG("CObjectsListDLG::OpenOBJInfoDLG: Objects List: selected [%d]: %s\n", num + 1, fname);
 	//
 	winApp->showOBJInfoDLG(obj);
 

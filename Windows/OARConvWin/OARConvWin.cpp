@@ -295,7 +295,6 @@ void  COARConvWinApp::OnFileOpen()
         fname = fileDialog.GetPathName();
     }
     int err = CommDlgExtendedError();
-    PRINT_MESG("2====> %d", err);
     */
 
     if (fname.IsEmpty()) return;
@@ -517,7 +516,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     char* fp = ts2mbs((LPCTSTR)fname);        // 要 free
     int ret = TarCheckArchive(fp, 0);
     if (!ret) {
-        PRINT_MESG("Error: Tar32/64 Check Error = 0x%04x [%s]\n", ret, fp);
+        PRINT_MESG("COARConvWinApp::fileOpenOAR: ERROR: Tar32/64 Check Error = 0x%04x [%s]\n", ret, fp);
         MessageBoxDLG(IDS_STR_ERROR, IDS_STR_ERR_OPEN_FILE, MB_OK, pMainFrame);
         ::free(fp);
         return false;
@@ -536,7 +535,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     char* md = ts2mbs((LPCTSTR)mode);
     ret = Tar(pMainFrame->m_hWnd, md, NULL, 0);
     if (ret) {
-        PRINT_MESG("Error: Tar32/64 Extract Error = 0x%04x [%s]\n", ret, md);
+        PRINT_MESG("COARConvWinApp::fileOpenOAR: ERROR: Tar32/64 Extract Error = 0x%04x [%s]\n", ret, md);
         MessageBoxDLG(IDS_STR_ERROR, IDS_STR_ERR_EXTRACT, MB_OK, pMainFrame);
         ::free(md);
         return false;
@@ -556,7 +555,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     updateStatusBar(getOARFolder(), getOutFolder());
     //
     char* fn = ts2mbs(fname);
-    PRINT_MESG("fileOpenOAR: File is opened %s\n", fn);
+    PRINT_MESG("COARConvWinApp::fileOpenOAR: File is opened %s\n", fn);
     free(fn);
 
     return chk;
@@ -597,7 +596,7 @@ bool  COARConvWinApp::folderOpenOAR(CString folder)
     updateStatusBar(getOARFolder(), getOutFolder());
     //
     char* fn = ts2mbs(folder);
-    PRINT_MESG("folderOpenOAR: Folder is opened %s\n", fn);
+    PRINT_MESG("COARConvWinApp::folderOpenOAR: Folder is opened %s\n", fn);
     free(fn);
 
     return chk;
