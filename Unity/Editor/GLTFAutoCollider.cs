@@ -20,30 +20,30 @@ public class GLTFAutoCollider
 
     private static void OnHierarchyChanged()
     {
-        string unityVersion = Application.unityVersion;
-        int majorVersion = int.Parse(unityVersion.Split('.')[0]);
-        
+        //string unityVersion = Application.unityVersion;
+        //int majorVersion = int.Parse(unityVersion.Split('.')[0]);
+
         GameObject[] allObjects = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
         foreach (GameObject obj in allObjects) {
             if (obj.scene.isLoaded && PrefabUtility.GetPrefabInstanceStatus(obj)!=PrefabInstanceStatus.NotAPrefab) {
                 string assetPath = GetAssetPath(obj);
                 if (assetPath.Contains("/Solids/")) {
-                    AddBoxColliderToObject(obj, majorVersion);
+                    AddBoxColliderToObject(obj);
                 }
                 else if (assetPath.Contains("/Terrains/")) {
-                    AddMeshColliderToObject(obj, majorVersion);
+                    AddMeshColliderToObject(obj);
                 }
             }
         }
     }
 
 
-    private static void AddBoxColliderToObject(GameObject obj, int version)
+    private static void AddBoxColliderToObject(GameObject obj)
     {
         Transform parent = obj.transform.parent;
 
         bool isAddCollider = (obj.GetComponent<Collider>()==null) && (parent!=null);
-        if (version<=5) isAddCollider = isAddCollider && (parent.transform.parent==null);
+        //if (version<6000) isAddCollider = isAddCollider && (parent.transform.parent==null);
         if (isAddCollider) {
             obj.AddComponent<BoxCollider>();
         	MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
@@ -52,12 +52,12 @@ public class GLTFAutoCollider
     }
 
 
-    private static void AddMeshColliderToObject(GameObject obj, int version)
+    private static void AddMeshColliderToObject(GameObject obj)
     {
         Transform parent = obj.transform.parent;
 
         bool isAddCollider = (obj.GetComponent<Collider>()==null) && (parent!=null);
-        if (version<=5) isAddCollider = isAddCollider && (parent.transform.parent==null);
+        //if (version<6000) isAddCollider = isAddCollider && (parent.transform.parent==null);
         if (isAddCollider) {
         	MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
             if (meshFilter!=null) {
