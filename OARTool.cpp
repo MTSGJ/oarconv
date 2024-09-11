@@ -544,9 +544,7 @@ bool  OARTool::GetDataInfo()
 
 void  OARTool::MakeOutputFolder(void)
 {
-    if (pathOUT.buf!=NULL) {
-        mkdir((char*)pathOUT.buf, 0700);                                // OUTPUT Folder
-    }
+    mkdir((char*)pathOUT.buf, 0700);                                    // OUTPUT Folder
 
     // Texture, Material and Phantom Folder
     if (dataFormat==JBXL_3D_FORMAT_DAE  || dataFormat==JBXL_3D_FORMAT_OBJ || dataFormat==JBXL_3D_FORMAT_FBX || 
@@ -1222,6 +1220,13 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         GLTFData* gltf = (GLTFData*)solid;
         //
         if (noOffset) setDegenerateFname(&out_fname, engine, gltf->center, OART_LOCATION_MAGIC_STR);
+        if (gltf->phantom_out) out_path = dup_Buffer(pathPTM);
+        else                   out_path = dup_Buffer(pathSLD);
+        //
+        gltf->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
+
+
+/*
         if (gltf->engine==JBXL_3D_ENGINE_UE) {
             //if (gltf->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             //else                   ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
@@ -1230,6 +1235,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         else {
             gltf->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
         }
+*/
     }
 
     // FBX
@@ -1237,6 +1243,12 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         FBXData* fbx = (FBXData*)solid;
         //
         if (noOffset && fbx->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, fbx->affineTrans->getShift(), OART_LOCATION_MAGIC_STR);
+        if (fbx->phantom_out) out_path = dup_Buffer(pathPTM);
+        else                  out_path = dup_Buffer(pathSLD);
+        //
+        fbx->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
+
+/*
         if (fbx->engine==JBXL_3D_ENGINE_UE) {
             //if (fbx->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             //else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
@@ -1245,6 +1257,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         else {
             fbx->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_BIN_DIR);
         }
+*/
     }
 
     // STL
