@@ -237,6 +237,7 @@ void  OARTool::SetPathInfo(const char* oardir, const char* outdir, const char* a
         // STL
         else { 
             pathOUT = make_Buffer_bystr(OART_DEFAULT_STL_DIR);
+            noOffset = false;
         }
         //
         if (noOffset) {
@@ -581,6 +582,7 @@ void  OARTool::MakeOutputFolder(void)
         if (dataFormat==JBXL_3D_FORMAT_OBJ) {
             makeFolders((char*)pathSLD.buf, OART_DEFAULT_MTL_DIR);
             makeFolders((char*)pathPTM.buf, OART_DEFAULT_MTL_DIR);
+            makeFolders((char*)pathTRR.buf, OART_DEFAULT_MTL_DIR);
 /*
             Buffer mtl = dup_Buffer(pathSLD);
             cat_s2Buffer(OART_DEFAULT_MTL_DIR, &mtl);
@@ -597,6 +599,7 @@ void  OARTool::MakeOutputFolder(void)
         if (dataFormat==JBXL_3D_FORMAT_GLTF) {
             makeFolders((char*)pathSLD.buf, OART_DEFAULT_BIN_DIR);
             makeFolders((char*)pathPTM.buf, OART_DEFAULT_BIN_DIR);
+            makeFolders((char*)pathTRR.buf, OART_DEFAULT_BIN_DIR);
 /*
             Buffer bin = dup_Buffer(pathSLD);
             cat_s2Buffer(OART_DEFAULT_BIN_DIR, &bin);
@@ -1188,7 +1191,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         //
         if (noOffset && dae->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, dae->affineTrans->getShift(), OART_LOCATION_MAGIC_STR);
         if (dae->phantom_out) out_path = dup_Buffer(pathPTM);
-        else                  out_path = dup_Buffer(pathOUT);
+        else                  out_path = dup_Buffer(pathSLD);
         //
         dae->outputFile((char*)out_fname.buf, (char*)out_path.buf, XML_SPACE_FORMAT);
     }
@@ -1198,6 +1201,11 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         OBJData* obj = (OBJData*)solid;
 
         if (noOffset && obj->affineTrans!=NULL) setDegenerateFname(&out_fname, engine, obj->affineTrans->getShift(), OART_LOCATION_MAGIC_STR);
+        if (obj->phantom_out) out_path = dup_Buffer(pathPTM);
+        else                  out_path = dup_Buffer(pathSLD);
+        //
+        obj->outputFile((char*)out_fname.buf, (char*)out_path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
+        /*
         if (obj->engine==JBXL_3D_ENGINE_UE) {
             //if (obj->phantom_out) ins_s2Buffer(OART_UE_PHANTOM_PREFIX,  &out_fname);
             //else                  ins_s2Buffer(OART_UE_COLLIDER_PREFIX, &out_fname);
@@ -1206,6 +1214,7 @@ void  OARTool::outputSolidData(int format, const char* fname, void* solid)
         else {
             obj->outputFile((char*)out_fname.buf, (char*)pathOUT.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
         }
+        */
     }
 
     // GLTF or GLB

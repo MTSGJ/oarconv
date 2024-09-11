@@ -569,7 +569,8 @@ void  TerrainTool::GenerateTerrain(const char* outpath, Vector<double> offset)
                 obj->affineTrans->setShift(offset);
                 obj->affineTrans->computeMatrix();
                 obj->closeSolid();
-                obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
+                //obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_PTM_DIR, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
+                obj->outputFile((char*)objname.buf, (char*)path.buf, OART_DEFAULT_TEX_DIR, OART_DEFAULT_MTL_DIR);
                 freeOBJData(obj);
             }
             // GLTF
