@@ -6,6 +6,8 @@
 // 2024/09/11
 //
 
+
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,68 +22,90 @@ public class GLTFAutoCollider
 
     private static void OnHierarchyChanged()
     {
-        //string unityVersion = Application.unityVersion;
-        //int majorVersion = int.Parse(unityVersion.Split('.')[0]);
-
         GameObject[] allObjects = Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
         foreach (GameObject obj in allObjects) {
-            if (obj.scene.isLoaded && PrefabUtility.GetPrefabInstanceStatus(obj)!=PrefabInstanceStatus.NotAPrefab) {
-                string assetPath = GetAssetPath(obj);
-                if (assetPath.Contains("/Solids/")) {
-                	try {
-                        AddMeshColliderToObject(obj);
+            Transform parent = obj.transform.parent;
+            if (obj.GetComponent<Collider>()==null && parent!=null) {
+                if (obj.scene.isLoaded && PrefabUtility.GetPrefabInstanceStatus(obj)!=PrefabInstanceStatus.NotAPrefab
+                                       && obj.GetComponent<SkinnedMeshRenderer>()==null) {
+                    string assetPath = GetAssetPath(obj);
+                    if (assetPath.Contains("/Solids/") || assetPath.Contains("/Terrains/")) {
+                        AddMeshCollider(obj);
                     }
-                    catch {
-                    	AddBoxColliderToObject(obj);
-                    }
-                }
-                else if (assetPath.Contains("/Terrains/")) {
-                    AddMeshColliderToObject(obj);
                 }
             }
         }
     }
 
 
-    private static void AddBoxColliderToObject(GameObject obj)
+    private static void AddBoxCollider(GameObject obj)
     {
-        Transform parent = obj.transform.parent;
-
-        bool isAddCollider = (obj.GetComponent<Collider>()==null) && (parent!=null);
-        //if (version<6000) isAddCollider = isAddCollider && (parent.transform.parent==null);
-        if (isAddCollider) {
-            obj.AddComponent<BoxCollider>();
-        	MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
-        }
+        obj.AddComponent<BoxCollider>();
         return;
     }
 
 
-    private static void AddMeshColliderToObject(GameObject obj)
+    private static void AddMeshCollider(GameObject obj)
     {
-        Transform parent = obj.transform.parent;
-
-        bool isAddCollider = (obj.GetComponent<Collider>()==null) && (parent!=null);
-        //if (version<6000) isAddCollider = isAddCollider && (parent.transform.parent==null);
-        if (isAddCollider) {
-        	MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
-            if (meshFilter!=null) {
+        MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
+        if (meshFilter!=null) {
+            UnityEngine.Mesh mesh = meshFilter.sharedMesh;
+            if (IsValidMesh(mesh)) {
                 MeshCollider meshCollider = obj.AddComponent<MeshCollider>();
                 if (meshCollider!=null) {
                     meshCollider.sharedMesh = meshFilter.sharedMesh;
                     //meshCollider.convex = true;
-                    //Debug.Log("MeshCollider added to " + obj.name);
+                    //Debug.Log("MeshCollider added to" + obj.name);
                 }
-
             }
             else {
-                obj.AddComponent<BoxCollider>();
-                //BoxCollider boxCollider = obj.AddComponent<BoxCollider>();
-                //if (boxCollider!=null) Debug.Log("BoxCollider added to " + obj.name);
+                AddBoxCollider(obj);
             }
+        }
+        else {
+            AddBoxCollider(obj);
         }
         return;
     }
+
+
+    private static bool IsValidMesh(UnityEngine.Mesh mesh)
+    {
+        if (mesh==null) {
+            Debug.Log("Mesh is null.");
+            return false;
+        }
+        if (mesh.normals.Length==0) {
+            Debug.Log("Mesh has no normals.");
+            return false;
+        }
+        if (mesh.vertexCount==0) {
+            Debug.Log("Mesh has no vertices.");
+            return false;
+        }
+        if (mesh.triangles.Length == 0) {
+            Debug.Log("Mesh has no triangles.");
+            return false;
+        }
+        int[] triangles = mesh.triangles;
+        if (!triangles.All(index=>index>=0 && index<mesh.vertexCount)) {
+            Debug.Log("Mesh has invarid triangle.");
+            return false;
+        }
+
+        // Bounds Size
+        int count = 0;
+        if (mesh.bounds.size.x<0.0001f) count++;
+        if (mesh.bounds.size.y<0.0001f) count++;
+        if (mesh.bounds.size.z<0.0010f) count++;
+        if (count>=2) {
+            //Debug.Log("Mesh has small bounds size " + mesh.bounds.size + ".");
+            return false;
+        }
+
+        return true;
+    }
+
 
     private static string GetAssetPath(GameObject obj)
     {
