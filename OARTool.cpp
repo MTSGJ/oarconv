@@ -864,6 +864,9 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         return NULL;
     }
 
+    int  collider_flag = OFF;
+    bool collider = true;
+
     //
     ColladaXML*    dae  = NULL;
     OBJData*       obj  = NULL;
@@ -1039,9 +1042,11 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, ptr_skin_joint);
             //
             if (mesh!=NULL) {
-                bool collider = true;
-                if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
-                    collider = false;
+                if (collider_flag==OFF) {
+                    collider_flag = ON;
+                    if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
+                        collider = false;
+                    }
                 }
                 //
                 if (isRequiredTexture(format)) {    // STLの場合は不必要
