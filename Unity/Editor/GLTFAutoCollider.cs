@@ -28,7 +28,12 @@ public class GLTFAutoCollider
             if (obj.scene.isLoaded && PrefabUtility.GetPrefabInstanceStatus(obj)!=PrefabInstanceStatus.NotAPrefab) {
                 string assetPath = GetAssetPath(obj);
                 if (assetPath.Contains("/Solids/")) {
-                    AddBoxColliderToObject(obj);
+                	try {
+                        AddMeshColliderToObject(obj);
+                    }
+                    catch {
+                    	AddBoxColliderToObject(obj);
+                    }
                 }
                 else if (assetPath.Contains("/Terrains/")) {
                     AddMeshColliderToObject(obj);
@@ -61,17 +66,13 @@ public class GLTFAutoCollider
         if (isAddCollider) {
         	MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
             if (meshFilter!=null) {
-                try {
-                    MeshCollider meshCollider = obj.AddComponent<MeshCollider>();
-                    if (meshCollider!=null) {
-                        meshCollider.sharedMesh = meshFilter.sharedMesh;
-                        //meshCollider.convex = true;
-                        //Debug.Log("MeshCollider added to " + obj.name);
-                    }
+                MeshCollider meshCollider = obj.AddComponent<MeshCollider>();
+                if (meshCollider!=null) {
+                    meshCollider.sharedMesh = meshFilter.sharedMesh;
+                    //meshCollider.convex = true;
+                    //Debug.Log("MeshCollider added to " + obj.name);
                 }
-                catch (System.Exception e) {
-                    obj.AddComponent<BoxCollider>();
-                }
+
             }
             else {
                 obj.AddComponent<BoxCollider>();
