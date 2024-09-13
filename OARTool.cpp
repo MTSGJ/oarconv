@@ -1087,7 +1087,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
 
                 tXML* joints_template = NULL;
-                if (count==0 && this->procJoints) {
+                if (/*count==0 &&*/ this->procJoints) {
                     char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
                     if (path != NULL) {
                         joints_template = xml_parse_file(path);     // not free
