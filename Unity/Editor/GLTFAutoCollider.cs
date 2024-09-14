@@ -1,11 +1,10 @@
 //
-// GLTFAutoCollider by Fumi.Iseki 2015-2024 (C) v1.0.0
+// GLTFAutoCollider by Fumi.Iseki 2015-2024 (C) v1.0.1
 //
 // see also https://github.com/MTSGJ/oarconv
 //
-// 2024/09/11
+// 2024/09/14
 //
-
 
 using System.Linq;
 using UnityEditor;
@@ -19,6 +18,7 @@ public class GLTFAutoCollider
     {
         EditorApplication.hierarchyChanged += OnHierarchyChanged;
     }
+
 
     private static void OnHierarchyChanged()
     {
@@ -38,13 +38,6 @@ public class GLTFAutoCollider
     }
 
 
-    private static void AddBoxCollider(GameObject obj)
-    {
-        obj.AddComponent<BoxCollider>();
-        return;
-    }
-
-
     private static void AddMeshCollider(GameObject obj)
     {
         MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
@@ -58,12 +51,6 @@ public class GLTFAutoCollider
                     //Debug.Log("MeshCollider added to" + obj.name);
                 }
             }
-            else {
-                AddBoxCollider(obj);
-            }
-        }
-        else {
-            AddBoxCollider(obj);
         }
         return;
     }
@@ -72,27 +59,26 @@ public class GLTFAutoCollider
     private static bool IsValidMesh(UnityEngine.Mesh mesh)
     {
         if (mesh==null) {
-            Debug.Log("Mesh is null.");
+            //Debug.Log("Mesh is null.");
             return false;
         }
         if (mesh.normals.Length==0) {
-            Debug.Log("Mesh has no normals.");
+            //Debug.Log("Mesh has no normals.");
             return false;
         }
         if (mesh.vertexCount==0) {
-            Debug.Log("Mesh has no vertices.");
+            //Debug.Log("Mesh has no vertices.");
             return false;
         }
         if (mesh.triangles.Length == 0) {
-            Debug.Log("Mesh has no triangles.");
+            //Debug.Log("Mesh has no triangles.");
             return false;
         }
         int[] triangles = mesh.triangles;
         if (!triangles.All(index=>index>=0 && index<mesh.vertexCount)) {
-            Debug.Log("Mesh has invarid triangle.");
+            //Debug.Log("Mesh has invarid triangle.");
             return false;
         }
-
         // Bounds Size
         int count = 0;
         if (mesh.bounds.size.x<0.0001f) count++;
@@ -102,7 +88,6 @@ public class GLTFAutoCollider
             //Debug.Log("Mesh has small bounds size " + mesh.bounds.size + ".");
             return false;
         }
-
         return true;
     }
 
