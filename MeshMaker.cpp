@@ -839,6 +839,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
         uWord* weight = NULL;
         if (lpwgt!=NULL && lpwgt->altp!=NULL) {
             wgt = decode_base64_Buffer(lpwgt->altp->ldat.key);
+            // weight[頂点番号*(*joints_num) + joint番号]
             weight = llsd_bin_get_skin_weight((uByte*)wgt.buf, wgt.vldsz, vertex_num, &joints_num);
         }
         //
@@ -847,7 +848,7 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
             //
             // INDEX
             for (int vtx=0; vtx<3; vtx++) {
-                index[vtx] = ushort_from_little_endian(idx.buf + 6*tri + 2*vtx);  // 頂点インデックス
+                index[vtx] = ushort_from_little_endian(idx.buf + 6*tri + 2*vtx);  // 頂点インデックス（頂点番号）
             }
             // POSITION
             for (int vtx=0; vtx<3; vtx++) {
@@ -875,10 +876,10 @@ TriPolygonData*  jbxl::TriPolygonDataFromLLMesh(uByte* mesh, int sz, int* fnum, 
             // WEIGHT
             if (wgt.buf!=NULL && joints_num>0) {
                 tridata[tri_num].has_weight = true;
-                for (int vtx=0; vtx<3; vtx++) {
+                for (int vtx=0; vtx<3; vtx++) {     // 3角形を形成する頂点
                     tridata[tri_num].weight[vtx].init(joints_num);
-                    int ppos = index[vtx]*joints_num;
-                    for (int j=0; j<joints_num; j++) {
+                    int ppos = index[vtx]*joints_num;   // index[vtx]: 頂点インデックス
+                    for (int j=0; j<joints_num; j++) {  // j: joint番号
                         tridata[tri_num].weight[vtx].set_value(j, (int)weight[ppos + j]);
                     }
                 }

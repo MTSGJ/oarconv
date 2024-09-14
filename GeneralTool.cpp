@@ -154,7 +154,7 @@ XMLのJointのテンプレート joints_template から，必要な jount の情
 @retval list->ldat.lv   ジョイントの親の ID
 @retval list->ldat.key  "name" 固定．
 @retval list->ldat.val  ジョイントの名前．文字の最初と最後に " が付く．例："\"mPelvis\""
-@retval list->ldat.ptr  ジョイントの位置．Vector<float>* として格納（Blender 用）
+@retval list->ldat.ptr  ジョイントの座標．Vector<float>* として格納（Blender 用）
 @retval list->ldat.sz   *ldat.ptr のサイズ．
 */
 tList*  jbxl::selectJointsFromXMLTemplate(SkinJointData* joints, tXML* joints_template)

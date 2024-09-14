@@ -1087,21 +1087,16 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 }
 
                 tXML* joints_template = NULL;
-                if (count==0 && this->procJoints) {
-                    char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
-                    if (path != NULL) {
-                        joints_template = xml_parse_file(path);     // not free
-                    }
-                    else {
-                        PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
-                    }
-                }
-
                 // DAE
                 if (format==JBXL_3D_FORMAT_DAE) {
                     if (collider) dae->phantom_out = false;
+                    if (count==0 && this->procJoints) {
+                        char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
+                        if (path!=NULL) joints_template = xml_parse_file(path);     // not free
+                        else PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
+                    }
                     dae->addShell(mesh, collider, skin_joint, joints_template);
-                    joints_template = NULL;         // joints_tempalte は dae 内で freeされる
+                    joints_template = NULL;         // joints_tempalte は出力用のデータに組み込まれ，最後に dae 内で freeされる
                 }
                 // OBJ
                 else if (format==JBXL_3D_FORMAT_OBJ) {
@@ -1111,12 +1106,22 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 // GLTF or GLB
                 else if (format==JBXL_3D_FORMAT_GLTF || format==JBXL_3D_FORMAT_GLB) {
                     if (collider) gltf->phantom_out = false;
+                    if (this->procJoints) {
+                        char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
+                        if (path!=NULL) joints_template = xml_parse_file(path);     // not free
+                        else PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
+                    }
                     tList* jl = selectJointsFromXMLTemplate(skin_joint, joints_template);
                     gltf->addShell(mesh, collider, skin_joint, jl);
                 }
                 // FBX
                 else if (format==JBXL_3D_FORMAT_FBX) {
                     if (collider) fbx->phantom_out = false;
+                    if (this->procJoints) {
+                        char* path = get_resource_path(OART_JOINT_TEMPLATE_FILE, assetsFiles);
+                        if (path!=NULL) joints_template = xml_parse_file(path);     // not free
+                        else PRINT_MESG("OARTool::generateSolidData: WARNING: Joints template xml file is not found!\n");
+                    }
                     tTree* jl = selectJointsFromXMLTemplate(skin_joint, joints_template);
                     fbx->addShell(mesh, collider, skin_joint, jl);
                 }
