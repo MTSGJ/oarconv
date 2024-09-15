@@ -1,11 +1,12 @@
 //
-// GLTFAutoCollider by Fumi.Iseki 2015-2024 (C) v1.0.1
+// GLTFAutoCollider by Fumi.Iseki 2024 (C) v1.1.1
 //
 // see also https://github.com/MTSGJ/oarconv
 //
 // 2024/09/14
 //
 
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -36,7 +37,7 @@ public class GLTFAutoCollider
             }
         }
     }
-
+     
 
     private static void AddMeshCollider(GameObject obj)
     {
@@ -88,7 +89,27 @@ public class GLTFAutoCollider
             //Debug.Log("Mesh has small bounds size " + mesh.bounds.size + ".");
             return false;
         }
+        /**/
+        // Unique coordinates
+        Vector3[] vertices = mesh.vertices;
+        HashSet<Vector3> uniqueVertices = new HashSet<Vector3>();
+        foreach (Vector3 vertex in vertices) {
+            uniqueVertices.Add(vertex);
+            if (uniqueVertices.Count>=3) return true;
+        }
+        //Debug.Log("Mesh has no more than 3 unique coordinates");
+        return false;
+        /*
+        // Unique coordinates
+        Vector3[] vertices = mesh.vertices;
+        HashSet<Vector3> uniqueVertices = new HashSet<Vector3>();
+        foreach (Vector3 vertex in vertices) uniqueVertices.Add(vertex);
+        if (uniqueVertices.Count<3) {
+            //Debug.Log("Mesh has no more than 3 unique coordinates");
+            return false;
+        }
         return true;
+        */
     }
 
 
