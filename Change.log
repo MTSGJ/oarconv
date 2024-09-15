@@ -1,4 +1,8 @@
 #
+1.8.2
+    fix complex skeleton bug.
+    Unity/Editor/GLTFAutoCollider.cs for Unity6000 v1.1.1
+
 1.8.1
     modify output folders
     fix Unity/Editor/GLTFAutoCollider.cs for Unity6000
