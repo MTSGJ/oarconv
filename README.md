@@ -32,7 +32,7 @@
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
-* v1,8,2 (2024/09/15)
+* v1.8.2 (2024/09/15)
   * add handling of cases where objects with and without joints are mixed
   * GLTFAutoCollider.cs v1.1.1 for Unity
 
