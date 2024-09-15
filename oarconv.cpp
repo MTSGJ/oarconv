@@ -1,9 +1,9 @@
 ﻿/** 
 @brief   Convert OAR Files to Collada Files
 
-@author  Fumi.Iseki 
-@date    2015 5/31
-@version 1.1
+@author  Fumi.Iseki and Austin Tate
+@date    2024 9/15
+@version 1.18.1
 */
 
 #include "oarconv.h"
