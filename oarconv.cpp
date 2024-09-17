@@ -16,22 +16,23 @@ int main(int argc, char** argv)
 {
     setlocale(LC_NUMERIC, "");      // 数字表記．システムから．
 
-    Buffer inpdir = init_Buffer();
-    Buffer outdir = init_Buffer();
-    Buffer astdir = init_Buffer();
-    Buffer infile = init_Buffer();
-    Buffer cmmnd  = init_Buffer();
-    Buffer tscale = init_Buffer();
+    Buffer inpdir  = init_Buffer();
+    Buffer outdir  = init_Buffer();
+    Buffer astdir  = init_Buffer();
+    Buffer infile  = init_Buffer();
+    Buffer oarfile = init_Buffer();
+    Buffer cmmnd   = init_Buffer();
+    Buffer tscale  = init_Buffer();
 
-    float xshift  = 0.0;
-    float yshift  = 0.0;
-    float zshift  = 0.0;
+    float xshift   = 0.0;
+    float yshift   = 0.0;
+    float zshift   = 0.0;
 
-    int   strtnum = 0;
-    int   stopnum = -1;
-    int   format  = JBXL_3D_FORMAT_DAE;
-    int   texture = JBXL_TEXTURE_PNG;
-    int   engine  = JBXL_3D_ENGINE_UNITY;
+    int   strtnum  = 0;
+    int   stopnum  = -1;
+    int   format   = JBXL_3D_FORMAT_DAE;
+    int   texture  = JBXL_TEXTURE_PNG;
+    int   engine   = JBXL_3D_ENGINE_UNITY;
 
     bool  degeneracy = false;
     bool  useBrep = false;      // required
@@ -54,6 +55,8 @@ int main(int argc, char** argv)
         else if (!strcmp(argv[i], "-h")) { oarconv_help(stdout); exit(0);}
         else if (!strcmp(argv[i], "-v")) { fprintf(stdout, " Version is %s\n", OARCONV_VERSION); exit(0);}
         //
+        else if (!strcmp(argv[i], "--oar"))  { if (i!=argc-1){ copy_s2Buffer(argv[i+1], &oarfile); i++;}}
+
         else if (!strcmp(argv[i], "--unity")){ engine  = JBXL_3D_ENGINE_UNITY;}  // for UNITY
         else if (!strcmp(argv[i], "--ue"))   { engine  = JBXL_3D_ENGINE_UE;}     // for UE
         else if (!strcmp(argv[i], "--dae"))  { format  = JBXL_3D_FORMAT_DAE;}    // DAEデータを出力
@@ -74,9 +77,22 @@ int main(int argc, char** argv)
         }
     }
 
+    if (inpdir.buf==NULL && oarfile.buf!=NULL) {
+        Buffer enc = read_Buffer_file((char*)oarfile.buf);
+        if (enc.vldsz>0) {
+            del_file_extension_Buffer(&oarfile);
+            inpdir = dup_Buffer(oarfile);
+            //
+            Buffer dec = gz_decode_data(enc);
+            extract_tTar(dec, inpdir, 0750);
+            free_Buffer(&dec);
+            free_Buffer(&enc);
+        }
+    }
     if (inpdir.buf==NULL) {
         inpdir = make_Buffer_bystr("OAR");
     }
+    //
     float scale = (float)TRNT_DEFAULT_TEX_SCALE;
     if (tscale.buf!=NULL) {
         scale = (float)atof((char*)tscale.buf);
@@ -129,6 +145,7 @@ int main(int argc, char** argv)
     free_Buffer(&tscale);
     free_Buffer(&cmmnd);
     free_Buffer(&infile);
+    free_Buffer(&oarfile);
 
     return 0;
 }
