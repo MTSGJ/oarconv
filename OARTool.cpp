@@ -649,6 +649,75 @@ void  OARTool::RmTextureFolder(void)
 }
 
 
+Buffer  OARTool::ExtractOAR(Buffer oarfile, mode_t mode)
+{
+    Buffer inpdir = init_Buffer();
+    //
+    Buffer enc = read_Buffer_file((char*)oarfile.buf);
+    if (enc.vldsz>0) {
+        PRINT_MESG("OARTool::ExtractOAR: Extracting OAR file...\n");
+        Buffer dec = gz_decode_data(enc);
+        free_Buffer(&enc);
+        if (dec.vldsz>0) {
+            inpdir = dup_Buffer(oarfile);
+            del_file_extension_Buffer(&inpdir);
+            if (inpdir.buf[inpdir.vldsz-1]!='/') cat_s2Buffer("/", &inpdir);
+            int ret = ExtractTar(dec, inpdir, mode);
+            if (ret<0) {
+                free_Buffer(&inpdir);
+                inpdir = init_Buffer();
+            }
+        }
+        free_Buffer(&dec);
+    }
+    return inpdir;
+}
+
+
+int   OARTool::ExtractTar(Buffer dec, Buffer prefix, mode_t mode)
+{
+    Tar_Header  tar_header;
+    long unsigned int size = 0;
+    long unsigned int datalen = (long unsigned int)(dec.vldsz - 1024);
+
+#ifdef WIN32
+    if (prefix.buf[prefix.vldsz-1]!='\\') cat_s2Buffer("\\", &prefix);
+#else
+    if (prefix.buf[prefix.vldsz-1]!='/')  cat_s2Buffer("/", &prefix);
+#endif
+    //
+    CVCounter* counter = GetUsableGlobalCounter();
+
+    while (size < datalen) {
+        memcpy(&tar_header, (char*)&dec.buf[size], sizeof(Tar_Header));
+        Buffer fname = make_Buffer_bystr(tar_header.name);
+        canonical_filename_Buffer(&fname, FALSE);
+        size += sizeof(Tar_Header);
+        //
+        Buffer path = dup_Buffer(prefix);
+        cat_Buffer(&fname, &path);
+        free_Buffer(&fname);
+        //
+        int ret = mkdirp((char*)path.buf, mode);
+        if (ret<0) PRINT_MESG("COARConvWinApp::ExtractTar: WARNING: Failed to create directory.\n");
+        long unsigned int len = (long unsigned int)strtol(tar_header.size, NULL, 8);
+        write_file((char*)path.buf, &dec.buf[size], len);
+        free_Buffer(&path);
+        //
+        if (len%512>0) len = (len/512 + 1)*512;
+        size += len;
+
+        if (counter!=NULL) {
+            if (counter->cancel) break;
+            counter->StepIt();
+        }
+    }
+
+    if (counter!=NULL && counter->cancel) return JBXL_CANCEL;
+    return JBXL_NORMAL;
+}
+
+
 void  OARTool::ReadTerrainData(void)
 {
     if (terrainNum==0) return;

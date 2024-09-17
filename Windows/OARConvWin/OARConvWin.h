@@ -73,6 +73,8 @@ public:
     bool     fileOpenOAR(CString);
     bool     folderOpenOAR(CString);
 
+    void     extractOARfile(Buffer oarfile);
+
     //
     void     convertAllData(void);
     void     convertSelectedData(int* selectedObjs, int selectedNums);

@@ -77,17 +77,9 @@ int main(int argc, char** argv)
         }
     }
 
+    OARTool oar;
     if (inpdir.buf==NULL && oarfile.buf!=NULL) {
-        Buffer enc = read_Buffer_file((char*)oarfile.buf);
-        if (enc.vldsz>0) {
-            del_file_extension_Buffer(&oarfile);
-            inpdir = dup_Buffer(oarfile);
-            //
-            Buffer dec = gz_decode_data(enc);
-            extract_tTar(dec, inpdir, 0750);
-            free_Buffer(&dec);
-            free_Buffer(&enc);
-        }
+        inpdir = oar.ExtractOAR(oarfile, 07500);
     }
     if (inpdir.buf==NULL) {
         inpdir = make_Buffer_bystr("OAR");
@@ -105,7 +97,6 @@ int main(int argc, char** argv)
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     // main process
-    OARTool oar;
     oar.SetEngine(engine);
     oar.SetDataFormat(format);
     oar.SetTextureFormat(texture);

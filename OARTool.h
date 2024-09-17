@@ -155,6 +155,9 @@ public:
     tList* GetObjectsList(void) { return objectsFiles;}
     char*  GetOutPath(void) { return get_outpath(); }   // not free
 
+    Buffer ExtractOAR(Buffer oarfile, mode_t mode);
+    int    ExtractTar(Buffer dec, Buffer prefix, mode_t mode);
+
     // DAE/OBJ/STL/glTF
     int    GenerateObjectFromDataIndex(int startnum=1, int stopnum=-1, bool useBrep=false, char* command=NULL);
     int    GenerateObjectFromDataList(int* objlist, int objnum, bool useBrep=false, char* command=NULL);

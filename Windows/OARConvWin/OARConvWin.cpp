@@ -503,6 +503,52 @@ bool  COARConvWinApp::fileOpen(CString fname)
 }
 
 
+void  COARConvWinApp::extractOARfile(Buffer oarfile)
+{
+    PRINT_MESG("COARConvWinApp::extractOARfile: Extracting OAR file...\n");
+    Buffer enc = read_Buffer_file((char*)oarfile.buf);
+    if (enc.vldsz<=0) {
+        return;
+    }
+    Buffer dec = gz_decode_data(enc);
+    free_Buffer(&enc);
+
+    // count file num
+    Tar_Header  tar_header;
+    long unsigned int size = 0;
+    long unsigned int datalen = (long unsigned int)(dec.vldsz - 1024);
+    int filenum = 0;
+    while (size < datalen) {
+        memcpy(&tar_header, (char*)&tardata.buf[size], sizeof(Tar_Header));
+        size += sizeof(Tar_Header);
+        long unsigned int len = (long unsigned int)strtol(tar_header.size, NULL, 8);
+        if (len%512>0) len = (len/512 + 1)*512;
+        size += len;
+        filenum++;
+    }
+
+    CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
+    if (progress != NULL) {
+        progress->SetTitle("Extract OAR File");
+        progress->Start(filenum);
+        SetGlobalCounter(progress);
+    }
+    //
+    Buffer prefix = dup_Buffer(oarfile);
+    del_file_extension_Buffer(&prefix);
+    if (prefix.buf[prefix.vldsz-1]!='\\') cat_s2Buffer("\\", &prefix);
+    oarTool.ExtractTar(dec, prefix, 0750);
+    free_Buffer(&prefix);
+
+    if (progress != NULL) {
+        progress->PutFill();
+        delete progress;
+        ClearGlobalCounter();
+    }
+    return;
+}
+
+
 //
 // OARファイルをオープンする．
 //
@@ -511,17 +557,17 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     hasData = false;
     updateMenuBar();
     updateStatusBar(_T(""), _T(""));
-
+/*
     // Check
-    char* fp = ts2mbs((LPCTSTR)fname);        // 要 free
-    int ret = TarCheckArchive(fp, 0);
+    char* fc = ts2mbs((LPCTSTR)fname);        // 要 free
+    int ret = TarCheckArchive(fc, 0);
     if (!ret) {
-        PRINT_MESG("COARConvWinApp::fileOpenOAR: ERROR: Tar32/64 Check Error = 0x%04x [%s]\n", ret, fp);
+        PRINT_MESG("COARConvWinApp::fileOpenOAR: ERROR: Tar32/64 Check Error = 0x%04x [%s]\n", ret, fc);
         MessageBoxDLG(IDS_STR_ERROR, IDS_STR_ERR_OPEN_FILE, MB_OK, pMainFrame);
-        ::free(fp);
+        ::free(fc);
         return false;
     }
-    ::free(fp);
+    ::free(fc);
 
     CString path = get_file_path_t(fname);    // パス名
     CString file = get_file_name_t(fname);
@@ -541,6 +587,11 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
         return false;
     }
     ::free(md);
+*/
+    char* oarf = ts2mbs((LPCTSTR)fname);        // 要 free
+    Buffer oarfile = make_Buffer_bystr(oarf, 0);
+    ExtractOARFile(oarfile);
+    ::free(oarf);
 
     setupParameters(path, file, oarf);
 
