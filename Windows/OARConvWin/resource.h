@@ -70,6 +70,7 @@
 #define IDS_STR_CONV_TERRAIN            57001
 #define IDS_STR_NOT_OAR                 57002
 #define IDS_STR_STATUSBAR_INIT          57003
+#define IDS_STR_EXTRACT_GZIP            57004
 #define IDS_STR_EXTRACT_ERR             57346
 #define IDS_STR_ERR_EXTRACT             57346
 #define ID_FILE_MRU_FILE                0xE110

@@ -655,7 +655,7 @@ Buffer  OARTool::ExtractOAR(Buffer oarfile, mode_t mode)
     //
     Buffer enc = read_Buffer_file((char*)oarfile.buf);
     if (enc.vldsz>0) {
-        PRINT_MESG("OARTool::ExtractOAR: Extracting OAR file...\n");
+        PRINT_MESG("OARTool::ExtractOAR: Extracting OAR file... (%s)\n", (char*)oarfile.buf);
         Buffer dec = gz_decode_data(enc);
         free_Buffer(&enc);
         if (dec.vldsz>0) {
@@ -680,28 +680,27 @@ int   OARTool::ExtractTar(Buffer dec, Buffer prefix, mode_t mode)
     long unsigned int size = 0;
     long unsigned int datalen = (long unsigned int)(dec.vldsz - 1024);
 
-    for (int i=0; i<prefix.vldsz; i++) if (prefix.buf[i]=='\\') prefix.buf[i] = '/';
-    if (prefix.buf[prefix.vldsz-1]!='/')  cat_s2Buffer("/", &prefix);
+    Buffer pre_path = dup_Buffer(prefix);
+    for (int i=0; i<pre_path.vldsz; i++) if (pre_path.buf[i]=='\\') pre_path.buf[i] = '/';
+    if (pre_path.buf[pre_path.vldsz-1]!='/')  cat_s2Buffer("/", &pre_path);
     //
-     CVCounter* counter = NULL;// GetUsableGlobalCounter();
-     PRINT_MESG("111111111111\n");
-
+    CVCounter* counter = GetUsableGlobalCounter();
+ 
     while (size < datalen) {
         memcpy(&tar_header, (char*)&dec.buf[size], sizeof(Tar_Header));
         Buffer fname = make_Buffer_bystr(tar_header.name);
         canonical_filename_Buffer(&fname, FALSE);
         size += sizeof(Tar_Header);
         //
-        Buffer path = dup_Buffer(prefix);
+        Buffer path = dup_Buffer(pre_path);
         cat_Buffer(&fname, &path);
         free_Buffer(&fname);
         //
-   PRINT_MESG("%s\n", (char*)path.buf);
-        //int ret = mkdirp((char*)path.buf, mode);
-        //if (ret<0) PRINT_MESG("COARConvWinApp::ExtractTar: WARNING: Failed to create directory (%d).\n", ret);
+        DEBUG_MODE PRINT_MESG("OARTool::ExtractTar: Extracting %s\n", (char*)path.buf);
+        int ret = mkdirp((char*)path.buf, mode);
+        if (ret<0) PRINT_MESG("COARConvWinApp::ExtractTar: WARNING: Failed to create directory (%d).\n", ret);
         long unsigned int len = (long unsigned int)strtol(tar_header.size, NULL, 8);
- 
-        //write_file((char*)path.buf, &dec.buf[size], len);
+        long unsigned int rsz = write_file((char*)path.buf, &dec.buf[size], len);
         free_Buffer(&path);
         //
         if (len%512>0) len = (len/512 + 1)*512;
@@ -711,19 +710,13 @@ int   OARTool::ExtractTar(Buffer dec, Buffer prefix, mode_t mode)
             if (counter->cancel) break;
             counter->StepIt();
         }
-        PRINT_MESG("55555555555555555  %ld %ld\n", size, datalen);
     }
- PRINT_MESG("66666666666666\n");
+    free_Buffer(&pre_path);
 
- /*
     if (counter != NULL) {
-           PRINT_MESG("777777777777777777\n");
         if (counter->cancel) return JBXL_CANCEL;
-        //else counter->PutFill();
-           PRINT_MESG("88888888888888888888888\n");
+        else counter->PutFill();
     }
-    */
-    PRINT_MESG("9999999999999999999\n");
     return JBXL_NORMAL;
 }
 

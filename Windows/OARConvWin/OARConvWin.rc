@@ -495,6 +495,7 @@ STRINGTABLE
 BEGIN
     IDS_STR_CONVERT_NUM     "%d 個のオブジェクトを変換しました"
     IDS_STR_CONV_TERRAIN    "土地データを変換中．しばらくお待ちください．．．"
+    IDS_STR_EXTRACT_GZIP    "OARファイルを解凍中．しばらくお待ちください．．．"
     IDS_STR_NOT_OAR         "指定されたデータは OARではありません!!"
     IDS_STR_STATUSBAR_INIT  "OAR Path:                                                                                                                                                      "
 END
@@ -931,6 +932,7 @@ STRINGTABLE
 BEGIN
     IDS_STR_CONVERT_NUM     "Objects (%d) were converted"
     IDS_STR_CONV_TERRAIN    "Converting Terrain Data ..."
+    IDS_STR_EXTRACT_GZIP    "Extracting OAR file..."
     IDS_STR_NOT_OAR         "Not OAR Data!!"
     IDS_STR_STATUSBAR_INIT  "OAR Path:                                                                                                                                                      "
 END

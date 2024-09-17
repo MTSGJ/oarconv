@@ -508,14 +508,19 @@ Buffer  COARConvWinApp::extractOARfile(CString fname, int* filenum)
     char* fn = ts2mbs((LPCTSTR)fname);          // 要 free
     Buffer dec = init_Buffer();
     //
-    PRINT_MESG("COARConvWinApp::extractOARfile: Extracting OAR file... %s\n", fn);
+    PRINT_MESG("COARConvWinApp::extractOARfile: Wait a minute. Extracting OAR file... (%s)\n", fn);
+    DisPatcher();
     Buffer enc = read_Buffer_file(fn);
     ::free(fn);
-    if (enc.vldsz<=0) {
+    if (enc.vldsz <= 0) {
         return dec;
     }
+    //
+    //CMessageBoxDLG* mbox = MessageBoxDLG(IDS_STR_INFO, IDS_STR_EXTRACT_GZIP, m_pMainWnd);
+    //if (mbox != NULL) mbox->Display();
     dec = gz_decode_data(enc);
     free_Buffer(&enc);
+    //if (mbox != NULL) delete mbox;
 
     // count file num
     Tar_Header  tar_header;
@@ -524,7 +529,6 @@ Buffer  COARConvWinApp::extractOARfile(CString fname, int* filenum)
     *filenum = 0;
     while (size < datalen) {
         memcpy(&tar_header, (char*)&dec.buf[size], sizeof(Tar_Header));
-    PRINT_MESG("===> %s\n", tar_header.name);
         size += sizeof(Tar_Header);
         long unsigned int len = (long unsigned int)strtol(tar_header.size, NULL, 8);
         if (len%512>0) len = (len/512 + 1)*512;
@@ -575,16 +579,12 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     ::free(md);
 */
 
-
-    //char* fn = ts2mbs((LPCTSTR)fname);          // 要 free
-    //Buffer oarfile = make_Buffer_bystr(fn);
-
     int filenum;
     Buffer dec = extractOARfile(fname, &filenum);
 
-    CProgressBarDLG* progress = NULL;// new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
+    CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
     if (progress != NULL) {
-        progress->SetTitle("Extracting OAR File...");
+        progress->SetTitle("Saving OAR files...");
         progress->Start(filenum);
         SetGlobalCounter(progress);
     }
@@ -597,7 +597,7 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     if (file_exist_t((LPCTSTR)oarpath)) tunlink((LPCTSTR)oarpath);
     setupParameters(path, file, oarpath);
 
-    char* fn = ts2mbs((LPCTSTR)oarpath);               // 要 free
+    char* fn = ts2mbs((LPCTSTR)oarpath);        // 要 free
     Buffer prefix = make_Buffer_bystr(fn);
     ::free(fn);
     
