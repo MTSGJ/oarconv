@@ -503,49 +503,35 @@ bool  COARConvWinApp::fileOpen(CString fname)
 }
 
 
-void  COARConvWinApp::extractOARfile(Buffer oarfile)
+Buffer  COARConvWinApp::extractOARfile(CString fname, int* filenum)
 {
-    PRINT_MESG("COARConvWinApp::extractOARfile: Extracting OAR file...\n");
-    Buffer enc = read_Buffer_file((char*)oarfile.buf);
+    char* fn = ts2mbs((LPCTSTR)fname);          // 要 free
+    Buffer dec = init_Buffer();
+    //
+    PRINT_MESG("COARConvWinApp::extractOARfile: Extracting OAR file... %s\n", fn);
+    Buffer enc = read_Buffer_file(fn);
+    ::free(fn);
     if (enc.vldsz<=0) {
-        return;
+        return dec;
     }
-    Buffer dec = gz_decode_data(enc);
+    dec = gz_decode_data(enc);
     free_Buffer(&enc);
 
     // count file num
     Tar_Header  tar_header;
     long unsigned int size = 0;
     long unsigned int datalen = (long unsigned int)(dec.vldsz - 1024);
-    int filenum = 0;
+    *filenum = 0;
     while (size < datalen) {
-        memcpy(&tar_header, (char*)&tardata.buf[size], sizeof(Tar_Header));
+        memcpy(&tar_header, (char*)&dec.buf[size], sizeof(Tar_Header));
+    PRINT_MESG("===> %s\n", tar_header.name);
         size += sizeof(Tar_Header);
         long unsigned int len = (long unsigned int)strtol(tar_header.size, NULL, 8);
         if (len%512>0) len = (len/512 + 1)*512;
         size += len;
-        filenum++;
+        (*filenum)++;
     }
-
-    CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
-    if (progress != NULL) {
-        progress->SetTitle("Extract OAR File");
-        progress->Start(filenum);
-        SetGlobalCounter(progress);
-    }
-    //
-    Buffer prefix = dup_Buffer(oarfile);
-    del_file_extension_Buffer(&prefix);
-    if (prefix.buf[prefix.vldsz-1]!='\\') cat_s2Buffer("\\", &prefix);
-    oarTool.ExtractTar(dec, prefix, 0750);
-    free_Buffer(&prefix);
-
-    if (progress != NULL) {
-        progress->PutFill();
-        delete progress;
-        ClearGlobalCounter();
-    }
-    return;
+    return dec;
 }
 
 
@@ -588,13 +574,42 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     }
     ::free(md);
 */
-    char* oarf = ts2mbs((LPCTSTR)fname);        // 要 free
-    Buffer oarfile = make_Buffer_bystr(oarf, 0);
-    ExtractOARFile(oarfile);
-    ::free(oarf);
 
-    setupParameters(path, file, oarf);
 
+    //char* fn = ts2mbs((LPCTSTR)fname);          // 要 free
+    //Buffer oarfile = make_Buffer_bystr(fn);
+
+    int filenum;
+    Buffer dec = extractOARfile(fname, &filenum);
+
+    CProgressBarDLG* progress = NULL;// new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
+    if (progress != NULL) {
+        progress->SetTitle("Extracting OAR File...");
+        progress->Start(filenum);
+        SetGlobalCounter(progress);
+    }
+    
+    CString path = get_file_path_t(fname);      // パス名
+    CString file = get_file_name_t(fname);
+    file = cut_file_extension_t(file);          // 拡張子なしファイル名
+    CString oarpath = path + appParam.prefixOAR + file;
+
+    if (file_exist_t((LPCTSTR)oarpath)) tunlink((LPCTSTR)oarpath);
+    setupParameters(path, file, oarpath);
+
+    char* fn = ts2mbs((LPCTSTR)oarpath);               // 要 free
+    Buffer prefix = make_Buffer_bystr(fn);
+    ::free(fn);
+    
+    oarTool.ExtractTar(dec, prefix, 0750);
+    free_Buffer(&dec);
+    free_Buffer(&prefix);
+
+    if (progress != NULL) {
+        progress->PutFill();
+        delete progress;
+        ClearGlobalCounter();
+    }
     bool chk = oarTool.GetDataInfo();
     if (!chk) {
         MessageBoxDLG(IDS_STR_ERROR, IDS_STR_NOT_OAR, MB_OK, pMainFrame);
@@ -605,9 +620,8 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
     updateMenuBar();
     updateStatusBar(getOARFolder(), getOutFolder());
     //
-    char* fn = ts2mbs(fname);
-    PRINT_MESG("COARConvWinApp::fileOpenOAR: File is opened %s\n", fn);
-    free(fn);
+    //PRINT_MESG("COARConvWinApp::fileOpenOAR: File is opened %s\n", (char*)oarfile.buf);
+    //free_Buffer(&oarfile);
 
     return chk;
 }

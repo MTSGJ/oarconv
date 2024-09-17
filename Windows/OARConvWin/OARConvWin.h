@@ -73,7 +73,7 @@ public:
     bool     fileOpenOAR(CString);
     bool     folderOpenOAR(CString);
 
-    void     extractOARfile(Buffer oarfile);
+    Buffer   extractOARfile(CString fname, int* filenum);
 
     //
     void     convertAllData(void);
