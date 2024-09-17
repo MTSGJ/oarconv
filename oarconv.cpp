@@ -79,7 +79,7 @@ int main(int argc, char** argv)
 
     OARTool oar;
     if (inpdir.buf==NULL && oarfile.buf!=NULL) {
-        inpdir = oar.ExtractOAR(oarfile, 07500);
+        inpdir = oar.ExtractOAR(oarfile, 0750);
     }
     if (inpdir.buf==NULL) {
         inpdir = make_Buffer_bystr("OAR");
