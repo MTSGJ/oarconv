@@ -1,4 +1,8 @@
 #
+1.8.3
+    implemented a function to expand OAR file for Regions with region names that contain characters that cannot be used as file names
+        stop using tar32.dll
+
 1.8.2
     fix complex skeleton bug.
     Unity/Editor/GLTFAutoCollider.cs for Unity6000 v1.1.1
