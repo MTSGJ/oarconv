@@ -32,8 +32,8 @@
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
-* v1.8.2.1 (2024/09/17)
-  * fix terrain texture name bug for glTF/glb
+* v1.8.3 (2024/09/18)
+  * implemented a function to expand OAR file for Regions 
 
 * v1.8.2 (2024/09/15)
   * add handling of cases where objects with and without joints are mixed
@@ -68,6 +68,7 @@
    -x : specify shift of x direction of all objects. default is 0.0
    -y : specify shift of y direction of all objects. default is 0.0
    -z : specify shift of z direction of all objects. default is 0.0
+   --oar : specify OAR file. The -i option has priority.
    --dae : output Collada DAE file(s).
    --obj : output Wavefront OBJ file(s).
    --gltf: output glTF file(s).
@@ -123,7 +124,7 @@ make
 
 ## OARConvWin (for MS Windows)
 ### Download Binary
-- [OARConvWin-1.8.2.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.2.1.zip)  (glTF/glb support)
+- [OARConvWin-1.8.3.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.3.zip)  (glTF/glb support)
 - [OARConvWin-1.7.12.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.12.zip)
 - [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.6.0.zip)
 - [OARConvWin-1.5.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.5.0.zip)
@@ -138,6 +139,6 @@ make
 - This software uses the source code of OpenMetaverse in part. see also  https://github.com/openmetaversefoundation
 - This software uses OpenJpeg command and library. see also http://www.openjpeg.org/
 - This software uses zlib library. see also http://www.zlib.net/
-- This software uses tar64.dll. see also https://www.madobe.net/archiver/lib/tar32.html
+- This software uses tar32.dll. see also https://www.madobe.net/archiver/lib/tar32.html
 - This software uses libpng. see also https://daeudaeu.com/libpng/
 - Thank you very much for all contributors!!

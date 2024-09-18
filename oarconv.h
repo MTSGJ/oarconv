@@ -6,7 +6,8 @@
 #include "oarconv_help.h"
 
 
-#define OARCONV_VERSION           "1.8.2" // 20240915 For complex skeleton
+#define OARCONV_VERSION           "1.8.3" // 20240918 implemented a function to expand OAR file
+//#define OARCONV_VERSION           "1.8.2" // 20240915 For complex skeleton
 //#define OARCONV_VERSION           "1.8.1" // 20240912 fix Unity/Editor/GLTFAutoCollider.cs, output Folder.
 //#define OARCONV_VERSION           "1.8.0" // 20240906 for glTF or FBX
 //#define OARCONV_VERSION           "1.7.5" // 20240527 fix OAR file path include spaces

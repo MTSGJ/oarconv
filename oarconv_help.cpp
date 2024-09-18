@@ -28,6 +28,8 @@ void  oarconv_help(FILE* fp)
     fprintf(fp, "   -y : specify shift of y direction of all objects. default is 0.0\n");
     fprintf(fp, "   -z : specify shift of z direction of all objects. default is 0.0\n");
 
+    fprintf(fp, "   --oar : specify OAR file. The -i option has priority.\n");
+
     fprintf(fp, "   --dae : output Collada DAE file(s).\n");
     fprintf(fp, "   --obj : output Wavefront OBJ file(s).\n");
     fprintf(fp, "   --gltf: output glTF file(s).\n");
