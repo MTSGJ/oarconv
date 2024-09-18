@@ -7,6 +7,7 @@
 #endif
 
 #include  "resource.h"       // メイン シンボル
+#include  "gz_tool.h"
 #include  "ExClass.h"
 #include  "MainFrm.h"
 

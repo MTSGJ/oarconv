@@ -511,10 +511,13 @@ Buffer  COARConvWinApp::extractOARfile(CString fname, int* filenum)
     PRINT_MESG("COARConvWinApp::extractOARfile: Wait a minute. Extracting OAR file... (%s)\n", fn);
     DisPatcher();
     Buffer enc = read_Buffer_file(fn);
-    ::free(fn);
-    if (enc.vldsz <= 0) {
+    if (!is_gz_data(enc)) {
+        PRINT_MESG("COARConvWinApp::extractOARfile: %s is not OAR file!!\n", fn);
+        ::free(fn);
+        free_Buffer(&enc);
         return dec;
     }
+    ::free(fn);
     //
     //CMessageBoxDLG* mbox = MessageBoxDLG(IDS_STR_INFO, IDS_STR_EXTRACT_GZIP, m_pMainWnd);
     //if (mbox != NULL) mbox->Display();
@@ -581,10 +584,14 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 
     int filenum;
     Buffer dec = extractOARfile(fname, &filenum);
+    if (dec.vldsz<=0) {
+        MessageBoxDLG(IDS_STR_ERROR, IDS_STR_NOT_OAR, MB_OK, pMainFrame);
+        return false;
+    }
 
     CProgressBarDLG* progress = new CProgressBarDLG(IDD_PROGBAR, _T(""), TRUE);
     if (progress != NULL) {
-        progress->SetTitle("Saving OAR files...");
+        progress->SetTitle("Saving files from OAR file...");
         progress->Start(filenum);
         SetGlobalCounter(progress);
     }
@@ -607,9 +614,11 @@ bool  COARConvWinApp::fileOpenOAR(CString fname)
 
     if (progress != NULL) {
         progress->PutFill();
+        //DisPatcher();
         delete progress;
         ClearGlobalCounter();
     }
+
     bool chk = oarTool.GetDataInfo();
     if (!chk) {
         MessageBoxDLG(IDS_STR_ERROR, IDS_STR_NOT_OAR, MB_OK, pMainFrame);
