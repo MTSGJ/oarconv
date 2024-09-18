@@ -1,7 +1,7 @@
 # OARConverter
 
 ## OverView
-* Convert OAR file of OpenSimulator to Collada/OBJ files for Unity/UE5
+* Convert OAR file of OpenSimulator to Collada/OBJ/glTF(glb) files for Unity/UE5
 * **OARConv** is for Linux/Unix
 * **OARConvWin** is for MS Windows
 
