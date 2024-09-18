@@ -82,7 +82,7 @@ int main(int argc, char** argv)
         inpdir = oar.ExtractOAR(oarfile, 0750);
     }
     if (inpdir.buf==NULL) {
-        inpdir = make_Buffer_bystr("OAR");
+        inpdir = make_Buffer_bystr(".");
     }
     //
     float scale = (float)TRNT_DEFAULT_TEX_SCALE;

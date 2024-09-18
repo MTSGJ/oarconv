@@ -54,6 +54,7 @@
          [-t terrain_texture_scale] [-c external_convert_command_of_jp2]
          [-s start_no.] [-e end_no.]
          [-x shift_of_x_direction] [-y shift_of_y_direction] [-z shift_of_z_direction]
+         [--oar OAR_file]
          [--dae | --obj | --gltf | --glb | --stl] [--unity | --ue] [--dg | --nooffset] [--joint]
          [-d] [-v] [-h | --help]
  
