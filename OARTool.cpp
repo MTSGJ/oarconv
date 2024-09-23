@@ -686,7 +686,7 @@ int   OARTool::ExtractTar(Buffer dec, Buffer prefix, mode_t mode)
     //
     CVCounter* counter = GetUsableGlobalCounter();
  
-    int long_link = FALSE;
+    bool long_link = false;
     Buffer long_link_name = init_Buffer();
 
     while (size < datalen) {
@@ -695,13 +695,13 @@ int   OARTool::ExtractTar(Buffer dec, Buffer prefix, mode_t mode)
 
         if (!long_link && (*tar_header.typeflag=='L' || *tar_header.typeflag=='K')) { 
             // GNU Long Link
-            long_link = TRUE;
+            long_link = true;
         }
         else if (long_link) {
             fname = dup_Buffer(long_link_name);
             free_Buffer(&long_link_name);
             long_link_name = init_Buffer();
-            long_link = FALSE;
+            long_link = false;
         }
         else {
             fname = make_Buffer_bystr(tar_header.name);
@@ -720,15 +720,15 @@ int   OARTool::ExtractTar(Buffer dec, Buffer prefix, mode_t mode)
             free_Buffer(&fname);
         }
         //
-        DEBUG_MODE PRINT_MESG("OARTool::ExtractTar: Extracting %s\n", (char*)path.buf);
-        int ret = mkdirp((char*)path.buf, mode);
-        if (ret<0) PRINT_MESG("COARConvWinApp::ExtractTar: WARNING: Failed to create directory (%d).\n", ret);
         long unsigned int len = (long unsigned int)strtol(tar_header.size, NULL, 8);
         if (long_link) {
             long_link_name = make_Buffer_bystr(&dec.buf[size]);
         }
         else {
-            long unsigned int rsz = write_file((char*)path.buf, &dec.buf[size], len);
+            DEBUG_MODE PRINT_MESG("OARTool::ExtractTar: Extracting %s\n", (char*)path.buf);
+            int ret = mkdirp((char*)path.buf, mode);
+            if (ret<0) PRINT_MESG("COARConvWinApp::ExtractTar: WARNING: Failed to create directory (%d).\n", ret);
+            write_file((char*)path.buf, &dec.buf[size], len);
         }
         free_Buffer(&path);
         //
