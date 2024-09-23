@@ -32,6 +32,9 @@
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
+* V1.8.4
+  * Change output format for UE5.
+
 * v1.8.3 (2024/09/18)
   * implemented a function to expand OAR file for Regions 
 
@@ -125,7 +128,7 @@ make
 
 ## OARConvWin (for MS Windows)
 ### Download Binary
-- [OARConvWin-1.8.3.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.3.zip)  (glTF/glb support)
+- [OARConvWin-1.8.4.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.4.zip)  (glTF/glb support)
 - [OARConvWin-1.7.12.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.12.zip)
 - [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.6.0.zip)
 - [OARConvWin-1.5.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.5.0.zip)

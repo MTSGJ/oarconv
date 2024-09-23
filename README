@@ -1,14 +1,14 @@
 OAR Converter
-    Copyright (C) 2014 Fumi.Iseki, Austin Tate, D.Mizumaki and K.Suzuki
-                       http://www.nsl.tuis.ac.jp/
-                       mailto:iseki@rsch.tuis.ac.jp
+    Copyright (C) 2014-2024 Fumi.Iseki, Austin Tate, D.Mizumaki and K.Suzuki
+                       https://github.com/MTSGJ/oarconv
+                       mailto:iseki@rsch.tuis.ac.jp, mailto:fumi.hax@gmail.com
 
 Explanation.
   This software converts from OAR of OpenSimulator to Collada files for Unity.
-  More information is at https://polaris.star-dust.jp/pukiwiki/?OAR+Converter
+  More information is at https://polaris.star-dust.jp/pukiwiki/?OARConverter
 
 License.
- OAR Converter Copyright (c) 2014-2016 Fumi.Iseki, Austin Tate, D.Mizumaki and K.Suzuki, 
+ OAR Converter Copyright (c) 2014-2024 Fumi.Iseki, Austin Tate, D.Mizumaki and K.Suzuki, 
  http://www.nsl.tuis.ac.jp/, All rights reserved.
  MIT-License.
 
@@ -25,5 +25,6 @@ Address of thanks.
       OpenMetaverse License text is in OpenMetaverse.License directiry.
   This system uses OpenJpeg2 command and library. see also http://www.openjpeg.org/
   This system uses zlib library. http://www.zlib.net/ 
+  This system uses libpng. see also https://daeudaeu.com/libpng/
 
   Thank you very much to all contributors!!
