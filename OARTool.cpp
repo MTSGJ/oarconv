@@ -1017,6 +1017,19 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
 
     int  count = 0;
     for (int s=0; s<shno; s++) {    // SHELL
+        // Collider は一番最初のオブジェクトの設定を引き継ぐ
+        if (collider_flag==OFF) {
+            collider_flag = ON;
+            if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
+                collider = false;
+            }
+        }
+        // Texture Path
+        Buffer tex_path;
+        if (collider) tex_path = dup_Buffer(pathSLD);
+        else          tex_path = dup_Buffer(pathPTM);
+        cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
+
         // Tree
         if (shapes[s].PCode==PRIM_PCODE_NEWTREE || shapes[s].PCode==PRIM_PCODE_TREE) {
             //
@@ -1029,8 +1042,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (isRequiredTexture(format)) {    // STLの場合は不必要
                     MeshFacetNode* facet = mesh->facet;
                     char* image_type = GetTextureExtension();
-                    Buffer tex_path = dup_Buffer(pathPTM);
-                    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
                             ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, (char*)tex_path.buf, command);
@@ -1038,7 +1049,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                         }
                         facet = facet->next;
                     }
-                    free_Buffer(&tex_path);
                 }
 
                 // DAE
@@ -1088,8 +1098,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                 if (isRequiredTexture(format)) {    // STLの場合は不必要
                     MeshFacetNode* facet = mesh->facet;
                     char* image_type = GetTextureExtension();
-                    Buffer tex_path = dup_Buffer(pathPTM);
-                    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
                             ConvertTexture(facet->material_param.getTextureName(), NULL, image_type, (char*)tex_path.buf, command);
@@ -1097,7 +1105,6 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                         }
                         facet = facet->next;
                     }
-                    free_Buffer(&tex_path);
                 }
 
                 // DAE
@@ -1144,20 +1151,9 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             MeshObjectData* mesh = MeshObjectDataFromPrimShape(shapes[s], assetsFiles, useBrep, ptr_skin_joint);
             //
             if (mesh!=NULL) {
-                if (collider_flag==OFF) {
-                    collider_flag = ON;
-                    if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
-                        collider = false;
-                    }
-                }
-                //
                 if (isRequiredTexture(format)) {    // STLの場合は不必要
                     MeshFacetNode* facet = mesh->facet;
                     char* image_type = GetTextureExtension();
-                    Buffer tex_path;
-                    if (collider) tex_path = dup_Buffer(pathSLD);
-                    else          tex_path = dup_Buffer(pathPTM);
-                    cat_s2Buffer(OART_DEFAULT_TEX_DIR, &tex_path);
                     while (facet!=NULL) {
                         if (facet->material_param.enable) {
                             // MeshObjectDataFromPrimShape へ移動
@@ -1179,13 +1175,12 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
                                     PRINT_MESG("OARTool::generateSolidData: tetxure was changed to %s\n", facet->material_param.getTextureName());
                                 }
                             }
-                            ConvertTexture(facet->material_param.getBumpMapName(), NULL, image_type, (char*)tex_path.buf, command);
+                            ConvertTexture(facet->material_param.getBumpMapName(), NULL, image_type, (char*)tex_path.buf, command); // バンプマッピング
                             //
                             facet->material_param.setFullName(image_type);
                         }
                         facet = facet->next;
                     }
-                    free_Buffer(&tex_path);
                 }
 
                 tXML* joints_template = NULL;
@@ -1238,6 +1233,7 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
             }
             if (skin_joint!=NULL) skin_joint->free();
         }
+        free_Buffer(&tex_path);
     }
 
     for (int s=0; s<shno; s++) shapes[s].free();
