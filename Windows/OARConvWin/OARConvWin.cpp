@@ -536,7 +536,7 @@ Buffer  COARConvWinApp::extractOARfile(CString fname, int* filenum)
         long unsigned int len = (long unsigned int)strtol(tar_header.size, NULL, 8);
         if (len%512>0) len = (len/512 + 1)*512;
         size += len;
-        (*filenum)++;
+        if (*tar_header.typeflag!='L' && *tar_header.typeflag!='K') (*filenum)++;
     }
     return dec;
 }

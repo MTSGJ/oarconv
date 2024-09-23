@@ -32,7 +32,8 @@
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
-* V1.8.4
+* V1.8.4 (2024/09/23)
+  * fix bug of tar for long file name. 
   * Change output format for UE5.
 
 * v1.8.3 (2024/09/18)
