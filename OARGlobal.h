@@ -43,8 +43,8 @@
 #endif
 
 #define  OART_DEFAULT_NOFST_DIR      "_nooffset"
-//#define  OART_UE_PHANTOM_PREFIX      "UNC_"
-//#define  OART_UE_COLLIDER_PREFIX     "UCP_"
+#define  OART_UE_COLLIDER_PREFIX     "UCP_"
+#define  OART_UE_PHANTOM_PREFIX      "UNC_"
 
 #define  OART_LOCATION_MAGIC_STR     "metaverse.jp.net."
 
