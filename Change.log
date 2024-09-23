@@ -1,4 +1,9 @@
 #
+1.8.4
+    fix texture path.
+    fix bug of tar for long file name. 
+    Change output format for UE5.
+
 1.8.3
     implemented a function to expand OAR file for Regions with region names that contain characters that cannot be used as file names
         stop using tar32.dll

@@ -33,6 +33,7 @@
 
 ### Latest Version
 * V1.8.4 (2024/09/23)
+  * fix texture path.
   * fix bug of tar for long file name. 
   * Change output format for UE5.
 
