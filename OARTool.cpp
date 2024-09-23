@@ -1020,7 +1020,13 @@ void*  OARTool::generateSolidData(int format, const char* fname, int num, bool u
         // Collider は一番最初のオブジェクトの設定を引き継ぐ
         if (collider_flag==OFF) {
             collider_flag = ON;
-            if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {    // Phantom
+            if (shapes[s].PCode==PRIM_PCODE_NEWTREE || shapes[s].PCode==PRIM_PCODE_TREE) {      // Tree
+                collider = false;
+            }
+            else if (shapes[s].PCode==PRIM_PCODE_GRASS){                                        // Grass
+                collider = false;
+            }
+            else if (strstr((const char*)shapes[s].ObjFlags.buf, OART_FLAGS_PHANTOM)!=NULL) {   // Phantom Object
                 collider = false;
             }
         }
