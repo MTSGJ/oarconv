@@ -686,32 +686,62 @@ int   OARTool::ExtractTar(Buffer dec, Buffer prefix, mode_t mode)
     //
     CVCounter* counter = GetUsableGlobalCounter();
  
+    int long_link = FALSE;
+    Buffer long_link_name = init_Buffer();
+
     while (size < datalen) {
         memcpy(&tar_header, (char*)&dec.buf[size], sizeof(Tar_Header));
-        Buffer fname = make_Buffer_bystr(tar_header.name);
+        Buffer fname = init_Buffer();
+
+        if (!long_link && (*tar_header.typeflag=='L' || *tar_header.typeflag=='K')) { 
+            // GNU Long Link
+            long_link = TRUE;
+        }
+        else if (long_link) {
+            fname = dup_Buffer(long_link_name);
+            free_Buffer(&long_link_name);
+            long_link_name = init_Buffer();
+            long_link = FALSE;
+        }
+        else {
+            fname = make_Buffer_bystr(tar_header.name);
+        }
+
+        if (*tar_header.typeflag=='x') {
+           PRINT_MESG("OARTool::ExtractTar: ERROR: type flag \"x\" (POSIX pax extend header) is not supported\n");
+        }    
+        //
         canonical_filename_Buffer(&fname, FALSE);
         size += sizeof(Tar_Header);
         //
         Buffer path = dup_Buffer(pre_path);
-        cat_Buffer(&fname, &path);
-        free_Buffer(&fname);
+        if (!long_link) {
+            cat_Buffer(&fname, &path);
+            free_Buffer(&fname);
+        }
         //
         DEBUG_MODE PRINT_MESG("OARTool::ExtractTar: Extracting %s\n", (char*)path.buf);
         int ret = mkdirp((char*)path.buf, mode);
         if (ret<0) PRINT_MESG("COARConvWinApp::ExtractTar: WARNING: Failed to create directory (%d).\n", ret);
         long unsigned int len = (long unsigned int)strtol(tar_header.size, NULL, 8);
-        long unsigned int rsz = write_file((char*)path.buf, &dec.buf[size], len);
+        if (long_link) {
+            long_link_name = make_Buffer_bystr(&dec.buf[size]);
+        }
+        else {
+            long unsigned int rsz = write_file((char*)path.buf, &dec.buf[size], len);
+        }
         free_Buffer(&path);
         //
         if (len%512>0) len = (len/512 + 1)*512;
         size += len;
 
-        if (counter!=NULL) {
+        if (!long_link && counter!=NULL) {
             if (counter->cancel) break;
             counter->StepIt();
         }
     }
     free_Buffer(&pre_path);
+    free_Buffer(&long_link_name);
 
     if (counter != NULL) {
         if (counter->cancel) return JBXL_CANCEL;
