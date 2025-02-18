@@ -128,7 +128,7 @@ BOOL CSetParamDLG::OnInitDialog()
 	prefixOarEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_OAR);
 	prefixDaeEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_DAE);
 	prefixObjEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_OBJ);
-    prefixGltfEBox= (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_GLTF);
+    	prefixGltfEBox= (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_GLTF);
 	prefixGlbEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_GLB);
 	prefixFbxEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_FBX);
 	prefixStlEBox = (CEdit*)GetDlgItem(IDC_EDIT_PREFIX_STL);
