@@ -22,6 +22,7 @@
 #include  "OutFormatDLG.h"
 #include  "ObjectsListDLG.h"
 
+/*
 #include  "tar32api.h"
 
 #ifdef WIN64
@@ -29,7 +30,7 @@
 #else
 #pragma comment(lib, "tar32.lib")
 #endif
-
+*/
 
 using namespace jbxl;
 using namespace jbxwl;
@@ -513,6 +514,10 @@ Buffer  COARConvWinApp::extractOARfile(CString fname, int* filenum)
     Buffer enc = read_Buffer_file(fn);
     if (!is_gz_data(enc)) {
         PRINT_MESG("COARConvWinApp::extractOARfile: %s is not OAR file!!\n", fn);
+        PRINT_MESG("COARConvWinApp::extractOARfile: STATUS = %d, SIZE = %d / %d\n", enc.state, enc.vldsz, enc.bufsz);
+        if (enc.vldsz > 2) {
+            PRINT_MESG("COARConvWinApp::extractOARfile: File Head = 0x%02x, 0x%02x  (OAR is 0x1f, 0x8b)\n", enc.buf[0], enc.buf[1]);
+        }
         ::free(fn);
         free_Buffer(&enc);
         return dec;

@@ -125,7 +125,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib-1.3\x64;..\..\..\openjpeg-v2.5.0-windows-x64\include\openjpeg-2.5;..\..\..\lpng16\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\JunkBox_Lib++\BasicLib\Lib;..\..\..\JunkBox_Lib++\BasicLib;..\..\..\JunkBox_Lib++\MathLib;..\..\..\JunkBox_Lib++\GraphLib;..\..\..\JunkBox_Lib++\ExtendLib;..\..\..\JunkBox_Lib++\ExtendLib\xLib;..\..\..\JunkBox_Lib++\BREPLib;..\..\..\JunkBox_Lib++\MeshLib;..\..\..\zlib-1.3\include;..\..\..\openjpeg-v2.5.0-windows-x64\include\openjpeg-2.5;..\..\..\lpng16\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;WIN64;_LIB;_UNICODE;_DEBUG;DISABLE_BERKELEYDB;DISABLE_SSL;DISABLE_OPENNI2;DISABLE_OPENCV;ENABLE_ZLIB;HAVE_JPEGLIB_H;ENABLE_JPEGLIB;HAVE_OPENJPEG_H;ENABLE_OPENJPEG;OPENJPEG_VER=25;ENABLE_PNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
