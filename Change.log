@@ -83,7 +83,7 @@
   correct Gray Scale Sculpt Image
 
 1.4.2
-  support MS Windws (OARCovWin 1.0)
+  support MS Windws (OARConvWin 1.0.0)
 
 1.4.1
   fix memory leak of STLTool, for VS C++
