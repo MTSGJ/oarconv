@@ -65,6 +65,31 @@
 
 1.5.0  2024 01/27
   less Texture
+  OARConvWin 1.2.x -> OARConvWin 1.5.0
 
-1.4.6  2024 01/2
+1.4.6  2024 01/02
   support Unity 2022
+  OARConvWin 1.2.1 for x64
+
+---------------------------------------------
+
+1.4.5
+  OARConvWin 1.1.0
+
+1.4.4
+  fix "tree rotation bug" that tree does not rotation. re-generate tree images
+
+1.4.3
+  correct Gray Scale Sculpt Image
+
+1.4.2
+  support MS Windws (OARCovWin 1.0)
+
+1.4.1
+  fix memory leak of STLTool, for VS C++
+
+1.4.0
+  BREP (Boundary Representation) is used for vertexes arrangement. The data (dae file) size decreases.
+  support of output of STL file(s) using BREP
+
+
