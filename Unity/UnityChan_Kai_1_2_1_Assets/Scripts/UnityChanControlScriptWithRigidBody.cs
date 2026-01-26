@@ -5,10 +5,11 @@
 //
 
 // Add Flying by Fumi.Iseki for OARConWin-1.8
-// 2015/05/01 
+// 2015/05/01
 // 2015/07/11
 // 2023/12/17
 // 2024/09/11
+// 2026/01/26 (linearVelocity)
 //
 
 using UnityEngine;
@@ -148,7 +149,11 @@ namespace UnityChan
                 {
                     flying = 1;
                     rb.useGravity = false;
-                    rb.velocity = new Vector3(0, 0, 0);
+                    #if UNITY_6000_0_OR_NEWER
+                        rb.linearVelocity = new Vector3(0, 0, 0);
+                    #else
+                        rb.velocity = new Vector3(0, 0, 0);
+                    #endif
                     transform.localPosition += Vector3.up * 0.2f;
                     anim.SetBool("Hovering", true);
                     homeKey = false;
@@ -159,7 +164,11 @@ namespace UnityChan
                     flying = 1;
                     forward = 0;
                     rb.useGravity = false;
-                    rb.velocity = new Vector3(0, 0, 0);
+                    #if UNITY_6000_0_OR_NEWER
+                        rb.linearVelocity = new Vector3(0, 0, 0);
+                    #else
+                        rb.velocity = new Vector3(0, 0, 0);
+                    #endif
                     transform.localPosition += Vector3.up * 0.2f;
                     anim.SetBool("Walking", false);
                     anim.SetBool("Running", false);
