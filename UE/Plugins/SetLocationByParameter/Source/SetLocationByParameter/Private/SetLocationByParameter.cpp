@@ -1,6 +1,6 @@
 /**
 * Set Location処理 for OAR   by Fumi.Iseki
-*                               ver1.2.0
+*                               ver1.2.1
 */
 
 #include "SetLocationByParameter.h"
@@ -57,41 +57,69 @@ void FSetLocationByParameterModule::ShutdownModule()
 void FSetLocationByParameterModule::PluginButtonClicked()
 {
 	UE_LOG(LogTemp, Log, TEXT("FSetLocationByParameterModule: Start"));
-	
-	TArray<AActor*> actors;
+
+    if (!GEditor) {
+        UE_LOG(LogTemp, Warning, TEXT("[SetLocationByParameter] GEditor is null"));
+        return;
+    }
+
 	UWorld* World = GEditor->GetEditorWorldContext().World();
-	UGameplayStatics::GetAllActorsOfClass(World, AActor::StaticClass(), actors);
+    if (!World) {
+        UE_LOG(LogTemp, Warning, TEXT("[SetLocationByParameter] World is null"));
+        return;
+    }
+
+    // Undo対応
+    const FScopedTransaction Transaction(NSLOCTEXT("SetLocationByParameter", "RelocateActors", "Relocate Actors"));
+   
+	TArray<AActor*> actors;
+	UGameplayStatics::GetAllActorsOfClass(World, AStaticMeshActor::StaticClass(), actors);
 
 	for (AActor* act : actors) {
-		FString class_name = act->GetClass()->GetName();
-		if (class_name.Find(TEXT("StaticMeshActor")) == 0) {
-			UStaticMeshComponent* smhc = Cast<AStaticMeshActor>(act)->GetStaticMeshComponent();
-			if (smhc != NULL) {
-				UStaticMesh* mesh = smhc->GetStaticMesh();
-				if (mesh != NULL) {
-					FString mesh_name = mesh->GetName();
-					bool rslt = false;
-					FVector vv = GetLocationFromName(mesh_name, rslt);
-					if (rslt && vv!= act->GetActorLocation()) {
-						act->SetActorLocation(vv);
-						UE_LOG(LogTemp, Log, TEXT("FSetLocationByParameterModule: Actor %s is relocated to (%lf, %lf, %lf)"), 
-							*mesh_name, vv.X, vv.Y, vv.Z);
-					}
-				}
-			}
+		AStaticMeshActor* SMA = Cast<AStaticMeshActor>(act);
+		if (!SMA) {
+			UE_LOG(LogTemp, Log, TEXT("[SetLocationByParameter] SMA is null"));
+			continue;
+		}
+
+		UStaticMeshComponent* SMC = SMA->GetStaticMeshComponent();
+		if (!SMC) continue;
+
+		UStaticMesh* Mesh = SMC->GetStaticMesh();
+		if (!Mesh) continue;
+
+		
+		bool rslt = false;
+		FVector NewLoc = GetLocationFromName(Mesh->GetName(), rslt);
+		if (!rslt) {
+			rslt = false;
+			NewLoc = GetLocationFromName(Mesh->GetOutermost()->GetName(), rslt);
+		}
+
+		if (rslt && NewLoc != act->GetActorLocation()) {
+			act->Modify();			// Editorで変更として残す
+			act->SetActorLocation(NewLoc);
+			UE_LOG(LogTemp, Log, TEXT("[SetLocationByParameter] %s -> (%f, %f, %f)"), *Mesh->GetName(), NewLoc.X, NewLoc.Y, NewLoc.Z);
 		}
 	}
+
+	GEditor->RedrawAllViewports(); // 表示更新
 	UE_LOG(LogTemp, Log, TEXT("FSetLocationByParameterModule: End"));
+
 	return;
 }
 
 
 FVector FSetLocationByParameterModule::GetLocationFromName(FString mesh_name, bool& rslt)
 {
+	rslt = false;
 	FVector location(0.0, 0.0, 0.0);
 
 	int32 _name_end = mesh_name.Find(TEXT(LOCATION_MAGIC_STR), ESearchCase::CaseSensitive, ESearchDir::FromEnd, mesh_name.Len());
-	if (_name_end == -1) return location;
+	if (_name_end == -1) {
+		UE_LOG(LogTemp, Log, TEXT("[SetLocationByParameter] err 1"))
+		return location;
+	}
 
 	FString _magic_str = FString(TEXT(LOCATION_MAGIC_STR));
 	int32 _magic_len = _magic_str.Len();
@@ -113,7 +141,10 @@ FVector FSetLocationByParameterModule::GetLocationFromName(FString mesh_name, bo
 		return location;
 	}
 	int32 dec_size = param_size / 4 * 3;
-	if (dec.Num() != dec_size) return location;
+	if (dec.Num() != dec_size) {
+	    UE_LOG(LogTemp, Log, TEXT("[SetLocationByParameter] err 2"))
+		return location;
+	}
 
 	float position[3];
 	memcpy(position, dec.GetData(), dec_size);

@@ -26,6 +26,8 @@ public class OARSelectMaterial : ModuleRules
 			new string[]
 			{
 				"Core",
+				"CoreUObject",
+				"Engine",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
