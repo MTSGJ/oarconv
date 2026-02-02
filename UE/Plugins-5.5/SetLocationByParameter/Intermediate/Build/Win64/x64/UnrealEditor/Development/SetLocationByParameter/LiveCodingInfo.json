@@ -1,0 +1,11 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.SetLocationByParameter.cpp.obj": [
+			"PerModuleInline.gen.cpp.obj",
+			"SetLocationByParameter.cpp.obj",
+			"SetLocationByParameterCommands.cpp.obj",
+			"SetLocationByParameterStyle.cpp.obj"
+		]
+	}
+}

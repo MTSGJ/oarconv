@@ -1,0 +1,25 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue5\\myproject19\\plugins\\oarselectmaterial\\source\\oarselectmaterial\\private\\oareditorsubsystem.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue5\\myproject19\\intermediate\\build\\win64\\x64\\myproject19editor\\development\\unrealed\\sharedpch.unrealed.project.valapi.valexpapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue5\\myproject19\\plugins\\oarselectmaterial\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\oarselectmaterial\\definitions.oarselectmaterial.h",
+            "d:\\ue5\\myproject19\\plugins\\oarselectmaterial\\source\\oarselectmaterial\\public\\oareditorsubsystem.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\source\\editor\\staticmesheditor\\public\\staticmesheditorsubsystem.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\staticmeshdescription\\public\\uvmapsettings.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\staticmeshdescription\\uht\\uvmapsettings.generated.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\source\\editor\\staticmesheditor\\public\\staticmesheditorsubsystemhelpers.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\engine\\public\\meshmerge\\meshmergingsettings.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\meshmergingsettings.generated.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\source\\runtime\\engine\\public\\meshmerge\\meshproxysettings.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\meshproxysettings.generated.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\staticmesheditor\\uht\\staticmesheditorsubsystemhelpers.generated.h",
+            "c:\\program files\\epic games\\ue_5.6\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\staticmesheditor\\uht\\staticmesheditorsubsystem.generated.h",
+            "d:\\ue5\\myproject19\\plugins\\oarselectmaterial\\intermediate\\build\\win64\\unrealeditor\\inc\\oarselectmaterial\\uht\\oareditorsubsystem.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

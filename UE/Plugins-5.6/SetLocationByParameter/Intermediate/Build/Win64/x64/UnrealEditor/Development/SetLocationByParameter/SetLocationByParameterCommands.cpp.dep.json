@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue5\\myproject19\\plugins\\setlocationbyparameter\\source\\setlocationbyparameter\\private\\setlocationbyparametercommands.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue5\\myproject19\\intermediate\\build\\win64\\x64\\myproject19editor\\development\\unrealed\\sharedpch.unrealed.project.valapi.valexpapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue5\\myproject19\\plugins\\setlocationbyparameter\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\setlocationbyparameter\\definitions.setlocationbyparameter.h",
+            "d:\\ue5\\myproject19\\plugins\\setlocationbyparameter\\source\\setlocationbyparameter\\public\\setlocationbyparametercommands.h",
+            "d:\\ue5\\myproject19\\plugins\\setlocationbyparameter\\source\\setlocationbyparameter\\public\\setlocationbyparameterstyle.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

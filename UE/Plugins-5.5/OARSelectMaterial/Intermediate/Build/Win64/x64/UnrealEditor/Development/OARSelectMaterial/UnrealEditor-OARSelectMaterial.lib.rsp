@@ -1,0 +1,14 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-OARSelectMaterial.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\UE5\MyProject21\Intermediate\Build\Win64\x64\MyProject21Editor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"D:\UE5\MyProject21\Plugins\OARSelectMaterial\Intermediate\Build\Win64\x64\UnrealEditor\Development\OARSelectMaterial\Module.OARSelectMaterial.cpp.obj"
+"D:\UE5\MyProject21\Plugins\OARSelectMaterial\Intermediate\Build\Win64\x64\UnrealEditor\Development\OARSelectMaterial\OAREditorSubsystem.cpp.obj"
+"D:\UE5\MyProject21\Plugins\OARSelectMaterial\Intermediate\Build\Win64\x64\UnrealEditor\Development\OARSelectMaterial\OARSelectMaterial.cpp.obj"
+"D:\UE5\MyProject21\Plugins\OARSelectMaterial\Intermediate\Build\Win64\x64\UnrealEditor\Development\OARSelectMaterial\Default.rc2.res"
+/OUT:"D:\UE5\MyProject21\Plugins\OARSelectMaterial\Intermediate\Build\Win64\x64\UnrealEditor\Development\OARSelectMaterial\UnrealEditor-OARSelectMaterial.lib"

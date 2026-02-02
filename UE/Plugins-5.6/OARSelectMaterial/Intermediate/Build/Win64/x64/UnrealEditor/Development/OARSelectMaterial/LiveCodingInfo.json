@@ -1,0 +1,12 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.OARSelectMaterial.cpp.obj": [
+			"OAREditorSubsystem.gen.cpp.obj",
+			"OARSelectMaterial.init.gen.cpp.obj",
+			"PerModuleInline.gen.cpp.obj",
+			"OAREditorSubsystem.cpp.obj",
+			"OARSelectMaterial.cpp.obj"
+		]
+	}
+}

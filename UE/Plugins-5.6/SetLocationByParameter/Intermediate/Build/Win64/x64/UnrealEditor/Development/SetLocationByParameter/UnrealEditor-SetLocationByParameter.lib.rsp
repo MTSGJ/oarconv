@@ -1,0 +1,15 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-SetLocationByParameter.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:/UE5/MyProject19/Intermediate/Build/Win64/x64/MyProject19Editor/Development/UnrealEd/SharedPCH.UnrealEd.Project.ValApi.ValExpApi.Cpp20.h.obj"
+"D:/UE5/MyProject19/Plugins/SetLocationByParameter/Intermediate/Build/Win64/x64/UnrealEditor/Development/SetLocationByParameter/Module.SetLocationByParameter.cpp.obj"
+"D:/UE5/MyProject19/Plugins/SetLocationByParameter/Intermediate/Build/Win64/x64/UnrealEditor/Development/SetLocationByParameter/SetLocationByParameter.cpp.obj"
+"D:/UE5/MyProject19/Plugins/SetLocationByParameter/Intermediate/Build/Win64/x64/UnrealEditor/Development/SetLocationByParameter/SetLocationByParameterCommands.cpp.obj"
+"D:/UE5/MyProject19/Plugins/SetLocationByParameter/Intermediate/Build/Win64/x64/UnrealEditor/Development/SetLocationByParameter/SetLocationByParameterStyle.cpp.obj"
+"D:/UE5/MyProject19/Plugins/SetLocationByParameter/Intermediate/Build/Win64/x64/UnrealEditor/Development/SetLocationByParameter/Default.rc2.res"
+/OUT:"D:/UE5/MyProject19/Plugins/SetLocationByParameter/Intermediate/Build/Win64/x64/UnrealEditor/Development/SetLocationByParameter/UnrealEditor-SetLocationByParameter.lib"

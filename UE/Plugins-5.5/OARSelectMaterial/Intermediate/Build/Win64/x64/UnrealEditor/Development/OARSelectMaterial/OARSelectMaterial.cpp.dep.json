@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue5\\myproject21\\plugins\\oarselectmaterial\\source\\oarselectmaterial\\private\\oarselectmaterial.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue5\\myproject21\\intermediate\\build\\win64\\x64\\myproject21editor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue5\\myproject21\\plugins\\oarselectmaterial\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\oarselectmaterial\\definitions.oarselectmaterial.h",
+            "d:\\ue5\\myproject21\\plugins\\oarselectmaterial\\source\\oarselectmaterial\\public\\oarselectmaterial.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
