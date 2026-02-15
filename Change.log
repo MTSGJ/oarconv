@@ -1,4 +1,9 @@
 #
+1.8.4.1
+    fix Set Location by Parameter Plugin for UE5
+    fix Unity Chan Material with Toon Shader
+
+
 1.8.4
     fix texture path.
     fix bug of tar for long file name. 

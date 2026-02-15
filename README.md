@@ -32,6 +32,10 @@
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
+* V1.8.4.1 (2025/02/15)
+  * fix Set Location by Parameter Plugin for UE5
+  * fix Unity Chan Material with Toon Shader
+
 * V1.8.4 (2024/09/23)
   * fix texture path.
   * fix bug of tar for long file name. 
@@ -130,6 +134,7 @@ make
 
 ## OARConvWin (for MS Windows)
 ### Download Binary
+- [OARConvWin-1.8.4.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.4.1.zip)
 - [OARConvWin-1.8.4.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.4.zip)  (glTF/glb support)
 - [OARConvWin-1.7.12.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.12.zip)
 - [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.6.0.zip)
