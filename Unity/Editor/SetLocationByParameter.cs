@@ -11,16 +11,16 @@ using UnityEngine;
 using UnityEditor;
 
 
-public sealed class SetLocationByPatameter : EditorWindow
+public sealed class SetLocationByParameter : EditorWindow
 {
 	static string _magicSTR = "metaverse.jp.net.";
 	
-    static SetLocationByPatameter()
+    static SetLocationByParameter()
     {
         SetLocation();
     }
 
-    [MenuItem("Tools/Set Location By Patameter")]
+    [MenuItem("Tools/Set Location By Parameter")]
 
 
     //
