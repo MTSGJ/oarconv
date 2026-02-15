@@ -1,2 +1,0 @@
-
-SetLocationByParameter (SetLocationByParameter.cpp) は 5.5用が最も新しい（v1.3.0）
