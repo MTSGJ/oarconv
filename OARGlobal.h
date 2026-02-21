@@ -46,6 +46,6 @@
 #define  OART_UE_COLLIDER_PREFIX     "UCP_"
 #define  OART_UE_PHANTOM_PREFIX      "UNC_"
 
-#define  OART_LOCATION_MAGIC_STR     "metaverse.jp.net."
+#define  OART_LOCATION_MAGIC_STR     "metaverse_jp_net_"
 
 #endif
