@@ -74,6 +74,7 @@ namespace UnityChan
 
 		void setCameraPositionJumpView ()
 		{
+			if (jumpPos == null) return; 
 			// Change Jump Camera
 			bQuickSwitch = false;
 			transform.position = Vector3.Lerp (transform.position, jumpPos.position, Time.fixedDeltaTime * smooth);	

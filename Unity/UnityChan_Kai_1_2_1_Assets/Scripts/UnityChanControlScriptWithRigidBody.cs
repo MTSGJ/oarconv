@@ -10,6 +10,7 @@
 // 2023/12/17
 // 2024/09/11
 // 2026/01/26 (linearVelocity)
+// 2026/02/15 6000.3.5f1 でジャンプすると地面にめり込むバグを修正
 //
 
 using UnityEngine;
@@ -289,9 +290,11 @@ namespace UnityChan
             // 現在のベースレイヤーがjumpStateの時
             else if (currentBaseState.fullPathHash == jumpState)
             {
-                cameraObject.SendMessage("setCameraPositionJumpView");  // ジャンプ中のカメラに変更
-                                                                        // ステートがトランジション中でない場合
-                if (!anim.IsInTransition(0))
+            	if (cameraObject != null)
+            	{
+                	cameraObject.SendMessage("setCameraPositionJumpView");  // ジャンプ中のカメラに変更
+                }                                                   
+                if (!anim.IsInTransition(0))  // ステートがトランジション中でない場合
                 {
 
                     // 以下、カーブ調整をする場合の処理
@@ -300,8 +303,9 @@ namespace UnityChan
                         // 以下JUMP00アニメーションについているカーブJumpHeightとGravityControl
                         // JumpHeight:JUMP00でのジャンプの高さ（0〜1）
                         // GravityControl:1⇒ジャンプ中（重力無効）、0⇒重力有効
+                        //float jumpHeight = 1;
                         //float jumpHeight = anim.GetFloat("JumpHeight");
-                        float jumpHeight = 1;
+                        float jumpHeight = 0f;
                         float gravityControl = anim.GetFloat("GravityControl");
                         if (gravityControl > 0)
                             rb.useGravity = false;  //ジャンプ中の重力の影響を切る
@@ -314,7 +318,11 @@ namespace UnityChan
                         {
                             if (hitInfo.distance > useCurvesHeight)
                             {
-                                col.height = orgColHight - jumpHeight;          // 調整されたコライダーの高さ
+                                //col.height = orgColHight - jumpHeight;    // 調整されたコライダーの高さ
+                                float newH = orgColHight - jumpHeight;
+								float minH = col.radius * 2.0f + 0.01f;   // カプセル成立条件
+								if (newH < minH) newH = minH;
+							 	col.height = newH;
                                 float adjCenterY = orgVectColCenter.y + jumpHeight;
                                 col.center = new Vector3(0, adjCenterY, 0);     // 調整されたコライダーのセンター
                             }
