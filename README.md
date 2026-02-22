@@ -32,7 +32,8 @@
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
-* V1.8.4.1 (2025/02/15)
+* V1.8.5 (2025/02/22)
+  * fix output file name for UE5
   * fix Set Location by Parameter Plugin for UE5
   * fix Unity Chan Material with Toon Shader
 
