@@ -5,15 +5,22 @@
 * **OARConv** is for Linux/Unix
 * **OARConvWin** is for MS Windows
 
+### GitHub
+* [GitHub Code](https://github.com/MTSGJ/oarconv/)
+* [GitHub Releases](https://github.com/MTSGJ/oarconv/releases)
+
 ### Wiki
 * [Wiki of OARConv](https://polaris.star-dust.jp/pukiwiki/?OARConverter)
 * [Wiki of OARConvWin](https://polaris.star-dust.jp/pukiwiki/?OARConvWin)
     * [Simple Wiki of OARConvWin](https://github.com/MTSGJ/oarconv/wiki)
 
 ### Blog
-* Blog of introductions by Austin: 
+* Blog Post Introductions by Austin Tate: 
+   * https://blog.inf.ed.ac.uk/atate/?s=oar+converter
    * http://blog.inf.ed.ac.uk/atate/2015/10/24/opensim-oar-convert-to-unity-scene-with-windows-interface/
+   * https://blog.inf.ed.ac.uk/atate/2017/09/17/oar-conv/
    * https://blog.inf.ed.ac.uk/atate/2024/06/10/oar-converter/
+   * https://blog.inf.ed.ac.uk/atate/2024/09/23/oar-converter-with-gltf/
 
 ### Demo
 #### WebGL by Unity
@@ -32,10 +39,8 @@
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
-* V1.8.5 (2025/02/22)
-  * fix output file name for UE5
-  * fix Set Location by Parameter Plugin for UE5
-  * fix Unity Chan Material with Toon Shader
+* V1.8.5 (2026/02/22)
+  * tweak to output filename format for UE5 (one-line change in the source code)
 
 * V1.8.4 (2024/09/23)
   * fix texture path.
@@ -135,7 +140,6 @@ make
 
 ## OARConvWin (for MS Windows)
 ### Download Binary
-- [OARConvWin-1.8.4.1.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.4.1.zip)
 - [OARConvWin-1.8.4.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.4.zip)  (glTF/glb support)
 - [OARConvWin-1.7.12.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.12.zip)
 - [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.6.0.zip)
@@ -154,3 +158,4 @@ make
 - This software uses tar32.dll. see also https://www.madobe.net/archiver/lib/tar32.html
 - This software uses libpng. see also https://daeudaeu.com/libpng/
 - Thank you very much for all contributors!!
+
