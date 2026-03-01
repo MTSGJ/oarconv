@@ -1,4 +1,8 @@
 #
+1.8.6
+    fix bug of Unity Editor extension
+    Change default settings for OARConvWin
+
 1.8.5
     fix output file name for UE5
     fix Set Location by Parameter Plugin for UE5

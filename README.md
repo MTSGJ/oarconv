@@ -31,6 +31,7 @@
 - http://blackjack.nsl.tuis.ac.jp/unity/Marineville/ with ILTan (Data from [Austin Tate](http://www.aiai.ed.ac.uk/~bat/) )
 - http://blackjack.nsl.tuis.ac.jp/unity/OpenVCE/ with Naka-Chan (Data from [Austin Tate](http://www.aiai.ed.ac.uk/~bat/) )
 #### Youtube
+- https://www.youtube.com/watch?v=FnvDopaEv08 (Avatar configuration with skeleton information)
 - https://youtu.be/AOnfXmVD5uM (v1.6.0)
 - https://youtu.be/LUhqNJHLCuM (v1.2.0)
 - https://youtu.be/eOd5Vsb85q4 (v1.0.0)
@@ -39,10 +40,20 @@
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
-* V1.8.5 (2026/02/22)
+* v1.8.6 (2026/03/01)
+  * Change default settings for OARConvWin
+  * fix bug of Unity Editor extension (SetLocationByParameter)
+  * fix warnnings Unity Editor extension (SelectOARShader.cs) at Unity6 and separated for Unity2022 (Edit_2022)
+  * UnityChan had versions 1.2.1 and 1.4.0 mixed up, so they have been organized.
+  * Modify Water assets for shared use BRP and URP
+  
+* v1.8.5 (2026/02/22)
   * tweak to output filename format for UE5 (one-line change in the source code)
+  * fix Unity and UE5 scripts for latest version (Unity6.3 and UE5.7)
+  * fix "Set Location by Parameter Plugin" for UE5
+  * fix Unity Chan Material with Toon Shader (UnityChan-1.4.0)
 
-* V1.8.4 (2024/09/23)
+* v1.8.4 (2024/09/23)
   * fix texture path.
   * fix bug of tar for long file name. 
   * Change output format for UE5.
@@ -53,6 +64,10 @@
 * v1.8.2 (2024/09/15)
   * add handling of cases where objects with and without joints are mixed
   * GLTFAutoCollider.cs v1.1.1 for Unity
+
+* v1.8.1 (2024/09/10)
+  * modify output folders
+  * fix Unity/Editor/GLTFAutoCollider.cs for Unity6000
 
 * v1.8.0 (2024/09/06)
   * support glTF/glb file output for Unity / UE5  (DAE, OBJ and STL, too)

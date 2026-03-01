@@ -23,10 +23,10 @@ void  CParameterSet::init(void)
 	outputTerrain = TRUE;
 	debugMode     = FALSE;
 	noOffset      = FALSE;
-	procJoints    = FALSE;
+	procJoints    = TRUE;
 
 	outputEngine  = JBXL_3D_ENGINE_UNITY;
-	outputFormat  = JBXL_3D_FORMAT_DAE;
+	outputFormat  = JBXL_3D_FORMAT_GLB;
 	terrainScale  = TRNT_DEFAULT_TEX_SCALE;
 	xShift        = 0.0f;
 	yShift        = 0.0f;
