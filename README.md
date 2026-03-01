@@ -155,7 +155,10 @@ make
 
 ## OARConvWin (for MS Windows)
 ### Download Binary
-- [OARConvWin-1.8.4.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.4.zip)  (glTF/glb support)
+- [OARConvWin-1.8.6.zip](https://github.com/MTSGJ/oarconv/releases/download/v1.8.6/OARConvWin-1.8.6.zip)
+- [OARConvWin-1.8.5.zip](https://github.com/MTSGJ/oarconv/releases/download/v1.8.5/OARConvWin-1.8.5.zip)
+- [OARConvWin-1.8.4.zip](https://github.com/MTSGJ/oarconv/releases/download/v1.8.4/OARConvWin-1.8.4.zip))  (glTF/glb support)
+  - [OARConvWin-1.8.4.zip] alternate (https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.8.4.zip) 
 - [OARConvWin-1.7.12.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.7.12.zip)
 - [OARConvWin-1.6.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.6.0.zip)
 - [OARConvWin-1.5.0.zip](https://blackjack.nsl.tuis.ac.jp/Download/Release/OARConverter/OARConvWin-1.5.0.zip)
