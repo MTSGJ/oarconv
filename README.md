@@ -28,15 +28,14 @@
 - http://blackjack.nsl.tuis.ac.jp/unity/TUIS_HW/  with Halloween Unity Chan
 - http://blackjack.nsl.tuis.ac.jp/unity/TUIS_SD/ with SD Unity Chan
 - http://blackjack.nsl.tuis.ac.jp/unity/TUIS_TWIN/ with Unity Chan and SD Unity Chan
-- http://blackjack.nsl.tuis.ac.jp/unity/Marineville/ with ILTan (Data from [Austin Tate](http://www.aiai.ed.ac.uk/~bat/) )
-- http://blackjack.nsl.tuis.ac.jp/unity/OpenVCE/ with Naka-Chan (Data from [Austin Tate](http://www.aiai.ed.ac.uk/~bat/) )
+- http://blackjack.nsl.tuis.ac.jp/unity/Marineville/ with ILTan (SIM Data from [Austin Tate](http://www.aiai.ed.ac.uk/~bat/) )
+- http://blackjack.nsl.tuis.ac.jp/unity/OpenVCE/ with Naka-Chan (SIM Data from [Austin Tate](http://www.aiai.ed.ac.uk/~bat/) )
 #### Youtube
-- https://www.youtube.com/watch?v=FnvDopaEv08 (Avatar configuration with skeleton information)
+- https://youtu.be/FnvDopaEv08 (v1.7.12 Avatar configuration with skeleton information)
 - https://youtu.be/AOnfXmVD5uM (v1.6.0)
 - https://youtu.be/LUhqNJHLCuM (v1.2.0)
 - https://youtu.be/eOd5Vsb85q4 (v1.0.0)
 #### Videos at BlackJack
-- https://blackjack.nsl.tuis.ac.jp/video/PronamaChan_are_go.mp4 (v1.7.x with Joints)
 - https://blackjack.nsl.tuis.ac.jp/video/OARConvWin1.6.0_UE_Demo.mp4 (v1.6.0 for UE)
 
 ### Latest Version
