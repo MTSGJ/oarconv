@@ -41,11 +41,11 @@
 
 ### Latest Version
 * v1.8.6 (2026/03/01)
-  * Change default settings for OARConvWin
+  * change default settings for OARConvWin
   * fix bug of Unity Editor extension (SetLocationByParameter)
   * fix warnnings Unity Editor extension (SelectOARShader.cs) at Unity6 and separated for Unity2022 (Edit_2022)
   * UnityChan had versions 1.2.1 and 1.4.0 mixed up, so they have been organized.
-  * Modify Water assets for shared use BRP and URP
+  * modify Water assets for shared use BRP and URP
   
 * v1.8.5 (2026/02/22)
   * tweak to output filename format for UE5 (one-line change in the source code)
@@ -56,7 +56,7 @@
 * v1.8.4 (2024/09/23)
   * fix texture path.
   * fix bug of tar for long file name. 
-  * Change output format for UE5.
+  * change output format for UE5.
 
 * v1.8.3 (2024/09/18)
   * implemented a function to expand OAR file for Regions 
