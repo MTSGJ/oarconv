@@ -44,7 +44,7 @@
   * fix bug of Unity Editor extension (SetLocationByParameter)
   * fix warnnings Unity Editor extension (SelectOARShader.cs) at Unity6 and separated for Unity2022 (Edit_2022)
   * UnityChan had versions 1.2.1 and 1.4.0 mixed up, so they have been organized.
-  * modify Water assets for shared use BRP and URP
+  * modify Unity Water assets for shared use BRP and URP
   
 * v1.8.5 (2026/02/22)
   * tweak to output filename format for UE5 (one-line change in the source code)
